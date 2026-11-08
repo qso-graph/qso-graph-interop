@@ -3,6 +3,23 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Preserve neutral client IDs and unknown direction in the common model; resolve Clear and Close
+  only with caller context. Keep Reply and Configure target IDs separate from source identity.
+  Support generic native families and request/response correlation for future protocol adapters.
+- Preserve finite binary64 values through JSON with float_roundtrip, boundary/random regressions,
+  and packet/common-model JSON fuzz coverage.
+- Give independent fixtures distinct same-type sentinels and multiple boolean patterns; assert
+  normalized fields and permanently check the review's paired Status Rx/Tx mutation.
+- Reject CLI process aliases and alternative standard-library access. Confine socket operations
+  to an audited numeric-address interface, with planted DNS and interface-policy failures.
+- Align policy wording with enforcement: first-party Rust forbids unsafe and macro definitions;
+  crates.io dependencies may use both, with native-code and supply-chain checks.
+- Log simulated WSJT-X transmit frequency as dial plus TX offset, with checked arithmetic.
+- Escape bidi controls, Unicode line separators, and selected invisible format controls in human
+  output while preserving wire and JSON data.
+
 ### Added
 
 - Readable, terminal-safe listener output, structured JSON Lines, and UTC conversion helpers.

@@ -622,3 +622,345 @@ fn extensions_cannot_fill_missing_known_suffix_fields() {
     p.extensions = vec![0];
     assert_eq!(encode(&p), Err(Error::NonContiguousTail));
 }
+
+#[test]
+fn normalization_does_not_invent_identity_or_direction() {
+    for name in [
+        "prototype_Clear",
+        "wsjtx_Clear",
+        "wsjtx_Close",
+        "wsjtx_Reply",
+        "wsjtx_Configure",
+    ] {
+        let packet = fixture(name);
+        let value = serde_json::to_value(model::Message::from(packet.clone())).unwrap();
+        assert!(
+            value.get("source_id").is_none(),
+            "{name}: invented source: {value}"
+        );
+        assert_eq!(
+            value["client_id"],
+            serde_json::to_value(&packet.id).unwrap()
+        );
+        assert_eq!(value["context"]["direction"], "Unknown");
+        assert!(value["context"]["source_id"].is_null());
+        if matches!(packet.body, Body::Clear(_) | Body::Close) {
+            assert!(value["kind"].get("Ambiguous").is_some(), "{name}: {value}");
+        }
+    }
+}
+
+#[test]
+fn finite_float_json_preserves_boundary_and_random_bits() {
+    let check = |bits| {
+        let value = f64::from_bits(bits);
+        if !value.is_finite() {
+            return;
+        }
+        let mut packet = Packet::new(
+            "float-probe",
+            Body::Decode(Decode {
+                delta_time_seconds: value,
+                ..Default::default()
+            }),
+        );
+        for wspr in [false, true] {
+            if wspr {
+                packet.body = Body::WsprDecode(WsprDecode {
+                    delta_time_seconds: value,
+                    ..Default::default()
+                });
+            }
+            let expected = encode(&packet).unwrap();
+            let json = serde_json::to_vec(&packet).unwrap();
+            let roundtrip: Packet = serde_json::from_slice(&json).unwrap();
+            assert_eq!(
+                encode(&roundtrip).unwrap(),
+                expected,
+                "packet bits={bits:016x}"
+            );
+            let common = model::Message::from(packet.clone());
+            let json = serde_json::to_vec(&common).unwrap();
+            let roundtrip: model::Message = serde_json::from_slice(&json).unwrap();
+            assert_eq!(
+                encode(&roundtrip.into_family()).unwrap(),
+                expected,
+                "model bits={bits:016x}"
+            );
+            let json = serde_json::to_string(&common.kind).unwrap();
+            let model::Kind::Decode(d) = serde_json::from_str(&json).unwrap() else {
+                panic!("decode");
+            };
+            assert_eq!(
+                d.delta_time_seconds.to_bits(),
+                bits,
+                "normalized bits={bits:016x}"
+            );
+        }
+    };
+    for bits in [
+        0x3f99_867e_711c_7600,
+        0x7800_fec1_8e28_0768,
+        0,
+        1,
+        0x8000_0000_0000_0000,
+        0x000f_ffff_ffff_ffff,
+        0x0010_0000_0000_0000,
+        0x0010_0000_0000_0001,
+        0x3fef_ffff_ffff_ffff,
+        0x3ff0_0000_0000_0000,
+        0x3ff0_0000_0000_0001,
+        0x7fef_ffff_ffff_ffff,
+        0xffef_ffff_ffff_ffff,
+    ] {
+        check(bits);
+    }
+    let mut bits = 42_u64;
+    for _ in 0..10_000 {
+        bits = bits.wrapping_mul(6364136223846793005).wrapping_add(1);
+        check(bits);
+    }
+}
+
+#[test]
+fn independent_status_sentinels_reach_normalized_fields() {
+    let model::Kind::RadioState(radio) = model::Message::from(fixture("wsjtx_Status")).kind else {
+        panic!("radio");
+    };
+    assert_eq!((radio.rx_offset_hz, radio.tx_offset_hz), (1201, 2302));
+    assert_eq!(
+        (radio.mode.as_str(), radio.tx_mode.as_str()),
+        (Some("FT8"), Some("FT4"))
+    );
+    assert_eq!(
+        (
+            radio.dx_call.as_str(),
+            radio.station_call.as_ref().and_then(Utf8::as_str)
+        ),
+        (Some("W1AW"), Some("N0CALL"))
+    );
+}
+
+#[test]
+fn caller_context_resolves_both_clear_and_close_meanings() {
+    use model::{Context, Direction, Kind, Operation};
+    for name in ["prototype_Clear", "wsjtx_Clear", "wsjtx_Close"] {
+        let packet = fixture(name);
+        let operation = if matches!(packet.body, Body::Clear(_)) {
+            Operation::Clear
+        } else {
+            Operation::Close
+        };
+        assert_eq!(
+            model::Message::from(packet.clone()).kind,
+            Kind::Ambiguous(operation)
+        );
+        for direction in [Direction::FromApplication, Direction::ToApplication] {
+            let context = Context {
+                direction,
+                source_id: Some("actual-source".into()),
+                target_id: Some("actual-target".into()),
+                ..Default::default()
+            };
+            let message = model::Message::with_context(packet.clone(), context.clone());
+            assert_eq!(message.context, context);
+            assert_eq!(message.client_id, packet.id);
+            match direction {
+                Direction::ToApplication => assert_eq!(
+                    message.kind,
+                    Kind::Control(model::Control {
+                        operation,
+                        target_id: packet.id.clone()
+                    })
+                ),
+                Direction::FromApplication if operation == Operation::Close => {
+                    assert_eq!(message.kind, Kind::Lifecycle)
+                }
+                Direction::FromApplication => {
+                    assert_eq!(message.kind, Kind::Notification(Operation::Clear))
+                }
+                Direction::Unknown => unreachable!(),
+            }
+            assert_eq!(message.into_family(), packet);
+        }
+    }
+    for (name, operation) in [
+        ("wsjtx_Reply", Operation::Reply),
+        ("wsjtx_Configure", Operation::Configure),
+    ] {
+        let packet = fixture(name);
+        let message = model::Message::from(packet.clone());
+        assert_eq!(
+            message.kind,
+            Kind::Control(model::Control {
+                operation,
+                target_id: packet.id.clone()
+            })
+        );
+        assert_eq!(message.context.source_id, None);
+        assert_eq!(message.context.direction, Direction::Unknown);
+        assert_eq!(message.client_id, packet.id);
+    }
+}
+
+#[test]
+fn all_independent_fixtures_assert_normalized_semantics() {
+    let all = vectors();
+    for vector in all["vectors"].as_array().unwrap() {
+        let packet = fixture(vector["name"].as_str().unwrap());
+        let common = model::Message::from(packet.clone());
+        match (&packet.body, &common.kind) {
+            (Body::Status(s), model::Kind::RadioState(r)) => {
+                assert_eq!(
+                    (r.rx_offset_hz, r.tx_offset_hz),
+                    (i64::from(s.rx_df_hz), i64::from(s.tx_df_hz))
+                );
+                assert_eq!(
+                    (&r.mode, &r.tx_mode, &r.dx_call),
+                    (&s.mode, &s.tx_mode, &s.dx_call)
+                );
+                assert_eq!(
+                    (&r.station_call, &r.station_grid, &r.dx_grid),
+                    (&s.de_call, &s.de_grid, &s.dx_grid)
+                );
+                assert_eq!(
+                    (r.tx_enabled, r.transmitting, r.decoding),
+                    (s.tx_enabled, s.transmitting, s.decoding)
+                );
+                assert_eq!(r.dial_frequency_hz, s.dial_frequency_hz);
+            }
+            (Body::JtdxStatus(s), model::Kind::RadioState(r)) => {
+                assert_eq!(
+                    (r.rx_offset_hz, r.tx_offset_hz),
+                    (i64::from(s.rx_df_hz), i64::from(s.tx_df_hz))
+                );
+                assert_eq!(
+                    (&r.mode, &r.tx_mode, &r.dx_call),
+                    (&s.mode, &s.tx_mode, &s.dx_call)
+                );
+                assert_eq!(
+                    (&r.station_call, &r.station_grid, &r.dx_grid),
+                    (&s.de_call, &s.de_grid, &s.dx_grid)
+                );
+                assert_eq!(
+                    (r.tx_enabled, r.transmitting, r.decoding),
+                    (s.tx_enabled, s.transmitting, s.decoding)
+                );
+                assert_eq!(r.dial_frequency_hz, s.dial_frequency_hz);
+            }
+            (Body::Decode(d), model::Kind::Decode(n)) => {
+                assert_eq!(
+                    (n.new, n.time, n.snr_db, n.delta_time_seconds.to_bits()),
+                    (d.new, d.time, d.snr_db, d.delta_time_seconds.to_bits())
+                );
+                assert_eq!(
+                    (n.offset_hz, &n.mode, &n.text),
+                    (
+                        Some(d.delta_frequency_hz),
+                        &Some(d.mode.clone()),
+                        &Some(d.message.clone())
+                    )
+                );
+                assert_eq!((n.low_confidence, n.off_air), (d.low_confidence, d.off_air));
+                assert_eq!((n.frequency_hz, &n.call, &n.grid), (None, &None, &None));
+            }
+            (Body::WsprDecode(d), model::Kind::Decode(n)) => {
+                assert_eq!(
+                    (n.new, n.time, n.snr_db, n.delta_time_seconds.to_bits()),
+                    (d.new, d.time, d.snr_db, d.delta_time_seconds.to_bits())
+                );
+                assert_eq!(
+                    (n.frequency_hz, &n.call, &n.grid),
+                    (
+                        Some(d.frequency_hz),
+                        &Some(d.callsign.clone()),
+                        &Some(d.grid.clone())
+                    )
+                );
+                assert_eq!((n.low_confidence, n.off_air), (None, d.off_air));
+                assert_eq!((n.offset_hz, &n.mode, &n.text), (None, &None, &None));
+            }
+            (Body::QsoLogged(q), model::Kind::LoggedQso(n)) => {
+                assert_eq!(
+                    (&n.call, &n.grid, &n.mode),
+                    (
+                        &Some(q.dx_call.clone()),
+                        &Some(q.dx_grid.clone()),
+                        &Some(q.mode.clone())
+                    )
+                );
+                assert_eq!(
+                    (&n.report_sent, &n.report_received),
+                    (
+                        &Some(q.report_sent.clone()),
+                        &Some(q.report_received.clone())
+                    )
+                );
+                assert_eq!((&n.start, &n.end), (&q.time_on, &Some(q.time_off.clone())));
+                assert_eq!(
+                    (&n.operator_call, &n.station_call, &n.station_grid),
+                    (&q.operator_call, &q.my_call, &q.my_grid)
+                );
+                assert_eq!(
+                    (&n.exchange_sent, &n.exchange_received),
+                    (&q.exchange_sent, &q.exchange_received)
+                );
+                assert_eq!(
+                    n.tx_frequency_hz,
+                    (packet.variant == Variant::Wsjtx).then_some(q.frequency_hz)
+                );
+                assert_eq!(
+                    n.dial_frequency_hz,
+                    (packet.variant == Variant::Jtdx).then_some(q.frequency_hz)
+                );
+            }
+            _ => {}
+        }
+    }
+}
+
+#[test]
+fn generic_envelope_supports_non_udp_request_response_context() {
+    let message = model::Message {
+        kind: model::Kind::Native,
+        client_id: Utf8::default(),
+        context: model::Context {
+            direction: model::Direction::FromApplication,
+            exchange: model::Exchange::Response,
+            correlation_id: Some("request-42".into()),
+            ..Default::default()
+        },
+        family: b"<methodResponse/>".to_vec(),
+    };
+    let json = serde_json::to_vec(&message).unwrap();
+    let restored: model::Message<Vec<u8>> = serde_json::from_slice(&json).unwrap();
+    assert_eq!(restored, message);
+    assert_eq!(restored.into_family(), b"<methodResponse/>");
+}
+
+#[test]
+fn jtdx_clear_and_close_keep_released_outbound_meanings() {
+    for (name, expected) in [
+        (
+            "jtdx_Clear",
+            model::Kind::Notification(model::Operation::Clear),
+        ),
+        ("jtdx_Close", model::Kind::Lifecycle),
+    ] {
+        for direction in [
+            model::Direction::Unknown,
+            model::Direction::FromApplication,
+            model::Direction::ToApplication,
+        ] {
+            let packet = fixture(name);
+            let context = model::Context {
+                direction,
+                ..Default::default()
+            };
+            let common = model::Message::with_context(packet.clone(), context.clone());
+            assert_eq!(common.kind, expected);
+            assert_eq!(common.context, context);
+            assert_eq!(common.into_family(), packet);
+        }
+    }
+}

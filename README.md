@@ -60,8 +60,9 @@ Each command's `--help` includes examples.
 
 - **Bounded input:** the decoder checks datagram and string lengths before copying them.
   Tests exercise oversized lengths, truncation, null values, and future schemas.
-- **Safe Rust:** repository policy requires `#![forbid(unsafe_code)]`, checks code behind inactive conditions too,
-  and refuses macro definitions and native code in the shipped dependency graph.
+- **Safe Rust:** first-party code forbids unsafe Rust and defines no macros, including code behind
+  inactive conditions. Dependencies come from crates.io, contain no native code, and pass
+  cargo-vet, cargo-deny, and cargo-audit checks. Dependencies can use unsafe Rust and macros.
 - **Explicit networking:** the library opens no sockets. The listener defaults to loopback;
   the simulator requires a numeric destination. Loopback integration tests exercise both commands.
 - **Repeatable checks:** exact dependency requirements, lockfiles, dependency checks, and a

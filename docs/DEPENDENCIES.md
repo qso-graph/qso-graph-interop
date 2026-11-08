@@ -4,7 +4,7 @@
 Every direct requirement uses `=`. Cargo.lock and fuzz/Cargo.lock pin transitive resolution.
 Only crates.io sources are allowed. The library has one direct dependency, serde; the CLI adds
 clap and serde_json. xtask adds TOML and Rust-token parsers without entering the shipped graph.
-The isolated fuzz workspace adds libfuzzer-sys and never enters either shipped crate.
+The isolated fuzz workspace adds libfuzzer-sys and serde_json JSON-path checks and never enters either shipped crate.
 
 ## Direct dependencies
 
@@ -12,7 +12,7 @@ The isolated fuzz workspace adds libfuzzer-sys and never enters either shipped c
 | --- | --- | --- | --- |
 | serde | 1.0.229 | MIT OR Apache-2.0 | Serialize complete family and normalized models. |
 | clap | 4.6.7 | MIT OR Apache-2.0 | CLI parsing and help, without its color feature. |
-| serde_json | 1.0.145 | MIT OR Apache-2.0 | JSON lines, fixture tests, and cargo metadata in policy tooling. |
+| serde_json | 1.0.145 | MIT OR Apache-2.0 | JSON lines, fixture tests, fuzz round trips, and cargo metadata; float_roundtrip enabled. |
 | toml | 1.1.8+spec-1.1.0 | MIT OR Apache-2.0 | Read manifests as TOML in xtask; no display feature. Requirement is `=1.1.8`, which resolves this metadata-qualified release. |
 | syn | 3.0.9 | MIT OR Apache-2.0 | Parse actual crate-root attributes in xtask. |
 | proc-macro2 | 1.0.107 | MIT OR Apache-2.0 | Scan all Rust tokens, including disabled code, in xtask. |

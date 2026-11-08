@@ -43,7 +43,7 @@
     },
     {
       "name": "wsjtx_Status",
-      "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c09000000003465438000000000000000000000003465438000001000005dc000005dc000000054b49374d5400000004444e31330000000000000000000000ffffffff0000000f0000000744656661756c7400000000",
+      "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c090000000034654380000000457314157000000032d303700000003465434000001000004b1000008fe000000064e3043414c4c00000004444e313300000004464e333100000000014100030000002f0000001e000000054669656c640000000743512054455354",
       "packet": {
         "schema": 3,
         "variant": "Wsjtx",
@@ -68,30 +68,40 @@
               ]
             },
             "dx_call": {
-              "bytes": []
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
             },
             "report": {
-              "bytes": []
+              "bytes": [
+                45,
+                48,
+                55
+              ]
             },
             "tx_mode": {
               "bytes": [
                 70,
                 84,
-                56
+                52
               ]
             },
             "tx_enabled": false,
             "transmitting": false,
             "decoding": true,
-            "rx_df_hz": 1500,
-            "tx_df_hz": 1500,
+            "rx_df_hz": 1201,
+            "tx_df_hz": 2302,
             "de_call": {
               "bytes": [
-                75,
-                73,
-                55,
-                77,
-                84
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
               ]
             },
             "de_grid": {
@@ -103,29 +113,42 @@
               ]
             },
             "dx_grid": {
-              "bytes": []
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
             },
             "tx_watchdog": false,
             "sub_mode": {
-              "bytes": []
+              "bytes": [
+                65
+              ]
             },
             "fast_mode": false,
-            "special_operation_mode": 0,
-            "frequency_tolerance_hz": 4294967295,
-            "tr_period_seconds": 15,
+            "special_operation_mode": 3,
+            "frequency_tolerance_hz": 47,
+            "tr_period_seconds": 30,
             "configuration_name": {
               "bytes": [
-                68,
+                70,
+                105,
                 101,
-                102,
-                97,
-                117,
                 108,
-                116
+                100
               ]
             },
             "tx_message": {
-              "bytes": []
+              "bytes": [
+                67,
+                81,
+                32,
+                84,
+                69,
+                83,
+                84
+              ]
             }
           }
         },
@@ -261,7 +284,7 @@
     },
     {
       "name": "wsjtx_QsoLogged",
-      "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b3392001000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331000000053144204354000000053241204354000000025452",
+      "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b3392001000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 3,
         "variant": "Wsjtx",
@@ -340,7 +363,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -351,12 +382,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -371,10 +401,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": {
@@ -655,7 +685,7 @@
     },
     {
       "name": "wsjtx_HighlightCallsign",
-      "wire_hex": "adbccbda000000030000000d0000000657534a542d58000000045731415701ffffffff00000000000000ffff000000000000000001",
+      "wire_hex": "adbccbda000000030000000d0000000657534a542d58000000045731415701fde9044d089a0ce7113401fa02158119ce1e1b226801",
       "packet": {
         "schema": 3,
         "variant": "Wsjtx",
@@ -682,21 +712,21 @@
             "background": {
               "spec": 1,
               "channels": [
-                65535,
-                65535,
-                0,
-                0,
-                0
+                65001,
+                1101,
+                2202,
+                3303,
+                4404
               ]
             },
             "foreground": {
-              "spec": 0,
+              "spec": 1,
               "channels": [
-                65535,
-                0,
-                0,
-                0,
-                0
+                64002,
+                5505,
+                6606,
+                7707,
+                8808
               ]
             },
             "highlight_last": true
@@ -739,7 +769,7 @@
     },
     {
       "name": "wsjtx_Configure",
-      "wire_hex": "adbccbda000000030000000f0000000657534a542d5800000003465438ffffffff00000000000000000f000005dc000000045731415700000004464e333101",
+      "wire_hex": "adbccbda000000030000000f0000000657534a542d5800000003465438000000490000000142000000001e00000b4a000000045731415700000004464e333101",
       "packet": {
         "schema": 3,
         "variant": "Wsjtx",
@@ -762,13 +792,15 @@
                 56
               ]
             },
-            "frequency_tolerance_hz": 4294967295,
+            "frequency_tolerance_hz": 73,
             "sub_mode": {
-              "bytes": []
+              "bytes": [
+                66
+              ]
             },
             "fast_mode": false,
-            "tr_period_seconds": 15,
-            "rx_df_hz": 1500,
+            "tr_period_seconds": 30,
+            "rx_df_hz": 2890,
             "dx_call": {
               "bytes": [
                 87,
@@ -858,7 +890,7 @@
     },
     {
       "name": "jtdx_Status",
-      "wire_hex": "adbccbda0000000300000001000000044a5444580000000000d6c09000000003465438000000000000000000000003465438000001ffffff6afffffed4000000054b49374d5400000004444e31330000000000000000000001",
+      "wire_hex": "adbccbda0000000300000001000000044a5444580000000000d6c090000000034654380000000457314157000000032d303700000003465434000001ffffff6afffffed4000000064e3043414c4c00000004444e313300000004464e33310000000001410001",
       "packet": {
         "schema": 3,
         "variant": "Jtdx",
@@ -881,16 +913,25 @@
               ]
             },
             "dx_call": {
-              "bytes": []
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
             },
             "report": {
-              "bytes": []
+              "bytes": [
+                45,
+                48,
+                55
+              ]
             },
             "tx_mode": {
               "bytes": [
                 70,
                 84,
-                56
+                52
               ]
             },
             "tx_enabled": false,
@@ -900,11 +941,12 @@
             "tx_df_hz": -300,
             "de_call": {
               "bytes": [
-                75,
-                73,
-                55,
-                77,
-                84
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
               ]
             },
             "de_grid": {
@@ -916,11 +958,18 @@
               ]
             },
             "dx_grid": {
-              "bytes": []
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
             },
             "tx_watchdog": false,
             "sub_mode": {
-              "bytes": []
+              "bytes": [
+                65
+              ]
             },
             "fast_mode": false,
             "tx_first": true
@@ -1052,7 +1101,7 @@
     },
     {
       "name": "jtdx_QsoLogged",
-      "wire_hex": "adbccbda0000000300000005000000044a5444580000000000258ea902b3392001000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331",
+      "wire_hex": "adbccbda0000000300000005000000044a5444580000000000258ea902b3392001000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133",
       "packet": {
         "schema": 3,
         "variant": "Jtdx",
@@ -1129,7 +1178,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -1140,12 +1197,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -1160,10 +1216,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": null,
@@ -1553,8 +1609,3285 @@
       }
     },
     {
+      "name": "wsjtx_Status_bool_0",
+      "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c090000000034654380000000457314157000000032d303700000003465434010001000004b1000008fe000000064e3043414c4c00000004444e313300000004464e333100000000014101030000002f0000001e000000054669656c640000000743512054455354",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Status": {
+            "dial_frequency_hz": 14074000,
+            "mode": {
+              "bytes": [
+                70,
+                84,
+                56
+              ]
+            },
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "report": {
+              "bytes": [
+                45,
+                48,
+                55
+              ]
+            },
+            "tx_mode": {
+              "bytes": [
+                70,
+                84,
+                52
+              ]
+            },
+            "tx_enabled": true,
+            "transmitting": false,
+            "decoding": true,
+            "rx_df_hz": 1201,
+            "tx_df_hz": 2302,
+            "de_call": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "de_grid": {
+              "bytes": [
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "dx_grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "tx_watchdog": false,
+            "sub_mode": {
+              "bytes": [
+                65
+              ]
+            },
+            "fast_mode": true,
+            "special_operation_mode": 3,
+            "frequency_tolerance_hz": 47,
+            "tr_period_seconds": 30,
+            "configuration_name": {
+              "bytes": [
+                70,
+                105,
+                101,
+                108,
+                100
+              ]
+            },
+            "tx_message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                84,
+                69,
+                83,
+                84
+              ]
+            }
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_Status_bool_1",
+      "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c090000000034654380000000457314157000000032d303700000003465434000101000004b1000008fe000000064e3043414c4c00000004444e313300000004464e333100000000014100030000002f0000001e000000054669656c640000000743512054455354",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Status": {
+            "dial_frequency_hz": 14074000,
+            "mode": {
+              "bytes": [
+                70,
+                84,
+                56
+              ]
+            },
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "report": {
+              "bytes": [
+                45,
+                48,
+                55
+              ]
+            },
+            "tx_mode": {
+              "bytes": [
+                70,
+                84,
+                52
+              ]
+            },
+            "tx_enabled": false,
+            "transmitting": true,
+            "decoding": true,
+            "rx_df_hz": 1201,
+            "tx_df_hz": 2302,
+            "de_call": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "de_grid": {
+              "bytes": [
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "dx_grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "tx_watchdog": false,
+            "sub_mode": {
+              "bytes": [
+                65
+              ]
+            },
+            "fast_mode": false,
+            "special_operation_mode": 3,
+            "frequency_tolerance_hz": 47,
+            "tr_period_seconds": 30,
+            "configuration_name": {
+              "bytes": [
+                70,
+                105,
+                101,
+                108,
+                100
+              ]
+            },
+            "tx_message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                84,
+                69,
+                83,
+                84
+              ]
+            }
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_Status_bool_2",
+      "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c090000000034654380000000457314157000000032d303700000003465434000000000004b1000008fe000000064e3043414c4c00000004444e313300000004464e333101000000014101030000002f0000001e000000054669656c640000000743512054455354",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Status": {
+            "dial_frequency_hz": 14074000,
+            "mode": {
+              "bytes": [
+                70,
+                84,
+                56
+              ]
+            },
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "report": {
+              "bytes": [
+                45,
+                48,
+                55
+              ]
+            },
+            "tx_mode": {
+              "bytes": [
+                70,
+                84,
+                52
+              ]
+            },
+            "tx_enabled": false,
+            "transmitting": false,
+            "decoding": false,
+            "rx_df_hz": 1201,
+            "tx_df_hz": 2302,
+            "de_call": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "de_grid": {
+              "bytes": [
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "dx_grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "tx_watchdog": true,
+            "sub_mode": {
+              "bytes": [
+                65
+              ]
+            },
+            "fast_mode": true,
+            "special_operation_mode": 3,
+            "frequency_tolerance_hz": 47,
+            "tr_period_seconds": 30,
+            "configuration_name": {
+              "bytes": [
+                70,
+                105,
+                101,
+                108,
+                100
+              ]
+            },
+            "tx_message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                84,
+                69,
+                83,
+                84
+              ]
+            }
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_Status_bool_3",
+      "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c090000000034654380000000457314157000000032d303700000003465434000000000004b1000008fe000000064e3043414c4c00000004444e313300000004464e333100000000014100030000002f0000001e000000054669656c640000000743512054455354",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Status": {
+            "dial_frequency_hz": 14074000,
+            "mode": {
+              "bytes": [
+                70,
+                84,
+                56
+              ]
+            },
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "report": {
+              "bytes": [
+                45,
+                48,
+                55
+              ]
+            },
+            "tx_mode": {
+              "bytes": [
+                70,
+                84,
+                52
+              ]
+            },
+            "tx_enabled": false,
+            "transmitting": false,
+            "decoding": false,
+            "rx_df_hz": 1201,
+            "tx_df_hz": 2302,
+            "de_call": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "de_grid": {
+              "bytes": [
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "dx_grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "tx_watchdog": false,
+            "sub_mode": {
+              "bytes": [
+                65
+              ]
+            },
+            "fast_mode": false,
+            "special_operation_mode": 3,
+            "frequency_tolerance_hz": 47,
+            "tr_period_seconds": 30,
+            "configuration_name": {
+              "bytes": [
+                70,
+                105,
+                101,
+                108,
+                100
+              ]
+            },
+            "tx_message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                84,
+                69,
+                83,
+                84
+              ]
+            }
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_Status_bool_4",
+      "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c090000000034654380000000457314157000000032d303700000003465434010101000004b1000008fe000000064e3043414c4c00000004444e313300000004464e333101000000014101030000002f0000001e000000054669656c640000000743512054455354",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Status": {
+            "dial_frequency_hz": 14074000,
+            "mode": {
+              "bytes": [
+                70,
+                84,
+                56
+              ]
+            },
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "report": {
+              "bytes": [
+                45,
+                48,
+                55
+              ]
+            },
+            "tx_mode": {
+              "bytes": [
+                70,
+                84,
+                52
+              ]
+            },
+            "tx_enabled": true,
+            "transmitting": true,
+            "decoding": true,
+            "rx_df_hz": 1201,
+            "tx_df_hz": 2302,
+            "de_call": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "de_grid": {
+              "bytes": [
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "dx_grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "tx_watchdog": true,
+            "sub_mode": {
+              "bytes": [
+                65
+              ]
+            },
+            "fast_mode": true,
+            "special_operation_mode": 3,
+            "frequency_tolerance_hz": 47,
+            "tr_period_seconds": 30,
+            "configuration_name": {
+              "bytes": [
+                70,
+                105,
+                101,
+                108,
+                100
+              ]
+            },
+            "tx_message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                84,
+                69,
+                83,
+                84
+              ]
+            }
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_Decode_bool_0",
+      "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330001",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Decode": {
+            "new": true,
+            "time": 85155000,
+            "snr_db": -12,
+            "delta_time_seconds": 0.2,
+            "delta_frequency_hz": 1234,
+            "mode": {
+              "bytes": [
+                126
+              ]
+            },
+            "message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                75,
+                55,
+                65,
+                66,
+                67,
+                32,
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "low_confidence": false,
+            "off_air": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_Decode_bool_1",
+      "wire_hex": "adbccbda00000003000000020000000657534a542d580005135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330101",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Decode": {
+            "new": false,
+            "time": 85155000,
+            "snr_db": -12,
+            "delta_time_seconds": 0.2,
+            "delta_frequency_hz": 1234,
+            "mode": {
+              "bytes": [
+                126
+              ]
+            },
+            "message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                75,
+                55,
+                65,
+                66,
+                67,
+                32,
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "low_confidence": true,
+            "off_air": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_Decode_bool_2",
+      "wire_hex": "adbccbda00000003000000020000000657534a542d580005135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330000",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Decode": {
+            "new": false,
+            "time": 85155000,
+            "snr_db": -12,
+            "delta_time_seconds": 0.2,
+            "delta_frequency_hz": 1234,
+            "mode": {
+              "bytes": [
+                126
+              ]
+            },
+            "message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                75,
+                55,
+                65,
+                66,
+                67,
+                32,
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "low_confidence": false,
+            "off_air": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_Decode_bool_3",
+      "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330101",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Decode": {
+            "new": true,
+            "time": 85155000,
+            "snr_db": -12,
+            "delta_time_seconds": 0.2,
+            "delta_frequency_hz": 1234,
+            "mode": {
+              "bytes": [
+                126
+              ]
+            },
+            "message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                75,
+                55,
+                65,
+                66,
+                67,
+                32,
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "low_confidence": true,
+            "off_air": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_Reply_bool_0",
+      "wire_hex": "adbccbda00000003000000040000000657534a542d5805135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330104",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Reply": {
+            "time": 85155000,
+            "snr_db": -12,
+            "delta_time_seconds": 0.2,
+            "delta_frequency_hz": 1234,
+            "mode": {
+              "bytes": [
+                126
+              ]
+            },
+            "message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                75,
+                55,
+                65,
+                66,
+                67,
+                32,
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "low_confidence": true,
+            "modifiers": 4
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_Reply_bool_1",
+      "wire_hex": "adbccbda00000003000000040000000657534a542d5805135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330004",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Reply": {
+            "time": 85155000,
+            "snr_db": -12,
+            "delta_time_seconds": 0.2,
+            "delta_frequency_hz": 1234,
+            "mode": {
+              "bytes": [
+                126
+              ]
+            },
+            "message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                75,
+                55,
+                65,
+                66,
+                67,
+                32,
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "low_confidence": false,
+            "modifiers": 4
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_Reply_bool_2",
+      "wire_hex": "adbccbda00000003000000040000000657534a542d5805135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330104",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Reply": {
+            "time": 85155000,
+            "snr_db": -12,
+            "delta_time_seconds": 0.2,
+            "delta_frequency_hz": 1234,
+            "mode": {
+              "bytes": [
+                126
+              ]
+            },
+            "message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                75,
+                55,
+                65,
+                66,
+                67,
+                32,
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "low_confidence": true,
+            "modifiers": 4
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_HaltTx_bool_0",
+      "wire_hex": "adbccbda00000003000000080000000657534a542d5801",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "HaltTx": {
+            "auto_tx_only": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_HaltTx_bool_1",
+      "wire_hex": "adbccbda00000003000000080000000657534a542d5800",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "HaltTx": {
+            "auto_tx_only": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_HaltTx_bool_2",
+      "wire_hex": "adbccbda00000003000000080000000657534a542d5801",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "HaltTx": {
+            "auto_tx_only": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_FreeText_bool_0",
+      "wire_hex": "adbccbda00000003000000090000000657534a542d58000000074351205445535401",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "FreeText": {
+            "text": {
+              "bytes": [
+                67,
+                81,
+                32,
+                84,
+                69,
+                83,
+                84
+              ]
+            },
+            "send": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_FreeText_bool_1",
+      "wire_hex": "adbccbda00000003000000090000000657534a542d58000000074351205445535400",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "FreeText": {
+            "text": {
+              "bytes": [
+                67,
+                81,
+                32,
+                84,
+                69,
+                83,
+                84
+              ]
+            },
+            "send": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_FreeText_bool_2",
+      "wire_hex": "adbccbda00000003000000090000000657534a542d58000000074351205445535401",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "FreeText": {
+            "text": {
+              "bytes": [
+                67,
+                81,
+                32,
+                84,
+                69,
+                83,
+                84
+              ]
+            },
+            "send": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_WsprDecode_bool_0",
+      "wire_hex": "adbccbda000000030000000a0000000657534a542d580102aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002500",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "WsprDecode": {
+            "new": true,
+            "time": 45000000,
+            "snr_db": -24,
+            "delta_time_seconds": -0.3,
+            "frequency_hz": 14097100,
+            "drift_hz": -1,
+            "callsign": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "power_dbm": 37,
+            "off_air": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_WsprDecode_bool_1",
+      "wire_hex": "adbccbda000000030000000a0000000657534a542d580002aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002501",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "WsprDecode": {
+            "new": false,
+            "time": 45000000,
+            "snr_db": -24,
+            "delta_time_seconds": -0.3,
+            "frequency_hz": 14097100,
+            "drift_hz": -1,
+            "callsign": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "power_dbm": 37,
+            "off_air": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_WsprDecode_bool_2",
+      "wire_hex": "adbccbda000000030000000a0000000657534a542d580002aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002500",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "WsprDecode": {
+            "new": false,
+            "time": 45000000,
+            "snr_db": -24,
+            "delta_time_seconds": -0.3,
+            "frequency_hz": 14097100,
+            "drift_hz": -1,
+            "callsign": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "power_dbm": 37,
+            "off_air": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_WsprDecode_bool_3",
+      "wire_hex": "adbccbda000000030000000a0000000657534a542d580102aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002501",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "WsprDecode": {
+            "new": true,
+            "time": 45000000,
+            "snr_db": -24,
+            "delta_time_seconds": -0.3,
+            "frequency_hz": 14097100,
+            "drift_hz": -1,
+            "callsign": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "power_dbm": 37,
+            "off_air": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_HighlightCallsign_bool_0",
+      "wire_hex": "adbccbda000000030000000d0000000657534a542d58000000045731415701fde9044d089a0ce7113401fa02158119ce1e1b226801",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "HighlightCallsign": {
+            "callsign": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "background": {
+              "spec": 1,
+              "channels": [
+                65001,
+                1101,
+                2202,
+                3303,
+                4404
+              ]
+            },
+            "foreground": {
+              "spec": 1,
+              "channels": [
+                64002,
+                5505,
+                6606,
+                7707,
+                8808
+              ]
+            },
+            "highlight_last": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_HighlightCallsign_bool_1",
+      "wire_hex": "adbccbda000000030000000d0000000657534a542d58000000045731415701fde9044d089a0ce7113401fa02158119ce1e1b226800",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "HighlightCallsign": {
+            "callsign": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "background": {
+              "spec": 1,
+              "channels": [
+                65001,
+                1101,
+                2202,
+                3303,
+                4404
+              ]
+            },
+            "foreground": {
+              "spec": 1,
+              "channels": [
+                64002,
+                5505,
+                6606,
+                7707,
+                8808
+              ]
+            },
+            "highlight_last": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_HighlightCallsign_bool_2",
+      "wire_hex": "adbccbda000000030000000d0000000657534a542d58000000045731415701fde9044d089a0ce7113401fa02158119ce1e1b226801",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "HighlightCallsign": {
+            "callsign": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "background": {
+              "spec": 1,
+              "channels": [
+                65001,
+                1101,
+                2202,
+                3303,
+                4404
+              ]
+            },
+            "foreground": {
+              "spec": 1,
+              "channels": [
+                64002,
+                5505,
+                6606,
+                7707,
+                8808
+              ]
+            },
+            "highlight_last": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_Configure_bool_0",
+      "wire_hex": "adbccbda000000030000000f0000000657534a542d5800000003465438000000490000000142010000001e00000b4a000000045731415700000004464e333100",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Configure": {
+            "mode": {
+              "bytes": [
+                70,
+                84,
+                56
+              ]
+            },
+            "frequency_tolerance_hz": 73,
+            "sub_mode": {
+              "bytes": [
+                66
+              ]
+            },
+            "fast_mode": true,
+            "tr_period_seconds": 30,
+            "rx_df_hz": 2890,
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "dx_grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "generate_messages": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_Configure_bool_1",
+      "wire_hex": "adbccbda000000030000000f0000000657534a542d5800000003465438000000490000000142000000001e00000b4a000000045731415700000004464e333101",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Configure": {
+            "mode": {
+              "bytes": [
+                70,
+                84,
+                56
+              ]
+            },
+            "frequency_tolerance_hz": 73,
+            "sub_mode": {
+              "bytes": [
+                66
+              ]
+            },
+            "fast_mode": false,
+            "tr_period_seconds": 30,
+            "rx_df_hz": 2890,
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "dx_grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "generate_messages": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_Configure_bool_2",
+      "wire_hex": "adbccbda000000030000000f0000000657534a542d5800000003465438000000490000000142000000001e00000b4a000000045731415700000004464e333100",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Configure": {
+            "mode": {
+              "bytes": [
+                70,
+                84,
+                56
+              ]
+            },
+            "frequency_tolerance_hz": 73,
+            "sub_mode": {
+              "bytes": [
+                66
+              ]
+            },
+            "fast_mode": false,
+            "tr_period_seconds": 30,
+            "rx_df_hz": 2890,
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "dx_grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "generate_messages": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_Configure_bool_3",
+      "wire_hex": "adbccbda000000030000000f0000000657534a542d5800000003465438000000490000000142010000001e00000b4a000000045731415700000004464e333101",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "Configure": {
+            "mode": {
+              "bytes": [
+                70,
+                84,
+                56
+              ]
+            },
+            "frequency_tolerance_hz": 73,
+            "sub_mode": {
+              "bytes": [
+                66
+              ]
+            },
+            "fast_mode": true,
+            "tr_period_seconds": 30,
+            "rx_df_hz": 2890,
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "dx_grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "generate_messages": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_AnnotationInfo_bool_0",
+      "wire_hex": "adbccbda00000003000000100000000657534a542d58000000045731415701ffffffff",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "AnnotationInfo": {
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "sort_order_provided": true,
+            "sort_order": 4294967295
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_AnnotationInfo_bool_1",
+      "wire_hex": "adbccbda00000003000000100000000657534a542d58000000045731415700ffffffff",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "AnnotationInfo": {
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "sort_order_provided": false,
+            "sort_order": 4294967295
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "wsjtx_AnnotationInfo_bool_2",
+      "wire_hex": "adbccbda00000003000000100000000657534a542d58000000045731415701ffffffff",
+      "packet": {
+        "schema": 3,
+        "variant": "Wsjtx",
+        "id": {
+          "bytes": [
+            87,
+            83,
+            74,
+            84,
+            45,
+            88
+          ]
+        },
+        "body": {
+          "AnnotationInfo": {
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "sort_order_provided": true,
+            "sort_order": 4294967295
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_Status_bool_0",
+      "wire_hex": "adbccbda0000000300000001000000044a5444580000000000d6c090000000034654380000000457314157000000032d303700000003465434010001ffffff6afffffed4000000064e3043414c4c00000004444e313300000004464e33310000000001410100",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "JtdxStatus": {
+            "dial_frequency_hz": 14074000,
+            "mode": {
+              "bytes": [
+                70,
+                84,
+                56
+              ]
+            },
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "report": {
+              "bytes": [
+                45,
+                48,
+                55
+              ]
+            },
+            "tx_mode": {
+              "bytes": [
+                70,
+                84,
+                52
+              ]
+            },
+            "tx_enabled": true,
+            "transmitting": false,
+            "decoding": true,
+            "rx_df_hz": -150,
+            "tx_df_hz": -300,
+            "de_call": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "de_grid": {
+              "bytes": [
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "dx_grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "tx_watchdog": false,
+            "sub_mode": {
+              "bytes": [
+                65
+              ]
+            },
+            "fast_mode": true,
+            "tx_first": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_Status_bool_1",
+      "wire_hex": "adbccbda0000000300000001000000044a5444580000000000d6c090000000034654380000000457314157000000032d303700000003465434000101ffffff6afffffed4000000064e3043414c4c00000004444e313300000004464e33310000000001410001",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "JtdxStatus": {
+            "dial_frequency_hz": 14074000,
+            "mode": {
+              "bytes": [
+                70,
+                84,
+                56
+              ]
+            },
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "report": {
+              "bytes": [
+                45,
+                48,
+                55
+              ]
+            },
+            "tx_mode": {
+              "bytes": [
+                70,
+                84,
+                52
+              ]
+            },
+            "tx_enabled": false,
+            "transmitting": true,
+            "decoding": true,
+            "rx_df_hz": -150,
+            "tx_df_hz": -300,
+            "de_call": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "de_grid": {
+              "bytes": [
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "dx_grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "tx_watchdog": false,
+            "sub_mode": {
+              "bytes": [
+                65
+              ]
+            },
+            "fast_mode": false,
+            "tx_first": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_Status_bool_2",
+      "wire_hex": "adbccbda0000000300000001000000044a5444580000000000d6c090000000034654380000000457314157000000032d303700000003465434000000ffffff6afffffed4000000064e3043414c4c00000004444e313300000004464e33310100000001410101",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "JtdxStatus": {
+            "dial_frequency_hz": 14074000,
+            "mode": {
+              "bytes": [
+                70,
+                84,
+                56
+              ]
+            },
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "report": {
+              "bytes": [
+                45,
+                48,
+                55
+              ]
+            },
+            "tx_mode": {
+              "bytes": [
+                70,
+                84,
+                52
+              ]
+            },
+            "tx_enabled": false,
+            "transmitting": false,
+            "decoding": false,
+            "rx_df_hz": -150,
+            "tx_df_hz": -300,
+            "de_call": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "de_grid": {
+              "bytes": [
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "dx_grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "tx_watchdog": true,
+            "sub_mode": {
+              "bytes": [
+                65
+              ]
+            },
+            "fast_mode": true,
+            "tx_first": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_Status_bool_3",
+      "wire_hex": "adbccbda0000000300000001000000044a5444580000000000d6c090000000034654380000000457314157000000032d303700000003465434000000ffffff6afffffed4000000064e3043414c4c00000004444e313300000004464e33310000000001410000",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "JtdxStatus": {
+            "dial_frequency_hz": 14074000,
+            "mode": {
+              "bytes": [
+                70,
+                84,
+                56
+              ]
+            },
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "report": {
+              "bytes": [
+                45,
+                48,
+                55
+              ]
+            },
+            "tx_mode": {
+              "bytes": [
+                70,
+                84,
+                52
+              ]
+            },
+            "tx_enabled": false,
+            "transmitting": false,
+            "decoding": false,
+            "rx_df_hz": -150,
+            "tx_df_hz": -300,
+            "de_call": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "de_grid": {
+              "bytes": [
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "dx_grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "tx_watchdog": false,
+            "sub_mode": {
+              "bytes": [
+                65
+              ]
+            },
+            "fast_mode": false,
+            "tx_first": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_Status_bool_4",
+      "wire_hex": "adbccbda0000000300000001000000044a5444580000000000d6c090000000034654380000000457314157000000032d303700000003465434010101ffffff6afffffed4000000064e3043414c4c00000004444e313300000004464e33310100000001410101",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "JtdxStatus": {
+            "dial_frequency_hz": 14074000,
+            "mode": {
+              "bytes": [
+                70,
+                84,
+                56
+              ]
+            },
+            "dx_call": {
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
+            },
+            "report": {
+              "bytes": [
+                45,
+                48,
+                55
+              ]
+            },
+            "tx_mode": {
+              "bytes": [
+                70,
+                84,
+                52
+              ]
+            },
+            "tx_enabled": true,
+            "transmitting": true,
+            "decoding": true,
+            "rx_df_hz": -150,
+            "tx_df_hz": -300,
+            "de_call": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "de_grid": {
+              "bytes": [
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "dx_grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "tx_watchdog": true,
+            "sub_mode": {
+              "bytes": [
+                65
+              ]
+            },
+            "fast_mode": true,
+            "tx_first": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_Decode_bool_0",
+      "wire_hex": "adbccbda0000000300000002000000044a5444580105135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330001",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "Decode": {
+            "new": true,
+            "time": 85155000,
+            "snr_db": -12,
+            "delta_time_seconds": 0.2,
+            "delta_frequency_hz": 1234,
+            "mode": {
+              "bytes": [
+                126
+              ]
+            },
+            "message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                75,
+                55,
+                65,
+                66,
+                67,
+                32,
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "low_confidence": false,
+            "off_air": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_Decode_bool_1",
+      "wire_hex": "adbccbda0000000300000002000000044a5444580005135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330101",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "Decode": {
+            "new": false,
+            "time": 85155000,
+            "snr_db": -12,
+            "delta_time_seconds": 0.2,
+            "delta_frequency_hz": 1234,
+            "mode": {
+              "bytes": [
+                126
+              ]
+            },
+            "message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                75,
+                55,
+                65,
+                66,
+                67,
+                32,
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "low_confidence": true,
+            "off_air": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_Decode_bool_2",
+      "wire_hex": "adbccbda0000000300000002000000044a5444580005135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330000",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "Decode": {
+            "new": false,
+            "time": 85155000,
+            "snr_db": -12,
+            "delta_time_seconds": 0.2,
+            "delta_frequency_hz": 1234,
+            "mode": {
+              "bytes": [
+                126
+              ]
+            },
+            "message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                75,
+                55,
+                65,
+                66,
+                67,
+                32,
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "low_confidence": false,
+            "off_air": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_Decode_bool_3",
+      "wire_hex": "adbccbda0000000300000002000000044a5444580105135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330101",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "Decode": {
+            "new": true,
+            "time": 85155000,
+            "snr_db": -12,
+            "delta_time_seconds": 0.2,
+            "delta_frequency_hz": 1234,
+            "mode": {
+              "bytes": [
+                126
+              ]
+            },
+            "message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                75,
+                55,
+                65,
+                66,
+                67,
+                32,
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "low_confidence": true,
+            "off_air": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_HaltTx_bool_0",
+      "wire_hex": "adbccbda0000000300000008000000044a54445801",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "HaltTx": {
+            "auto_tx_only": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_HaltTx_bool_1",
+      "wire_hex": "adbccbda0000000300000008000000044a54445800",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "HaltTx": {
+            "auto_tx_only": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_HaltTx_bool_2",
+      "wire_hex": "adbccbda0000000300000008000000044a54445801",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "HaltTx": {
+            "auto_tx_only": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_FreeText_bool_0",
+      "wire_hex": "adbccbda0000000300000009000000044a544458000000074351205445535401",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "FreeText": {
+            "text": {
+              "bytes": [
+                67,
+                81,
+                32,
+                84,
+                69,
+                83,
+                84
+              ]
+            },
+            "send": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_FreeText_bool_1",
+      "wire_hex": "adbccbda0000000300000009000000044a544458000000074351205445535400",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "FreeText": {
+            "text": {
+              "bytes": [
+                67,
+                81,
+                32,
+                84,
+                69,
+                83,
+                84
+              ]
+            },
+            "send": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_FreeText_bool_2",
+      "wire_hex": "adbccbda0000000300000009000000044a544458000000074351205445535401",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "FreeText": {
+            "text": {
+              "bytes": [
+                67,
+                81,
+                32,
+                84,
+                69,
+                83,
+                84
+              ]
+            },
+            "send": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_WsprDecode_bool_0",
+      "wire_hex": "adbccbda000000030000000a000000044a5444580102aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e333100000025",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "WsprDecode": {
+            "new": true,
+            "time": 45000000,
+            "snr_db": -24,
+            "delta_time_seconds": -0.3,
+            "frequency_hz": 14097100,
+            "drift_hz": -1,
+            "callsign": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "power_dbm": 37,
+            "off_air": null
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_WsprDecode_bool_1",
+      "wire_hex": "adbccbda000000030000000a000000044a5444580002aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e333100000025",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "WsprDecode": {
+            "new": false,
+            "time": 45000000,
+            "snr_db": -24,
+            "delta_time_seconds": -0.3,
+            "frequency_hz": 14097100,
+            "drift_hz": -1,
+            "callsign": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "power_dbm": 37,
+            "off_air": null
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_WsprDecode_bool_2",
+      "wire_hex": "adbccbda000000030000000a000000044a5444580102aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e333100000025",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "WsprDecode": {
+            "new": true,
+            "time": 45000000,
+            "snr_db": -24,
+            "delta_time_seconds": -0.3,
+            "frequency_hz": 14097100,
+            "drift_hz": -1,
+            "callsign": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "power_dbm": 37,
+            "off_air": null
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_TriggerCq_bool_0",
+      "wire_hex": "adbccbda0000000300000033000000044a5444580000000244580100",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "TriggerCq": {
+            "direction": {
+              "bytes": [
+                68,
+                88
+              ]
+            },
+            "tx_period": true,
+            "send": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_TriggerCq_bool_1",
+      "wire_hex": "adbccbda0000000300000033000000044a5444580000000244580001",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "TriggerCq": {
+            "direction": {
+              "bytes": [
+                68,
+                88
+              ]
+            },
+            "tx_period": false,
+            "send": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_TriggerCq_bool_2",
+      "wire_hex": "adbccbda0000000300000033000000044a5444580000000244580000",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "TriggerCq": {
+            "direction": {
+              "bytes": [
+                68,
+                88
+              ]
+            },
+            "tx_period": false,
+            "send": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_TriggerCq_bool_3",
+      "wire_hex": "adbccbda0000000300000033000000044a5444580000000244580101",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "TriggerCq": {
+            "direction": {
+              "bytes": [
+                68,
+                88
+              ]
+            },
+            "tx_period": true,
+            "send": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_TriggerCq_source_bool_0",
+      "wire_hex": "adbccbda0000000300000033000000044a54445800000002445801",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "TriggerCq": {
+            "direction": {
+              "bytes": [
+                68,
+                88
+              ]
+            },
+            "tx_period": null,
+            "send": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_TriggerCq_source_bool_1",
+      "wire_hex": "adbccbda0000000300000033000000044a54445800000002445800",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "TriggerCq": {
+            "direction": {
+              "bytes": [
+                68,
+                88
+              ]
+            },
+            "tx_period": null,
+            "send": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_TriggerCq_source_bool_2",
+      "wire_hex": "adbccbda0000000300000033000000044a54445800000002445801",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "TriggerCq": {
+            "direction": {
+              "bytes": [
+                68,
+                88
+              ]
+            },
+            "tx_period": null,
+            "send": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_Reply_source_bool_0",
+      "wire_hex": "adbccbda0000000300000004000000044a54445805135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330104",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "Reply": {
+            "time": 85155000,
+            "snr_db": -12,
+            "delta_time_seconds": 0.2,
+            "delta_frequency_hz": 1234,
+            "mode": {
+              "bytes": [
+                126
+              ]
+            },
+            "message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                75,
+                55,
+                65,
+                66,
+                67,
+                32,
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "low_confidence": true,
+            "modifiers": 4
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_Reply_source_bool_1",
+      "wire_hex": "adbccbda0000000300000004000000044a54445805135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330004",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "Reply": {
+            "time": 85155000,
+            "snr_db": -12,
+            "delta_time_seconds": 0.2,
+            "delta_frequency_hz": 1234,
+            "mode": {
+              "bytes": [
+                126
+              ]
+            },
+            "message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                75,
+                55,
+                65,
+                66,
+                67,
+                32,
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "low_confidence": false,
+            "modifiers": 4
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_Reply_source_bool_2",
+      "wire_hex": "adbccbda0000000300000004000000044a54445805135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330104",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "Reply": {
+            "time": 85155000,
+            "snr_db": -12,
+            "delta_time_seconds": 0.2,
+            "delta_frequency_hz": 1234,
+            "mode": {
+              "bytes": [
+                126
+              ]
+            },
+            "message": {
+              "bytes": [
+                67,
+                81,
+                32,
+                75,
+                55,
+                65,
+                66,
+                67,
+                32,
+                68,
+                78,
+                49,
+                51
+              ]
+            },
+            "low_confidence": true,
+            "modifiers": 4
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_WsprDecode_source_bool_0",
+      "wire_hex": "adbccbda000000030000000a000000044a5444580102aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002500",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "WsprDecode": {
+            "new": true,
+            "time": 45000000,
+            "snr_db": -24,
+            "delta_time_seconds": -0.3,
+            "frequency_hz": 14097100,
+            "drift_hz": -1,
+            "callsign": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "power_dbm": 37,
+            "off_air": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_WsprDecode_source_bool_1",
+      "wire_hex": "adbccbda000000030000000a000000044a5444580002aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002501",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "WsprDecode": {
+            "new": false,
+            "time": 45000000,
+            "snr_db": -24,
+            "delta_time_seconds": -0.3,
+            "frequency_hz": 14097100,
+            "drift_hz": -1,
+            "callsign": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "power_dbm": 37,
+            "off_air": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_WsprDecode_source_bool_2",
+      "wire_hex": "adbccbda000000030000000a000000044a5444580002aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002500",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "WsprDecode": {
+            "new": false,
+            "time": 45000000,
+            "snr_db": -24,
+            "delta_time_seconds": -0.3,
+            "frequency_hz": 14097100,
+            "drift_hz": -1,
+            "callsign": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "power_dbm": 37,
+            "off_air": false
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
+      "name": "jtdx_WsprDecode_source_bool_3",
+      "wire_hex": "adbccbda000000030000000a000000044a5444580102aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002501",
+      "packet": {
+        "schema": 3,
+        "variant": "Jtdx",
+        "id": {
+          "bytes": [
+            74,
+            84,
+            68,
+            88
+          ]
+        },
+        "body": {
+          "WsprDecode": {
+            "new": true,
+            "time": 45000000,
+            "snr_db": -24,
+            "delta_time_seconds": -0.3,
+            "frequency_hz": 14097100,
+            "drift_hz": -1,
+            "callsign": {
+              "bytes": [
+                78,
+                48,
+                67,
+                65,
+                76,
+                76
+              ]
+            },
+            "grid": {
+              "bytes": [
+                70,
+                78,
+                51,
+                49
+              ]
+            },
+            "power_dbm": 37,
+            "off_air": true
+          }
+        },
+        "extensions": []
+      }
+    },
+    {
       "name": "datetime_s1_spec0",
-      "wire_hex": "adbccbda00000001000000050000000657534a542d580000000000258ea902b3392000000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331000000053144204354000000053241204354000000025452",
+      "wire_hex": "adbccbda00000001000000050000000657534a542d580000000000258ea902b3392000000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 1,
         "variant": "Wsjtx",
@@ -1633,7 +4966,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -1644,12 +4985,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -1664,10 +5004,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": {
@@ -1701,7 +5041,7 @@
     },
     {
       "name": "datetime_s1_spec1",
-      "wire_hex": "adbccbda00000001000000050000000657534a542d580000000000258ea902b3392001000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331000000053144204354000000053241204354000000025452",
+      "wire_hex": "adbccbda00000001000000050000000657534a542d580000000000258ea902b3392001000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 1,
         "variant": "Wsjtx",
@@ -1780,7 +5120,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -1791,12 +5139,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -1811,10 +5158,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": {
@@ -1848,7 +5195,7 @@
     },
     {
       "name": "datetime_s1_spec2",
-      "wire_hex": "adbccbda00000001000000050000000657534a542d580000000000258ea902b3392002000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331000000053144204354000000053241204354000000025452",
+      "wire_hex": "adbccbda00000001000000050000000657534a542d580000000000258ea902b3392002000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 1,
         "variant": "Wsjtx",
@@ -1927,7 +5274,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -1938,12 +5293,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -1958,10 +5312,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": {
@@ -1995,7 +5349,7 @@
     },
     {
       "name": "datetime_s1_spec3",
-      "wire_hex": "adbccbda00000001000000050000000657534a542d580000000000258ea902b3392003000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331000000053144204354000000053241204354000000025452",
+      "wire_hex": "adbccbda00000001000000050000000657534a542d580000000000258ea902b3392003000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 1,
         "variant": "Wsjtx",
@@ -2074,7 +5428,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -2085,12 +5447,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -2105,10 +5466,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": {
@@ -2142,7 +5503,7 @@
     },
     {
       "name": "datetime_s2_spec0",
-      "wire_hex": "adbccbda00000002000000050000000657534a542d580000000000258ea902b3392000000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331000000053144204354000000053241204354000000025452",
+      "wire_hex": "adbccbda00000002000000050000000657534a542d580000000000258ea902b3392000000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 2,
         "variant": "Wsjtx",
@@ -2221,7 +5582,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -2232,12 +5601,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -2252,10 +5620,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": {
@@ -2289,7 +5657,7 @@
     },
     {
       "name": "datetime_s2_spec1",
-      "wire_hex": "adbccbda00000002000000050000000657534a542d580000000000258ea902b3392001000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331000000053144204354000000053241204354000000025452",
+      "wire_hex": "adbccbda00000002000000050000000657534a542d580000000000258ea902b3392001000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 2,
         "variant": "Wsjtx",
@@ -2368,7 +5736,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -2379,12 +5755,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -2399,10 +5774,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": {
@@ -2436,7 +5811,7 @@
     },
     {
       "name": "datetime_s2_spec2",
-      "wire_hex": "adbccbda00000002000000050000000657534a542d580000000000258ea902b339200200000e10000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331000000053144204354000000053241204354000000025452",
+      "wire_hex": "adbccbda00000002000000050000000657534a542d580000000000258ea902b339200200000e10000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 2,
         "variant": "Wsjtx",
@@ -2515,7 +5890,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -2526,12 +5909,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -2546,10 +5928,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": {
@@ -2583,7 +5965,7 @@
     },
     {
       "name": "datetime_s2_spec3",
-      "wire_hex": "adbccbda00000002000000050000000657534a542d580000000000258ea902b3392003000000200041006d00650072006900630061002f004e00650077005f0059006f0072006b000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331000000053144204354000000053241204354000000025452",
+      "wire_hex": "adbccbda00000002000000050000000657534a542d580000000000258ea902b3392003000000200041006d00650072006900630061002f004e00650077005f0059006f0072006b000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 2,
         "variant": "Wsjtx",
@@ -2681,7 +6063,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -2692,12 +6082,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -2712,10 +6101,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": {
@@ -2749,7 +6138,7 @@
     },
     {
       "name": "datetime_s3_spec0",
-      "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b3392000000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331000000053144204354000000053241204354000000025452",
+      "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b3392000000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 3,
         "variant": "Wsjtx",
@@ -2828,7 +6217,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -2839,12 +6236,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -2859,10 +6255,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": {
@@ -2896,7 +6292,7 @@
     },
     {
       "name": "datetime_s3_spec1",
-      "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b3392001000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331000000053144204354000000053241204354000000025452",
+      "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b3392001000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 3,
         "variant": "Wsjtx",
@@ -2975,7 +6371,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -2986,12 +6390,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -3006,10 +6409,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": {
@@ -3043,7 +6446,7 @@
     },
     {
       "name": "datetime_s3_spec2",
-      "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b339200200000e10000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331000000053144204354000000053241204354000000025452",
+      "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b339200200000e10000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 3,
         "variant": "Wsjtx",
@@ -3122,7 +6525,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -3133,12 +6544,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -3153,10 +6563,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": {
@@ -3190,7 +6600,7 @@
     },
     {
       "name": "datetime_s3_spec3",
-      "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b3392003000000200041006d00650072006900630061002f004e00650077005f0059006f0072006b000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331000000053144204354000000053241204354000000025452",
+      "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b3392003000000200041006d00650072006900630061002f004e00650077005f0059006f0072006b000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 3,
         "variant": "Wsjtx",
@@ -3288,7 +6698,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -3299,12 +6717,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -3319,10 +6736,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": {
@@ -3356,7 +6773,7 @@
     },
     {
       "name": "datetime_null",
-      "wire_hex": "adbccbda00000003000000050000000657534a542d588000000000000000ffffffff00000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331000000053144204354000000053241204354000000025452",
+      "wire_hex": "adbccbda00000003000000050000000657534a542d588000000000000000ffffffff00000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 3,
         "variant": "Wsjtx",
@@ -3435,7 +6852,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -3446,12 +6871,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -3466,10 +6890,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": {
@@ -3503,7 +6927,7 @@
     },
     {
       "name": "datetime_custom_zone",
-      "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b33920030000001a004f0066006600730065007400460072006f006d005500740063000000120054006500730074002f005a006f006e0065ffffb9b000000008005400650073007400000006005400530054000000e1ffffffff000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000000000000000258ea902b2895801000000064e3043414c4c000000064e3043414c4c00000004464e3331000000053144204354000000053241204354000000025452",
+      "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b33920030000001a004f0066006600730065007400460072006f006d005500740063000000120054006500730074002f005a006f006e0065ffffb9b000000008005400650073007400000006005400530054000000e1ffffffff000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 3,
         "variant": "Wsjtx",
@@ -3610,7 +7034,15 @@
               ]
             },
             "name": {
-              "bytes": []
+              "bytes": [
+                69,
+                120,
+                97,
+                109,
+                112,
+                108,
+                101
+              ]
             },
             "time_on": {
               "julian_day": 2461353,
@@ -3621,12 +7053,11 @@
             },
             "operator_call": {
               "bytes": [
-                78,
-                48,
-                67,
+                75,
+                55,
                 65,
-                76,
-                76
+                66,
+                67
               ]
             },
             "my_call": {
@@ -3641,10 +7072,10 @@
             },
             "my_grid": {
               "bytes": [
-                70,
+                68,
                 78,
-                51,
-                49
+                49,
+                51
               ]
             },
             "exchange_sent": {
@@ -3728,7 +7159,7 @@
     },
     {
       "name": "prototype_Status_old",
-      "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c09000000003465438000000000000000000000003465438000001000005dc000005dc",
+      "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c090000000034654380000000457314157000000032d303700000003465434000001000004b1000008fe",
       "packet": {
         "schema": 3,
         "variant": "Wsjtx",
@@ -3753,23 +7184,32 @@
               ]
             },
             "dx_call": {
-              "bytes": []
+              "bytes": [
+                87,
+                49,
+                65,
+                87
+              ]
             },
             "report": {
-              "bytes": []
+              "bytes": [
+                45,
+                48,
+                55
+              ]
             },
             "tx_mode": {
               "bytes": [
                 70,
                 84,
-                56
+                52
               ]
             },
             "tx_enabled": false,
             "transmitting": false,
             "decoding": true,
-            "rx_df_hz": 1500,
-            "tx_df_hz": 1500,
+            "rx_df_hz": 1201,
+            "tx_df_hz": 2302,
             "de_call": null,
             "de_grid": null,
             "dx_grid": null,

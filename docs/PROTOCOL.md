@@ -125,3 +125,22 @@ The script ports the fixtures for repeatability without an external source check
 Tests also cover every datagram prefix, malicious lengths, maximum datagrams and IDs, wrong magic,
 future schemas, null/empty/raw Unicode, date/time specs, colors, and model/JSON round trips.
 Actual application interoperability remains a separate validation step.
+
+## Normalization and regression oracles
+
+See [identity and direction](NORMALIZATION.md) for neutral IDs, caller context, and future adapter
+mappings. Clear's missing window does not distinguish an erase notification from a legacy clear
+command in WSJT-X; its Close also has both directions. JTDX 159 defines both only outbound. Reply and Configure identify their target, not source.
+
+Status wire order is Rx DF then Tx DF, per the pinned header lines 150–151. Independent fixtures
+use 1201 and 2302 Hz, distinct strings and other same-type scalars, and multiple boolean patterns
+whose per-position signatures differ. Normalized-field assertions supplement binary comparisons.
+Run `uv run --no-project python scripts/check-field-order-mutation.py` to plant the review's paired
+encoder/decoder swap in a temporary copy and verify the independent Status fixture rejects it.
+
+The simulator's WSJT-X QSOLogged frequency is dial plus TX offset, checked for overflow before
+sending the script. This follows the released
+[mainwindow logging call](https://github.com/WSJTX/wsjtx/blob/v3.0.2/widgets/mainwindow.cpp#L10594),
+which adds the transmit spin-box offset to nominal dial frequency. The default USB FT8 script
+therefore logs 14,075,500 Hz from a 14,074,000 Hz dial and 1,500 Hz TX offset. JTDX's separate
+QSOLogged dial-frequency interpretation is unchanged.

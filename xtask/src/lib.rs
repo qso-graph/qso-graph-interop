@@ -208,17 +208,59 @@ pub fn network_tokens(tokens: TokenStream, library: bool) -> Check {
                         !matches!(name, "net" | "UdpSocket" | "process"),
                         format!("library API {name}"),
                     )?;
-                } else if name == "process" {
-                    let remaining = trees
-                        .iter()
-                        .skip(i + 1)
-                        .take(4)
-                        .map(ToString::to_string)
-                        .collect::<Vec<_>>();
+                } else {
+                    if name == "std" {
+                        // No root/module aliases, glob imports, grouped paths, or alternate OS APIs.
+                        // Module aliases for io/time are harmless; networking is restricted to the
+                        // SocketAddr value type. The audited adapter is checked separately.
+                        let mut segments = Vec::new();
+                        let mut cursor = i + 1;
+                        let colon = |index| matches!(trees.get(index), Some(TokenTree::Punct(p)) if p.as_char() == ':');
+                        while colon(cursor) && colon(cursor + 1) {
+                            let Some(TokenTree::Ident(segment)) = trees.get(cursor + 2) else {
+                                break;
+                            };
+                            segments.push(segment.to_string().trim_start_matches("r#").to_owned());
+                            cursor += 3;
+                        }
+                        let path = segments.join("::");
+                        let allowed = [
+                            "io",
+                            "time",
+                            "error",
+                            "str",
+                            "net::SocketAddr",
+                            "process::ExitCode",
+                        ];
+                        require(
+                            allowed.iter().any(|p| {
+                                path.strip_prefix(p)
+                                    .is_some_and(|tail| tail.is_empty() || tail.starts_with("::"))
+                            }),
+                            format!("unapproved CLI standard-library path: std::{path}"),
+                        )?;
+                    }
                     require(
-                        !remaining.iter().any(|s| s == "Command"),
-                        "process creation",
+                        name != "UdpSocket",
+                        "socket APIs belong only in the audited numeric UDP adapter",
                     )?;
+                    if name == "process" {
+                        let prefix = trees[..i]
+                            .iter()
+                            .rev()
+                            .take(3)
+                            .map(ToString::to_string)
+                            .collect::<Vec<_>>();
+                        let suffix = trees[i + 1..]
+                            .iter()
+                            .take(3)
+                            .map(ToString::to_string)
+                            .collect::<Vec<_>>();
+                        require(
+                            prefix == [":", ":", "std"] && suffix == [":", ":", "ExitCode"],
+                            "CLI process access must be std::process::ExitCode",
+                        )?;
+                    }
                 }
             }
             TokenTree::Group(g) => network_tokens(g.stream(), library)?,
@@ -226,6 +268,52 @@ pub fn network_tokens(tokens: TokenStream, library: bool) -> Check {
         }
     }
     Ok(())
+}
+
+// This exact token template is the audited exception to the CLI socket ban.
+// Changes to either the interface or implementation require updating this policy oracle.
+const AUDITED_NUMERIC_UDP: &str = r#"// SPDX-License-Identifier: GPL-3.0-or-later
+//! Audited socket boundary: address-taking operations accept only SocketAddr.
+use std::io;
+use std::net::{Ipv6Addr, SocketAddr, UdpSocket};
+
+pub struct NumericUdp(UdpSocket);
+
+impl NumericUdp {
+    pub fn bind(address: SocketAddr) -> io::Result<Self> {
+        UdpSocket::bind(address).map(Self)
+    }
+
+    pub fn sender(peer: SocketAddr) -> io::Result<Self> {
+        let local = if peer.is_ipv4() {
+            SocketAddr::from(([0, 0, 0, 0], 0))
+        } else {
+            SocketAddr::from((Ipv6Addr::UNSPECIFIED, 0))
+        };
+        let socket = Self::bind(local)?;
+        socket.0.connect(peer)?;
+        Ok(socket)
+    }
+
+    pub fn recv_from(&self, bytes: &mut [u8]) -> io::Result<(usize, SocketAddr)> {
+        self.0.recv_from(bytes)
+    }
+
+    pub fn send(&self, bytes: &[u8]) -> io::Result<usize> {
+        self.0.send(bytes)
+    }
+}
+"#;
+
+fn numeric_udp_tokens(tokens: TokenStream) -> Check {
+    require(
+        tokens.to_string()
+            == AUDITED_NUMERIC_UDP
+                .parse::<TokenStream>()
+                .expect("audited template")
+                .to_string(),
+        "numeric UDP adapter differs from the audited template",
+    )
 }
 
 fn files(dir: &Path) -> Result<Vec<PathBuf>, String> {
@@ -312,6 +400,19 @@ pub fn manifest_policy(t: &toml::Table, fuzz: bool) -> Check {
                         version.is_some_and(exact_version),
                         format!("dependency {key} must use an exact = version"),
                     )?;
+                    if key == "serde_json" {
+                        require(
+                            value
+                                .get("features")
+                                .and_then(|v| v.as_array())
+                                .is_some_and(|features| {
+                                    features
+                                        .iter()
+                                        .any(|v| v.as_str() == Some("float_roundtrip"))
+                                }),
+                            "serde_json must explicitly enable float_roundtrip",
+                        )?;
+                    }
                     require(
                         value.get("git").is_none() && value.get("registry").is_none(),
                         format!("dependency {key} must come from crates.io"),
@@ -336,6 +437,45 @@ fn exact_version(v: &str) -> bool {
         .is_some_and(|s| !s.is_empty() && !s.contains([',', '*', '^', '~', ' ', '>', '<']))
 }
 
+// A new dependency can expose process/network APIs under arbitrary names. Reject additions
+// and package aliases until their public API has been reviewed with the socket boundary.
+fn shipped_dependency_names(table: &toml::Table, library: bool) -> Check {
+    fn scan(table: &toml::Table, library: bool) -> Check {
+        for (key, value) in table {
+            if matches!(
+                key.as_str(),
+                "dependencies" | "dev-dependencies" | "build-dependencies"
+            ) {
+                let dependencies = value
+                    .as_table()
+                    .ok_or("dependency section must be a table")?;
+                for (name, specification) in dependencies {
+                    let allowed: &[&str] = match (library, key.as_str()) {
+                        (true, "dependencies") => &["serde"],
+                        (true, "dev-dependencies") => &["serde_json"],
+                        (false, "dependencies") => &["clap", "qso-graph-udp", "serde_json"],
+                        _ => &[],
+                    };
+                    require(
+                        allowed.contains(&name.as_str()),
+                        format!("unreviewed shipped dependency API: {name}"),
+                    )?;
+                    require(
+                        specification
+                            .get("package")
+                            .is_none_or(|package| package.as_str() == Some(name.as_str())),
+                        format!("shipped dependency package alias: {name}"),
+                    )?;
+                }
+            } else if let Some(nested) = value.as_table() {
+                scan(nested, library)?;
+            }
+        }
+        Ok(())
+    }
+    scan(table, library)
+}
+
 fn workspace_policy(root: &Path, meta: &Value) -> Check {
     let manifest = toml_file(&root.join("Cargo.toml"))?;
     require(
@@ -355,7 +495,11 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
         }
         let path = Path::new(pkg["manifest_path"].as_str().ok_or("no manifest")?);
         let dir = path.parent().ok_or("no parent")?;
-        manifest_policy(&toml_file(path)?, false)?;
+        let package_manifest = toml_file(path)?;
+        manifest_policy(&package_manifest, false)?;
+        if pkg["name"] == "qso-graph-udp" || pkg["name"] == "qso-graph-udp-cli" {
+            shipped_dependency_names(&package_manifest, pkg["name"] == "qso-graph-udp")?;
+        }
         no_native(dir)?;
         for target in array(pkg, "targets")? {
             require(
@@ -385,7 +529,12 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
                 if pkg["name"] == "qso-graph-udp"
                     || pkg["name"] == "qso-graph-udp-cli" && file.starts_with(dir.join("src"))
                 {
-                    network_tokens(token_file(&file)?, pkg["name"] == "qso-graph-udp")?;
+                    if pkg["name"] == "qso-graph-udp-cli" && file == dir.join("src/numeric_udp.rs")
+                    {
+                        numeric_udp_tokens(token_file(&file)?)?;
+                    } else {
+                        network_tokens(token_file(&file)?, pkg["name"] == "qso-graph-udp")?;
+                    }
                 }
             }
         }
@@ -593,14 +742,142 @@ mod tests {
         ] {
             assert!(network_tokens(s.parse().unwrap(), false).is_err());
         }
+        assert!(network_tokens("use std::net::SocketAddr;".parse().unwrap(), false).is_ok());
+    }
+    #[test]
+    fn review_process_alias_and_implicit_dns_are_rejected() {
+        for source in [
+            "use std::process as child; pub fn policy_probe() { let _ = child::Command::new(\"true\").status(); }",
+            "pub fn dns_probe() { let _ = UdpSocket::bind(\"localhost:0\"); }",
+            "use std as s; use s::process as child;",
+            "use std::{process as child};",
+            "use std::process::*;",
+            "use std::os::unix::process::CommandExt;",
+            "use std::net as n; n::UdpSocket::bind(\"localhost:0\");",
+            "use std::net::{UdpSocket as S}; S::bind(\"localhost:0\");",
+            "use std::*;",
+            "extern crate std as system;",
+            "use std::net::TcpSocket;",
+        ] {
+            assert!(
+                network_tokens(source.parse().unwrap(), false).is_err(),
+                "{source}"
+            );
+        }
+        assert!(network_tokens("use std::process::ExitCode;".parse().unwrap(), false).is_ok());
+    }
+
+    #[test]
+    fn review_implicit_dns_is_rejected() {
         assert!(
             network_tokens(
-                "use std::net::{UdpSocket, SocketAddr};".parse().unwrap(),
+                "pub fn dns_probe() { let _ = UdpSocket::bind(\"localhost:0\"); }"
+                    .parse()
+                    .unwrap(),
+                false
+            )
+            .is_err()
+        );
+    }
+
+    #[test]
+    fn numeric_udp_adapter_changes_are_rejected() {
+        assert!(numeric_udp_tokens(AUDITED_NUMERIC_UDP.parse().unwrap()).is_ok());
+        for mutant in [
+            AUDITED_NUMERIC_UDP.replace(
+                "UdpSocket::bind(address)",
+                "UdpSocket::bind(\"localhost:0\")",
+            ),
+            AUDITED_NUMERIC_UDP.replace(
+                "socket.0.connect(peer)",
+                "socket.0.connect(\"example.com:2237\")",
+            ),
+            AUDITED_NUMERIC_UDP.replace(
+                "SocketAddr) -> io::Result<Self>",
+                "impl std::net::ToSocketAddrs) -> io::Result<Self>",
+            ),
+            format!("{AUDITED_NUMERIC_UDP} pub fn extra() {{}}"),
+        ] {
+            assert!(numeric_udp_tokens(mutant.parse().unwrap()).is_err());
+        }
+    }
+
+    #[test]
+    fn dependency_policy_allows_rust_unsafe_and_macros_but_own_code_does_not() {
+        let dependency = "unsafe fn internal() {} macro_rules! helper { () => {} }";
+        assert!(native_tokens(dependency.parse().unwrap()).is_ok());
+        assert!(source_tokens(dependency.parse().unwrap()).is_err());
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
+        assert!(
+            read(&root.join("AGENTS.md"))
+                .unwrap()
+                .contains("Dependencies may use unsafe Rust and define macros")
+        );
+        assert!(
+            read(&root.join("SECURITY.md"))
+                .unwrap()
+                .contains("Dependencies may use unsafe Rust and define macros")
+        );
+        assert!(
+            !read(&root.join("README.md")).unwrap().contains(
+                "refuses macro definitions and native code in the shipped dependency graph"
+            )
+        );
+    }
+
+    #[test]
+    fn unreviewed_dependency_apis_aliases_and_target_paths_are_rejected() {
+        for source in [
+            "[dependencies]\nduct='=0.13.0'",
+            "[dependencies]\nclap={package='duct',version='=0.13.0'}",
+            "[target.'cfg(unix)'.dependencies]\nresolver='=1.0.0'",
+            "[dev-dependencies]\nprocess_wrapper='=1.0.0'",
+            "[build-dependencies]\nprocess_wrapper='=1.0.0'",
+        ] {
+            assert!(shipped_dependency_names(&toml::from_str(source).unwrap(), false).is_err());
+        }
+        assert!(
+            shipped_dependency_names(
+                &toml::from_str(
+                    "[dependencies]\nserde='=1.0.229'\n[dev-dependencies]\nserde_json='=1.0.145'"
+                )
+                .unwrap(),
+                true
+            )
+            .is_ok()
+        );
+        assert!(
+            shipped_dependency_names(
+                &toml::from_str(
+                    "[dependencies]\nclap='=4.6.7'\nserde_json='=1.0.145'\nqso-graph-udp='=0.1.0'"
+                )
+                .unwrap(),
                 false
             )
             .is_ok()
         );
+        assert!(
+            shipped_dependency_names(
+                &toml::from_str("[dependencies]\nwrapper='=1.0.0'").unwrap(),
+                true
+            )
+            .is_err()
+        );
     }
+
+    #[test]
+    fn serde_json_requires_float_roundtrip_in_every_manifest() {
+        for dependency in [
+            "serde_json='=1.0.145'",
+            "serde_json={version='=1.0.145',features=[]}",
+        ] {
+            let source = format!("[lints]\nworkspace=true\n[dependencies]\n{dependency}");
+            assert!(manifest_policy(&toml::from_str(&source).unwrap(), false).is_err());
+        }
+        let source = "[lints]\nworkspace=true\n[dependencies]\nserde_json={version='=1.0.145',features=['float_roundtrip']}";
+        assert!(manifest_policy(&toml::from_str(source).unwrap(), false).is_ok());
+    }
+
     #[test]
     fn planted_floating_dependency_and_lint_override() {
         let good: toml::Table =

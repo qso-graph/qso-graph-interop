@@ -31,9 +31,18 @@ cargo fuzz run wsjtx -- -max_total_time=60 -max_len=65508 -timeout=10 -rss_limit
 ```
 
 The target tests both variants, canonical re-encoding, and lossless passage through the common
-model. Reproduce a failure with `cargo fuzz run wsjtx <artifact>` and add a small regression test.
+model, plus packet and common-model JSON round trips. Reproduce a failure with `cargo fuzz run wsjtx <artifact>` and add a small regression test.
 
 New source and documentation files carry an SPDX `GPL-3.0-or-later` header in their comment syntax.
 Contributions use that license. Keep generated fixture changes reproducible with
 `scripts/generate-fixtures.py`. Supply-chain exemptions name exact versions and explicitly mean
 not audited yet; do not describe an exemption as an audit.
+
+To verify the independent fixture oracle against a paired encoder/decoder field-order mutation:
+
+```sh
+uv run --no-project python scripts/check-field-order-mutation.py
+```
+
+This copies the workspace to a temporary directory, applies the adversarial review's Status
+Rx/Tx swap, and requires the independent Status fixture to fail. It never edits the working tree.

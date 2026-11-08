@@ -2,12 +2,14 @@
 //! UDP listener and finite scripted simulator. All destinations are numeric socket addresses.
 #![forbid(unsafe_code)]
 
+mod numeric_udp;
 mod output;
 
 use clap::{Args, Parser, Subcommand};
+use numeric_udp::NumericUdp;
 use qso_graph_udp::wsjtx::{self, Body, Packet, QDateTime, QTime, Variant};
 use std::io::{self, Write};
-use std::net::{SocketAddr, UdpSocket};
+use std::net::SocketAddr;
 use std::process::ExitCode;
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -101,7 +103,7 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn listen(options: Listen) -> Result<(), Box<dyn std::error::Error>> {
-    let socket = UdpSocket::bind(options.address)?;
+    let socket = NumericUdp::bind(options.address)?;
     let variant = if options.jtdx {
         Variant::Jtdx
     } else {
@@ -137,21 +139,15 @@ fn listen(options: Listen) -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn simulate(options: Sim) -> Result<(), Box<dyn std::error::Error>> {
-    let socket = UdpSocket::bind(if options.to.is_ipv4() {
-        "0.0.0.0:0"
-    } else {
-        "[::]:0"
-    })?;
-    // Connect only to the caller's numeric destination; no resolution, reception or discovery.
-    socket.connect(options.to)?;
+    let socket = NumericUdp::sender(options.to)?;
     let now = SystemTime::now().duration_since(UNIX_EPOCH)?;
-    for packet in script(&options, now.as_secs()) {
+    for packet in script(&options, now.as_secs())? {
         socket.send(&wsjtx::encode(&packet)?)?;
     }
     Ok(())
 }
 
-fn script(s: &Sim, seconds: u64) -> Vec<Packet> {
+fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
     let make = |body| Packet::new(s.id.as_str(), body);
     let mut status = wsjtx::Status {
         dial_frequency_hz: s.frequency,
@@ -162,7 +158,7 @@ fn script(s: &Sim, seconds: u64) -> Vec<Packet> {
         tx_enabled: false,
         transmitting: false,
         decoding: true,
-        rx_df_hz: 1500,
+        rx_df_hz: 1200,
         tx_df_hz: 1500,
         de_call: Some(s.call.as_str().into()),
         de_grid: Some(s.grid.as_str().into()),
@@ -176,6 +172,15 @@ fn script(s: &Sim, seconds: u64) -> Vec<Packet> {
         configuration_name: Some("Default".into()),
         tx_message: Some("".into()),
     };
+    let tx_frequency_hz = s
+        .frequency
+        .checked_add(u64::from(status.tx_df_hz))
+        .ok_or_else(|| {
+            io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "dial frequency plus TX offset overflows",
+            )
+        })?;
     let mut messages = vec![
         make(Body::Heartbeat(wsjtx::Heartbeat {
             max_schema: Some(3),
@@ -218,7 +223,7 @@ fn script(s: &Sim, seconds: u64) -> Vec<Packet> {
         time_off: timestamp(seconds),
         dx_call: s.dx_call.as_str().into(),
         dx_grid: s.grid.as_str().into(),
-        frequency_hz: s.frequency,
+        frequency_hz: tx_frequency_hz,
         mode: s.mode.as_str().into(),
         report_sent: "-12".into(),
         report_received: "-10".into(),
@@ -235,7 +240,7 @@ fn script(s: &Sim, seconds: u64) -> Vec<Packet> {
     }))));
     messages.push(make(Body::Clear(wsjtx::Clear { window: None })));
     messages.push(make(Body::Close));
-    messages
+    Ok(messages)
 }
 
 #[cfg(test)]
@@ -289,7 +294,7 @@ mod tests {
             "Clear",
             "Close",
         ];
-        for (packet, label) in script(&sim, 0).into_iter().zip(expected) {
+        for (packet, label) in script(&sim, 0).unwrap().into_iter().zip(expected) {
             let value = output::object(
                 &wsjtx::Outcome::Message(Box::new(packet)),
                 "127.0.0.1:1234".parse().unwrap(),
@@ -307,6 +312,41 @@ mod tests {
                 assert_eq!(json["time"], "00:00:00.000");
                 assert!(line.contains("CQ W1AW FN31") || line.contains("N0CALL W1AW"));
             }
+        }
+    }
+
+    #[test]
+    fn simulator_tx_frequency_matches_status_and_overflow_is_rejected() {
+        for mode in ["FT8", "FT4"] {
+            let cli = Cli::try_parse_from([
+                "qg-udp",
+                "sim",
+                "--wsjtx",
+                "--to",
+                "127.0.0.1:2237",
+                "--mode",
+                mode,
+            ])
+            .unwrap();
+            let Command::Sim(mut sim) = cli.command else {
+                panic!("sim");
+            };
+            let packets = script(&sim, 0).unwrap();
+            let Body::Status(status) = &packets[1].body else {
+                panic!("status");
+            };
+            let Body::QsoLogged(qso) = &packets[6].body else {
+                panic!("QSO");
+            };
+            assert_eq!(
+                qso.frequency_hz,
+                status.dial_frequency_hz + u64::from(status.tx_df_hz)
+            );
+            assert_eq!(qso.frequency_hz, 14_075_500);
+            sim.frequency = u64::MAX - 1500;
+            assert!(script(&sim, 0).is_ok());
+            sim.frequency += 1;
+            assert!(script(&sim, 0).is_err());
         }
     }
 
@@ -329,7 +369,7 @@ mod tests {
         let Command::Sim(s) = c.command else {
             panic!("sim");
         };
-        let packets = script(&s, 100_000);
+        let packets = script(&s, 100_000).unwrap();
         assert_eq!(packets.len(), 9);
         for p in packets {
             assert_eq!(
