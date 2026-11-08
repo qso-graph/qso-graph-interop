@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+[package]
+name = "qso-graph-udp"
+description = "Bounded, bidirectional WSJT-X and JTDX UDP protocol codecs"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "README.md"
+
+[dependencies]
+serde = { version = "=1.0.229", features = ["derive"] }
+
+[lints]
+workspace = true
+
+[dev-dependencies]
+serde_json = "=1.0.145"

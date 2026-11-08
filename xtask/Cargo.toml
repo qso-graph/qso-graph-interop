@@ -1,0 +1,18 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+[package]
+name = "xtask"
+description = "Repository policy checks"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+serde_json = "=1.0.145"
+toml = { version = "=1.1.8", default-features = false, features = ["std", "serde", "parse"] }
+syn = { version = "=3.0.9", default-features = false, features = ["full", "parsing"] }
+proc-macro2 = { version = "=1.0.107", default-features = false }
+
+[lints]
+workspace = true
