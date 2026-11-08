@@ -14,7 +14,15 @@ source tokens, exact dependency requirements, crates.io sources, and the pinned 
 It rejects native source/object files, foreign blocks, assembly, and link attributes in the
 shipped dependency graph. Registry Rust unsafe code and macro definitions are allowed.
 
-The library token scan rejects socket/process API names, including disabled code. CLI standard
+The library network token scan covers every `.rs` file in its package directory, including tests.
+The CLI network scan covers every `.rs` file in its package directory, including examples,
+benches, and sources outside `src/`, except roots identified exclusively as test targets by
+Cargo metadata. Test roots cannot be imported as modules, and files shared with other targets
+are scanned. Both scans include inactive code; package symlinks, source includes, and path
+redirection are rejected. Build scripts are rejected for all workspace packages. No generated
+or vendored directory is excluded from these package scans.
+
+The library scan rejects socket/process API names. CLI standard
 library access is restricted to io, time, error, str, SocketAddr, and ExitCode paths; root aliases,
 grouped standard-library imports, OS APIs, and socket type access are rejected. ExitCode is the
 only allowed process path. This prevents process module aliases and alternate OS process paths.
@@ -27,7 +35,7 @@ The direct dependency API set is also fixed: serde for the library, serde_json f
 and clap, serde_json, and the codec for the CLI. Package renames, target-specific additions,
 and new direct dependencies fail until this policy is updated after API review, so a wrapper
 crate cannot silently introduce process or resolver APIs under an arbitrary name.
-Policy self-tests plant aliases, implicit DNS, adapter changes, unreviewed dependency APIs,
+Policy self-tests plant an external binary, a build script, aliases, implicit DNS, adapter changes, unreviewed dependency APIs,
 and native/first-party violations.
 Policy tooling itself may invoke build tools. Fuzzing is an isolated workspace; libFuzzer's C++
 runtime and its build dependencies never enter the shipped dependency graph.

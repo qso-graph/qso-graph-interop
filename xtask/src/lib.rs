@@ -476,6 +476,26 @@ fn shipped_dependency_names(table: &toml::Table, library: bool) -> Check {
     scan(table, library)
 }
 
+// Test roots may use processes and sockets, but cannot also be imported as modules.
+fn reject_test_root_modules(tokens: TokenStream, names: &BTreeSet<String>) -> Check {
+    let trees: Vec<_> = tokens.into_iter().collect();
+    for (i, token) in trees.iter().enumerate() {
+        match token {
+            TokenTree::Ident(id) if id == "mod" => {
+                if let Some(TokenTree::Ident(name)) = trees.get(i + 1) {
+                    require(
+                        !names.contains(name.to_string().trim_start_matches("r#")),
+                        format!("test target root cannot be imported as module: {name}"),
+                    )?;
+                }
+            }
+            TokenTree::Group(group) => reject_test_root_modules(group.stream(), names)?,
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
 fn workspace_policy(root: &Path, meta: &Value) -> Check {
     let manifest = toml_file(&root.join("Cargo.toml"))?;
     require(
@@ -501,7 +521,35 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
             shipped_dependency_names(&package_manifest, pkg["name"] == "qso-graph-udp")?;
         }
         no_native(dir)?;
-        for target in array(pkg, "targets")? {
+        let targets = array(pkg, "targets")?;
+        let mut test_roots = BTreeSet::new();
+        let mut other_roots = BTreeSet::new();
+        for target in targets {
+            let source = PathBuf::from(target["src_path"].as_str().ok_or("no target source")?);
+            let source = source
+                .canonicalize()
+                .map_err(|e| format!("{}: {e}", source.display()))?;
+            if array(target, "kind")?.iter().all(|kind| kind == "test") {
+                test_roots.insert(source);
+            } else {
+                other_roots.insert(source);
+            }
+        }
+        test_roots.retain(|source| !other_roots.contains(source));
+        let test_names: BTreeSet<String> = test_roots
+            .iter()
+            .map(|source| {
+                let name = if source.file_name().is_some_and(|name| name == "mod.rs") {
+                    source.parent().and_then(Path::file_name)
+                } else {
+                    source.file_stem()
+                };
+                name.and_then(|name| name.to_str())
+                    .map(str::to_owned)
+                    .ok_or("invalid test root name")
+            })
+            .collect::<Result<_, _>>()?;
+        for target in targets {
             require(
                 target["edition"] == "2024",
                 "every target must be edition 2024",
@@ -513,8 +561,15 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
                 "workspace cannot define proc macros or build scripts",
             )?;
             let source = Path::new(target["src_path"].as_str().ok_or("no target source")?);
+            let canonical_source = source
+                .canonicalize()
+                .map_err(|e| format!("{}: {e}", source.display()))?;
+            let canonical_dir = dir
+                .canonicalize()
+                .map_err(|e| format!("{}: {e}", dir.display()))?;
             require(
-                source.extension().is_some_and(|e| e == "rs") && source.starts_with(dir),
+                source.extension().is_some_and(|e| e == "rs")
+                    && canonical_source.starts_with(&canonical_dir),
                 "crate root must be a .rs file in its own crate",
             )?;
             require(
@@ -524,10 +579,19 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
         }
         for file in files(dir)? {
             if file.extension().is_some_and(|e| e == "rs") {
-                source_tokens(token_file(&file)?)
-                    .map_err(|e| format!("{}: {e}", file.display()))?;
+                let tokens = token_file(&file)?;
+                source_tokens(tokens.clone()).map_err(|e| format!("{}: {e}", file.display()))?;
+                if pkg["name"] == "qso-graph-udp-cli" {
+                    reject_test_root_modules(tokens, &test_names)
+                        .map_err(|e| format!("{}: {e}", file.display()))?;
+                }
                 if pkg["name"] == "qso-graph-udp"
-                    || pkg["name"] == "qso-graph-udp-cli" && file.starts_with(dir.join("src"))
+                    || pkg["name"] == "qso-graph-udp-cli"
+                        && !test_roots.contains(
+                            &file
+                                .canonicalize()
+                                .map_err(|e| format!("{}: {e}", file.display()))?,
+                        )
                 {
                     if pkg["name"] == "qso-graph-udp-cli" && file == dir.join("src/numeric_udp.rs")
                     {
@@ -723,6 +787,85 @@ mod tests {
         assert!(no_native(&dir).is_err());
         std::fs::remove_file(dir.join("hidden.c")).unwrap();
         assert!(no_native(&dir).is_ok());
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn planted_targets_outside_src_are_rejected() {
+        let base = Path::new(env!("CARGO_MANIFEST_DIR")).join("../target/policy-target-planted");
+        let stamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let dir = base.join(format!("{}-{stamp}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let manifest = r#"
+[workspace]
+[workspace.lints.rust]
+unsafe_code = "forbid"
+[package]
+name = "qso-graph-udp-cli"
+version = "0.1.0"
+edition = "2024"
+[lints]
+workspace = true
+"#;
+        let probe = r#"// SPDX-License-Identifier: GPL-3.0-or-later
+#![forbid(unsafe_code)]
+use std::process as child;
+use std::net::UdpSocket;
+pub fn policy_probe() { let _ = child::Command::new("true").status(); }
+pub fn dns_probe() { let _ = UdpSocket::bind("localhost:0"); }
+fn main() {}
+"#;
+        std::fs::write(dir.join("policy_probe.rs"), probe).unwrap();
+        std::fs::write(
+            dir.join("Cargo.toml"),
+            format!("{manifest}\n[[bin]]\nname = \"policy-probe\"\npath = \"policy_probe.rs\"\n"),
+        )
+        .unwrap();
+        let get_metadata = || {
+            let mut command =
+                Command::new(std::env::var_os("CARGO").unwrap_or_else(|| "cargo".into()));
+            command
+                .args([
+                    "metadata",
+                    "--no-deps",
+                    "--format-version",
+                    "1",
+                    "--manifest-path",
+                ])
+                .arg(dir.join("Cargo.toml"));
+            serde_json::from_str::<Value>(&output(&mut command).unwrap()).unwrap()
+        };
+        let result = workspace_policy(&dir, &get_metadata());
+        assert!(
+            result
+                .unwrap_err()
+                .contains("unapproved CLI standard-library path")
+        );
+        std::fs::write(
+            dir.join("policy_probe.rs"),
+            "#![forbid(unsafe_code)]\nfn main() {}\n",
+        )
+        .unwrap();
+        std::fs::write(dir.join("build.rs"), probe).unwrap();
+        let result = workspace_policy(&dir, &get_metadata());
+        assert!(result.unwrap_err().contains("build scripts"));
+        std::fs::remove_file(dir.join("build.rs")).unwrap();
+        std::fs::write(dir.join("Cargo.toml"), format!("{manifest}\n[[bin]]\nname = \"policy-probe\"\npath = \"policy_probe.rs\"\n[[test]]\nname = \"integration\"\npath = \"integration.rs\"\n")).unwrap();
+        std::fs::write(dir.join("integration.rs"), probe).unwrap();
+        assert!(workspace_policy(&dir, &get_metadata()).is_ok());
+        std::fs::write(
+            dir.join("policy_probe.rs"),
+            "#![forbid(unsafe_code)]\nmod integration;\nfn main() {}\n",
+        )
+        .unwrap();
+        assert!(
+            workspace_policy(&dir, &get_metadata())
+                .unwrap_err()
+                .contains("test target root cannot be imported")
+        );
         std::fs::remove_dir_all(dir).unwrap();
     }
 

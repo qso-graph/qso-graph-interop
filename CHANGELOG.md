@@ -5,6 +5,9 @@
 
 ### Fixed
 
+- Apply CLI process and DNS restrictions to package Rust sources outside `src/`, with planted
+  external binary and build script checks.
+
 - Preserve neutral client IDs and unknown direction in the common model; resolve Clear and Close
   only with caller context. Keep Reply and Configure target IDs separate from source identity.
   Support generic native families and request/response correlation for future protocol adapters.
