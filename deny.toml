@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+[graph]
+all-features = true
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []
+
+[bans]
+multiple-versions = "allow"
+wildcards = "deny"
+allow-wildcard-paths = false
+deny = [
+    { crate = "autotools", reason = "builds native code" },
+    { crate = "bindgen", reason = "generates native bindings" },
+    { crate = "cc", reason = "builds native code" },
+    { crate = "cmake", reason = "builds native code" },
+    { crate = "cxx-build", reason = "builds native code" },
+    { crate = "nasm-rs", reason = "builds assembly" },
+    { crate = "pkg-config", reason = "finds native libraries" },
+    { crate = "vcpkg", reason = "finds native libraries" },
+]
+
+[licenses]
+confidence-threshold = 0.93
+allow = ["Apache-2.0", "GPL-3.0-or-later", "MIT", "Unicode-3.0"]
