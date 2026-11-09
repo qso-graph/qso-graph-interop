@@ -65,15 +65,11 @@ layouts = {
 'SwitchConfiguration': ('utf8','configuration_name'),
 'Configure': ('utf8 u32 utf8 bool u32 u32 utf8 utf8 bool?', 'mode frequency_tolerance_hz sub_mode fast_mode tr_period_seconds rx_df_hz dx_call dx_grid generate_messages'),
 'AnnotationInfo': ('utf8 bool u32','dx_call sort_order_provided sort_order'),
-'JtdxStatus': ('u64 utf8 utf8 utf8 utf8 bool bool bool i32 i32 utf8? utf8? utf8? bool? utf8? bool? bool?', 'dial_frequency_hz mode dx_call report tx_mode tx_enabled transmitting decoding rx_df_hz tx_df_hz de_call de_grid dx_grid tx_watchdog sub_mode fast_mode tx_first'),
-'SetTxDeltaFreq': ('u32','tx_delta_frequency_hz'),
-'TriggerCq': ('utf8 bool? bool','direction tx_period send'),
 }
 numbers = dict(zip(['Heartbeat','Status','Decode','Clear','Reply','QsoLogged','Close','Replay','HaltTx','FreeText','WsprDecode','Location','LoggedAdif','HighlightCallsign','SwitchConfiguration','Configure','AnnotationInfo'], range(17)))
-numbers.update(JtdxStatus=1, SetTxDeltaFreq=50, TriggerCq=51)
 writers = dict(u8=uint8, u32=uint32, i32=int32, u64=uint64, f64=float64, bool=boolean, utf8=utf8, datetime=qdatetime, color=color)
 
-def vector(name, kind, fields=None, variant='Wsjtx', sender='WSJT-X', schema=3, extensions=b''):
+def vector(name, kind, fields=None, sender='WSJT-X', schema=3, extensions=b''):
     global SCHEMA
     SCHEMA = schema
     b = struct.pack('>III',0xadbccbda,schema,numbers[kind]) + utf8(text(sender))
@@ -88,7 +84,7 @@ def vector(name, kind, fields=None, variant='Wsjtx', sender='WSJT-X', schema=3, 
     expected = None if fields is None else dict(fields)
     for t,k in zip(types.split(),keys.split()):
         if t.rstrip('?')=='utf8' and (not t.endswith('?') or fields[k] is not None): expected[k]={'bytes':fields[k]}
-    return dict(name=name, wire_hex=b.hex(), packet=dict(schema=schema,variant=variant,id={'bytes':text(sender)},body={kind:expected} if fields is not None else kind,extensions=list(extensions)))
+    return dict(name=name, wire_hex=b.hex(), packet=dict(schema=schema,id={'bytes':text(sender)},body={kind:expected} if fields is not None else kind,extensions=list(extensions)))
 
 
 def vectors():
@@ -100,24 +96,6 @@ def vectors():
     r = {k:v for k,v in d.items() if k not in ('new','off_air')}; r['modifiers']=4
     b = dict(Heartbeat=h,Status=s,Decode=d,Clear=dict(window=2),Reply=r,QsoLogged=q,Close=None,Replay=None,HaltTx=dict(auto_tx_only=True),FreeText=dict(text=text('CQ TEST'),send=True),WsprDecode=w,Location=dict(location=text('FN31pr')),LoggedAdif=dict(adif=text('<adif_ver:5>3.1.0<EOH><CALL:4>W1AW<EOR>')),HighlightCallsign=dict(callsign=text('W1AW'),background=dict(spec=1,channels=[65001,1101,2202,3303,4404]),foreground=dict(spec=1,channels=[64002,5505,6606,7707,8808]),highlight_last=True),SwitchConfiguration=dict(configuration_name=text('Field')),Configure=dict(mode=text('FT8'),frequency_tolerance_hz=73,sub_mode=text('B'),fast_mode=False,tr_period_seconds=30,rx_df_hz=2890,dx_call=text('W1AW'),dx_grid=text('FN31'),generate_messages=True),AnnotationInfo=dict(dx_call=text('W1AW'),sort_order_provided=True,sort_order=0xffffffff))
     out=[vector('wsjtx_'+k,k,f) for k,f in b.items()]
-    for k in ['Heartbeat','Status','Decode','Clear','Reply','QsoLogged','Close','Replay','HaltTx','FreeText','WsprDecode','LoggedAdif']:
-        f = None if b[k] is None else dict(b[k])
-        kind = k
-        if k=='Status':
-            kind='JtdxStatus'
-            f={key:f[key] for key in layouts[kind][1].split() if key!='tx_first'}
-            f.update(rx_df_hz=-150,tx_df_hz=-300,tx_first=True)
-        elif k=='Heartbeat':f['revision']=None
-        elif k=='Clear':f['window']=None
-        elif k=='Reply':f.update(low_confidence=None,modifiers=None)
-        elif k=='QsoLogged':f.update(exchange_sent=None,exchange_received=None,propagation_mode=None)
-        elif k=='WsprDecode':f['off_air']=None
-        out.append(vector('jtdx_'+k,kind,f,'Jtdx','JTDX'))
-    out.append(vector('jtdx_SetTxDeltaFreq','SetTxDeltaFreq',dict(tx_delta_frequency_hz=1800),'Jtdx','JTDX'))
-    out.append(vector('jtdx_TriggerCq','TriggerCq',dict(direction=text('DX'),tx_period=True,send=True),'Jtdx','JTDX'))
-    out.append(vector('jtdx_TriggerCq_source','TriggerCq',dict(direction=text('DX'),tx_period=None,send=True),'Jtdx','JTDX'))
-    out.append(vector('jtdx_Reply_source','Reply',r,'Jtdx','JTDX'))
-    out.append(vector('jtdx_WsprDecode_source','WsprDecode',w,'Jtdx','JTDX'))
     # Give every boolean position a unique signature across independent vectors.
     # All-false/all-true also exercise both values for every present boolean.
     boolean_bases = [v for v in out if isinstance(v['packet']['body'], dict)]
@@ -136,7 +114,7 @@ def vectors():
             values = dict(native)
             values.update(zip(keys, pattern))
             out.append(vector(f"{base['name']}_bool_{index}", kind, values,
-                              base['packet']['variant'], bytes(base['packet']['id']['bytes']).decode()))
+                              bytes(base['packet']['id']['bytes']).decode()))
     # Date/time vectors cover both working schemas and Qt 5.0's raw legacy layout.
     for schema in [1,2,3]:
         for spec in [0,1,2,3]:

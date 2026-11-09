@@ -1,28 +1,21 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #![forbid(unsafe_code)]
 use super::{
-    Error, Variant,
+    Error,
     qt::{Reader, Writer},
     types::*,
 };
-pub(super) fn known(n: u32, variant: Variant) -> bool {
-    match variant {
-        Variant::Wsjtx => n <= 16,
-        Variant::Jtdx => matches!(n, 0..=10 | 12 | 50 | 51),
-    }
+pub(super) fn known(n: u32) -> bool {
+    n <= 16
 }
-pub(super) fn read_body(r: &mut Reader<'_>, n: u32, variant: Variant) -> Result<Body, Error> {
-    Ok(match (n, variant) {
-        (0, _) => Body::Heartbeat(Heartbeat {
+pub(super) fn read_body(r: &mut Reader<'_>, n: u32) -> Result<Body, Error> {
+    Ok(match n {
+        0 => Body::Heartbeat(Heartbeat {
             max_schema: r.optional(|r| r.u32())?,
             version: r.optional(|r| r.utf8())?,
-            revision: if variant == Variant::Jtdx {
-                None
-            } else {
-                r.optional(|r| r.utf8())?
-            },
+            revision: r.optional(|r| r.utf8())?,
         }),
-        (1, Variant::Wsjtx) => Body::Status(Status {
+        1 => Body::Status(Status {
             dial_frequency_hz: r.u64()?,
             mode: r.utf8()?,
             dx_call: r.utf8()?,
@@ -45,7 +38,7 @@ pub(super) fn read_body(r: &mut Reader<'_>, n: u32, variant: Variant) -> Result<
             configuration_name: r.optional(|r| r.utf8())?,
             tx_message: r.optional(|r| r.utf8())?,
         }),
-        (2, _) => Body::Decode(Decode {
+        2 => Body::Decode(Decode {
             new: r.boolean()?,
             time: r.qtime()?,
             snr_db: r.i32()?,
@@ -56,14 +49,10 @@ pub(super) fn read_body(r: &mut Reader<'_>, n: u32, variant: Variant) -> Result<
             low_confidence: r.optional(|r| r.boolean())?,
             off_air: r.optional(|r| r.boolean())?,
         }),
-        (3, _) => Body::Clear(Clear {
-            window: if variant == Variant::Jtdx {
-                None
-            } else {
-                r.optional(|r| r.u8())?
-            },
+        3 => Body::Clear(Clear {
+            window: r.optional(|r| r.u8())?,
         }),
-        (4, _) => Body::Reply(Reply {
+        4 => Body::Reply(Reply {
             time: r.qtime()?,
             snr_db: r.i32()?,
             delta_time_seconds: r.f64()?,
@@ -73,7 +62,7 @@ pub(super) fn read_body(r: &mut Reader<'_>, n: u32, variant: Variant) -> Result<
             low_confidence: r.optional(|r| r.boolean())?,
             modifiers: r.optional(|r| r.u8())?,
         }),
-        (5, _) => Body::QsoLogged(Box::new(QsoLogged {
+        5 => Body::QsoLogged(Box::new(QsoLogged {
             time_off: r.qdatetime()?,
             dx_call: r.utf8()?,
             dx_grid: r.utf8()?,
@@ -88,30 +77,18 @@ pub(super) fn read_body(r: &mut Reader<'_>, n: u32, variant: Variant) -> Result<
             operator_call: r.optional(|r| r.utf8())?,
             my_call: r.optional(|r| r.utf8())?,
             my_grid: r.optional(|r| r.utf8())?,
-            exchange_sent: if variant == Variant::Jtdx {
-                None
-            } else {
-                r.optional(|r| r.utf8())?
-            },
-            exchange_received: if variant == Variant::Jtdx {
-                None
-            } else {
-                r.optional(|r| r.utf8())?
-            },
-            propagation_mode: if variant == Variant::Jtdx {
-                None
-            } else {
-                r.optional(|r| r.utf8())?
-            },
+            exchange_sent: r.optional(|r| r.utf8())?,
+            exchange_received: r.optional(|r| r.utf8())?,
+            propagation_mode: r.optional(|r| r.utf8())?,
         })),
-        (8, _) => Body::HaltTx(HaltTx {
+        8 => Body::HaltTx(HaltTx {
             auto_tx_only: r.boolean()?,
         }),
-        (9, _) => Body::FreeText(FreeText {
+        9 => Body::FreeText(FreeText {
             text: r.utf8()?,
             send: r.boolean()?,
         }),
-        (10, _) => Body::WsprDecode(WsprDecode {
+        10 => Body::WsprDecode(WsprDecode {
             new: r.boolean()?,
             time: r.qtime()?,
             snr_db: r.i32()?,
@@ -123,20 +100,20 @@ pub(super) fn read_body(r: &mut Reader<'_>, n: u32, variant: Variant) -> Result<
             power_dbm: r.i32()?,
             off_air: r.optional(|r| r.boolean())?,
         }),
-        (11, Variant::Wsjtx) => Body::Location(Location {
+        11 => Body::Location(Location {
             location: r.utf8()?,
         }),
-        (12, _) => Body::LoggedAdif(LoggedAdif { adif: r.utf8()? }),
-        (13, Variant::Wsjtx) => Body::HighlightCallsign(HighlightCallsign {
+        12 => Body::LoggedAdif(LoggedAdif { adif: r.utf8()? }),
+        13 => Body::HighlightCallsign(HighlightCallsign {
             callsign: r.utf8()?,
             background: r.qcolor()?,
             foreground: r.qcolor()?,
             highlight_last: r.optional(|r| r.boolean())?,
         }),
-        (14, Variant::Wsjtx) => Body::SwitchConfiguration(SwitchConfiguration {
+        14 => Body::SwitchConfiguration(SwitchConfiguration {
             configuration_name: r.utf8()?,
         }),
-        (15, Variant::Wsjtx) => Body::Configure(Configure {
+        15 => Body::Configure(Configure {
             mode: r.utf8()?,
             frequency_tolerance_hz: r.u32()?,
             sub_mode: r.utf8()?,
@@ -147,66 +124,24 @@ pub(super) fn read_body(r: &mut Reader<'_>, n: u32, variant: Variant) -> Result<
             dx_grid: r.utf8()?,
             generate_messages: r.optional(|r| r.boolean())?,
         }),
-        (16, Variant::Wsjtx) => Body::AnnotationInfo(AnnotationInfo {
+        16 => Body::AnnotationInfo(AnnotationInfo {
             dx_call: r.utf8()?,
             sort_order_provided: r.boolean()?,
             sort_order: r.u32()?,
         }),
-        (1, Variant::Jtdx) => Body::JtdxStatus(JtdxStatus {
-            dial_frequency_hz: r.u64()?,
-            mode: r.utf8()?,
-            dx_call: r.utf8()?,
-            report: r.utf8()?,
-            tx_mode: r.utf8()?,
-            tx_enabled: r.boolean()?,
-            transmitting: r.boolean()?,
-            decoding: r.boolean()?,
-            rx_df_hz: r.i32()?,
-            tx_df_hz: r.i32()?,
-            de_call: r.optional(|r| r.utf8())?,
-            de_grid: r.optional(|r| r.utf8())?,
-            dx_grid: r.optional(|r| r.utf8())?,
-            tx_watchdog: r.optional(|r| r.boolean())?,
-            sub_mode: r.optional(|r| r.utf8())?,
-            fast_mode: r.optional(|r| r.boolean())?,
-            tx_first: r.optional(|r| r.boolean())?,
-        }),
-        (50, Variant::Jtdx) => Body::SetTxDeltaFreq(SetTxDeltaFreq {
-            tx_delta_frequency_hz: r.u32()?,
-        }),
-        (51, Variant::Jtdx) => Body::TriggerCq(TriggerCq {
-            direction: r.utf8()?,
-            tx_period: if r.remaining() >= 2 {
-                Some(r.boolean()?)
-            } else {
-                None
-            },
-            send: r.boolean()?,
-        }),
-        (6, _) => Body::Close,
-        (7, _) => Body::Replay,
-        _ => return Err(Error::VariantMismatch),
+        6 => Body::Close,
+        7 => Body::Replay,
+        _ => unreachable!("known message type"),
     })
 }
-pub(super) fn write_body(w: &mut Writer, body: &Body, variant: Variant) -> Result<(), Error> {
-    if !known(body.message_type(), variant) {
-        return Err(Error::VariantMismatch);
-    }
+pub(super) fn write_body(w: &mut Writer, body: &Body) -> Result<(), Error> {
     match body {
         Body::Heartbeat(v) => {
             w.optional(&v.max_schema, |w, v| w.u32(*v))?;
             w.optional(&v.version, |w, v| w.utf8(v))?;
-            if variant == Variant::Jtdx && v.revision.is_some() {
-                return Err(Error::VariantMismatch);
-            }
-            if variant == Variant::Wsjtx {
-                w.optional(&v.revision, |w, v| w.utf8(v))?;
-            }
+            w.optional(&v.revision, |w, v| w.utf8(v))?;
         }
         Body::Status(v) => {
-            if variant != Variant::Wsjtx {
-                return Err(Error::VariantMismatch);
-            }
             w.u64(v.dial_frequency_hz)?;
             w.utf8(&v.mode)?;
             w.utf8(&v.dx_call)?;
@@ -241,12 +176,7 @@ pub(super) fn write_body(w: &mut Writer, body: &Body, variant: Variant) -> Resul
             w.optional(&v.off_air, |w, v| w.boolean(*v))?;
         }
         Body::Clear(v) => {
-            if variant == Variant::Jtdx && v.window.is_some() {
-                return Err(Error::VariantMismatch);
-            }
-            if variant == Variant::Wsjtx {
-                w.optional(&v.window, |w, v| w.u8(*v))?;
-            }
+            w.optional(&v.window, |w, v| w.u8(*v))?;
         }
         Body::Reply(v) => {
             w.qtime(&v.time)?;
@@ -273,24 +203,9 @@ pub(super) fn write_body(w: &mut Writer, body: &Body, variant: Variant) -> Resul
             w.optional(&v.operator_call, |w, v| w.utf8(v))?;
             w.optional(&v.my_call, |w, v| w.utf8(v))?;
             w.optional(&v.my_grid, |w, v| w.utf8(v))?;
-            if variant == Variant::Jtdx && v.exchange_sent.is_some() {
-                return Err(Error::VariantMismatch);
-            }
-            if variant == Variant::Wsjtx {
-                w.optional(&v.exchange_sent, |w, v| w.utf8(v))?;
-            }
-            if variant == Variant::Jtdx && v.exchange_received.is_some() {
-                return Err(Error::VariantMismatch);
-            }
-            if variant == Variant::Wsjtx {
-                w.optional(&v.exchange_received, |w, v| w.utf8(v))?;
-            }
-            if variant == Variant::Jtdx && v.propagation_mode.is_some() {
-                return Err(Error::VariantMismatch);
-            }
-            if variant == Variant::Wsjtx {
-                w.optional(&v.propagation_mode, |w, v| w.utf8(v))?;
-            }
+            w.optional(&v.exchange_sent, |w, v| w.utf8(v))?;
+            w.optional(&v.exchange_received, |w, v| w.utf8(v))?;
+            w.optional(&v.propagation_mode, |w, v| w.utf8(v))?;
         }
         Body::HaltTx(v) => {
             w.boolean(v.auto_tx_only)?;
@@ -341,38 +256,6 @@ pub(super) fn write_body(w: &mut Writer, body: &Body, variant: Variant) -> Resul
             w.utf8(&v.dx_call)?;
             w.boolean(v.sort_order_provided)?;
             w.u32(v.sort_order)?;
-        }
-        Body::JtdxStatus(v) => {
-            if variant != Variant::Jtdx {
-                return Err(Error::VariantMismatch);
-            }
-            w.u64(v.dial_frequency_hz)?;
-            w.utf8(&v.mode)?;
-            w.utf8(&v.dx_call)?;
-            w.utf8(&v.report)?;
-            w.utf8(&v.tx_mode)?;
-            w.boolean(v.tx_enabled)?;
-            w.boolean(v.transmitting)?;
-            w.boolean(v.decoding)?;
-            w.i32(v.rx_df_hz)?;
-            w.i32(v.tx_df_hz)?;
-            w.optional(&v.de_call, |w, v| w.utf8(v))?;
-            w.optional(&v.de_grid, |w, v| w.utf8(v))?;
-            w.optional(&v.dx_grid, |w, v| w.utf8(v))?;
-            w.optional(&v.tx_watchdog, |w, v| w.boolean(*v))?;
-            w.optional(&v.sub_mode, |w, v| w.utf8(v))?;
-            w.optional(&v.fast_mode, |w, v| w.boolean(*v))?;
-            w.optional(&v.tx_first, |w, v| w.boolean(*v))?;
-        }
-        Body::SetTxDeltaFreq(v) => {
-            w.u32(v.tx_delta_frequency_hz)?;
-        }
-        Body::TriggerCq(v) => {
-            w.utf8(&v.direction)?;
-            if let Some(period) = v.tx_period {
-                w.boolean(period)?;
-            }
-            w.boolean(v.send)?;
         }
         Body::Close | Body::Replay => {}
     }

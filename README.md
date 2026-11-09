@@ -3,13 +3,12 @@
 # QSO Graph UDP
 <!-- vale Google.Headings = YES -->
 
-**Read and write WSJT-X and JTDX UDP messages from Rust, or watch them with `qg-udp`.**
+**Read and write WSJT-X UDP messages from Rust, or watch them with `qg-udp`.**
 QSO Graph UDP gives radio app developers a bidirectional codec and gives operators a
 listener and a simulator for checking their UDP setup.
 
 The library implements all 17 message types in WSJT-X 3.0.2 (and 2.7.0, whose protocol is the same), including logging, decoding,
-radio status, and control. An explicit JTDX variant handles its Status layout and additional
-commands. Applications get both a common message model and the complete original family payload.
+radio status, and control. Applications get both a common message model and the complete original family payload.
 The library leaves sockets and control decisions to its caller.
 
 ## Install
@@ -45,8 +44,7 @@ The listener displays messages like these:
 
 The simulator sends a heartbeat, radio status, three decodes, a logged QSO, and shutdown messages.
 Choose callsigns, mode, and frequency with `--call`, `--dx-call`, `--mode`, and `--frequency` (Hz).
-Use `qg-udp listen --wsjtx --json` for one JSON object per decoded datagram, or add `--jtdx`
-to select JTDX. Add `--verbose` to show the sender, schema, and client ID. See the
+Use `qg-udp listen --wsjtx --json` for one JSON object per decoded datagram. Add `--verbose` to show the sender, schema, and client ID. See the
 [JSON Lines reference](docs/user/listen-json.md) for machine-readable output.
 Each command's `--help` includes examples.
 

@@ -30,7 +30,7 @@ cargo clippy --all-targets --locked -- -D warnings
 cargo fuzz run wsjtx -- -max_total_time=60 -max_len=65508 -timeout=10 -rss_limit_mb=2048 -print_final_stats=1
 ```
 
-The target tests both variants, canonical re-encoding, and lossless passage through the common
+The target tests the decoder, canonical re-encoding, and lossless passage through the common
 model, plus packet and common-model JSON round trips. Reproduce a failure with `cargo fuzz run wsjtx <artifact>` and add a small regression test.
 
 New source and documentation files carry an SPDX `GPL-3.0-or-later` header in their comment syntax.

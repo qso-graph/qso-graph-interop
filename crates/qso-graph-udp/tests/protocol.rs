@@ -24,7 +24,7 @@ fn fixture(name: &str) -> Packet {
     let packet: Packet = serde_json::from_value(vector["packet"].clone()).unwrap();
     let bytes = unhex(vector["wire_hex"].as_str().unwrap());
     assert_eq!(
-        decode(&bytes, packet.variant).unwrap(),
+        decode(&bytes).unwrap(),
         Outcome::Message(Box::new(packet.clone())),
         "{name}"
     );
@@ -126,91 +126,6 @@ fn wsjtx_configure() {
 #[test]
 fn wsjtx_annotationinfo() {
     fixture("wsjtx_AnnotationInfo");
-}
-
-#[test]
-fn jtdx_heartbeat() {
-    fixture("jtdx_Heartbeat");
-}
-
-#[test]
-fn jtdx_status() {
-    fixture("jtdx_Status");
-}
-
-#[test]
-fn jtdx_decode() {
-    fixture("jtdx_Decode");
-}
-
-#[test]
-fn jtdx_clear() {
-    fixture("jtdx_Clear");
-}
-
-#[test]
-fn jtdx_reply() {
-    fixture("jtdx_Reply");
-}
-
-#[test]
-fn jtdx_qsologged() {
-    fixture("jtdx_QsoLogged");
-}
-
-#[test]
-fn jtdx_close() {
-    fixture("jtdx_Close");
-}
-
-#[test]
-fn jtdx_replay() {
-    fixture("jtdx_Replay");
-}
-
-#[test]
-fn jtdx_halttx() {
-    fixture("jtdx_HaltTx");
-}
-
-#[test]
-fn jtdx_freetext() {
-    fixture("jtdx_FreeText");
-}
-
-#[test]
-fn jtdx_wsprdecode() {
-    fixture("jtdx_WsprDecode");
-}
-
-#[test]
-fn jtdx_loggedadif() {
-    fixture("jtdx_LoggedAdif");
-}
-
-#[test]
-fn jtdx_settxdeltafreq() {
-    fixture("jtdx_SetTxDeltaFreq");
-}
-
-#[test]
-fn jtdx_triggercq() {
-    fixture("jtdx_TriggerCq");
-}
-
-#[test]
-fn jtdx_triggercq_source() {
-    fixture("jtdx_TriggerCq_source");
-}
-
-#[test]
-fn jtdx_reply_source() {
-    fixture("jtdx_Reply_source");
-}
-
-#[test]
-fn jtdx_wsprdecode_source() {
-    fixture("jtdx_WsprDecode_source");
 }
 
 #[test]
@@ -342,10 +257,9 @@ fn all_120_sample_decodes() {
 fn every_datagram_prefix_is_safe_and_partial_fields_are_errors() {
     let all = vectors();
     for v in all["vectors"].as_array().unwrap() {
-        let packet: Packet = serde_json::from_value(v["packet"].clone()).unwrap();
         let bytes = unhex(v["wire_hex"].as_str().unwrap());
         for end in 0..bytes.len() {
-            let result = decode(&bytes[..end], packet.variant);
+            let result = decode(&bytes[..end]);
             if let Ok(Outcome::Message(short)) = result {
                 // Only a boundary between complete fields may succeed. Re-encoding
                 // gives exactly that shorter message for all canonical fixtures.
@@ -361,7 +275,7 @@ fn every_datagram_prefix_is_safe_and_partial_fields_are_errors() {
     let p = fixture("wsjtx_Decode");
     let b = encode(&p).unwrap();
     assert!(matches!(
-        decode(&b[..b.len() - 5], Variant::Wsjtx),
+        decode(&b[..b.len() - 5]),
         Err(Error::Truncated { .. })
     ));
 }
@@ -370,18 +284,20 @@ fn every_datagram_prefix_is_safe_and_partial_fields_are_errors() {
 fn unknown_types_and_future_schemas_are_skipped_without_parsing_their_layout() {
     let p = fixture("wsjtx_Decode");
     let mut b = encode(&p).unwrap();
-    b[8..12].copy_from_slice(&99_u32.to_be_bytes());
-    assert_eq!(
-        decode(&b, Variant::Wsjtx),
-        Ok(Outcome::Skipped {
-            schema: 3,
-            message_type: Some(99),
-            reason: SkipReason::UnknownType
-        })
-    );
+    for message_type in [17_u32, 50, 51, 99] {
+        b[8..12].copy_from_slice(&message_type.to_be_bytes());
+        assert_eq!(
+            decode(&b),
+            Ok(Outcome::Skipped {
+                schema: 3,
+                message_type: Some(message_type),
+                reason: SkipReason::UnknownType
+            })
+        );
+    }
     b[4..8].copy_from_slice(&4_u32.to_be_bytes());
     assert_eq!(
-        decode(&b[..8], Variant::Wsjtx),
+        decode(&b[..8]),
         Ok(Outcome::Skipped {
             schema: 4,
             message_type: None,
@@ -389,40 +305,27 @@ fn unknown_types_and_future_schemas_are_skipped_without_parsing_their_layout() {
         })
     );
     let mut location = encode(&fixture("wsjtx_Location")).unwrap();
-    assert!(matches!(
-        decode(&location, Variant::Jtdx),
-        Ok(Outcome::Skipped {
-            reason: SkipReason::UnknownType,
-            ..
-        })
-    ));
     location[4..8].copy_from_slice(&0_u32.to_be_bytes());
-    assert_eq!(
-        decode(&location, Variant::Wsjtx),
-        Err(Error::UnsupportedSchema(0))
-    );
+    assert_eq!(decode(&location), Err(Error::UnsupportedSchema(0)));
 }
 
 #[test]
 fn wrong_magic_and_malicious_lengths() {
     for bytes in [&[][..], &[0; 20][..]] {
-        assert!(decode(bytes, Variant::Wsjtx).is_err());
+        assert!(decode(bytes).is_err());
     }
     let mut bytes = encode(&fixture("wsjtx_FreeText")).unwrap();
     bytes[0] = 0;
-    assert_eq!(decode(&bytes, Variant::Wsjtx), Err(Error::WrongMagic));
+    assert_eq!(decode(&bytes), Err(Error::WrongMagic));
     bytes[0] = 0xad;
     for length in [257_u32, 65_507, 65_536, 0xffff_fffe] {
         bytes[12..16].copy_from_slice(&length.to_be_bytes());
-        assert_eq!(decode(&bytes, Variant::Wsjtx), Err(Error::Length));
+        assert_eq!(decode(&bytes), Err(Error::Length));
     }
     let mut bytes = encode(&fixture("wsjtx_FreeText")).unwrap();
     bytes[22..26].copy_from_slice(&0xffff_fffe_u32.to_be_bytes());
-    assert_eq!(decode(&bytes, Variant::Wsjtx), Err(Error::Length));
-    assert_eq!(
-        decode(&vec![0; MAX_DATAGRAM + 1], Variant::Wsjtx),
-        Err(Error::Length)
-    );
+    assert_eq!(decode(&bytes), Err(Error::Length));
+    assert_eq!(decode(&vec![0; MAX_DATAGRAM + 1]), Err(Error::Length));
 }
 
 #[test]
@@ -444,7 +347,7 @@ fn maximum_datagram_and_id_are_bounded_in_both_directions() {
     let bytes = encode(&p).unwrap();
     assert_eq!(bytes.len(), MAX_DATAGRAM);
     assert_eq!(
-        decode(&bytes, Variant::Wsjtx).unwrap(),
+        decode(&bytes).unwrap(),
         Outcome::Message(Box::new(p.clone()))
     );
     if let Body::FreeText(t) = &mut p.body {
@@ -467,10 +370,7 @@ fn null_id_and_optional_null_strings_remain_distinct_from_absent_and_empty() {
     );
     let b = encode(&p).unwrap();
     assert_eq!(&b[12..16], &u32::MAX.to_be_bytes());
-    assert_eq!(
-        decode(&b, Variant::Wsjtx).unwrap(),
-        Outcome::Message(Box::new(p.clone()))
-    );
+    assert_eq!(decode(&b).unwrap(), Outcome::Message(Box::new(p.clone())));
     let json = serde_json::to_vec(&p).unwrap();
     assert_eq!(serde_json::from_slice::<Packet>(&json).unwrap(), p);
     p.body = Body::Heartbeat(Heartbeat::default());
@@ -478,7 +378,7 @@ fn null_id_and_optional_null_strings_remain_distinct_from_absent_and_empty() {
 }
 
 #[test]
-fn noncontiguous_optional_fields_and_variant_confusion_are_refused() {
+fn noncontiguous_optional_fields_are_refused() {
     let p = Packet::new(
         "WSJT-X",
         Body::Heartbeat(Heartbeat {
@@ -488,12 +388,6 @@ fn noncontiguous_optional_fields_and_variant_confusion_are_refused() {
         }),
     );
     assert_eq!(encode(&p), Err(Error::NonContiguousTail));
-    let mut p = fixture("wsjtx_Status");
-    p.variant = Variant::Jtdx;
-    assert_eq!(encode(&p), Err(Error::VariantMismatch));
-    let mut p = fixture("jtdx_Status");
-    p.variant = Variant::Wsjtx;
-    assert_eq!(encode(&p), Err(Error::VariantMismatch));
 }
 
 #[test]
@@ -527,29 +421,13 @@ fn all_mode_characters_match_the_reference() {
 }
 
 #[test]
-fn normalized_fields_keep_units_and_variant_meaning() {
-    let message = model::Message::from(fixture("jtdx_Status"));
-    let model::Kind::RadioState(radio) = message.kind else {
-        panic!("radio");
+fn normalized_fields_keep_units() {
+    let message = model::Message::from(fixture("wsjtx_QsoLogged"));
+    let model::Kind::LoggedQso(q) = message.kind else {
+        panic!("QSO")
     };
-    assert_eq!(radio.rx_offset_hz, -150);
-    for (name, variant) in [
-        ("wsjtx_QsoLogged", Variant::Wsjtx),
-        ("jtdx_QsoLogged", Variant::Jtdx),
-    ] {
-        let message = model::Message::from(fixture(name));
-        let model::Kind::LoggedQso(q) = message.kind else {
-            panic!("QSO");
-        };
-        assert_eq!(
-            q.tx_frequency_hz,
-            (variant == Variant::Wsjtx).then_some(14_074_000)
-        );
-        assert_eq!(
-            q.dial_frequency_hz,
-            (variant == Variant::Jtdx).then_some(14_074_000)
-        );
-    }
+    assert_eq!(q.tx_frequency_hz, Some(14_074_000));
+    assert_eq!(q.dial_frequency_hz, None);
     let message = model::Message::from(fixture("wsjtx_Decode"));
     let model::Kind::Decode(d) = message.kind else {
         panic!("decode");
@@ -573,10 +451,7 @@ fn invalid_datetime_layout_is_refused() {
     assert_eq!(encode(&p), Err(Error::InvalidTimeSpec(99)));
     let mut bytes = encode(&fixture("wsjtx_QsoLogged")).unwrap();
     bytes[22 + 12] = 99;
-    assert_eq!(
-        decode(&bytes, Variant::Wsjtx),
-        Err(Error::InvalidTimeSpec(99))
-    );
+    assert_eq!(decode(&bytes), Err(Error::InvalidTimeSpec(99)));
 }
 
 #[test]
@@ -592,7 +467,7 @@ fn ieee_nan_infinity_and_signed_zero_preserve_wire_bits() {
             d.delta_time_seconds = f64::from_bits(bits);
         }
         let bytes = encode(&p).unwrap();
-        let Outcome::Message(decoded) = decode(&bytes, Variant::Wsjtx).unwrap() else {
+        let Outcome::Message(decoded) = decode(&bytes).unwrap() else {
             panic!("message");
         };
         let Body::Decode(d) = &decoded.body else {
@@ -610,16 +485,6 @@ fn ieee_nan_infinity_and_signed_zero_preserve_wire_bits() {
 fn extensions_cannot_fill_missing_known_suffix_fields() {
     let mut p = fixture("prototype_Heartbeat_old");
     p.extensions = vec![1, 2, 3];
-    assert_eq!(encode(&p), Err(Error::NonContiguousTail));
-    let mut p = fixture("jtdx_Heartbeat");
-    p.extensions = vec![1, 2, 3];
-    let bytes = encode(&p).unwrap();
-    assert_eq!(
-        decode(&bytes, Variant::Jtdx).unwrap(),
-        Outcome::Message(Box::new(p))
-    );
-    let mut p = fixture("jtdx_TriggerCq_source");
-    p.extensions = vec![0];
     assert_eq!(encode(&p), Err(Error::NonContiguousTail));
 }
 
@@ -829,25 +694,6 @@ fn all_independent_fixtures_assert_normalized_semantics() {
                 );
                 assert_eq!(r.dial_frequency_hz, s.dial_frequency_hz);
             }
-            (Body::JtdxStatus(s), model::Kind::RadioState(r)) => {
-                assert_eq!(
-                    (r.rx_offset_hz, r.tx_offset_hz),
-                    (i64::from(s.rx_df_hz), i64::from(s.tx_df_hz))
-                );
-                assert_eq!(
-                    (&r.mode, &r.tx_mode, &r.dx_call),
-                    (&s.mode, &s.tx_mode, &s.dx_call)
-                );
-                assert_eq!(
-                    (&r.station_call, &r.station_grid, &r.dx_grid),
-                    (&s.de_call, &s.de_grid, &s.dx_grid)
-                );
-                assert_eq!(
-                    (r.tx_enabled, r.transmitting, r.decoding),
-                    (s.tx_enabled, s.transmitting, s.decoding)
-                );
-                assert_eq!(r.dial_frequency_hz, s.dial_frequency_hz);
-            }
             (Body::Decode(d), model::Kind::Decode(n)) => {
                 assert_eq!(
                     (n.new, n.time, n.snr_db, n.delta_time_seconds.to_bits()),
@@ -905,14 +751,8 @@ fn all_independent_fixtures_assert_normalized_semantics() {
                     (&n.exchange_sent, &n.exchange_received),
                     (&q.exchange_sent, &q.exchange_received)
                 );
-                assert_eq!(
-                    n.tx_frequency_hz,
-                    (packet.variant == Variant::Wsjtx).then_some(q.frequency_hz)
-                );
-                assert_eq!(
-                    n.dial_frequency_hz,
-                    (packet.variant == Variant::Jtdx).then_some(q.frequency_hz)
-                );
+                assert_eq!(n.tx_frequency_hz, Some(q.frequency_hz));
+                assert_eq!(n.dial_frequency_hz, None);
             }
             _ => {}
         }
@@ -936,31 +776,4 @@ fn generic_envelope_supports_non_udp_request_response_context() {
     let restored: model::Message<Vec<u8>> = serde_json::from_slice(&json).unwrap();
     assert_eq!(restored, message);
     assert_eq!(restored.into_family(), b"<methodResponse/>");
-}
-
-#[test]
-fn jtdx_clear_and_close_keep_released_outbound_meanings() {
-    for (name, expected) in [
-        (
-            "jtdx_Clear",
-            model::Kind::Notification(model::Operation::Clear),
-        ),
-        ("jtdx_Close", model::Kind::Lifecycle),
-    ] {
-        for direction in [
-            model::Direction::Unknown,
-            model::Direction::FromApplication,
-            model::Direction::ToApplication,
-        ] {
-            let packet = fixture(name);
-            let context = model::Context {
-                direction,
-                ..Default::default()
-            };
-            let common = model::Message::with_context(packet.clone(), context.clone());
-            assert_eq!(common.kind, expected);
-            assert_eq!(common.context, context);
-            assert_eq!(common.into_family(), packet);
-        }
-    }
 }

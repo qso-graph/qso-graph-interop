@@ -38,9 +38,6 @@ are omitted for brevity. All fields of the decoded message are included in outpu
 {"type":"switch_configuration","configuration_name":"Default"}
 {"type":"configure","mode":"FT8","frequency_tolerance_hz":50}
 {"type":"annotation_info","dx_call":"W1AW","sort_order":1}
-{"type":"jtdx_status","dial_frequency_hz":14074000,"mode":"FT8"}
-{"type":"set_tx_delta_freq","tx_delta_frequency_hz":1500}
-{"type":"trigger_cq","direction":"","send":true}
 {"type":"skipped","message_type":null,"reason":"future_schema"}
 ```
 

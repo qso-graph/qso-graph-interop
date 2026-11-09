@@ -7,7 +7,7 @@ mod output;
 
 use clap::{Args, Parser, Subcommand};
 use numeric_udp::NumericUdp;
-use qso_graph_udp::wsjtx::{self, Body, Packet, QDateTime, QTime, Variant};
+use qso_graph_udp::wsjtx::{self, Body, Packet, QDateTime, QTime};
 use std::io::{self, Write};
 use std::net::SocketAddr;
 use std::process::ExitCode;
@@ -30,7 +30,7 @@ struct Cli {
 enum Command {
     /// Print each decoded datagram as one line.
     #[command(
-        after_help = "Examples:\n  qg-udp listen --wsjtx\n  qg-udp listen --wsjtx 127.0.0.1:2237 --json\n  qg-udp listen --wsjtx '[::1]:2237' --jtdx"
+        after_help = "Examples:\n  qg-udp listen --wsjtx\n  qg-udp listen --wsjtx 127.0.0.1:2237 --json"
     )]
     Listen(Listen),
     /// Send a finite heartbeat, status, decode and logged-QSO script.
@@ -54,9 +54,6 @@ struct Listen {
     /// Include sender, schema, and client ID in human output.
     #[arg(long)]
     verbose: bool,
-    /// Decode the explicitly selected JTDX 159 variant.
-    #[arg(long)]
-    jtdx: bool,
     /// Exit after this many datagrams (0 listens indefinitely).
     #[arg(long, default_value_t = 0)]
     count: u64,
@@ -104,11 +101,6 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
 
 fn listen(options: Listen) -> Result<(), Box<dyn std::error::Error>> {
     let socket = NumericUdp::bind(options.address)?;
-    let variant = if options.jtdx {
-        Variant::Jtdx
-    } else {
-        Variant::Wsjtx
-    };
     let mut bytes = [0_u8; 65_535];
     let stdout = io::stdout();
     let mut output = stdout.lock();
@@ -117,7 +109,7 @@ fn listen(options: Listen) -> Result<(), Box<dyn std::error::Error>> {
         let (n, peer) = socket.recv_from(&mut bytes)?;
         let received_ms = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
         let received_ms = i64::try_from(received_ms)?;
-        match wsjtx::decode(&bytes[..n], variant) {
+        match wsjtx::decode(&bytes[..n]) {
             Ok(message) => {
                 let value = output::object(&message, peer, received_ms);
                 if options.json {
@@ -373,7 +365,7 @@ mod tests {
         assert_eq!(packets.len(), 9);
         for p in packets {
             assert_eq!(
-                wsjtx::decode(&wsjtx::encode(&p).unwrap(), Variant::Wsjtx).unwrap(),
+                wsjtx::decode(&wsjtx::encode(&p).unwrap()).unwrap(),
                 wsjtx::Outcome::Message(Box::new(p.clone()))
             );
             match p.body {

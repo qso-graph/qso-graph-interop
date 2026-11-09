@@ -71,9 +71,6 @@ fn kind(body: &Body) -> &'static str {
         Body::SwitchConfiguration(_) => "switch_configuration",
         Body::Configure(_) => "configure",
         Body::AnnotationInfo(_) => "annotation_info",
-        Body::JtdxStatus(_) => "jtdx_status",
-        Body::SetTxDeltaFreq(_) => "set_tx_delta_freq",
-        Body::TriggerCq(_) => "trigger_cq",
     }
 }
 
@@ -239,7 +236,7 @@ pub fn human(value: &Value, verbose: bool) -> String {
                 parts.push(format!("(schema {})", field(m, "max_schema")));
             }
         }
-        "status" | "jtdx_status" => {
+        "status" => {
             add(&mut parts, mhz(m, "dial_frequency_hz"));
             add(&mut parts, field(m, "mode"));
             parts.push(
@@ -376,7 +373,7 @@ mod tests {
             }),
         );
         let bytes = wsjtx::encode(&packet).unwrap();
-        let outcome = wsjtx::decode(&bytes, wsjtx::Variant::Wsjtx).unwrap();
+        let outcome = wsjtx::decode(&bytes).unwrap();
         let Outcome::Message(ref decoded) = outcome else {
             panic!("packet");
         };
@@ -411,7 +408,7 @@ mod tests {
             }),
         );
         let wire = wsjtx::encode(&packet).unwrap();
-        let outcome = wsjtx::decode(&wire, wsjtx::Variant::Wsjtx).unwrap();
+        let outcome = wsjtx::decode(&wire).unwrap();
         let value = object(&outcome, "127.0.0.1:1".parse().unwrap(), 0);
         let json: Value = serde_json::from_str(&value.to_string()).unwrap();
         assert_eq!(json["text_bytes"], json!(bytes));

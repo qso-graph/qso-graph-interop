@@ -1,15 +1,15 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # QSO Graph UDP library
 
-Encode and decode WSJT-X and JTDX UDP messages with bounded Rust parsers.
+Encode and decode WSJT-X UDP messages with bounded Rust parsers.
 Applications choose which messages to send and supply their own sockets.
 
 ```rust
-use qso_graph_udp::wsjtx::{self, Body, Outcome, Packet, Variant};
+use qso_graph_udp::wsjtx::{self, Body, Outcome, Packet};
 
 let original = Packet::new("WSJT-X", Body::Replay);
 let bytes = wsjtx::encode(&original)?;
-match wsjtx::decode(&bytes, Variant::Wsjtx)? {
+match wsjtx::decode(&bytes)? {
     Outcome::Message(packet) => assert_eq!(*packet, original),
     Outcome::Skipped { .. } => unreachable!(),
 }
