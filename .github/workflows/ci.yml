@@ -90,7 +90,7 @@ jobs:
           cargo fmt --check
           cargo clippy --all-targets --locked -- -D warnings
       - run: python3 fuzz/seed.py
-      - name: Fuzz both variants
+      - name: Fuzz the decoder
         working-directory: fuzz
         env:
           SECONDS_EACH: ${{ github.event_name == 'schedule' && '600' || '60' }}

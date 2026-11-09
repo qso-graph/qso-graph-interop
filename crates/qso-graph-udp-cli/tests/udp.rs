@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #![forbid(unsafe_code)]
-use qso_graph_udp::wsjtx::{self, Body, Outcome, Variant};
+use qso_graph_udp::wsjtx::{self, Body, Outcome};
 use std::{
     io::{BufRead, BufReader},
     net::UdpSocket,
@@ -38,7 +38,7 @@ fn simulator_sends_only_to_the_named_loopback_socket() {
     for _ in 0..9 {
         let (n, peer) = socket.recv_from(&mut buf).unwrap();
         assert!(peer.ip().is_loopback());
-        let Outcome::Message(p) = wsjtx::decode(&buf[..n], Variant::Wsjtx).unwrap() else {
+        let Outcome::Message(p) = wsjtx::decode(&buf[..n]).unwrap() else {
             panic!("packet");
         };
         types.push(p.body.message_type());

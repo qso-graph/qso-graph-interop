@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 [package]
 name = "qso-graph-udp"
-description = "Bounded, bidirectional WSJT-X and JTDX UDP protocol codecs"
+description = "Bounded, bidirectional WSJT-X UDP protocol codecs"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

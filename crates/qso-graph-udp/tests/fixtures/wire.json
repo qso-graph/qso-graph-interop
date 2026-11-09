@@ -6,7 +6,6 @@
       "wire_hex": "adbccbda00000003000000000000000657534a542d580000000300000005332e332e3000000003616263",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -46,7 +45,6 @@
       "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c090000000034654380000000457314157000000032d303700000003465434000001000004b1000008fe000000064e3043414c4c00000004444e313300000004464e333100000000014100030000002f0000001e000000054669656c640000000743512054455354",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -160,7 +158,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -212,7 +209,6 @@
       "wire_hex": "adbccbda00000003000000030000000657534a542d5802",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -236,7 +232,6 @@
       "wire_hex": "adbccbda00000003000000040000000657534a542d5805135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330004",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -287,7 +282,6 @@
       "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b3392001000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -441,7 +435,6 @@
       "wire_hex": "adbccbda00000003000000060000000657534a542d58",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -461,7 +454,6 @@
       "wire_hex": "adbccbda00000003000000070000000657534a542d58",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -481,7 +473,6 @@
       "wire_hex": "adbccbda00000003000000080000000657534a542d5801",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -505,7 +496,6 @@
       "wire_hex": "adbccbda00000003000000090000000657534a542d58000000074351205445535401",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -540,7 +530,6 @@
       "wire_hex": "adbccbda000000030000000a0000000657534a542d580102aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002500",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -589,7 +578,6 @@
       "wire_hex": "adbccbda000000030000000b0000000657534a542d5800000006464e33317072",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -622,7 +610,6 @@
       "wire_hex": "adbccbda000000030000000c0000000657534a542d58000000273c616469665f7665723a353e332e312e303c454f483e3c43414c4c3a343e573141573c454f523e",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -688,7 +675,6 @@
       "wire_hex": "adbccbda000000030000000d0000000657534a542d58000000045731415701fde9044d089a0ce7113401fa02158119ce1e1b226801",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -740,7 +726,6 @@
       "wire_hex": "adbccbda000000030000000e0000000657534a542d58000000054669656c64",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -772,7 +757,6 @@
       "wire_hex": "adbccbda000000030000000f0000000657534a542d5800000003465438000000490000000142000000001e00000b4a000000045731415700000004464e333101",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -828,7 +812,6 @@
       "wire_hex": "adbccbda00000003000000100000000657534a542d58000000045731415701ffffffff",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -857,763 +840,10 @@
       }
     },
     {
-      "name": "jtdx_Heartbeat",
-      "wire_hex": "adbccbda0000000300000000000000044a5444580000000300000005332e332e30",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "Heartbeat": {
-            "max_schema": 3,
-            "version": {
-              "bytes": [
-                51,
-                46,
-                51,
-                46,
-                48
-              ]
-            },
-            "revision": null
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Status",
-      "wire_hex": "adbccbda0000000300000001000000044a5444580000000000d6c090000000034654380000000457314157000000032d303700000003465434000001ffffff6afffffed4000000064e3043414c4c00000004444e313300000004464e33310000000001410001",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "JtdxStatus": {
-            "dial_frequency_hz": 14074000,
-            "mode": {
-              "bytes": [
-                70,
-                84,
-                56
-              ]
-            },
-            "dx_call": {
-              "bytes": [
-                87,
-                49,
-                65,
-                87
-              ]
-            },
-            "report": {
-              "bytes": [
-                45,
-                48,
-                55
-              ]
-            },
-            "tx_mode": {
-              "bytes": [
-                70,
-                84,
-                52
-              ]
-            },
-            "tx_enabled": false,
-            "transmitting": false,
-            "decoding": true,
-            "rx_df_hz": -150,
-            "tx_df_hz": -300,
-            "de_call": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "de_grid": {
-              "bytes": [
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "dx_grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "tx_watchdog": false,
-            "sub_mode": {
-              "bytes": [
-                65
-              ]
-            },
-            "fast_mode": false,
-            "tx_first": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Decode",
-      "wire_hex": "adbccbda0000000300000002000000044a5444580105135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330000",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "Decode": {
-            "new": true,
-            "time": 85155000,
-            "snr_db": -12,
-            "delta_time_seconds": 0.2,
-            "delta_frequency_hz": 1234,
-            "mode": {
-              "bytes": [
-                126
-              ]
-            },
-            "message": {
-              "bytes": [
-                67,
-                81,
-                32,
-                75,
-                55,
-                65,
-                66,
-                67,
-                32,
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "low_confidence": false,
-            "off_air": false
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Clear",
-      "wire_hex": "adbccbda0000000300000003000000044a544458",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "Clear": {
-            "window": null
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Reply",
-      "wire_hex": "adbccbda0000000300000004000000044a54445805135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e3133",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "Reply": {
-            "time": 85155000,
-            "snr_db": -12,
-            "delta_time_seconds": 0.2,
-            "delta_frequency_hz": 1234,
-            "mode": {
-              "bytes": [
-                126
-              ]
-            },
-            "message": {
-              "bytes": [
-                67,
-                81,
-                32,
-                75,
-                55,
-                65,
-                66,
-                67,
-                32,
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "low_confidence": null,
-            "modifiers": null
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_QsoLogged",
-      "wire_hex": "adbccbda0000000300000005000000044a5444580000000000258ea902b3392001000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "QsoLogged": {
-            "time_off": {
-              "julian_day": 2461353,
-              "time": 45300000,
-              "time_spec": 1,
-              "offset_seconds": null,
-              "time_zone": null
-            },
-            "dx_call": {
-              "bytes": [
-                87,
-                49,
-                65,
-                87
-              ]
-            },
-            "dx_grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "frequency_hz": 14074000,
-            "mode": {
-              "bytes": [
-                70,
-                84,
-                56
-              ]
-            },
-            "report_sent": {
-              "bytes": [
-                45,
-                49,
-                50
-              ]
-            },
-            "report_received": {
-              "bytes": [
-                45,
-                49,
-                48
-              ]
-            },
-            "tx_power": {
-              "bytes": [
-                53
-              ]
-            },
-            "comments": {
-              "bytes": [
-                84,
-                101,
-                115,
-                116,
-                32,
-                81,
-                83,
-                79
-              ]
-            },
-            "name": {
-              "bytes": [
-                69,
-                120,
-                97,
-                109,
-                112,
-                108,
-                101
-              ]
-            },
-            "time_on": {
-              "julian_day": 2461353,
-              "time": 45255000,
-              "time_spec": 1,
-              "offset_seconds": null,
-              "time_zone": null
-            },
-            "operator_call": {
-              "bytes": [
-                75,
-                55,
-                65,
-                66,
-                67
-              ]
-            },
-            "my_call": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "my_grid": {
-              "bytes": [
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "exchange_sent": null,
-            "exchange_received": null,
-            "propagation_mode": null
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Close",
-      "wire_hex": "adbccbda0000000300000006000000044a544458",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": "Close",
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Replay",
-      "wire_hex": "adbccbda0000000300000007000000044a544458",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": "Replay",
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_HaltTx",
-      "wire_hex": "adbccbda0000000300000008000000044a54445801",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "HaltTx": {
-            "auto_tx_only": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_FreeText",
-      "wire_hex": "adbccbda0000000300000009000000044a544458000000074351205445535401",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "FreeText": {
-            "text": {
-              "bytes": [
-                67,
-                81,
-                32,
-                84,
-                69,
-                83,
-                84
-              ]
-            },
-            "send": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_WsprDecode",
-      "wire_hex": "adbccbda000000030000000a000000044a5444580102aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e333100000025",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "WsprDecode": {
-            "new": true,
-            "time": 45000000,
-            "snr_db": -24,
-            "delta_time_seconds": -0.3,
-            "frequency_hz": 14097100,
-            "drift_hz": -1,
-            "callsign": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "power_dbm": 37,
-            "off_air": null
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_LoggedAdif",
-      "wire_hex": "adbccbda000000030000000c000000044a544458000000273c616469665f7665723a353e332e312e303c454f483e3c43414c4c3a343e573141573c454f523e",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "LoggedAdif": {
-            "adif": {
-              "bytes": [
-                60,
-                97,
-                100,
-                105,
-                102,
-                95,
-                118,
-                101,
-                114,
-                58,
-                53,
-                62,
-                51,
-                46,
-                49,
-                46,
-                48,
-                60,
-                69,
-                79,
-                72,
-                62,
-                60,
-                67,
-                65,
-                76,
-                76,
-                58,
-                52,
-                62,
-                87,
-                49,
-                65,
-                87,
-                60,
-                69,
-                79,
-                82,
-                62
-              ]
-            }
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_SetTxDeltaFreq",
-      "wire_hex": "adbccbda0000000300000032000000044a54445800000708",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "SetTxDeltaFreq": {
-            "tx_delta_frequency_hz": 1800
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_TriggerCq",
-      "wire_hex": "adbccbda0000000300000033000000044a5444580000000244580101",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "TriggerCq": {
-            "direction": {
-              "bytes": [
-                68,
-                88
-              ]
-            },
-            "tx_period": true,
-            "send": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_TriggerCq_source",
-      "wire_hex": "adbccbda0000000300000033000000044a54445800000002445801",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "TriggerCq": {
-            "direction": {
-              "bytes": [
-                68,
-                88
-              ]
-            },
-            "tx_period": null,
-            "send": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Reply_source",
-      "wire_hex": "adbccbda0000000300000004000000044a54445805135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330004",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "Reply": {
-            "time": 85155000,
-            "snr_db": -12,
-            "delta_time_seconds": 0.2,
-            "delta_frequency_hz": 1234,
-            "mode": {
-              "bytes": [
-                126
-              ]
-            },
-            "message": {
-              "bytes": [
-                67,
-                81,
-                32,
-                75,
-                55,
-                65,
-                66,
-                67,
-                32,
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "low_confidence": false,
-            "modifiers": 4
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_WsprDecode_source",
-      "wire_hex": "adbccbda000000030000000a000000044a5444580102aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002500",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "WsprDecode": {
-            "new": true,
-            "time": 45000000,
-            "snr_db": -24,
-            "delta_time_seconds": -0.3,
-            "frequency_hz": 14097100,
-            "drift_hz": -1,
-            "callsign": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "power_dbm": 37,
-            "off_air": false
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
       "name": "wsjtx_Status_bool_0",
       "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c090000000034654380000000457314157000000032d303700000003465434010001000004b1000008fe000000064e3043414c4c00000004444e313300000004464e333100000000014101030000002f0000001e000000054669656c640000000743512054455354",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -1727,7 +957,6 @@
       "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c090000000034654380000000457314157000000032d303700000003465434000101000004b1000008fe000000064e3043414c4c00000004444e313300000004464e333100000000014100030000002f0000001e000000054669656c640000000743512054455354",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -1841,7 +1070,6 @@
       "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c090000000034654380000000457314157000000032d303700000003465434000000000004b1000008fe000000064e3043414c4c00000004444e313300000004464e333101000000014101030000002f0000001e000000054669656c640000000743512054455354",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -1955,7 +1183,6 @@
       "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c090000000034654380000000457314157000000032d303700000003465434000000000004b1000008fe000000064e3043414c4c00000004444e313300000004464e333100000000014100030000002f0000001e000000054669656c640000000743512054455354",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2069,7 +1296,6 @@
       "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c090000000034654380000000457314157000000032d303700000003465434010101000004b1000008fe000000064e3043414c4c00000004444e313300000004464e333101000000014101030000002f0000001e000000054669656c640000000743512054455354",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2183,7 +1409,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330001",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2235,7 +1460,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580005135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330101",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2287,7 +1511,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580005135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2339,7 +1562,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330101",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2391,7 +1613,6 @@
       "wire_hex": "adbccbda00000003000000040000000657534a542d5805135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330104",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2442,7 +1663,6 @@
       "wire_hex": "adbccbda00000003000000040000000657534a542d5805135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330004",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2493,7 +1713,6 @@
       "wire_hex": "adbccbda00000003000000040000000657534a542d5805135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330104",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2544,7 +1763,6 @@
       "wire_hex": "adbccbda00000003000000080000000657534a542d5801",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2568,7 +1786,6 @@
       "wire_hex": "adbccbda00000003000000080000000657534a542d5800",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2592,7 +1809,6 @@
       "wire_hex": "adbccbda00000003000000080000000657534a542d5801",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2616,7 +1832,6 @@
       "wire_hex": "adbccbda00000003000000090000000657534a542d58000000074351205445535401",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2651,7 +1866,6 @@
       "wire_hex": "adbccbda00000003000000090000000657534a542d58000000074351205445535400",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2686,7 +1900,6 @@
       "wire_hex": "adbccbda00000003000000090000000657534a542d58000000074351205445535401",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2721,7 +1934,6 @@
       "wire_hex": "adbccbda000000030000000a0000000657534a542d580102aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002500",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2770,7 +1982,6 @@
       "wire_hex": "adbccbda000000030000000a0000000657534a542d580002aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002501",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2819,7 +2030,6 @@
       "wire_hex": "adbccbda000000030000000a0000000657534a542d580002aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002500",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2868,7 +2078,6 @@
       "wire_hex": "adbccbda000000030000000a0000000657534a542d580102aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002501",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2917,7 +2126,6 @@
       "wire_hex": "adbccbda000000030000000d0000000657534a542d58000000045731415701fde9044d089a0ce7113401fa02158119ce1e1b226801",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -2969,7 +2177,6 @@
       "wire_hex": "adbccbda000000030000000d0000000657534a542d58000000045731415701fde9044d089a0ce7113401fa02158119ce1e1b226800",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -3021,7 +2228,6 @@
       "wire_hex": "adbccbda000000030000000d0000000657534a542d58000000045731415701fde9044d089a0ce7113401fa02158119ce1e1b226801",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -3073,7 +2279,6 @@
       "wire_hex": "adbccbda000000030000000f0000000657534a542d5800000003465438000000490000000142010000001e00000b4a000000045731415700000004464e333100",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -3129,7 +2334,6 @@
       "wire_hex": "adbccbda000000030000000f0000000657534a542d5800000003465438000000490000000142000000001e00000b4a000000045731415700000004464e333101",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -3185,7 +2389,6 @@
       "wire_hex": "adbccbda000000030000000f0000000657534a542d5800000003465438000000490000000142000000001e00000b4a000000045731415700000004464e333100",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -3241,7 +2444,6 @@
       "wire_hex": "adbccbda000000030000000f0000000657534a542d5800000003465438000000490000000142010000001e00000b4a000000045731415700000004464e333101",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -3297,7 +2499,6 @@
       "wire_hex": "adbccbda00000003000000100000000657534a542d58000000045731415701ffffffff",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -3330,7 +2531,6 @@
       "wire_hex": "adbccbda00000003000000100000000657534a542d58000000045731415700ffffffff",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -3363,7 +2563,6 @@
       "wire_hex": "adbccbda00000003000000100000000657534a542d58000000045731415701ffffffff",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -3392,1505 +2591,10 @@
       }
     },
     {
-      "name": "jtdx_Status_bool_0",
-      "wire_hex": "adbccbda0000000300000001000000044a5444580000000000d6c090000000034654380000000457314157000000032d303700000003465434010001ffffff6afffffed4000000064e3043414c4c00000004444e313300000004464e33310000000001410100",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "JtdxStatus": {
-            "dial_frequency_hz": 14074000,
-            "mode": {
-              "bytes": [
-                70,
-                84,
-                56
-              ]
-            },
-            "dx_call": {
-              "bytes": [
-                87,
-                49,
-                65,
-                87
-              ]
-            },
-            "report": {
-              "bytes": [
-                45,
-                48,
-                55
-              ]
-            },
-            "tx_mode": {
-              "bytes": [
-                70,
-                84,
-                52
-              ]
-            },
-            "tx_enabled": true,
-            "transmitting": false,
-            "decoding": true,
-            "rx_df_hz": -150,
-            "tx_df_hz": -300,
-            "de_call": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "de_grid": {
-              "bytes": [
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "dx_grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "tx_watchdog": false,
-            "sub_mode": {
-              "bytes": [
-                65
-              ]
-            },
-            "fast_mode": true,
-            "tx_first": false
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Status_bool_1",
-      "wire_hex": "adbccbda0000000300000001000000044a5444580000000000d6c090000000034654380000000457314157000000032d303700000003465434000101ffffff6afffffed4000000064e3043414c4c00000004444e313300000004464e33310000000001410001",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "JtdxStatus": {
-            "dial_frequency_hz": 14074000,
-            "mode": {
-              "bytes": [
-                70,
-                84,
-                56
-              ]
-            },
-            "dx_call": {
-              "bytes": [
-                87,
-                49,
-                65,
-                87
-              ]
-            },
-            "report": {
-              "bytes": [
-                45,
-                48,
-                55
-              ]
-            },
-            "tx_mode": {
-              "bytes": [
-                70,
-                84,
-                52
-              ]
-            },
-            "tx_enabled": false,
-            "transmitting": true,
-            "decoding": true,
-            "rx_df_hz": -150,
-            "tx_df_hz": -300,
-            "de_call": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "de_grid": {
-              "bytes": [
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "dx_grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "tx_watchdog": false,
-            "sub_mode": {
-              "bytes": [
-                65
-              ]
-            },
-            "fast_mode": false,
-            "tx_first": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Status_bool_2",
-      "wire_hex": "adbccbda0000000300000001000000044a5444580000000000d6c090000000034654380000000457314157000000032d303700000003465434000000ffffff6afffffed4000000064e3043414c4c00000004444e313300000004464e33310100000001410101",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "JtdxStatus": {
-            "dial_frequency_hz": 14074000,
-            "mode": {
-              "bytes": [
-                70,
-                84,
-                56
-              ]
-            },
-            "dx_call": {
-              "bytes": [
-                87,
-                49,
-                65,
-                87
-              ]
-            },
-            "report": {
-              "bytes": [
-                45,
-                48,
-                55
-              ]
-            },
-            "tx_mode": {
-              "bytes": [
-                70,
-                84,
-                52
-              ]
-            },
-            "tx_enabled": false,
-            "transmitting": false,
-            "decoding": false,
-            "rx_df_hz": -150,
-            "tx_df_hz": -300,
-            "de_call": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "de_grid": {
-              "bytes": [
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "dx_grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "tx_watchdog": true,
-            "sub_mode": {
-              "bytes": [
-                65
-              ]
-            },
-            "fast_mode": true,
-            "tx_first": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Status_bool_3",
-      "wire_hex": "adbccbda0000000300000001000000044a5444580000000000d6c090000000034654380000000457314157000000032d303700000003465434000000ffffff6afffffed4000000064e3043414c4c00000004444e313300000004464e33310000000001410000",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "JtdxStatus": {
-            "dial_frequency_hz": 14074000,
-            "mode": {
-              "bytes": [
-                70,
-                84,
-                56
-              ]
-            },
-            "dx_call": {
-              "bytes": [
-                87,
-                49,
-                65,
-                87
-              ]
-            },
-            "report": {
-              "bytes": [
-                45,
-                48,
-                55
-              ]
-            },
-            "tx_mode": {
-              "bytes": [
-                70,
-                84,
-                52
-              ]
-            },
-            "tx_enabled": false,
-            "transmitting": false,
-            "decoding": false,
-            "rx_df_hz": -150,
-            "tx_df_hz": -300,
-            "de_call": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "de_grid": {
-              "bytes": [
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "dx_grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "tx_watchdog": false,
-            "sub_mode": {
-              "bytes": [
-                65
-              ]
-            },
-            "fast_mode": false,
-            "tx_first": false
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Status_bool_4",
-      "wire_hex": "adbccbda0000000300000001000000044a5444580000000000d6c090000000034654380000000457314157000000032d303700000003465434010101ffffff6afffffed4000000064e3043414c4c00000004444e313300000004464e33310100000001410101",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "JtdxStatus": {
-            "dial_frequency_hz": 14074000,
-            "mode": {
-              "bytes": [
-                70,
-                84,
-                56
-              ]
-            },
-            "dx_call": {
-              "bytes": [
-                87,
-                49,
-                65,
-                87
-              ]
-            },
-            "report": {
-              "bytes": [
-                45,
-                48,
-                55
-              ]
-            },
-            "tx_mode": {
-              "bytes": [
-                70,
-                84,
-                52
-              ]
-            },
-            "tx_enabled": true,
-            "transmitting": true,
-            "decoding": true,
-            "rx_df_hz": -150,
-            "tx_df_hz": -300,
-            "de_call": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "de_grid": {
-              "bytes": [
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "dx_grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "tx_watchdog": true,
-            "sub_mode": {
-              "bytes": [
-                65
-              ]
-            },
-            "fast_mode": true,
-            "tx_first": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Decode_bool_0",
-      "wire_hex": "adbccbda0000000300000002000000044a5444580105135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330001",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "Decode": {
-            "new": true,
-            "time": 85155000,
-            "snr_db": -12,
-            "delta_time_seconds": 0.2,
-            "delta_frequency_hz": 1234,
-            "mode": {
-              "bytes": [
-                126
-              ]
-            },
-            "message": {
-              "bytes": [
-                67,
-                81,
-                32,
-                75,
-                55,
-                65,
-                66,
-                67,
-                32,
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "low_confidence": false,
-            "off_air": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Decode_bool_1",
-      "wire_hex": "adbccbda0000000300000002000000044a5444580005135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330101",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "Decode": {
-            "new": false,
-            "time": 85155000,
-            "snr_db": -12,
-            "delta_time_seconds": 0.2,
-            "delta_frequency_hz": 1234,
-            "mode": {
-              "bytes": [
-                126
-              ]
-            },
-            "message": {
-              "bytes": [
-                67,
-                81,
-                32,
-                75,
-                55,
-                65,
-                66,
-                67,
-                32,
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "low_confidence": true,
-            "off_air": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Decode_bool_2",
-      "wire_hex": "adbccbda0000000300000002000000044a5444580005135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330000",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "Decode": {
-            "new": false,
-            "time": 85155000,
-            "snr_db": -12,
-            "delta_time_seconds": 0.2,
-            "delta_frequency_hz": 1234,
-            "mode": {
-              "bytes": [
-                126
-              ]
-            },
-            "message": {
-              "bytes": [
-                67,
-                81,
-                32,
-                75,
-                55,
-                65,
-                66,
-                67,
-                32,
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "low_confidence": false,
-            "off_air": false
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Decode_bool_3",
-      "wire_hex": "adbccbda0000000300000002000000044a5444580105135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330101",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "Decode": {
-            "new": true,
-            "time": 85155000,
-            "snr_db": -12,
-            "delta_time_seconds": 0.2,
-            "delta_frequency_hz": 1234,
-            "mode": {
-              "bytes": [
-                126
-              ]
-            },
-            "message": {
-              "bytes": [
-                67,
-                81,
-                32,
-                75,
-                55,
-                65,
-                66,
-                67,
-                32,
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "low_confidence": true,
-            "off_air": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_HaltTx_bool_0",
-      "wire_hex": "adbccbda0000000300000008000000044a54445801",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "HaltTx": {
-            "auto_tx_only": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_HaltTx_bool_1",
-      "wire_hex": "adbccbda0000000300000008000000044a54445800",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "HaltTx": {
-            "auto_tx_only": false
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_HaltTx_bool_2",
-      "wire_hex": "adbccbda0000000300000008000000044a54445801",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "HaltTx": {
-            "auto_tx_only": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_FreeText_bool_0",
-      "wire_hex": "adbccbda0000000300000009000000044a544458000000074351205445535401",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "FreeText": {
-            "text": {
-              "bytes": [
-                67,
-                81,
-                32,
-                84,
-                69,
-                83,
-                84
-              ]
-            },
-            "send": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_FreeText_bool_1",
-      "wire_hex": "adbccbda0000000300000009000000044a544458000000074351205445535400",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "FreeText": {
-            "text": {
-              "bytes": [
-                67,
-                81,
-                32,
-                84,
-                69,
-                83,
-                84
-              ]
-            },
-            "send": false
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_FreeText_bool_2",
-      "wire_hex": "adbccbda0000000300000009000000044a544458000000074351205445535401",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "FreeText": {
-            "text": {
-              "bytes": [
-                67,
-                81,
-                32,
-                84,
-                69,
-                83,
-                84
-              ]
-            },
-            "send": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_WsprDecode_bool_0",
-      "wire_hex": "adbccbda000000030000000a000000044a5444580102aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e333100000025",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "WsprDecode": {
-            "new": true,
-            "time": 45000000,
-            "snr_db": -24,
-            "delta_time_seconds": -0.3,
-            "frequency_hz": 14097100,
-            "drift_hz": -1,
-            "callsign": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "power_dbm": 37,
-            "off_air": null
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_WsprDecode_bool_1",
-      "wire_hex": "adbccbda000000030000000a000000044a5444580002aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e333100000025",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "WsprDecode": {
-            "new": false,
-            "time": 45000000,
-            "snr_db": -24,
-            "delta_time_seconds": -0.3,
-            "frequency_hz": 14097100,
-            "drift_hz": -1,
-            "callsign": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "power_dbm": 37,
-            "off_air": null
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_WsprDecode_bool_2",
-      "wire_hex": "adbccbda000000030000000a000000044a5444580102aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e333100000025",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "WsprDecode": {
-            "new": true,
-            "time": 45000000,
-            "snr_db": -24,
-            "delta_time_seconds": -0.3,
-            "frequency_hz": 14097100,
-            "drift_hz": -1,
-            "callsign": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "power_dbm": 37,
-            "off_air": null
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_TriggerCq_bool_0",
-      "wire_hex": "adbccbda0000000300000033000000044a5444580000000244580100",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "TriggerCq": {
-            "direction": {
-              "bytes": [
-                68,
-                88
-              ]
-            },
-            "tx_period": true,
-            "send": false
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_TriggerCq_bool_1",
-      "wire_hex": "adbccbda0000000300000033000000044a5444580000000244580001",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "TriggerCq": {
-            "direction": {
-              "bytes": [
-                68,
-                88
-              ]
-            },
-            "tx_period": false,
-            "send": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_TriggerCq_bool_2",
-      "wire_hex": "adbccbda0000000300000033000000044a5444580000000244580000",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "TriggerCq": {
-            "direction": {
-              "bytes": [
-                68,
-                88
-              ]
-            },
-            "tx_period": false,
-            "send": false
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_TriggerCq_bool_3",
-      "wire_hex": "adbccbda0000000300000033000000044a5444580000000244580101",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "TriggerCq": {
-            "direction": {
-              "bytes": [
-                68,
-                88
-              ]
-            },
-            "tx_period": true,
-            "send": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_TriggerCq_source_bool_0",
-      "wire_hex": "adbccbda0000000300000033000000044a54445800000002445801",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "TriggerCq": {
-            "direction": {
-              "bytes": [
-                68,
-                88
-              ]
-            },
-            "tx_period": null,
-            "send": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_TriggerCq_source_bool_1",
-      "wire_hex": "adbccbda0000000300000033000000044a54445800000002445800",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "TriggerCq": {
-            "direction": {
-              "bytes": [
-                68,
-                88
-              ]
-            },
-            "tx_period": null,
-            "send": false
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_TriggerCq_source_bool_2",
-      "wire_hex": "adbccbda0000000300000033000000044a54445800000002445801",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "TriggerCq": {
-            "direction": {
-              "bytes": [
-                68,
-                88
-              ]
-            },
-            "tx_period": null,
-            "send": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Reply_source_bool_0",
-      "wire_hex": "adbccbda0000000300000004000000044a54445805135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330104",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "Reply": {
-            "time": 85155000,
-            "snr_db": -12,
-            "delta_time_seconds": 0.2,
-            "delta_frequency_hz": 1234,
-            "mode": {
-              "bytes": [
-                126
-              ]
-            },
-            "message": {
-              "bytes": [
-                67,
-                81,
-                32,
-                75,
-                55,
-                65,
-                66,
-                67,
-                32,
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "low_confidence": true,
-            "modifiers": 4
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Reply_source_bool_1",
-      "wire_hex": "adbccbda0000000300000004000000044a54445805135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330004",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "Reply": {
-            "time": 85155000,
-            "snr_db": -12,
-            "delta_time_seconds": 0.2,
-            "delta_frequency_hz": 1234,
-            "mode": {
-              "bytes": [
-                126
-              ]
-            },
-            "message": {
-              "bytes": [
-                67,
-                81,
-                32,
-                75,
-                55,
-                65,
-                66,
-                67,
-                32,
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "low_confidence": false,
-            "modifiers": 4
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_Reply_source_bool_2",
-      "wire_hex": "adbccbda0000000300000004000000044a54445805135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330104",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "Reply": {
-            "time": 85155000,
-            "snr_db": -12,
-            "delta_time_seconds": 0.2,
-            "delta_frequency_hz": 1234,
-            "mode": {
-              "bytes": [
-                126
-              ]
-            },
-            "message": {
-              "bytes": [
-                67,
-                81,
-                32,
-                75,
-                55,
-                65,
-                66,
-                67,
-                32,
-                68,
-                78,
-                49,
-                51
-              ]
-            },
-            "low_confidence": true,
-            "modifiers": 4
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_WsprDecode_source_bool_0",
-      "wire_hex": "adbccbda000000030000000a000000044a5444580102aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002500",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "WsprDecode": {
-            "new": true,
-            "time": 45000000,
-            "snr_db": -24,
-            "delta_time_seconds": -0.3,
-            "frequency_hz": 14097100,
-            "drift_hz": -1,
-            "callsign": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "power_dbm": 37,
-            "off_air": false
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_WsprDecode_source_bool_1",
-      "wire_hex": "adbccbda000000030000000a000000044a5444580002aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002501",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "WsprDecode": {
-            "new": false,
-            "time": 45000000,
-            "snr_db": -24,
-            "delta_time_seconds": -0.3,
-            "frequency_hz": 14097100,
-            "drift_hz": -1,
-            "callsign": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "power_dbm": 37,
-            "off_air": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_WsprDecode_source_bool_2",
-      "wire_hex": "adbccbda000000030000000a000000044a5444580002aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002500",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "WsprDecode": {
-            "new": false,
-            "time": 45000000,
-            "snr_db": -24,
-            "delta_time_seconds": -0.3,
-            "frequency_hz": 14097100,
-            "drift_hz": -1,
-            "callsign": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "power_dbm": 37,
-            "off_air": false
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
-      "name": "jtdx_WsprDecode_source_bool_3",
-      "wire_hex": "adbccbda000000030000000a000000044a5444580102aea540ffffffe8bfd33333333333330000000000d71accffffffff000000064e3043414c4c00000004464e33310000002501",
-      "packet": {
-        "schema": 3,
-        "variant": "Jtdx",
-        "id": {
-          "bytes": [
-            74,
-            84,
-            68,
-            88
-          ]
-        },
-        "body": {
-          "WsprDecode": {
-            "new": true,
-            "time": 45000000,
-            "snr_db": -24,
-            "delta_time_seconds": -0.3,
-            "frequency_hz": 14097100,
-            "drift_hz": -1,
-            "callsign": {
-              "bytes": [
-                78,
-                48,
-                67,
-                65,
-                76,
-                76
-              ]
-            },
-            "grid": {
-              "bytes": [
-                70,
-                78,
-                51,
-                49
-              ]
-            },
-            "power_dbm": 37,
-            "off_air": true
-          }
-        },
-        "extensions": []
-      }
-    },
-    {
       "name": "datetime_s1_spec0",
       "wire_hex": "adbccbda00000001000000050000000657534a542d580000000000258ea902b3392000000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 1,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -5044,7 +2748,6 @@
       "wire_hex": "adbccbda00000001000000050000000657534a542d580000000000258ea902b3392001000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 1,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -5198,7 +2901,6 @@
       "wire_hex": "adbccbda00000001000000050000000657534a542d580000000000258ea902b3392002000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 1,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -5352,7 +3054,6 @@
       "wire_hex": "adbccbda00000001000000050000000657534a542d580000000000258ea902b3392003000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 1,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -5506,7 +3207,6 @@
       "wire_hex": "adbccbda00000002000000050000000657534a542d580000000000258ea902b3392000000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 2,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -5660,7 +3360,6 @@
       "wire_hex": "adbccbda00000002000000050000000657534a542d580000000000258ea902b3392001000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 2,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -5814,7 +3513,6 @@
       "wire_hex": "adbccbda00000002000000050000000657534a542d580000000000258ea902b339200200000e10000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 2,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -5968,7 +3666,6 @@
       "wire_hex": "adbccbda00000002000000050000000657534a542d580000000000258ea902b3392003000000200041006d00650072006900630061002f004e00650077005f0059006f0072006b000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 2,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -6141,7 +3838,6 @@
       "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b3392000000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -6295,7 +3991,6 @@
       "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b3392001000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -6449,7 +4144,6 @@
       "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b339200200000e10000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -6603,7 +4297,6 @@
       "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b3392003000000200041006d00650072006900630061002f004e00650077005f0059006f0072006b000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -6776,7 +4469,6 @@
       "wire_hex": "adbccbda00000003000000050000000657534a542d588000000000000000ffffffff00000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -6930,7 +4622,6 @@
       "wire_hex": "adbccbda00000003000000050000000657534a542d580000000000258ea902b33920030000001a004f0066006600730065007400460072006f006d005500740063000000120054006500730074002f005a006f006e0065ffffb9b000000008005400650073007400000006005400530054000000e1ffffffff000000045731415700000004464e33310000000000d6c09000000003465438000000032d3132000000032d3130000000013500000008546573742051534f000000074578616d706c650000000000258ea902b2895801000000054b37414243000000064e3043414c4c00000004444e3133000000053144204354000000053241204354000000025452",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7112,7 +4803,6 @@
       "wire_hex": "adbccbda00000003000000030000000657534a542d58",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7136,7 +4826,6 @@
       "wire_hex": "adbccbda00000002000000000000000657534a542d58",
       "packet": {
         "schema": 2,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7162,7 +4851,6 @@
       "wire_hex": "adbccbda00000003000000010000000657534a542d580000000000d6c090000000034654380000000457314157000000032d303700000003465434000001000004b1000008fe",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7231,7 +4919,6 @@
       "wire_hex": "adbccbda00000003000000090000000657534a542d58ffffffff00",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7258,7 +4945,6 @@
       "wire_hex": "adbccbda00000003000000090000000657534a542d580000000000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7285,7 +4971,6 @@
       "wire_hex": "adbccbda00000003000000090000000657534a542d580000000f435120636166c3a920e697a5e69cac01",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7328,7 +5013,6 @@
       "wire_hex": "adbccbda00000003000000090000000657534a542d5800000004fffe00c000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7360,7 +5044,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff43fc999999999999a000004d2000000017e0000000d4351204b3741424320444e31330000000102",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7416,7 +5099,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512acf0000000003fd3333333333333000009f0000000017e000000114e35454d4d204b453051455120454e30340000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7472,7 +5154,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512acf0fffffffc3fc999999999999a0000067e000000017e0000000d4351204e3556414e20444e39310000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7524,7 +5205,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512acf0fffffff93fd3333333333333000005da000000017e0000000c4351204b57374520444d33330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7575,7 +5255,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512acf0000000013fc999999999999a00000794000000017e0000000f505932565a204b4a344b464a2037330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7629,7 +5308,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512acf0fffffff33fe0000000000000000008ad000000017e0000000d4351204e3852414620454e39300000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7681,7 +5359,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512acf0fffffff53fd33333333333330000043d000000017e000000114b42324b4243204b59344a4443202b32310000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7737,7 +5414,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512acf0ffffffee3fd999999999999a0000073b000000017e000000105050355447204b4438564158202d31370000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7792,7 +5468,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512acf0fffffff33fd333333333333300000391000000017e0000000c4351204e4e384d20454d37390000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7843,7 +5518,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512acf0fffffff13fd33333333333330000047d000000017e0000000d435120505032424f20474836310000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7895,7 +5569,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512acf0fffffff23fd3333333333333000001f4000000017e000000114b4330495559204e3850464b20454d38300000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -7951,7 +5624,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512acf0ffffffea3fc999999999999a0000053f000000017e0000000e5059324d4d204145314a522037330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8004,7 +5676,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512acf0fffffff23fd3333333333333000008b6000000017e0000000f4c5735445220414b384120525237330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8058,7 +5729,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512acf0ffffffed3fd999999999999a000005e9000000017e0000000f4e35454d4d204b53355820454d31350000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8112,7 +5782,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512acf0fffffff13fe000000000000000000381000000017e00000010564132504d205736524a5220444d31330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8167,7 +5836,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512acf0ffffffef3fd3333333333333000009f6000000017e000000104e35454d4d204b38544a4d20454e39310000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8222,7 +5890,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e7880000000a3ff199999999999a000003eb000000017e0000000f4358334a59204e36504520444d31330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8276,7 +5943,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788000000013fd3333333333333000008ad000000017e000000114e38524146204b493642574f20444d30340000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8332,7 +5998,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788000000033fe3333333333333000001f1000000017e000000114b443256524c20573644414420444d33330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8388,7 +6053,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788000000043ff3333333333333000004d5000000017e0000000c4351204e4c374420444d34320000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8439,7 +6103,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788000000033fc999999999999a00000794000000017e000000114b3656564b204b4a344b464a20454e37340000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8495,7 +6158,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788000000013fe33333333333330000042f000000017e0000000f4146304442204b38494720454e39310000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8549,7 +6211,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788fffffff83fd3333333333333000000bf000000017e00000010544e384744204142344f4220454d37300000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8604,7 +6265,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788fffffff53fd3333333333333000007d6000000017e0000000e4351204b443655594b20444d31330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8657,7 +6317,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788fffffff63feccccccccccccd0000048e000000017e000000104e4d3256204b4139454b4a20522b31350000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8712,7 +6371,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788fffffff83fe000000000000000000767000000017e000000124b4133504d57204b473546445420522d31390000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8769,7 +6427,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788fffffff73fc999999999999a0000029b000000017e0000001150593453544f204b3852574d20454e38320000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8825,7 +6482,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788fffffff03feccccccccccccd000000fe000000017e0000000e5645334251204b4a3557202d31350000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8878,7 +6534,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788fffffff03fe0000000000000000009ef000000017e0000000f4b385a49204e35454d4d20525237330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8932,7 +6587,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788fffffff33fe333333333333300000306000000017e00000010544e384744204e3849425720454d38390000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -8987,7 +6641,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788fffffff43fc999999999999a00000190000000017e000000105059344b5520414439415220454d36390000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9042,7 +6695,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788ffffffed3fd333333333333300000654000000017e000000144b513453524e203c573141572f353e20522b30350000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9101,7 +6753,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788fffffff03fe999999999999a000002f2000000017e0000000d4351204b3447424920454d37300000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9153,7 +6804,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788fffffff43fd3333333333333000001f2000000017e000000104e3850464b204b4330495559202b30360000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9208,7 +6858,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788ffffffea3fd999999999999a000005d0000000017e0000001057374a5a4920563331444c20454b35370000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9263,7 +6912,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010512e788ffffffeb3fd33333333333330000045e000000017e000000104b3453595420414333504e20522b32330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9318,7 +6966,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105132220000000053fd999999999999a00000a38000000017e000000114b453856574620414434564520444d31320000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9374,7 +7021,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105132220fffffffb3fc999999999999a0000067e000000017e0000000d4351204e3556414e20444e39310000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9426,7 +7072,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105132220fffffffb3fd3333333333333000007f4000000017e000000104b4735464454204b5136524e202d30310000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9481,7 +7126,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105132220fffffff53fd3333333333333000005d9000000017e0000000f574238424355204b573745202b30300000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9535,7 +7179,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105132220fffffff03fd33333333333330000061e000000017e0000000e5747345020505032424f202b30340000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9588,7 +7231,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105132220fffffff13fd33333333333330000073b000000017e0000000e4351204b443856415820454e38320000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9641,7 +7283,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105132220fffffff93fd33333333333330000043e000000017e000000115059354151204b59344a444320522d31340000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9697,7 +7338,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105132220ffffffee3fd999999999999a000007a5000000017e0000000f4e35454d4d204e3756424e202d31350000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9751,7 +7391,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105132220fffffff83fc999999999999a00000b46000000017e00000010544c384744204141315a5a20454d31360000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9806,7 +7445,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105132220fffffff63fd333333333333300000390000000017e0000000c4351204e4e384d20454d37390000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9857,7 +7495,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105132220fffffff03fe0000000000000000008ad000000017e0000000d4351204e3852414620454e39300000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9909,7 +7546,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105132220fffffff23fd3333333333333000001f3000000017e000000114b4330495559204e3850464b20522d31310000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -9965,7 +7601,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105132220ffffffe93fd3333333333333000006bd000000017e0000000f564133574c205744345420454d37350000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10019,7 +7654,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105132220fffffff03fe000000000000000000382000000017e00000010564132504d205736524a5220444d31330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10074,7 +7708,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8000000033ff199999999999a000003eb000000017e0000000f4358334a59204e36504520444d31330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10128,7 +7761,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8000000053fd3333333333333000008ad000000017e000000114e38524146204b493642574f20444d30340000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10184,7 +7816,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8000000043ff4cccccccccccd000004d5000000017e0000000e4e36424251204e4c3744202b30300000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10237,7 +7868,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffffe3fc999999999999a00000794000000017e000000114b3656564b204b4a344b464a20522d30310000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10293,7 +7923,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8000000003fe0000000000000000001f1000000017e000000114b443256524c20573644414420444d33330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10349,7 +7978,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff83fd3333333333333000000c0000000017e00000010544e384744204142344f4220454d37300000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10404,7 +8032,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff23fd33333333333330000045e000000017e000000104b3453595420414333504e20522b32330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10459,7 +8086,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff23fd3333333333333000007d6000000017e0000000e4351204b443655594b20444d31330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10512,7 +8138,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff93fc999999999999a0000029b000000017e0000001150593453544f204b3852574d20522d31380000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10568,7 +8193,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffffb3fe33333333333330000042f000000017e0000000f4146304442204b38494720454e39310000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10622,7 +8246,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff63fd333333333333300000246000000017e00000010544e384744204b4638454656202d31350000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10677,7 +8300,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff53fc999999999999a00000578000000017e0000000c4351204e4c384620414f36330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10728,7 +8350,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff2bfb999999999999a00000359000000017e0000000f5059344b55204b38534157202d31350000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10782,7 +8403,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff13feccccccccccccd0000048e000000017e0000000e4e4d3256204b4139454b4a2037330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10835,7 +8455,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff23fc999999999999a00000a9b000000017e00000010544e384744204e3053544c20454e33350000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10890,7 +8509,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8ffffffea3fd333333333333300000654000000017e0000000f3c2e2e2e3e20573141572f352037330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10944,7 +8562,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8ffffffee3fe0000000000000000009f0000000017e0000000f4b38544a4d204e35454d4d202d30360000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -10998,7 +8615,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff13feccccccccccccd000000fe000000017e0000000e5645334251204b4a3557202d31350000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11051,7 +8667,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff03fd3333333333333000007fa000000017e000000124b4233444846204b4d374d474d20444d34320000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11108,7 +8723,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffffb3fd3333333333333000001d8000000017e00000010544e38474420573450535820454d36350000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11163,7 +8777,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff33fd999999999999a000002a7000000017e0000000e5735455258204b413345202d30320000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11216,7 +8829,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff03fd999999999999a0000057d000000017e0000000f544e384744204b39584a20454e36330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11270,7 +8882,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8ffffffef3fc999999999999a0000033a000000017e0000001157314a4b4e204b4a354b594220454c30390000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11326,7 +8937,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8ffffffed3fe000000000000000000767000000017e000000124b4133504d57204b473546445420522d31390000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11383,7 +8993,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff43fd3333333333333000001f3000000017e000000114e3850464b204b433049555920525237330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11439,7 +9048,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105135cb8fffffff03fc999999999999a00000191000000017e000000105059344b5520414439415220454d36390000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11494,7 +9102,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8000000073ff199999999999a000003eb000000017e000000104b4435514a51204e36504520444d31330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11549,7 +9156,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8000000053fd3333333333333000008ad000000017e000000114e38524146204b493642574f20522b30320000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11605,7 +9211,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8fffffff73fd33333333333330000029a000000017e0000000f50593453544f204b3852574d2037330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11659,7 +9264,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8fffffffd3ff8000000000000000004d5000000017e0000000e4e36424251204e4c3744205252520000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11712,7 +9316,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8ffffffed3fd3333333333333000007d7000000017e0000000e4351204b443655594b20444d31330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11765,7 +9368,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8fffffff33fe0000000000000000009f0000000017e0000000f4b38544a4d204e35454d4d202d30360000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11819,7 +9421,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8ffffffee3fe000000000000000000767000000017e000000124b4133504d57204b473546445420522d31390000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11876,7 +9477,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8fffffff1bfb999999999999a00000358000000017e000000104b4435514a51204b38534157202b30370000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11931,7 +9531,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8fffffff33fd3333333333333000001d8000000017e00000010544e38474420573450535820454d36350000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -11986,7 +9585,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8fffffff03fd33333333333330000012f000000017e000000114b423344484620414430415220454e34310000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12042,7 +9640,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8ffffffed3fd33333333333330000045e000000017e0000000e4b3453595420414333504e2037330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12095,7 +9692,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8ffffffef3fe333333333333300000306000000017e00000010544e384744204e3849425720454d38390000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12150,7 +9746,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8fffffff23fd333333333333300000a5f000000017e000000114351204458204b4f3649445920444d30330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12206,7 +9801,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8ffffffef3fe00000000000000000057d000000017e0000000f544e384744204b39584a20454e36330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12260,7 +9854,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8ffffffee3fc999999999999a00000578000000017e0000000c4351204e4c384620414f36330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12311,7 +9904,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8fffffff23fd3333333333333000001f2000000017e000000114e3850464b204b433049555920525237330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12367,7 +9959,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8ffffffee3fc999999999999a0000033b000000017e0000001157314a4b4e204b4a354b594220522d32300000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12423,7 +10014,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8fffffff03fd3333333333333000000c0000000017e00000010544e384744204142344f4220454d37300000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12478,7 +10068,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d58010513d1e8ffffffee3fd999999999999a00000a2a000000017e0000000e4351204b4a354e554420454d34340000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12531,7 +10120,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105140c80fffffffc3fd999999999999a00000a38000000017e0000000f4b45385657462041443456452037330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12585,7 +10173,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105140c80fffffff93fc999999999999a0000067e000000017e0000000d4351204e3556414e20444e39310000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12637,7 +10224,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105140c80fffffff93fd333333333333300000390000000017e00000010564f31444e4b204e4e384d20525237330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12692,7 +10278,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105140c80fffffff73fd3333333333333000005da000000017e000000113c573141572f353e204b573745202d31310000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12748,7 +10333,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105140c80fffffff73fd33333333333330000043e000000017e000000124b42324b4243204b59344a444320525237330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12805,7 +10389,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105140c80fffffff43fd3333333333333000007f4000000017e000000104b4735464454204b5136524e202d30310000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12860,7 +10443,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105140c80ffffffea3fd999999999999a0000073c000000017e0000000e4351204b443856415820454e38320000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12913,7 +10495,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105140c80ffffffe83fd3333333333333000006bd000000017e0000000d564133574c20574434542037330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -12965,7 +10546,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105140c80ffffffeb3fd3333333333333000005ab000000017e0000000f4e365045204b4435514a51202b31340000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13019,7 +10599,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d5801051447180000000a3ff199999999999a000003eb000000017e000000104b4435514a51204e36504520522d30320000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13074,7 +10653,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718000000073fd3333333333333000008ad000000017e0000000f4e38524146204b493642574f2037330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13128,7 +10706,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718fffffff53fb999999999999a000006af000000017e00000010544e384744204b3143505420454e32320000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13183,7 +10760,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718ffffffef3fd33333333333330000048d000000017e000000105851354f5320414439415220454d36390000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13238,7 +10814,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718fffffff93feccccccccccccd000002ed000000017e0000000e4351204b4139454b4a20454d36340000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13291,7 +10866,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718fffffff63fd999999999999a0000057d000000017e0000000f544e384744204b39584a20454e36330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13345,7 +10919,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718fffffff23fd3333333333333000007d6000000017e0000000e4351204b443655594b20444d31330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13398,7 +10971,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718fffffff53fd3333333333333000001f3000000017e000000114e3850464b204b433049555920525237330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13454,7 +11026,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718ffffffec3fc999999999999a00000794000000017e000000104b4937534b54204b4a344b464a2037330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13509,7 +11080,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718fffffff33fd333333333333300000a5f000000017e000000114351204458204b4f3649445920444d30330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13565,7 +11135,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718fffffff23fe000000000000000000a9a000000017e00000010544e384744204e3053544c20522d31320000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13620,7 +11189,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718fffffff03fd33333333333330000012f000000017e000000114b423344484620414430415220522d30350000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13676,7 +11244,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718fffffff03fe0000000000000000009ef000000017e000000104b38544a4d204e35454d4d20525237330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13731,7 +11298,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718ffffffef3fe666666666666600000962000000017e0000000f5735455258205738585020454d37390000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13785,7 +11351,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718fffffff53fd3333333333333000001d8000000017e00000010544e38474420573450535820454d36350000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13840,7 +11405,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718ffffffef3fc999999999999a00000577000000017e0000000c4351204e4c384620414f36330000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,
@@ -13891,7 +11455,6 @@
       "wire_hex": "adbccbda00000003000000020000000657534a542d580105144718ffffffee3fe000000000000000000307000000017e00000010544e384744204e3849425720454d38390000",
       "packet": {
         "schema": 3,
-        "variant": "Wsjtx",
         "id": {
           "bytes": [
             87,

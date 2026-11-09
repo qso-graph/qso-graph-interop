@@ -44,7 +44,7 @@ The decoder caps datagrams at 65,507 bytes and IDs at 256 bytes. Every array len
 against remaining input before allocation. Unknown types and newer schemas produce `Skipped`.
 Known messages with incomplete fields return an error. Optional historical fields may end at a
 field boundary; extra trailing data is retained without interpretation. Unit tests and fuzzing
-exercise both variants. These checks reduce risk; they do not establish that every possible input
+exercise the decoder. These checks reduce risk; they do not establish that every possible input
 has been tested.
 
 The CLI accepts numeric socket addresses only. It listens only on the chosen address, defaults to
@@ -58,7 +58,7 @@ exact versions as explicit not-yet-audited exemptions in `supply-chain/config.to
 See [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md) for dependency purposes and review status.
 
 The first milestone's interoperability evidence is independent protocol vectors and reference
-encoder agreement. It has not been tested against running WSJT-X or JTDX applications.
+encoder agreement. It has not been tested against running WSJT-X applications.
 
 Human output escapes C0/C1 controls, bidi marks/embeddings/overrides/isolates (U+061C,
 U+200E–U+200F, U+202A–U+202E, U+2066–U+2069), and U+2028/U+2029 separators. It also escapes

@@ -6,21 +6,18 @@
 | Application | Released tag | Commit | Definition |
 | --- | --- | --- | --- |
 | WSJT-X | `v3.0.2` | `ccdfaf3c1c109010d15399674ce278167cfde848` | [Network/NetworkMessage.hpp](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/Network/NetworkMessage.hpp) |
-| JTDX | `159` | `2a0e2bea8c66c9ca94d2ea8034cf83a68cfa40eb` | [NetworkMessage.hpp](https://github.com/jtdx-project/jtdx/blob/2a0e2bea8c66c9ca94d2ea8034cf83a68cfa40eb/NetworkMessage.hpp) |
 
 WSJT-X was fetched from its official repository, `https://github.com/WSJTX/wsjtx` (where WSJT-X 3 is
 released; the older SourceForge repository ends at 2.7.0), using the released tag `v3.0.2`. Its
 `Network/NetworkMessage.hpp` and `Network/NetworkMessage.cpp` are byte for byte the same as at
 `wsjtx-2.7.0` (SourceForge, commit `b4f9a431bcf6449df8f37b56de79d48b665b044c`), so this library
-implements WSJT-X 2.7.0 and 3.0.2 alike. JTDX was fetched from `https://github.com/jtdx-project/jtdx.git` at its tag.
-The annotated tag objects are `d2d9c46a1e5061a8ab489ebf473e71fa070dc4e7` and
-`2e26ce38908934eb5bde18880bcbd681e3eab199`, respectively.
+implements WSJT-X 2.7.0 and 3.0.2 alike. The annotated tag object is
+`d2d9c46a1e5061a8ab489ebf473e71fa070dc4e7`.
 
 SHA-256 of the definitions:
 
 ```text
 fd73b7f92fc0f66ea8f12a147b59a6072408c24656735d59df772dc55a5eeb62  WSJT-X NetworkMessage.hpp
-5024babc52e18e8f6a9dda14284e54501366d045560475495d7b4b206ee0a2dc  JTDX NetworkMessage.hpp
 ```
 
 Qt's stream operators establish types beyond the headers' abbreviated description. These are
@@ -54,30 +51,6 @@ The named fixture for each message is an independent Python `struct` vector used
 | 15 | Configure | `wsjtx_Configure` |
 | 16 | AnnotationInfo | `wsjtx_AnnotationInfo` |
 
-JTDX defines 0–10 and 12, reserves 11 and 13–49, and adds SetTxDeltaFreq (50) and TriggerCQ (51).
-Reserved types are skipped in JTDX mode. The mode is explicit because JTDX Status cannot be
-reliably distinguished by bytes or the configurable sender ID.
-
-## JTDX differences
-
-The pinned header documents signed `qint32` Rx/Tx offsets and a final Tx-first boolean in Status,
-in place of WSJT-X's special-operation and subsequent fields. Heartbeat ends after version;
-Clear has no window; QSOLogged ends after My grid and calls its frequency a dial frequency.
-WSJT-X's header calls that QSO field a Tx frequency. The normalized model preserves this distinction.
-
-The [pinned MessageClient.cpp](https://github.com/jtdx-project/jtdx/blob/2a0e2bea8c66c9ca94d2ea8034cf83a68cfa40eb/MessageClient.cpp)
-(SHA-256 `b2ea862b140f8d58a05cf6e34e86c447fbfda057a76a17f156176b1794e7ba58`)
-differs from its own header in three places:
-
-- Reply's header stops after message; its reader also accepts low-confidence and modifiers.
-- WSPRDecode's header stops after power; its sender also writes off-air.
-- TriggerCQ's header lists direction, Tx period, send. Its reader reads direction and send only,
-  initializing Tx period to false. The codec accepts and emits either form:
-  `tx_period: None` selects the source implementation, `Some(bool)` selects the header form.
-
-Both forms have independent fixtures. These are source-derived vectors, not packet captures from
-running applications. The codec does not claim that JTDX's receiver honors its header's Tx-period field.
-
 ## Wire and compatibility rules
 
 - Header: big-endian magic `0xadbccbda`, schema, type, and UTF-8 QByteArray ID.
@@ -100,8 +73,7 @@ running applications. The codec does not claim that JTDX's receiver honors its h
   HighlightCallsign's highlight-last may be absent. A partial field is malformed.
 - Additional trailing fields are kept in `Packet::extensions` and ignored by normalization. They
   are written back unchanged. Optional suffixes must be contiguous; encoders refuse holes and
-  extensions placed before missing known suffixes. TriggerCQ source-form payloads cannot carry
-  extensions because they would be ambiguous with the header form.
+  extensions placed before missing known suffixes.
 - Nonzero booleans decode as true, as Qt does; encoders canonicalize them to 1. Other values remain
   raw. JSON uses numeric finite doubles and `ieee754:<16 hex digits>` for nonfinite values, preserving
   NaN payloads. Text uses `{ "bytes": null }` versus `{ "bytes": [] }`; an absent suffix is JSON null.
@@ -130,7 +102,7 @@ Actual application interoperability remains a separate validation step.
 
 See [identity and direction](NORMALIZATION.md) for neutral IDs, caller context, and future adapter
 mappings. Clear's missing window does not distinguish an erase notification from a legacy clear
-command in WSJT-X; its Close also has both directions. JTDX 159 defines both only outbound. Reply and Configure identify their target, not source.
+command in WSJT-X; its Close also has both directions. Reply and Configure identify their target, not source.
 
 Status wire order is Rx DF then Tx DF, per the pinned header lines 150–151. Independent fixtures
 use 1201 and 2302 Hz, distinct strings and other same-type scalars, and multiple boolean patterns
@@ -142,5 +114,4 @@ The simulator's WSJT-X QSOLogged frequency is dial plus TX offset, checked for o
 sending the script. This follows the released
 [mainwindow logging call](https://github.com/WSJTX/wsjtx/blob/v3.0.2/widgets/mainwindow.cpp#L10594),
 which adds the transmit spin-box offset to nominal dial frequency. The default USB FT8 script
-therefore logs 14,075,500 Hz from a 14,074,000 Hz dial and 1,500 Hz TX offset. JTDX's separate
-QSOLogged dial-frequency interpretation is unchanged.
+therefore logs 14,075,500 Hz from a 14,074,000 Hz dial and 1,500 Hz TX offset.

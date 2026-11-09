@@ -3,7 +3,7 @@
 //! Every message owns its complete family representation for lossless return.
 #![forbid(unsafe_code)]
 
-use crate::wsjtx::{Body, Packet, QDateTime, QTime, Utf8, Variant};
+use crate::wsjtx::{Body, Packet, QDateTime, QTime, Utf8};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -12,7 +12,7 @@ pub struct Message<F = Packet> {
     /// Neutral wire identifier. It is neither an authenticated identity nor always a source.
     pub client_id: Utf8,
     pub context: Context,
-    /// Protocol-specific fields, including schema, variant, and raw extensions.
+    /// Protocol-specific fields, including schema and raw extensions.
     pub family: F,
 }
 
@@ -143,8 +143,8 @@ impl Message {
                 call: Some(q.dx_call.clone()),
                 grid: Some(q.dx_grid.clone()),
                 mode: Some(q.mode.clone()),
-                tx_frequency_hz: (family.variant == Variant::Wsjtx).then_some(q.frequency_hz),
-                dial_frequency_hz: (family.variant == Variant::Jtdx).then_some(q.frequency_hz),
+                tx_frequency_hz: Some(q.frequency_hz),
+                dial_frequency_hz: None,
                 start: q.time_on.clone(),
                 end: Some(q.time_off.clone()),
                 report_sent: Some(q.report_sent.clone()),
@@ -161,20 +161,6 @@ impl Message {
                 ..LoggedQso::default()
             })),
             Body::Status(s) => Kind::RadioState(RadioState {
-                dial_frequency_hz: s.dial_frequency_hz,
-                mode: s.mode.clone(),
-                tx_mode: s.tx_mode.clone(),
-                tx_enabled: s.tx_enabled,
-                transmitting: s.transmitting,
-                decoding: s.decoding,
-                rx_offset_hz: i64::from(s.rx_df_hz),
-                tx_offset_hz: i64::from(s.tx_df_hz),
-                station_call: s.de_call.clone(),
-                station_grid: s.de_grid.clone(),
-                dx_call: s.dx_call.clone(),
-                dx_grid: s.dx_grid.clone(),
-            }),
-            Body::JtdxStatus(s) => Kind::RadioState(RadioState {
                 dial_frequency_hz: s.dial_frequency_hz,
                 mode: s.mode.clone(),
                 tx_mode: s.tx_mode.clone(),
@@ -216,12 +202,6 @@ impl Message {
                 low_confidence: None,
                 off_air: d.off_air,
             }),
-            // JTDX 159 defines these only as outbound notifications; its released
-            // MessageClient has no inbound Clear/Close handlers.
-            Body::Clear(_) if family.variant == Variant::Jtdx => {
-                Kind::Notification(Operation::Clear)
-            }
-            Body::Close if family.variant == Variant::Jtdx => Kind::Lifecycle,
             Body::Clear(_) | Body::Close => {
                 let operation = if matches!(family.body, Body::Clear(_)) {
                     Operation::Clear

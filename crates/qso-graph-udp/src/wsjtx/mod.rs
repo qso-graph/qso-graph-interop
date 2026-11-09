@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! WSJT-X 3.0.2 (the same protocol as 2.7.0) and JTDX 159. See docs/PROTOCOL.md for source pins and wire rules.
+//! WSJT-X 3.0.2 (the same protocol as 2.7.0). See docs/PROTOCOL.md for source pins and wire rules.
 #![forbid(unsafe_code)]
 
 mod codec;
@@ -17,20 +17,10 @@ pub const PULSE_SECONDS: u32 = 15;
 pub const MAX_DATAGRAM: usize = 65_507;
 pub const MAX_ID: usize = 256;
 pub const WSJTX_TAG: &str = "v3.0.2";
-pub const JTDX_TAG: &str = "159";
-
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
-pub enum Variant {
-    #[default]
-    Wsjtx,
-    Jtdx,
-}
-
 /// The original family payload and all unrecognized trailing bytes remain available.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Packet {
     pub schema: u32,
-    pub variant: Variant,
     pub id: Utf8,
     pub body: Body,
     pub extensions: Vec<u8>,
@@ -39,7 +29,6 @@ impl Packet {
     pub fn new(id: impl Into<Utf8>, body: Body) -> Self {
         Self {
             schema: MAX_SCHEMA,
-            variant: Variant::Wsjtx,
             id: id.into(),
             body,
             extensions: Vec::new(),
@@ -71,7 +60,6 @@ pub enum Error {
     InvalidTimeSpec(u8),
     InconsistentDateTime,
     NonContiguousTail,
-    VariantMismatch,
 }
 impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -81,7 +69,7 @@ impl std::fmt::Display for Error {
 impl std::error::Error for Error {}
 
 /// Decode one datagram. Unknown types and future schemas are skipped, never guessed.
-pub fn decode(data: &[u8], variant: Variant) -> Result<Outcome, Error> {
+pub fn decode(data: &[u8]) -> Result<Outcome, Error> {
     if data.len() > MAX_DATAGRAM {
         return Err(Error::Length);
     }
@@ -106,7 +94,7 @@ pub fn decode(data: &[u8], variant: Variant) -> Result<Outcome, Error> {
     }
     r.schema = schema;
     let message_type = r.u32()?;
-    if !codec::known(message_type, variant) {
+    if !codec::known(message_type) {
         return Ok(Outcome::Skipped {
             schema,
             message_type: Some(message_type),
@@ -114,17 +102,16 @@ pub fn decode(data: &[u8], variant: Variant) -> Result<Outcome, Error> {
         });
     }
     let id = r.id()?;
-    let body = codec::read_body(&mut r, message_type, variant)?;
+    let body = codec::read_body(&mut r, message_type)?;
     Ok(Outcome::Message(Box::new(Packet {
         schema,
-        variant,
         id,
         body,
         extensions: r.take(r.remaining())?.to_vec(),
     })))
 }
 
-/// Encode one datagram, refusing inconsistent variants, holes in optional tails,
+/// Encode one datagram, refusing holes in optional tails,
 /// unsupported schemas and any length beyond the decoder's bounds.
 pub fn encode(packet: &Packet) -> Result<Vec<u8>, Error> {
     if !(1..=MAX_SCHEMA).contains(&packet.schema) {
@@ -138,13 +125,8 @@ pub fn encode(packet: &Packet) -> Result<Vec<u8>, Error> {
     w.u32(packet.schema)?;
     w.u32(packet.body.message_type())?;
     w.utf8(&packet.id)?;
-    codec::write_body(&mut w, &packet.body, packet.variant)?;
+    codec::write_body(&mut w, &packet.body)?;
     if w.omitted && !packet.extensions.is_empty() {
-        return Err(Error::NonContiguousTail);
-    }
-    if matches!(&packet.body, Body::TriggerCq(v) if v.tx_period.is_none())
-        && !packet.extensions.is_empty()
-    {
         return Err(Error::NonContiguousTail);
     }
     w.put(&packet.extensions)?;

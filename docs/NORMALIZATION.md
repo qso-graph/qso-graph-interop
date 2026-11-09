@@ -3,7 +3,7 @@
 
 `Message<F = wsjtx::Packet>` separates normalized values, caller context, and the complete native
 family representation. The default preserves the existing binary protocol; another adapter can
-use a parsed XML/JSON envelope plus original bytes as `F`. Schema and variant belong to the
+use a parsed XML/JSON envelope plus original bytes as `F`. Schema belongs to the
 family, not to the transport-independent envelope. `client_id` preserves the neutral wire ID,
 including null, empty, and invalid UTF-8. It is not a peer identity or an authenticated source.
 Protocols without an application ID use a null `Utf8`; their family retains the exact distinction
@@ -20,9 +20,8 @@ when Clear has no window: the legacy inbound command has no window too. `with_co
 from the application to a notification and Clear to the application to a control. Close from the
 application is lifecycle notification; Close to it is a shutdown control. Reply and Configure
 have protocol-defined target IDs in `Control::target_id`, copied from `client_id`; neither becomes
-a source ID. Context identities remain exactly what the caller supplied. JTDX 159 defines Clear and Close
-only outbound; they remain notification and lifecycle views, respectively, even if a caller
-supplies contradictory transport context. Normalization does not validate or execute a command.
+a source ID. Context identities remain exactly what the caller supplied.
+Normalization does not validate or execute a command.
 Heartbeat is lifecycle
 in either direction. Every normalization path retains the original packet, and `into_family`
 returns it without applying edits to normalized views. See WSJT-X v3.0.2

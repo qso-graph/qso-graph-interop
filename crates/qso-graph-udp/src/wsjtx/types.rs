@@ -158,39 +158,6 @@ pub struct AnnotationInfo {
     pub sort_order: u32,
 }
 
-#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
-pub struct JtdxStatus {
-    pub dial_frequency_hz: u64,
-    pub mode: Utf8,
-    pub dx_call: Utf8,
-    pub report: Utf8,
-    pub tx_mode: Utf8,
-    pub tx_enabled: bool,
-    pub transmitting: bool,
-    pub decoding: bool,
-    pub rx_df_hz: i32,
-    pub tx_df_hz: i32,
-    pub de_call: Option<Utf8>,
-    pub de_grid: Option<Utf8>,
-    pub dx_grid: Option<Utf8>,
-    pub tx_watchdog: Option<bool>,
-    pub sub_mode: Option<Utf8>,
-    pub fast_mode: Option<bool>,
-    pub tx_first: Option<bool>,
-}
-
-#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
-pub struct SetTxDeltaFreq {
-    pub tx_delta_frequency_hz: u32,
-}
-
-#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
-pub struct TriggerCq {
-    pub direction: Utf8,
-    pub tx_period: Option<bool>,
-    pub send: bool,
-}
-
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub enum Body {
     Heartbeat(Heartbeat),
@@ -208,9 +175,6 @@ pub enum Body {
     SwitchConfiguration(SwitchConfiguration),
     Configure(Configure),
     AnnotationInfo(AnnotationInfo),
-    JtdxStatus(JtdxStatus),
-    SetTxDeltaFreq(SetTxDeltaFreq),
-    TriggerCq(TriggerCq),
     Close,
     Replay,
 }
@@ -233,9 +197,6 @@ impl Body {
             Self::SwitchConfiguration(..) => 14,
             Self::Configure(..) => 15,
             Self::AnnotationInfo(..) => 16,
-            Self::JtdxStatus(..) => 1,
-            Self::SetTxDeltaFreq(..) => 50,
-            Self::TriggerCq(..) => 51,
             Self::Close => 6,
             Self::Replay => 7,
         }
