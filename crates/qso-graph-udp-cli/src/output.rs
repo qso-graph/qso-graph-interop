@@ -148,7 +148,12 @@ pub fn object(outcome: &Outcome, peer: SocketAddr, received_ms: i64) -> Value {
 fn safe(s: &str) -> String {
     s.chars()
         .flat_map(|c| {
-            if c.is_control() {
+            if c.is_control()
+                || matches!(c,
+                    '\u{ad}' | '\u{61c}' | '\u{200b}'..='\u{200f}' |
+                    '\u{2028}'..='\u{202e}' | '\u{2060}'..='\u{206f}' |
+                    '\u{feff}' | '\u{fff9}'..='\u{fffb}')
+            {
                 c.escape_default().collect::<String>()
             } else {
                 c.to_string()
@@ -358,6 +363,70 @@ mod tests {
         assert_eq!(parsed["text_bytes"], json!([65, 27, 10, 255]));
         assert_eq!(parsed["send"], true);
         assert_eq!(parsed["received"], "1970-01-01T00:00:00.000Z");
+    }
+
+    #[test]
+    fn unicode_format_controls_are_visible_but_json_and_wire_are_exact() {
+        let text = "A\u{202a}\u{202b}\u{202c}\u{202d}\u{202e}\u{2066}\u{2067}\u{2068}\u{2069}\u{200e}\u{200f}\u{61c}\u{2028}\u{2029}\u{ad}\u{200b}\u{200c}\u{200d}\u{2060}\u{2061}\u{2062}\u{2063}\u{2064}\u{206a}\u{206f}\u{feff}\u{fff9}\u{fffa}\u{fffb}Z";
+        let packet = Packet::new(
+            text,
+            Body::FreeText(wsjtx::FreeText {
+                text: text.into(),
+                send: true,
+            }),
+        );
+        let bytes = wsjtx::encode(&packet).unwrap();
+        let outcome = wsjtx::decode(&bytes, wsjtx::Variant::Wsjtx).unwrap();
+        let Outcome::Message(ref decoded) = outcome else {
+            panic!("packet");
+        };
+        assert_eq!(wsjtx::encode(decoded).unwrap(), bytes);
+        let value = object(&outcome, "127.0.0.1:1".parse().unwrap(), 0);
+        let json: Value = serde_json::from_str(&serde_json::to_string(&value).unwrap()).unwrap();
+        assert_eq!(json["text"], text);
+        assert_eq!(json["client_id"], text);
+        let line = human(&value, true);
+        for c in text.chars().filter(|c| !c.is_ascii()) {
+            assert!(!line.contains(c), "raw format control {c:?}");
+            assert!(
+                line.contains(&c.escape_default().to_string()),
+                "missing visible escape {c:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn review_osc_invalid_utf8_and_bidi_probe_is_safe() {
+        let mut bytes = b"A\x1b]52;c;QQ==\x07\r\n\0\xff".to_vec();
+        bytes.extend_from_slice("\u{202e}abc\u{202c}\u{2028}next".as_bytes());
+        let packet = Packet::new(
+            Utf8 {
+                bytes: Some(bytes.clone()),
+            },
+            Body::FreeText(wsjtx::FreeText {
+                text: Utf8 {
+                    bytes: Some(bytes.clone()),
+                },
+                send: true,
+            }),
+        );
+        let wire = wsjtx::encode(&packet).unwrap();
+        let outcome = wsjtx::decode(&wire, wsjtx::Variant::Wsjtx).unwrap();
+        let value = object(&outcome, "127.0.0.1:1".parse().unwrap(), 0);
+        let json: Value = serde_json::from_str(&value.to_string()).unwrap();
+        assert_eq!(json["text_bytes"], json!(bytes));
+        assert_eq!(json["client_id_bytes"], json!(bytes));
+        let line = human(&value, true);
+        for c in [
+            '\u{1b}', '\u{7}', '\r', '\n', '\0', '\u{202e}', '\u{202c}', '\u{2028}',
+        ] {
+            assert!(!line.contains(c), "unescaped {c:?}");
+        }
+        assert!(line.contains(r"\xff\u{202e}abc\u{202c}\u{2028}next"));
+        let Outcome::Message(packet) = outcome else {
+            panic!("packet");
+        };
+        assert_eq!(wsjtx::encode(&packet).unwrap(), wire);
     }
 
     #[test]

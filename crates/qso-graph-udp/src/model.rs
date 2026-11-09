@@ -1,18 +1,57 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! A first common model. Normalized values are observations, never inferred calls
-//! or timestamps. Every event owns its complete family packet for lossless return.
+//! Transport-independent observations with caller-supplied endpoint context.
+//! Every message owns its complete family representation for lossless return.
 #![forbid(unsafe_code)]
 
 use crate::wsjtx::{Body, Packet, QDateTime, QTime, Utf8, Variant};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-pub struct Message {
+pub struct Message<F = Packet> {
     pub kind: Kind,
-    pub source_id: Utf8,
-    pub schema: u32,
-    pub variant: Variant,
-    pub family: Packet,
+    /// Neutral wire identifier. It is neither an authenticated identity nor always a source.
+    pub client_id: Utf8,
+    pub context: Context,
+    /// Protocol-specific fields, including schema, variant, and raw extensions.
+    pub family: F,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Context {
+    pub direction: Direction,
+    /// Caller-supplied identities; never inferred from a wire client ID.
+    pub source_id: Option<Utf8>,
+    pub target_id: Option<Utf8>,
+    /// Optional request/response correlation supplied by a protocol adapter or caller.
+    pub correlation_id: Option<Utf8>,
+    pub exchange: Exchange,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Exchange {
+    #[default]
+    Unknown,
+    Notification,
+    Request,
+    Response,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Direction {
+    #[default]
+    Unknown,
+    FromApplication,
+    ToApplication,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Operation {
+    Clear,
+    Close,
+    Reply,
+    Configure,
+    /// Other native operations retain their name and arguments in `Message::family`.
+    Other,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -21,6 +60,11 @@ pub enum Kind {
     RadioState(RadioState),
     Decode(Decode),
     Control(Control),
+    Notification(Operation),
+    /// The family permits both a notification and a command; direction is unknown.
+    Ambiguous(Operation),
+    /// A native payload with no normalized view (for example, an RPC error).
+    Native,
     /// Heartbeats and other lifecycle messages retain their native meaning.
     Lifecycle,
 }
@@ -80,13 +124,20 @@ pub struct Decode {
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Control {
+    pub operation: Operation,
+    /// A target explicitly identified by this protocol, independent of source identity.
     pub target_id: Utf8,
-    /// The native command and all its arguments are in `Message::family.body`.
-    pub message_type: u32,
 }
 
 impl From<Packet> for Message {
     fn from(family: Packet) -> Self {
+        Self::with_context(family, Context::default())
+    }
+}
+
+impl Message {
+    /// Normalize using endpoint knowledge provided by the caller, never the sender ID.
+    pub fn with_context(family: Packet, context: Context) -> Self {
         let kind = match &family.body {
             Body::QsoLogged(q) => Kind::LoggedQso(Box::new(LoggedQso {
                 call: Some(q.dx_call.clone()),
@@ -165,25 +216,50 @@ impl From<Packet> for Message {
                 low_confidence: None,
                 off_air: d.off_air,
             }),
-            Body::Heartbeat(_) | Body::Close => Kind::Lifecycle,
+            // JTDX 159 defines these only as outbound notifications; its released
+            // MessageClient has no inbound Clear/Close handlers.
+            Body::Clear(_) if family.variant == Variant::Jtdx => {
+                Kind::Notification(Operation::Clear)
+            }
+            Body::Close if family.variant == Variant::Jtdx => Kind::Lifecycle,
+            Body::Clear(_) | Body::Close => {
+                let operation = if matches!(family.body, Body::Clear(_)) {
+                    Operation::Clear
+                } else {
+                    Operation::Close
+                };
+                match context.direction {
+                    Direction::Unknown => Kind::Ambiguous(operation),
+                    Direction::ToApplication => Kind::Control(Control {
+                        operation,
+                        target_id: family.id.clone(),
+                    }),
+                    Direction::FromApplication if operation == Operation::Close => Kind::Lifecycle,
+                    Direction::FromApplication => Kind::Notification(operation),
+                }
+            }
+            Body::Heartbeat(_) => Kind::Lifecycle,
             _ => Kind::Control(Control {
                 target_id: family.id.clone(),
-                message_type: family.body.message_type(),
+                operation: match family.body {
+                    Body::Reply(_) => Operation::Reply,
+                    Body::Configure(_) => Operation::Configure,
+                    _ => Operation::Other,
+                },
             }),
         };
         Self {
             kind,
-            source_id: family.id.clone(),
-            schema: family.schema,
-            variant: family.variant,
+            client_id: family.id.clone(),
+            context,
             family,
         }
     }
 }
-impl Message {
+impl<F> Message<F> {
     /// Return the original packet. Changes to normalized observations do not
     /// silently become control commands or overwrite family-specific data.
-    pub fn into_family(self) -> Packet {
+    pub fn into_family(self) -> F {
         self.family
     }
 }

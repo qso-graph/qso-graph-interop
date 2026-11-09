@@ -1,5 +1,5 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-# Listener JSON Lines reference
+# Listener JSON lines reference
 
 Run `qg-udp listen --wsjtx --json` to emit one JSON object per decoded datagram.
 Every object has `type`, `received` (RFC 3339 UTC), `from` (numeric socket address),
@@ -12,6 +12,10 @@ strings remain empty. Invalid UTF-8 is replaced with U+FFFD and the accompanying
 `<field>_bytes` array contains the complete original bytes. Nonfinite floating-point
 values use `ieee754:` followed by their 16 hexadecimal bit digits. Colors are
 objects with `spec` and `channels`.
+
+For exact finite floating-point round trips, enable `float_roundtrip` in serde_json
+readers. Other JSON readers must correctly round binary64 numbers. See the
+[JSON float contract](../NORMALIZATION.md#json-float-preservation).
 
 These examples show the type-specific fields; the common fields and other fields
 are omitted for brevity. All fields of the decoded message are included in output.

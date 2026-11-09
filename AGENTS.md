@@ -27,8 +27,9 @@ Public files describe this project only. Use American English and synthetic test
 
 - Rust 1.99.1, edition 2024; exact `=` dependencies; keep both lockfiles current.
 - Every crate root, including tests and fuzz targets, says `#![forbid(unsafe_code)]`.
-  Every workspace member inherits the workspace lints. No macro definitions, unsafe code,
-  C, or native linking in shipped code or its dependencies.
+  Every workspace member inherits the workspace lints. Our own code has no unsafe Rust
+  and defines no macros. Dependencies may use unsafe Rust and define macros; they must
+  come from crates.io, contain no native code, and pass cargo-vet, cargo-deny, and cargo-audit.
 - Fuzzing is separate developer tooling on nightly-2026-10-30, with libFuzzer's runtime only
   in its isolated workspace. Do not make shipped crates depend on it.
 - The library opens no sockets or processes. The CLI uses only UDP at the numeric addresses

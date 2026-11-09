@@ -14,6 +14,7 @@ cargo-fuzz = true
 members = ["."]
 
 [dependencies]
+serde_json = { version = "=1.0.145", features = ["float_roundtrip"] }
 libfuzzer-sys = "=0.4.13"
 qso-graph-udp = { version = "=0.1.0", path = "../crates/qso-graph-udp" }
 

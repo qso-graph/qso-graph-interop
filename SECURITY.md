@@ -4,10 +4,39 @@
 Report vulnerabilities using [private vulnerability reporting](https://github.com/qso-graph/qso-graph-udp/security/advisories/new).
 Do not include private logs or credentials in a public issue.
 
-`cargo xtask policy` checks crate-root forbids, inherited lints, edition 2024, source tokens even
-under disabled cfgs, exact dependency requirements, crates.io sources, the pinned compiler, and
-native code in the shipped dependency graph. It scans the library for socket/process APIs and the
-CLI for TCP, name resolution, and process creation. Its tests plant violations of those rules.
+Our own code forbids unsafe Rust and defines no macros, including code behind inactive
+conditions. Dependencies may use unsafe Rust and define macros. Dependencies must come from
+crates.io, contain no native code, and pass cargo-vet, cargo-deny, and cargo-audit checks.
+Exemptions in cargo-vet are explicit review status, not completed audits.
+
+`cargo xtask policy` checks crate-root forbids, inherited lints, edition 2024, all first-party
+source tokens, exact dependency requirements, crates.io sources, and the pinned compiler.
+It rejects native source/object files, foreign blocks, assembly, and link attributes in the
+shipped dependency graph. Registry Rust unsafe code and macro definitions are allowed.
+
+The library network token scan covers every `.rs` file in its package directory, including tests.
+The CLI network scan covers every `.rs` file in its package directory, including examples,
+benches, and sources outside `src/`, except roots identified exclusively as test targets by
+Cargo metadata. Test roots cannot be imported as modules, and files shared with other targets
+are scanned. Both scans include inactive code; package symlinks, source includes, and path
+redirection are rejected. Build scripts are rejected for all workspace packages. No generated
+or vendored directory is excluded from these package scans.
+
+The library scan rejects socket/process API names. CLI standard
+library access is restricted to io, time, error, str, SocketAddr, and ExitCode paths; root aliases,
+grouped standard-library imports, OS APIs, and socket type access are rejected. ExitCode is the
+only allowed process path. This prevents process module aliases and alternate OS process paths.
+All CLI UDP operations are in `numeric_udp.rs`, whose complete tokens must match the audited
+policy template. Its bind and sender methods take SocketAddr, with no generic address traits,
+string addresses, DNS, or exposed socket handles. Edits to that boundary require updating the
+policy oracle. These are conservative source restrictions, not general Rust name resolution
+or a proof about arbitrary third-party behavior; dependencies have separate supply-chain checks.
+The direct dependency API set is also fixed: serde for the library, serde_json for its tests,
+and clap, serde_json, and the codec for the CLI. Package renames, target-specific additions,
+and new direct dependencies fail until this policy is updated after API review, so a wrapper
+crate cannot silently introduce process or resolver APIs under an arbitrary name.
+Policy self-tests plant an external binary, a build script, aliases, implicit DNS, adapter changes, unreviewed dependency APIs,
+and native/first-party violations.
 Policy tooling itself may invoke build tools. Fuzzing is an isolated workspace; libFuzzer's C++
 runtime and its build dependencies never enter the shipped dependency graph.
 
@@ -30,3 +59,11 @@ See [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md) for dependency purposes and rev
 
 The first milestone's interoperability evidence is independent protocol vectors and reference
 encoder agreement. It has not been tested against running WSJT-X or JTDX applications.
+
+Human output escapes C0/C1 controls, bidi marks/embeddings/overrides/isolates (U+061C,
+U+200E–U+200F, U+202A–U+202E, U+2066–U+2069), and U+2028/U+2029 separators. It also escapes
+soft hyphen (U+00AD), zero-width space/joiners (U+200B–U+200D), word joiner and invisible
+operators (U+2060–U+2064), reserved/deprecated format controls (U+2065, U+206A–U+206F),
+BOM (U+FEFF), and interlinear annotation controls (U+FFF9–U+FFFB). These additional invisible
+format controls can hide boundaries or alter presentation. Other printable Unicode is retained.
+The library and JSON retain original text and raw invalid UTF-8 bytes.

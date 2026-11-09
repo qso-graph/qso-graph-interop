@@ -93,12 +93,12 @@ def vector(name, kind, fields=None, variant='Wsjtx', sender='WSJT-X', schema=3, 
 
 def vectors():
     h = dict(max_schema=3,version=text('3.3.0'),revision=text('abc'))
-    s = dict(dial_frequency_hz=14074000,mode=text('FT8'),dx_call=[],report=[],tx_mode=text('FT8'),tx_enabled=False,transmitting=False,decoding=True,rx_df_hz=1500,tx_df_hz=1500,de_call=text('KI7MT'),de_grid=text('DN13'),dx_grid=[],tx_watchdog=False,sub_mode=[],fast_mode=False,special_operation_mode=0,frequency_tolerance_hz=0xffffffff,tr_period_seconds=15,configuration_name=text('Default'),tx_message=[])
+    s = dict(dial_frequency_hz=14074000,mode=text('FT8'),dx_call=text('W1AW'),report=text('-07'),tx_mode=text('FT4'),tx_enabled=False,transmitting=False,decoding=True,rx_df_hz=1201,tx_df_hz=2302,de_call=text('N0CALL'),de_grid=text('DN13'),dx_grid=text('FN31'),tx_watchdog=False,sub_mode=text('A'),fast_mode=False,special_operation_mode=3,frequency_tolerance_hz=47,tr_period_seconds=30,configuration_name=text('Field'),tx_message=text('CQ TEST'))
     d = dict(new=True,time=(23*3600+39*60+15)*1000,snr_db=-12,delta_time_seconds=0.2,delta_frequency_hz=1234,mode=text('~'),message=text('CQ K7ABC DN13'),low_confidence=False,off_air=False)
-    q = dict(time_off=dt(),dx_call=text('W1AW'),dx_grid=text('FN31'),frequency_hz=14074000,mode=text('FT8'),report_sent=text('-12'),report_received=text('-10'),tx_power=text('5'),comments=text('Test QSO'),name=[],time_on=dt(ms=45255000),operator_call=text('N0CALL'),my_call=text('N0CALL'),my_grid=text('FN31'),exchange_sent=text('1D CT'),exchange_received=text('2A CT'),propagation_mode=text('TR'))
+    q = dict(time_off=dt(),dx_call=text('W1AW'),dx_grid=text('FN31'),frequency_hz=14074000,mode=text('FT8'),report_sent=text('-12'),report_received=text('-10'),tx_power=text('5'),comments=text('Test QSO'),name=text('Example'),time_on=dt(ms=45255000),operator_call=text('K7ABC'),my_call=text('N0CALL'),my_grid=text('DN13'),exchange_sent=text('1D CT'),exchange_received=text('2A CT'),propagation_mode=text('TR'))
     w = dict(new=True,time=45000000,snr_db=-24,delta_time_seconds=-0.3,frequency_hz=14097100,drift_hz=-1,callsign=text('N0CALL'),grid=text('FN31'),power_dbm=37,off_air=False)
     r = {k:v for k,v in d.items() if k not in ('new','off_air')}; r['modifiers']=4
-    b = dict(Heartbeat=h,Status=s,Decode=d,Clear=dict(window=2),Reply=r,QsoLogged=q,Close=None,Replay=None,HaltTx=dict(auto_tx_only=True),FreeText=dict(text=text('CQ TEST'),send=True),WsprDecode=w,Location=dict(location=text('FN31pr')),LoggedAdif=dict(adif=text('<adif_ver:5>3.1.0<EOH><CALL:4>W1AW<EOR>')),HighlightCallsign=dict(callsign=text('W1AW'),background=dict(spec=1,channels=[65535,65535,0,0,0]),foreground=dict(spec=0,channels=[65535,0,0,0,0]),highlight_last=True),SwitchConfiguration=dict(configuration_name=text('Field')),Configure=dict(mode=text('FT8'),frequency_tolerance_hz=0xffffffff,sub_mode=[],fast_mode=False,tr_period_seconds=15,rx_df_hz=1500,dx_call=text('W1AW'),dx_grid=text('FN31'),generate_messages=True),AnnotationInfo=dict(dx_call=text('W1AW'),sort_order_provided=True,sort_order=0xffffffff))
+    b = dict(Heartbeat=h,Status=s,Decode=d,Clear=dict(window=2),Reply=r,QsoLogged=q,Close=None,Replay=None,HaltTx=dict(auto_tx_only=True),FreeText=dict(text=text('CQ TEST'),send=True),WsprDecode=w,Location=dict(location=text('FN31pr')),LoggedAdif=dict(adif=text('<adif_ver:5>3.1.0<EOH><CALL:4>W1AW<EOR>')),HighlightCallsign=dict(callsign=text('W1AW'),background=dict(spec=1,channels=[65001,1101,2202,3303,4404]),foreground=dict(spec=1,channels=[64002,5505,6606,7707,8808]),highlight_last=True),SwitchConfiguration=dict(configuration_name=text('Field')),Configure=dict(mode=text('FT8'),frequency_tolerance_hz=73,sub_mode=text('B'),fast_mode=False,tr_period_seconds=30,rx_df_hz=2890,dx_call=text('W1AW'),dx_grid=text('FN31'),generate_messages=True),AnnotationInfo=dict(dx_call=text('W1AW'),sort_order_provided=True,sort_order=0xffffffff))
     out=[vector('wsjtx_'+k,k,f) for k,f in b.items()]
     for k in ['Heartbeat','Status','Decode','Clear','Reply','QsoLogged','Close','Replay','HaltTx','FreeText','WsprDecode','LoggedAdif']:
         f = None if b[k] is None else dict(b[k])
@@ -118,6 +118,25 @@ def vectors():
     out.append(vector('jtdx_TriggerCq_source','TriggerCq',dict(direction=text('DX'),tx_period=None,send=True),'Jtdx','JTDX'))
     out.append(vector('jtdx_Reply_source','Reply',r,'Jtdx','JTDX'))
     out.append(vector('jtdx_WsprDecode_source','WsprDecode',w,'Jtdx','JTDX'))
+    # Give every boolean position a unique signature across independent vectors.
+    # All-false/all-true also exercise both values for every present boolean.
+    boolean_bases = [v for v in out if isinstance(v['packet']['body'], dict)]
+    for base in boolean_bases:
+        kind, fields = next(iter(base['packet']['body'].items()))
+        keys = [k for t,k in zip(*[v.split() for v in layouts[kind]])
+                if t.rstrip('?') == 'bool' and fields[k] is not None]
+        if not keys: continue
+        # Reconstruct native builder input (vector wraps UTF-8 fields in JSON objects).
+        native = {k: (v['bytes'] if isinstance(v,dict) and 'bytes' in v else v)
+                  for k,v in fields.items()}
+        patterns = [[bool((index+1) & (1 << bit)) for index in range(len(keys))]
+                    for bit in range(len(keys).bit_length())]
+        patterns += [[False]*len(keys), [True]*len(keys)]
+        for index, pattern in enumerate(patterns):
+            values = dict(native)
+            values.update(zip(keys, pattern))
+            out.append(vector(f"{base['name']}_bool_{index}", kind, values,
+                              base['packet']['variant'], bytes(base['packet']['id']['bytes']).decode()))
     # Date/time vectors cover both working schemas and Qt 5.0's raw legacy layout.
     for schema in [1,2,3]:
         for spec in [0,1,2,3]:
