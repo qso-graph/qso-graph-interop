@@ -98,7 +98,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "qso-graph-udp"
+name = "qso-graph-interop"
 version = "0.1.0"
 dependencies = [
  "serde",
@@ -106,11 +106,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "qso-graph-udp-cli"
+name = "qso-graph-interop-cli"
 version = "0.1.0"
 dependencies = [
  "clap",
- "qso-graph-udp",
+ "qso-graph-interop",
  "serde_json",
 ]
 

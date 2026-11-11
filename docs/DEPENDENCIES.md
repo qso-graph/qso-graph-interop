@@ -17,7 +17,7 @@ The isolated fuzz workspace adds libfuzzer-sys and serde_json JSON-path checks a
 | syn | 3.0.9 | MIT OR Apache-2.0 | Parse actual crate-root attributes in xtask. |
 | proc-macro2 | 1.0.107 | MIT OR Apache-2.0 | Scan all Rust tokens, including disabled code, in xtask. |
 | libfuzzer-sys | 0.4.13 | (MIT OR Apache-2.0) AND NCSA | Coverage-guided decoder fuzzing, developer tooling only. |
-| qso-graph-udp | 0.1.0 | GPL-3.0-or-later | Internal exact-version path dependency of the CLI and fuzz workspace. |
+| qso-graph-interop | 0.1.0 | GPL-3.0-or-later | Internal exact-version path dependency of the CLI and fuzz workspace. |
 
 ## Workspace resolution
 
@@ -79,4 +79,4 @@ sources still forbid unsafe code. This exception does not apply to the library o
 
 CI installs cargo-vet 0.10.3, cargo-deny 0.20.2, cargo-audit 0.22.2, and cargo-fuzz 0.13.2,
 with their own `--locked` dependencies. These tools run during development and validation, never
-from qg-udp. The Rust compilers are pinned separately for shipped code and fuzzing.
+from qg-interop. The Rust compilers are pinned separately for shipped code and fuzzing.

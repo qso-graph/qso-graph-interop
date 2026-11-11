@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #![forbid(unsafe_code)]
-use qso_graph_udp::{model, wsjtx::*};
+use qso_graph_interop::{model, wsjtx::*};
 
 fn vectors() -> serde_json::Value {
     serde_json::from_str(include_str!("fixtures/wire.json")).unwrap()

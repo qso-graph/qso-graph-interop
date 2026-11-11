@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 [workspace]
-members = ["crates/qso-graph-udp", "crates/qso-graph-udp-cli", "xtask"]
+members = ["crates/qso-graph-interop", "crates/qso-graph-interop-cli", "xtask"]
 exclude = ["fuzz"]
 resolver = "3"
 
@@ -9,7 +9,7 @@ version = "0.1.0"
 edition = "2024"
 rust-version = "1.99"
 license = "GPL-3.0-or-later"
-repository = "https://github.com/qso-graph/qso-graph-udp"
+repository = "https://github.com/qso-graph/qso-graph-interop"
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

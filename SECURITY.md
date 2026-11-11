@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # Security
 
-Report vulnerabilities using [private vulnerability reporting](https://github.com/qso-graph/qso-graph-udp/security/advisories/new).
+Report vulnerabilities using [private vulnerability reporting](https://github.com/qso-graph/qso-graph-interop/security/advisories/new).
 Do not include private logs or credentials in a public issue.
 
 Our own code forbids unsafe Rust and defines no macros, including code behind inactive

@@ -3,6 +3,12 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Renamed to QG Interop before its first release: the library is `qso-graph-interop`, the CLI
+  package `qso-graph-interop-cli` and the command `qg-interop`. Nothing was published under the
+  old names, so there is no alias.
+
 ### Fixed
 
 - Apply CLI process and DNS restrictions to package Rust sources outside `src/`, with planted
@@ -29,7 +35,7 @@
 
 - Readable, terminal-safe listener output, structured JSON Lines, and UTC conversion helpers.
 
-- Rust workspace with the `qso-graph-udp` library, `qg-udp` listener and simulator, isolated
+- Rust workspace with the `qso-graph-interop` library, `qg-interop` listener and simulator, isolated
   decoder fuzzing, and token-based repository policy checks.
 - Bidirectional WSJT-X 3.0.2 messages (the same protocol as 2.7.0) 0 through 16, schemas 1 through 3, optional historical
   tails, bounded Qt values, and graceful skipping of unknown types and newer schemas.

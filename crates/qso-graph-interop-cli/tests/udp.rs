@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #![forbid(unsafe_code)]
-use qso_graph_udp::wsjtx::{self, Body, Outcome};
+use qso_graph_interop::wsjtx::{self, Body, Outcome};
 use std::{
     io::{BufRead, BufReader},
     net::UdpSocket,
@@ -14,7 +14,7 @@ fn simulator_sends_only_to_the_named_loopback_socket() {
     socket
         .set_read_timeout(Some(Duration::from_secs(3)))
         .unwrap();
-    let status = Command::new(env!("CARGO_BIN_EXE_qg-udp"))
+    let status = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
         .args([
             "sim",
             "--wsjtx",
@@ -61,7 +61,7 @@ fn listener_json_is_one_object_per_message_and_survives_malformed_input() {
     let reserve = UdpSocket::bind("127.0.0.1:0").unwrap();
     let address = reserve.local_addr().unwrap();
     drop(reserve);
-    let mut child = Command::new(env!("CARGO_BIN_EXE_qg-udp"))
+    let mut child = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
         .args([
             "listen",
             "--wsjtx",
@@ -117,7 +117,7 @@ fn simulator_to_listener_reports_consistent_transmit_frequency() {
     let reserve = UdpSocket::bind("127.0.0.1:0").unwrap();
     let address = reserve.local_addr().unwrap();
     drop(reserve);
-    let mut listener = Command::new(env!("CARGO_BIN_EXE_qg-udp"))
+    let mut listener = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
         .args([
             "listen",
             "--wsjtx",
@@ -138,7 +138,7 @@ fn simulator_to_listener_reports_consistent_transmit_frequency() {
         }
         std::thread::sleep(Duration::from_millis(10));
     }
-    let sim = Command::new(env!("CARGO_BIN_EXE_qg-udp"))
+    let sim = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
         .args(["sim", "--wsjtx", "--to", &address.to_string()])
         .status()
         .unwrap();

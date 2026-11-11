@@ -1,5 +1,5 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-# Working on QSO Graph UDP
+# Working on QG Interop
 
 <!-- qso-graph:shared:start -->
 <!-- Maintained in qso-graph/.github; change this block there. -->
@@ -37,7 +37,7 @@ Public files describe this project only. Use American English and synthetic test
 - Preserve null, empty, absent, raw bytes, all family fields, and trailing extensions.
   Never guess a new schema's field encoding or infer a variant from its sender ID.
 - Pin protocol changes to released source; keep evidence in docs/PROTOCOL.md and independent
-  fixtures in crates/qso-graph-udp/tests/fixtures. New checks have planted failure cases.
+  fixtures in crates/qso-graph-interop/tests/fixtures. New checks have planted failure cases.
 - Keep the README a product page. Put validation details and limitations in docs/ or SECURITY.md.
 - SPDX GPL-3.0-or-later headers on new files, using that format's comment syntax.
 

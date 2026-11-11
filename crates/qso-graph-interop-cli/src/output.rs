@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Presentation of decoded packets; wire values remain unchanged.
-use qso_graph_udp::wsjtx::{Body, Outcome, QDateTime, QTime, Utf8};
+use qso_graph_interop::wsjtx::{Body, Outcome, QDateTime, QTime, Utf8};
 use serde_json::{Map, Value, json};
 use std::net::SocketAddr;
 
@@ -91,8 +91,8 @@ pub fn object(outcome: &Outcome, peer: SocketAddr, received_ms: i64) -> Value {
             map.insert(
                 "reason".into(),
                 json!(match reason {
-                    qso_graph_udp::wsjtx::SkipReason::FutureSchema => "future_schema",
-                    qso_graph_udp::wsjtx::SkipReason::UnknownType => "unknown_type",
+                    qso_graph_interop::wsjtx::SkipReason::FutureSchema => "future_schema",
+                    qso_graph_interop::wsjtx::SkipReason::UnknownType => "unknown_type",
                 }),
             );
         }
@@ -334,7 +334,7 @@ pub fn human(value: &Value, verbose: bool) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use qso_graph_udp::wsjtx::{self, Body, Packet};
+    use qso_graph_interop::wsjtx::{self, Body, Packet};
 
     #[test]
     fn hostile_text_is_escaped_and_json_preserves_bytes() {

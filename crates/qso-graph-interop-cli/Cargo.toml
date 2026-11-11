@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 [package]
-name = "qso-graph-udp-cli"
+name = "qso-graph-interop-cli"
 description = "Listen to and simulate WSJT-X UDP messages"
 version.workspace = true
 edition.workspace = true
@@ -10,11 +10,11 @@ repository.workspace = true
 readme = "README.md"
 
 [[bin]]
-name = "qg-udp"
+name = "qg-interop"
 path = "src/main.rs"
 
 [dependencies]
-qso-graph-udp = { version = "=0.1.0", path = "../qso-graph-udp" }
+qso-graph-interop = { version = "=0.1.0", path = "../qso-graph-interop" }
 clap = { version = "=4.6.7", default-features = false, features = ["std", "derive", "help", "usage", "error-context", "suggestions"] }
 serde_json = { version = "=1.0.145", features = ["float_roundtrip"] }
 

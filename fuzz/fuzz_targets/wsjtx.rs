@@ -3,7 +3,7 @@
 #![no_main]
 #![forbid(unsafe_code)]
 use libfuzzer_sys::fuzz_target;
-use qso_graph_udp::{
+use qso_graph_interop::{
     model,
     wsjtx::{self, Outcome},
 };

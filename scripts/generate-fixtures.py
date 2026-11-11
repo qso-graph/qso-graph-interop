@@ -12,7 +12,7 @@ from pathlib import Path
 import struct
 
 ROOT = Path(__file__).resolve().parent.parent
-DEST = ROOT / 'crates/qso-graph-udp/tests/fixtures/wire.json'
+DEST = ROOT / 'crates/qso-graph-interop/tests/fixtures/wire.json'
 SCHEMA = 3
 
 def uint8(v): return struct.pack('>B', v)

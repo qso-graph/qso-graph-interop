@@ -23,9 +23,9 @@ def main():
     with tempfile.TemporaryDirectory(prefix='qg-field-order-') as temporary:
         work = Path(temporary) / 'work'
         shutil.copytree(root, work, ignore=shutil.ignore_patterns('.git', 'target', 'corpus', 'artifacts'))
-        codec = work / 'crates/qso-graph-udp/src/wsjtx/codec.rs'
+        codec = work / 'crates/qso-graph-interop/src/wsjtx/codec.rs'
         original = codec.read_text()
-        # These are the exact two replacements from /tmp/qg-udp-review/mutate.py.
+        # These are the exact two replacements from /tmp/qg-interop-review/mutate.py.
         for pattern in [
             'rx_df_hz: r.u32()?,\n            tx_df_hz: r.u32()?,',
             'w.u32(v.rx_df_hz)?;\n            w.u32(v.tx_df_hz)?;',

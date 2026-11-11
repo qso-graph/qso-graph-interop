@@ -94,18 +94,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "qso-graph-udp"
+name = "qso-graph-interop"
 version = "0.1.0"
 dependencies = [
  "serde",
 ]
 
 [[package]]
-name = "qso-graph-udp-fuzz"
+name = "qso-graph-interop-fuzz"
 version = "0.0.0"
 dependencies = [
  "libfuzzer-sys",
- "qso-graph-udp",
+ "qso-graph-interop",
  "serde_json",
 ]
 

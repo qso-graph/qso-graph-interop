@@ -453,7 +453,7 @@ fn shipped_dependency_names(table: &toml::Table, library: bool) -> Check {
                     let allowed: &[&str] = match (library, key.as_str()) {
                         (true, "dependencies") => &["serde"],
                         (true, "dev-dependencies") => &["serde_json"],
-                        (false, "dependencies") => &["clap", "qso-graph-udp", "serde_json"],
+                        (false, "dependencies") => &["clap", "qso-graph-interop", "serde_json"],
                         _ => &[],
                     };
                     require(
@@ -517,8 +517,8 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
         let dir = path.parent().ok_or("no parent")?;
         let package_manifest = toml_file(path)?;
         manifest_policy(&package_manifest, false)?;
-        if pkg["name"] == "qso-graph-udp" || pkg["name"] == "qso-graph-udp-cli" {
-            shipped_dependency_names(&package_manifest, pkg["name"] == "qso-graph-udp")?;
+        if pkg["name"] == "qso-graph-interop" || pkg["name"] == "qso-graph-interop-cli" {
+            shipped_dependency_names(&package_manifest, pkg["name"] == "qso-graph-interop")?;
         }
         no_native(dir)?;
         let targets = array(pkg, "targets")?;
@@ -581,23 +581,24 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
             if file.extension().is_some_and(|e| e == "rs") {
                 let tokens = token_file(&file)?;
                 source_tokens(tokens.clone()).map_err(|e| format!("{}: {e}", file.display()))?;
-                if pkg["name"] == "qso-graph-udp-cli" {
+                if pkg["name"] == "qso-graph-interop-cli" {
                     reject_test_root_modules(tokens, &test_names)
                         .map_err(|e| format!("{}: {e}", file.display()))?;
                 }
-                if pkg["name"] == "qso-graph-udp"
-                    || pkg["name"] == "qso-graph-udp-cli"
+                if pkg["name"] == "qso-graph-interop"
+                    || pkg["name"] == "qso-graph-interop-cli"
                         && !test_roots.contains(
                             &file
                                 .canonicalize()
                                 .map_err(|e| format!("{}: {e}", file.display()))?,
                         )
                 {
-                    if pkg["name"] == "qso-graph-udp-cli" && file == dir.join("src/numeric_udp.rs")
+                    if pkg["name"] == "qso-graph-interop-cli"
+                        && file == dir.join("src/numeric_udp.rs")
                     {
                         numeric_udp_tokens(token_file(&file)?)?;
                     } else {
-                        network_tokens(token_file(&file)?, pkg["name"] == "qso-graph-udp")?;
+                        network_tokens(token_file(&file)?, pkg["name"] == "qso-graph-interop")?;
                     }
                 }
             }
@@ -611,7 +612,7 @@ fn dependency_policy(meta: &Value) -> Check {
     let nodes = array(&meta["resolve"], "nodes")?;
     let mut queue: VecDeque<&Value> = packages
         .iter()
-        .filter(|p| p["name"] == "qso-graph-udp" || p["name"] == "qso-graph-udp-cli")
+        .filter(|p| p["name"] == "qso-graph-interop" || p["name"] == "qso-graph-interop-cli")
         .map(|p| &p["id"])
         .collect();
     let mut seen = BTreeSet::new();
@@ -634,7 +635,7 @@ fn dependency_policy(meta: &Value) -> Check {
             // versions that remain explicitly not audited in supply-chain/config.toml.
         } else {
             require(
-                pkg["name"] == "qso-graph-udp" || pkg["name"] == "qso-graph-udp-cli",
+                pkg["name"] == "qso-graph-interop" || pkg["name"] == "qso-graph-interop-cli",
                 "unexpected path dependency in shipped graph",
             )?;
         }
@@ -804,7 +805,7 @@ mod tests {
 [workspace.lints.rust]
 unsafe_code = "forbid"
 [package]
-name = "qso-graph-udp-cli"
+name = "qso-graph-interop-cli"
 version = "0.1.0"
 edition = "2024"
 [lints]
@@ -992,7 +993,7 @@ fn main() {}
         assert!(
             shipped_dependency_names(
                 &toml::from_str(
-                    "[dependencies]\nclap='=4.6.7'\nserde_json='=1.0.145'\nqso-graph-udp='=0.1.0'"
+                    "[dependencies]\nclap='=4.6.7'\nserde_json='=1.0.145'\nqso-graph-interop='=0.1.0'"
                 )
                 .unwrap(),
                 false

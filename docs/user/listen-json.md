@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # Listener JSON lines reference
 
-Run `qg-udp listen --wsjtx --json` to emit one JSON object per decoded datagram.
+Run `qg-interop listen --wsjtx --json` to emit one JSON object per decoded datagram.
 Every object has `type`, `received` (RFC 3339 UTC), `from` (numeric socket address),
 `schema`, and `client_id`. The remaining names match the protocol fields, in snake case.
 Frequencies are integer Hz, and flags are booleans. Qt times use `HH:MM:SS.mmm`;

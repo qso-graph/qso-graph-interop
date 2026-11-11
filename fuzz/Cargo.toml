@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Isolated developer tooling: libFuzzer's C++ runtime never enters shipped crates.
 [package]
-name = "qso-graph-udp-fuzz"
+name = "qso-graph-interop-fuzz"
 version = "0.0.0"
 edition = "2024"
 license = "GPL-3.0-or-later"
@@ -16,7 +16,7 @@ members = ["."]
 [dependencies]
 serde_json = { version = "=1.0.145", features = ["float_roundtrip"] }
 libfuzzer-sys = "=0.4.13"
-qso-graph-udp = { version = "=0.1.0", path = "../crates/qso-graph-udp" }
+qso-graph-interop = { version = "=0.1.0", path = "../crates/qso-graph-interop" }
 
 [lints.rust]
 unsafe_code = "forbid"
