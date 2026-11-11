@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 [package]
-name = "qso-graph-udp"
+name = "qso-graph-interop"
 description = "Bounded, bidirectional WSJT-X UDP protocol codecs"
 version.workspace = true
 edition.workspace = true

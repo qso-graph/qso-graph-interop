@@ -1,10 +1,10 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <!-- vale Google.Headings = NO -->
-# QSO Graph UDP
+# QG Interop
 <!-- vale Google.Headings = YES -->
 
-**Read and write WSJT-X UDP messages from Rust, or watch them with `qg-udp`.**
-QSO Graph UDP gives radio app developers a bidirectional codec and gives operators a
+**Read and write WSJT-X UDP messages from Rust, or watch them with `qg-interop`.**
+QG Interop gives radio app developers a bidirectional codec and gives operators a
 listener and a simulator for checking their UDP setup.
 
 The library implements all 17 message types in WSJT-X 3.0.2 (and 2.7.0, whose protocol is the same), including logging, decoding,
@@ -16,7 +16,7 @@ The library leaves sockets and control decisions to its caller.
 From this checkout, with [Rust](https://rustup.rs) installed:
 
 ```sh
-cargo install --path crates/qso-graph-udp-cli --locked
+cargo install --path crates/qso-graph-interop-cli --locked
 ```
 
 ## First use
@@ -24,19 +24,19 @@ cargo install --path crates/qso-graph-udp-cli --locked
 Listen on the default local address, `127.0.0.1:2237`:
 
 ```sh
-qg-udp listen --wsjtx
+qg-interop listen --wsjtx
 ```
 
 In another terminal, send a short simulated exchange to that listener:
 
 ```sh
-qg-udp sim --wsjtx --to 127.0.0.1:2237
+qg-interop sim --wsjtx --to 127.0.0.1:2237
 ```
 
 The listener displays messages like these:
 
 ```text
-21:25:33  Heartbeat            WSJT-X  qg-udp  0.1.0  (schema 3)
+21:25:33  Heartbeat            WSJT-X  qg-interop  0.1.0  (schema 3)
 21:25:33  Status               14.074000 MHz  FT8  RX  DE N0CALL FN31
 21:25:33  Decode               -12 dB  0.2 s  1500 Hz  ~  CQ W1AW FN31
 21:25:33  Close
@@ -44,7 +44,7 @@ The listener displays messages like these:
 
 The simulator sends a heartbeat, radio status, three decodes, a logged QSO, and shutdown messages.
 Choose callsigns, mode, and frequency with `--call`, `--dx-call`, `--mode`, and `--frequency` (Hz).
-Use `qg-udp listen --wsjtx --json` for one JSON object per decoded datagram. Add `--verbose` to show the sender, schema, and client ID. See the
+Use `qg-interop listen --wsjtx --json` for one JSON object per decoded datagram. Add `--verbose` to show the sender, schema, and client ID. See the
 [JSON Lines reference](docs/user/listen-json.md) for machine-readable output.
 Each command's `--help` includes examples.
 
@@ -70,8 +70,8 @@ See [SECURITY.md](SECURITY.md) for the checks behind these properties and privat
 
 ## Use the library
 
-The `qso-graph-udp` crate exposes `wsjtx::encode`, `wsjtx::decode`, and `model::Message`.
-The [library example](crates/qso-graph-udp/README.md) shows a complete round trip.
+The `qso-graph-interop` crate exposes `wsjtx::encode`, `wsjtx::decode`, and `model::Message`.
+The [library example](crates/qso-graph-interop/README.md) shows a complete round trip.
 Protocol versions and source references are in [docs/PROTOCOL.md](docs/PROTOCOL.md).
 Build and contribution instructions: [CONTRIBUTING.md](CONTRIBUTING.md).
 

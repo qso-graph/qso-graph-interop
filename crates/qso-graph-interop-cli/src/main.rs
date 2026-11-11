@@ -7,7 +7,7 @@ mod output;
 
 use clap::{Args, Parser, Subcommand};
 use numeric_udp::NumericUdp;
-use qso_graph_udp::wsjtx::{self, Body, Packet, QDateTime, QTime};
+use qso_graph_interop::wsjtx::{self, Body, Packet, QDateTime, QTime};
 use std::io::{self, Write};
 use std::net::SocketAddr;
 use std::process::ExitCode;
@@ -15,11 +15,11 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 #[derive(Parser)]
 #[command(
-    name = "qg-udp",
+    name = "qg-interop",
     version,
     disable_help_subcommand = true,
     about = "Listen to and simulate amateur radio UDP messages",
-    after_help = "Examples:\n  qg-udp listen --wsjtx\n  qg-udp sim --wsjtx --to 127.0.0.1:2237"
+    after_help = "Examples:\n  qg-interop listen --wsjtx\n  qg-interop sim --wsjtx --to 127.0.0.1:2237"
 )]
 struct Cli {
     #[command(subcommand)]
@@ -30,12 +30,12 @@ struct Cli {
 enum Command {
     /// Print each decoded datagram as one line.
     #[command(
-        after_help = "Examples:\n  qg-udp listen --wsjtx\n  qg-udp listen --wsjtx 127.0.0.1:2237 --json"
+        after_help = "Examples:\n  qg-interop listen --wsjtx\n  qg-interop listen --wsjtx 127.0.0.1:2237 --json"
     )]
     Listen(Listen),
     /// Send a finite heartbeat, status, decode and logged-QSO script.
     #[command(
-        after_help = "Examples:\n  qg-udp sim --wsjtx --to 127.0.0.1:2237\n  qg-udp sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call W1AW --mode FT4 --frequency 7074000"
+        after_help = "Examples:\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call W1AW --mode FT4 --frequency 7074000"
     )]
     Sim(Sim),
 }
@@ -86,7 +86,7 @@ fn main() -> ExitCode {
     match run(Cli::parse()) {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
-            eprintln!("qg-udp: {e}");
+            eprintln!("qg-interop: {e}");
             ExitCode::FAILURE
         }
     }
@@ -177,7 +177,7 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
         make(Body::Heartbeat(wsjtx::Heartbeat {
             max_schema: Some(3),
             version: Some(env!("CARGO_PKG_VERSION").into()),
-            revision: Some("qg-udp".into()),
+            revision: Some("qg-interop".into()),
         })),
         make(Body::Status(status.clone())),
     ];
@@ -239,7 +239,7 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
 mod tests {
     use super::*;
     use clap::CommandFactory;
-    use qso_graph_udp::wsjtx::Utf8;
+    use qso_graph_interop::wsjtx::Utf8;
 
     #[test]
     fn help_examples_and_no_color() {
@@ -256,12 +256,13 @@ mod tests {
 
     #[test]
     fn addresses_are_numeric_and_sim_destination_is_required() {
-        assert!(Cli::try_parse_from(["qg-udp", "sim", "--wsjtx"]).is_err());
+        assert!(Cli::try_parse_from(["qg-interop", "sim", "--wsjtx"]).is_err());
         assert!(
-            Cli::try_parse_from(["qg-udp", "sim", "--wsjtx", "--to", "example.com:2237"]).is_err()
+            Cli::try_parse_from(["qg-interop", "sim", "--wsjtx", "--to", "example.com:2237"])
+                .is_err()
         );
-        assert!(Cli::try_parse_from(["qg-udp", "listen"]).is_err());
-        let c = Cli::try_parse_from(["qg-udp", "listen", "--wsjtx"]).unwrap();
+        assert!(Cli::try_parse_from(["qg-interop", "listen"]).is_err());
+        let c = Cli::try_parse_from(["qg-interop", "listen", "--wsjtx"]).unwrap();
         let Command::Listen(l) = c.command else {
             panic!("listen");
         };
@@ -270,8 +271,8 @@ mod tests {
 
     #[test]
     fn simulator_output_has_expected_human_lines_and_json_types() {
-        let cli =
-            Cli::try_parse_from(["qg-udp", "sim", "--wsjtx", "--to", "127.0.0.1:2237"]).unwrap();
+        let cli = Cli::try_parse_from(["qg-interop", "sim", "--wsjtx", "--to", "127.0.0.1:2237"])
+            .unwrap();
         let Command::Sim(sim) = cli.command else {
             panic!("sim")
         };
@@ -311,7 +312,7 @@ mod tests {
     fn simulator_tx_frequency_matches_status_and_overflow_is_rejected() {
         for mode in ["FT8", "FT4"] {
             let cli = Cli::try_parse_from([
-                "qg-udp",
+                "qg-interop",
                 "sim",
                 "--wsjtx",
                 "--to",
@@ -345,7 +346,7 @@ mod tests {
     #[test]
     fn script_respects_options_and_codec() {
         let c = Cli::try_parse_from([
-            "qg-udp",
+            "qg-interop",
             "sim",
             "--wsjtx",
             "--to",

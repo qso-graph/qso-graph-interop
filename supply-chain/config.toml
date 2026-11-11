@@ -16,10 +16,10 @@ url = "https://raw.githubusercontent.com/mozilla/supply-chain/main/audits.toml"
 [imports.zcash]
 url = "https://raw.githubusercontent.com/zcash/rust-ecosystem/main/supply-chain/audits.toml"
 
-[policy.qso-graph-udp]
+[policy.qso-graph-interop]
 audit-as-crates-io = false
 
-[policy.qso-graph-udp-cli]
+[policy.qso-graph-interop-cli]
 audit-as-crates-io = false
 
 [policy.xtask]

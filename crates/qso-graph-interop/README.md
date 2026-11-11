@@ -1,11 +1,11 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-# QSO Graph UDP library
+# QG Interop library
 
 Encode and decode WSJT-X UDP messages with bounded Rust parsers.
 Applications choose which messages to send and supply their own sockets.
 
 ```rust
-use qso_graph_udp::wsjtx::{self, Body, Outcome, Packet};
+use qso_graph_interop::wsjtx::{self, Body, Outcome, Packet};
 
 let original = Packet::new("WSJT-X", Body::Replay);
 let bytes = wsjtx::encode(&original)?;
