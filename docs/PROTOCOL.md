@@ -26,129 +26,113 @@ pinned to Qt `v5.4.2`: [QDate/QTime/QDateTime](https://github.com/qt/qtbase/blob
 and [QColor](https://github.com/qt/qtbase/blob/v5.4.2/src/gui/painting/qcolor.cpp).
 The implementation is Rust; upstream C++ is not compiled or shipped here.
 
-## Complete message inventory
+## Specification and public API
 
-All fields listed by the pinned WSJT-X header are encoded and decoded in their specified order.
-The named fixture for each message is an independent Python `struct` vector used for both directions.
+The implementation follows [QGI-SPEC-001 0.1.0](../spec/QGI-SPEC-001.md), Annex A's common
+fields, Annex B revision 1 for WSJT-X, and Annex I revision 1 for event carriage. The source pins
+above remain the native-layout evidence. No upstream source was fetched during this alignment.
 
-| Value | WSJT-X message | Fixture |
-| --- | --- | --- |
-| 0 | Heartbeat | `wsjtx_Heartbeat` |
-| 1 | Status | `wsjtx_Status` |
-| 2 | Decode | `wsjtx_Decode` |
-| 3 | Clear | `wsjtx_Clear`, `prototype_Clear` |
-| 4 | Reply | `wsjtx_Reply` |
-| 5 | QSOLogged | `wsjtx_QsoLogged` |
-| 6 | Close | `wsjtx_Close` |
-| 7 | Replay | `wsjtx_Replay` |
-| 8 | HaltTx | `wsjtx_HaltTx` |
-| 9 | FreeText | `wsjtx_FreeText` |
-| 10 | WSPRDecode | `wsjtx_WsprDecode` |
-| 11 | Location | `wsjtx_Location` |
-| 12 | LoggedADIF | `wsjtx_LoggedAdif` |
-| 13 | HighlightCallsign | `wsjtx_HighlightCallsign` |
-| 14 | SwitchConfiguration | `wsjtx_SwitchConfiguration` |
-| 15 | Configure | `wsjtx_Configure` |
-| 16 | AnnotationInfo | `wsjtx_AnnotationInfo` |
+The family-independent core exports `Event`, `Context`, neutral text/integer/time/binary64 values,
+radio labels, hops, class-native evidence, `Codec`, `Profile`, outcomes, skips, limits, and errors.
+It imports no family. Default features select `wsjtx`, `qgi`, and `serde`; disabling default features
+builds and tests the core alone. `conformance` exports the vector runner and hash, round-trip,
+truncation, limit and fuzz helpers. The `serde` feature enables serde traits on neutral values and events. The core retains serde_json
+for the preserved JSON value model and bounded JSON format, including with serde integration off.
 
-## Wire and compatibility rules
+`Codec::decode` returns an ordered collection of events and skip notices or one atomic error.
+The caller supplies a session key, observer context and optional expiry input. `Limits` declares
+message, field, event, session, template and dependency budgets. WSJT-X and qgi have no semantic
+session state. `reset` resets one session or all sessions. Stream decoding consumes a caller-owned
+buffer without an async runtime. The external implementation in `tests/core.rs` proves the open
+trait with bounded session state and planted atomic failures.
 
-- Header: big-endian magic `0xadbccbda`, schema, type, and UTF-8 QByteArray ID.
-- All floating-point wire fields are IEEE 754 binary64, including fields called float upstream.
-- Schema 1 uses Qt 5.0's raw date/time layout, including its UTC-clock/original-spec bug; schema 2
-  uses Qt 5.2, schema 3 uses Qt 5.4. The Rust type keeps the raw Julian day, clock, and spec.
-  It does not silently convert local times or repair schema 1's meaning. Schema 0 is refused.
-- Schemas greater than 3 are skipped immediately after the stable eight-byte prefix. Their type
-  and ID encodings cannot be assumed. Unknown types in supported schemas are skipped without
-  interpreting their payload. Neither case generates a network reply.
-- `negotiate_schema` limits responses to the local maximum, peer datagram schema, and peer maximum;
-  a heartbeat missing its maximum implies 2. Callers manage per-peer sessions and heartbeat timers.
-- A null byte array or QString length is `0xffffffff`; empty is zero. UTF-8 is retained as bytes;
-  QString is retained as UTF-16 units, even for invalid Unicode. Date/time nulls use Qt's sentinels.
-- QString length is in bytes. Named and custom Qt zones are carried without consulting host data.
-  QColor carries its spec and all five 16-bit channels, including padding and invalid colors.
-- Historical suffix fields are optional and preserve absent versus transmitted null. Status requires
-  its first ten fields; Heartbeat may have no fields; Decode requires through message; Reply
-  requires through message; QSOLogged requires through name. Configure's generate-messages and
-  HighlightCallsign's highlight-last may be absent. A partial field is malformed.
-- Additional trailing fields are kept in `Packet::extensions` and ignored by normalization. They
-  are written back unchanged. Optional suffixes must be contiguous; encoders refuse holes and
-  extensions placed before missing known suffixes.
-- Nonzero booleans decode as true, as Qt does; encoders canonicalize them to 1. Other values remain
-  raw. JSON uses numeric finite doubles and `ieee754:<16 hex digits>` for nonfinite values, preserving
-  NaN payloads. Text uses `{ "bytes": null }` versus `{ "bytes": [] }`; an absent suffix is JSON null.
-- Limits are 65,507 bytes per datagram and 256 bytes per ID. Arrays must fit in remaining input
-  before allocating. Encoders enforce the same limits. These are local resource limits, not claims
-  about every possible upstream instance name or network MTU.
+`encode_command` constructs bytes from common fields, operation, target `wire_id` and encoding
+options. `reencode` separately validates observed native evidence and canonicalizes booleans.
+`Event::native_bytes` retrieves exact original bytes. Decoding and encoding never perform I/O.
+`Profile` supplies family interpretation and producer validation through public core APIs.
+Family errors remain typed sources of the non-exhaustive core error. Display messages are prose.
 
-The common model exposes logged QSO, radio state, decode, control, and lifecycle observations.
-It always carries the full family packet. `into_family` returns that packet; editing normalized
-observations does not implicitly send commands or rewrite family data. ADIF is retained verbatim;
-this milestone does not parse ADIF tags. Callsigns are not inferred from decode text.
+## WSJT-X mapping
 
-## Fixture provenance
+All 17 types and schemas 1–3 use Annex B's wire order, optional contiguous tails, radio identifier,
+text wrappers, time resolution, integer range and sentinels. Unknown versions stop after schema;
+unknown types stop before ID. Admission order is size, magic, schema, type, then body. QString
+length checks distinguish oversized bounds, malformed odd counts and truncated payloads.
 
-`scripts/generate-fixtures.py` uses Python's standard-library `struct`, independent of the Rust
-codec. The original Python prototype was verified against the six packet shapes it emits and all
-120 decodes in `ALL-sample.TXT`, byte for byte. Reference encoder SHA-256:
-`d83f197e89daa372beff55d18145b06da47377716d4bf303f282c4bd5d41428c`.
-The script ports the fixtures for repeatability without an external source checkout.
+Observed events preserve exact datagrams, including noncanonical booleans and extensions.
+Optional `native.message` uses the Annex B catalog, with separate structured-view comparisons.
+The producer profile checks that complete view against the decoded native representation.
+`Profile::verify` returns `verified` or `unavailable` separately from the event and applies the
+mapping-revision outcome table. Unsupported command mappings are never encoded.
 
-Tests also cover every datagram prefix, malicious lengths, maximum datagrams and IDs, wrong magic,
-future schemas, null/empty/raw Unicode, date/time specs, colors, and model/JSON round trips.
-Actual application interoperability remains a separate validation step.
+The sending types are 0, 3, 4, 6–9, 11 and 13–16. Schema defaults to 3 and accepts integers 1–3.
+Missing arguments or wire IDs, optional-tail holes, incorrect text wrappers, unsupported argument
+combinations and wire-range violations return `invalid_value`. The common view never derives
+callsigns, locators, observer identity or a WSPR mode from text or IDs.
 
-## Normalization and regression oracles
+## Event JSON and carriage
 
-See [identity and direction](NORMALIZATION.md) for neutral IDs, caller context, and future adapter
-mappings. Clear's missing window does not distinguish an erase notification from a legacy clear
-command in WSJT-X; its Close also has both directions. Reply and Configure identify their target, not source.
+`json::parse` checks the frame limit before allocating. Its bounded container parser delegates
+string/Unicode and numeric scalar syntax to serde_json. Building maps explicitly rejects duplicate
+members at every depth and preserves ordinary event keys that coincide with serde_json's private
+arbitrary-precision-number marker. This small framing layer is needed for those two guarantees and
+for resource admission before map/array growth; it does not replace serde's scalar encoding.
+`json::parse` is the byte-bounded reader entry point. Serde deserialization of `Event` also delegates
+to it after acquiring the raw JSON record from the deserializer.
 
-Status wire order is Rx DF then Tx DF, per the pinned header lines 151–152. Independent fixtures
-use 1201 and 2302 Hz, distinct strings and other same-type scalars, and multiple boolean patterns
-whose per-position signatures differ. Normalized-field assertions supplement binary comparisons.
-Run `uv run --no-project python scripts/check-field-order-mutation.py` to plant the review's paired
-encoder/decoder swap in a temporary copy and verify the independent Status fixture rejects it.
+Carriage containers have depth at most 32, with at most 65,536 total object members and array
+elements. The general event reader uses the same depth and number bounds and a 1,048,576-element
+bound, implied by its record-byte bound. This permits Annex B's large raw-text structured views
+without applying Annex I's separate carriage limit to native observations.
+Numeric tokens have at most 128 bytes. Strings are bounded by the transport frame limit. Each
+context has a 4,096-byte compact budget. Compact records are admitted at 1,048,576 UTF-8 bytes. Serialization uses a bounded in-memory
+serde sink, including the separate context budget, so oversize output never grows an unbounded
+output buffer.
+Finite binary64 values use correctly rounded numbers; nonfinite values preserve all bits.
+Common integers are exact within ±(2^53−1), and unknown numeric additions retain their exact tokens.
+Absent, null, empty and invalid text remain distinct. Neutral time values validate UTC spelling
+and Gregorian dates. Qt values stay in the WSJT-X module.
 
-The simulator's WSJT-X QSOLogged frequency is dial plus TX offset, checked for overflow before
-sending the script. This follows the released
-[mainwindow logging call](https://github.com/WSJTX/wsjtx/blob/v3.0.2/widgets/mainwindow.cpp#L10594),
-which adds the transmit spin-box offset to nominal dial frequency. The default USB FT8 script
-therefore logs 14,075,500 Hz from a 14,074,000 Hz dial and 1,500 Hz TX offset.
+Reader validation accepts additions and preserves the complete event; `recognized` projects known
+members recursively without rewriting the stored content. Producer validation rejects unknown
+members recursively, including contexts, hops, fields, radio, colors, native headers, dependencies
+and family-supplied structured views. Native consistency requires an explicit supported family
+profile; carriage itself never verifies the original native protocol.
 
+`qgi::Qgi` receives one UDP event or LF/CRLF-delimited TCP record. Reception appends exactly one
+observer hop and preserves all prior content. Eight existing hops reject a ninth atomically.
+Parser and compact-output limits are reapplied after appending. Forwarding adds no hop and uses
+the reader profile for newer preserved content. TCP errors consume through the next LF. If an
+oversized incomplete frame has no LF, the codec enters delimiter-discard recovery; reset clears
+that framing state. EOF with an unfinished frame returns `truncated`.
 
-## Second-pass specification evidence
+## Acceptance and supplemental evidence
 
-[QGI-SPEC-001](../spec/QGI-SPEC-001.md) now distinguishes field-built commands from observed
-native re-encoding. [Annex B](../spec/annex-b-wsjtx.md) still uses the released WSJT-X pin above;
-the new reverse vectors start without native bytes. This specification change does not establish
-that the current Rust API implements command events or the new collection/session rules.
+`tests/conformance.rs` hashes every complete vector file, checks manifest metadata, executes every
+instruction, and checks that the manifest and directory have identical file sets. Unknown classes
+fail. The qgi manifest's annex hash is also checked. WSJT-X's source hash is compared with the pin
+above. Informative views and original-byte retrieval are tested separately from normative events.
 
-Sources read on 2026-11-12 for the five incomplete family annexes:
+| Family | Positive | Command | Command negative | Negative | Skip | Compatibility | Embedded reencode |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| wsjtx | 165 | 67 | 69 | 80 | 5 | 14 | 81 |
+| qgi | 13 | 0 | 0 | 22 | 0 | 0 | 13 |
 
-| Scope | Source | Pin status |
-|---|---|---|
-| JS8Call operations | [JS8Call-improved API v3.0.0](https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html) | Live master documentation; released-source pin and original v2.3.1 comparison pending in C. |
-| N1MM frequency command | [External UDP Messages](https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/) | Dated/hash profile pin pending in D. |
-| fldigi methods | [XML-RPC reference, manual 4.2.00](https://www.w1hkj.org/FldigiHelp/xmlrpc_control_page.html) | Dated/hash profile and build capability pin pending in E. |
-| MQTT feed envelope | [Feed documentation](https://www.mqtt.pskreporter.info/) and [timing/receiver metadata](https://www.mqtt.pskreporter.info/timing.html) | Dated/hash profile pin pending in G. Spot software association is unresolved. |
-| PSK Reporter export | [Developer/IPFIX page](https://pskreporter.info/pskdev.html) | Dated/hash profile pin and older-example reconciliation pending in H. |
-| Template rules | [RFC 7011](https://www.rfc-editor.org/rfc/rfc7011.txt), September 2013, §§8–8.4, 9.3 | Stable standards text; complements rather than replaces a PSK Reporter profile pin. |
+The manifests contain no standalone `reencode` class today; the exported runner handles it, and
+all embedded re-encoding instructions execute. qgi compatibility checks are embedded in positives.
+All 435 manifest vectors and 94 embedded re-encoding operations pass.
 
-Only documents were read. No MQTT connection, subscription, report submission or external protocol
-probe was performed. [Annex Z](../spec/annex-z-design-check.md) checks model capacity for future
-families; it does not claim protocol pins or live interoperability for them.
+The old layout/schema/string/date/color/boolean/sentinel/direction fixtures and corresponding
+`tests/protocol.rs` tests were retired because the independently reviewed specification vectors
+supersede them. Their generator no longer maintains a second protocol oracle. The 120-message
+variation corpus remains in `tests/fixtures`, with synthetic callsigns, generated by the independent
+standard-library `struct` script. Its sequence, exhaustive-prefix, mode/negotiation helpers and
+10,000 randomized finite-binary64 checks use the new event API. Qt primitive validation and
+inconsistent-date-time/optional-tail encoder guards remain covered inside the family.
 
-## QGI fourth-pass evidence
-
-The pinned WSJT-X header above was fetched by commit and its SHA-256 rechecked for this pass.
-Lines 353–381 define FreeText's staged-text behavior and application encoding/truncation; lines
-488–508 document Configure's possible indirect dial-frequency change. Annex B records the
-normative meanings (`QGI-WSJ-0029`). Header IDs label WSJT-X clients; the common radio mapping is
-specified by `QGI-WSJ-0028`. The association with a `--rig-name` label follows the task's supplied
-instance model; no additional command-line source was fetched.
-
-N1MM field names and intended assignments in Annex D are supplied review evidence referencing
-its External UDP Broadcasts appendix. No dated/hash pin is available here and the unpinned page
-was not fetched under this pass's network restriction. They remain provisional; no N1MM native
-wire fixtures or source-backed encoding rules are claimed.
+Additional planted cases cover unknown classes and changed manifest bytes, duplicate and reserved
+JSON keys, precise unknown integers, null/empty/absent context, neutral value bounds, recursive
+producer rejection, partial and multiple TCP frames, EOF/recovery, and typed family errors. A maximum-size invalid UTF-8 observation with its structured view
+checks Annex B admission separately from Annex I rejection. The
+fuzz harness accepts arbitrary binary, arbitrary event JSON and qgi datagram/stream input through
+the public API on nightly-2026-10-30. Live-peer interoperability remains separate evidence.

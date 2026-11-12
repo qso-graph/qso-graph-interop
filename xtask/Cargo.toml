@@ -9,10 +9,10 @@ license.workspace = true
 publish = false
 
 [dependencies]
-serde_json = { version = "=1.0.145", features = ["float_roundtrip"] }
-toml = { version = "=1.1.8", default-features = false, features = ["std", "serde", "parse"] }
-syn = { version = "=3.0.9", default-features = false, features = ["full", "parsing"] }
-proc-macro2 = { version = "=1.0.107", default-features = false }
+serde_json = { version = "1.0.145", features = ["float_roundtrip"] }
+toml = { version = "1.1.8", default-features = false, features = ["std", "serde", "parse"] }
+syn = { version = "3.0.9", default-features = false, features = ["full", "parsing"] }
+proc-macro2 = { version = "1.0.107", default-features = false }
 
 [lints]
 workspace = true

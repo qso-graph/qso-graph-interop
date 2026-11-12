@@ -106,8 +106,8 @@ fn listener_json_is_one_object_per_message_and_survives_malformed_input() {
         .unwrap();
     assert_eq!(lines.len(), 1);
     assert_eq!(
-        serde_json::from_str::<serde_json::Value>(&lines[0]).unwrap()["type"],
-        "close"
+        serde_json::from_str::<serde_json::Value>(&lines[0]).unwrap()["kind"],
+        "ambiguous"
     );
     assert!(!output.stderr.is_empty());
 }
@@ -158,12 +158,50 @@ fn simulator_to_listener_reports_consistent_transmit_frequency() {
         .map(|line| serde_json::from_str(&line.unwrap()).unwrap())
         .collect();
     assert_eq!(events.len(), 9);
-    let status = events.iter().find(|v| v["type"] == "status").unwrap();
-    let qso = events.iter().find(|v| v["type"] == "qso_logged").unwrap();
-    assert_eq!(status["dial_frequency_hz"], 14_074_000);
+    let status = events.iter().find(|v| v["kind"] == "radio_state").unwrap();
+    let qso = events.iter().find(|v| v["kind"] == "qso_logged").unwrap();
+    assert_eq!(status["fields"]["dial_frequency_hz"], 14_074_000);
     assert_eq!(
-        qso["frequency_hz"],
-        status["dial_frequency_hz"].as_u64().unwrap() + status["tx_df_hz"].as_u64().unwrap()
+        qso["fields"]["tx_frequency_hz"],
+        status["fields"]["dial_frequency_hz"].as_u64().unwrap()
+            + status["fields"]["tx_offset_hz"].as_u64().unwrap()
     );
-    assert_eq!(qso["frequency_hz"], 14_075_500);
+    assert_eq!(qso["fields"]["tx_frequency_hz"], 14_075_500);
+}
+
+#[test]
+fn decode_reads_file_and_stdin_and_rejects_an_oversized_capture() {
+    use std::io::Write;
+    let bytes = wsjtx::encode(&wsjtx::Packet::new("synthetic-instance", Body::Close)).unwrap();
+    let mut child = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
+        .args(["decode", "--wsjtx", "-"])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .spawn()
+        .unwrap();
+    child.stdin.take().unwrap().write_all(&bytes).unwrap();
+    let output = child.wait_with_output().unwrap();
+    assert!(output.status.success());
+    let from_stdin: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    let path = std::env::temp_dir().join(format!("qgi-decode-{}.bin", std::process::id()));
+    std::fs::write(&path, &bytes).unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
+        .args(["decode", "--wsjtx"])
+        .arg(&path)
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    assert_eq!(
+        from_stdin,
+        serde_json::from_slice::<serde_json::Value>(&output.stdout).unwrap()
+    );
+    std::fs::write(&path, vec![0; 65_508]).unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
+        .args(["decode", "--wsjtx"])
+        .arg(&path)
+        .output()
+        .unwrap();
+    std::fs::remove_file(&path).unwrap();
+    assert!(!output.status.success());
+    assert!(output.stdout.is_empty());
 }

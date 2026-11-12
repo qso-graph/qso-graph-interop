@@ -3,17 +3,16 @@
 # QG Interop
 <!-- vale Google.Headings = YES -->
 
-**Read and write WSJT-X UDP messages from Rust, or watch them with `qg-interop`.**
-QG Interop gives radio app developers a bidirectional codec and gives operators a
-listener and a simulator for checking their UDP setup.
+QG Interop gives radio app developers a Rust library for specification events and commands,
+and gives operators the `qg-interop` listener, capture decoder, and simulator.
 
-The library implements all 17 message types in WSJT-X 3.0.2 (and 2.7.0, whose protocol is the same), including logging, decoding,
-radio status, and control. Applications get both a common message model and the complete original family payload.
-The library leaves sockets and control decisions to its caller.
+The library implements QGI-SPEC-001 0.1.0 for all 17 WSJT-X message types, schemas 1–3, and QGI event
+carriage over UDP and TCP. Events preserve native evidence and distinguish observations from
+commands. Applications supply observer context and own transport and control policy.
 
 ## Install
 
-From this checkout, with [Rust](https://rustup.rs) installed:
+From this checkout with Rust 1.99.1 installed:
 
 ```sh
 cargo install --path crates/qso-graph-interop-cli --locked
@@ -27,53 +26,39 @@ Listen on the default local address, `127.0.0.1:2237`:
 qg-interop listen --wsjtx
 ```
 
-In another terminal, send a short simulated exchange to that listener:
+In another terminal, send a short synthetic exchange to the listener:
 
 ```sh
 qg-interop sim --wsjtx --to 127.0.0.1:2237
 ```
 
-The listener displays messages like these:
+The listener emits one specification JSON event per line. Its events describe heartbeats, radio
+state, decodes, logged QSOs, and shutdown messages. Each observation includes the complete native
+datagram. Decode one captured native message from a file or standard input:
 
-```text
-21:25:33  Heartbeat            WSJT-X  qg-interop  0.1.0  (schema 3)
-21:25:33  Status               14.074000 MHz  FT8  RX  DE N0CALL FN31
-21:25:33  Decode               -12 dB  0.2 s  1500 Hz  ~  CQ W1AW FN31
-21:25:33  Close
+```sh
+qg-interop decode --wsjtx capture.bin
+qg-interop decode --wsjtx - < capture.bin
 ```
 
-The simulator sends a heartbeat, radio status, three decodes, a logged QSO, and shutdown messages.
-Choose callsigns, mode, and frequency with `--call`, `--dx-call`, `--mode`, and `--frequency` (Hz).
-Use `qg-interop listen --wsjtx --json` for one JSON object per decoded datagram. Add `--verbose` to show the sender, schema, and client ID. See the
-[JSON Lines reference](docs/user/listen-json.md) for machine-readable output.
-Each command's `--help` includes examples.
-
-<!-- vale Google.EmDash = NO -->
-<!-- vale Google.Headings = NO -->
-<!-- vale Google.We = NO -->
-## Security — Our #1 Priority
-<!-- vale Google.We = YES -->
-<!-- vale Google.Headings = YES -->
-<!-- vale Google.EmDash = YES -->
-
-- **Bounded input:** the decoder checks datagram and string lengths before copying them.
-  Tests exercise oversized lengths, truncation, null values, and future schemas.
-- **Safe Rust:** first-party code forbids unsafe Rust and defines no macros, including code behind
-  inactive conditions. Dependencies come from crates.io, contain no native code, and pass
-  cargo-vet, cargo-deny, and cargo-audit checks. Dependencies can use unsafe Rust and macros.
-- **Explicit networking:** the library opens no sockets. The listener defaults to loopback;
-  the simulator requires a numeric destination. Loopback integration tests exercise both commands.
-- **Repeatable checks:** exact dependency requirements, lockfiles, dependency checks, and a
-  decoder fuzz target are part of the repository's validation.
-
-See [SECURITY.md](SECURITY.md) for the checks behind these properties and private reporting.
+See the [event JSON guide](docs/user/listen-json.md). Each command's `--help` includes examples.
 
 ## Use the library
 
-The `qso-graph-interop` crate exposes `wsjtx::encode`, `wsjtx::decode`, and `model::Message`.
-The [library example](crates/qso-graph-interop/README.md) shows a complete round trip.
-Protocol versions and source references are in [docs/PROTOCOL.md](docs/PROTOCOL.md).
-Build and contribution instructions: [CONTRIBUTING.md](CONTRIBUTING.md).
+Install with `cargo add qso-graph-interop`. Default features select `wsjtx`, `qgi`, and `serde`.
+Use `default-features = false` for the core without protocol families or enable `conformance` to test a
+third-party codec. The public `Codec` trait decodes observations, encodes commands from common
+fields, and separately re-encodes native evidence. Stream input uses caller-owned buffers.
+
+See the [library example](crates/qso-graph-interop/README.md),
+[protocol documentation](docs/PROTOCOL.md), and [contribution guide](CONTRIBUTING.md).
+
+## Security
+
+The library forbids unsafe Rust and opens no sockets. The command-line tool accepts numeric addresses and defaults
+to loopback. Parser, field, context, and event limits are checked before output is published.
+Dependencies use compatible ranges and committed lockfiles, with cargo-vet, cargo-deny, and
+cargo-audit checks. See [SECURITY.md](SECURITY.md) for private vulnerability reporting.
 
 ## License
 

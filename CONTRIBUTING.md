@@ -5,18 +5,17 @@ Follow the [organization defaults](https://github.com/qso-graph/.github/blob/mai
 and [repository rules](AGENTS.md). Keep protocol changes tied to a pinned upstream source and add
 independent wire fixtures. New checks need planted cases that they reject.
 
-Run the checks from the repository root:
+Run every check from the repository root with one command:
 
 ```sh
-cargo fmt --all --check
-cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
-cargo test --workspace --all-features --locked
-cargo xtask policy
-python3 scripts/generate-fixtures.py --check
-cargo deny --locked check bans licenses sources
-cargo vet --locked
-cargo audit --file Cargo.lock
+cargo xtask verify
 ```
+
+It runs the same checks as CI (formatting, Clippy, full and core-only tests, policy, fixtures,
+the specification vectors with `uv`, cargo-vet, cargo-deny, cargo-audit, and a 60-second fuzz
+smoke on the pinned nightly), prints one pass/fail table, and exits non-zero if any check fails.
+`--fuzz-seconds 0` skips fuzzing, and `--fuzz-seconds N` fuzzes longer. Each check's output is in
+`target/verify/`. A missing tool fails its row with the command that installs it.
 
 Fuzzing uses its own workspace and dated nightly. Its libFuzzer runtime is developer tooling,
 never a dependency of the library or CLI:
@@ -31,7 +30,7 @@ cargo fuzz run wsjtx -- -max_total_time=60 -max_len=65508 -timeout=10 -rss_limit
 ```
 
 The target tests the decoder, canonical re-encoding, and lossless passage through the common
-model, plus packet and common-model JSON round trips. Reproduce a failure with `cargo fuzz run wsjtx <artifact>` and add a small regression test.
+events, native re-encoding, arbitrary event JSON, and qgi UDP/TCP carriage. Reproduce a failure with `cargo fuzz run wsjtx <artifact>` and add a small regression test.
 
 New source and documentation files carry an SPDX `GPL-3.0-or-later` header in their comment syntax.
 Contributions use that license. Keep generated fixture changes reproducible with

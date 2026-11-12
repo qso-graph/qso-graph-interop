@@ -10,7 +10,7 @@ crates.io, contain no native code, and pass cargo-vet, cargo-deny, and cargo-aud
 Exemptions in cargo-vet are explicit review status, not completed audits.
 
 `cargo xtask policy` checks crate-root forbids, inherited lints, edition 2024, all first-party
-source tokens, exact dependency requirements, crates.io sources, and the pinned compiler.
+source tokens, compatible dependency ranges, crates.io sources, and the pinned compiler.
 It rejects native source/object files, foreign blocks, assembly, and link attributes in the
 shipped dependency graph. Registry Rust unsafe code and macro definitions are allowed.
 

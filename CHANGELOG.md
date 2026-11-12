@@ -5,6 +5,15 @@
 
 ### Added
 
+- Family-independent QGI-SPEC-001 event core, neutral values, open sans-I/O codec/profile traits,
+  typed atomic errors, bounded event JSON, and exported conformance tools.
+- WSJT-X revision 1 command construction, native consistency and re-encoding, all 17 types in
+  schemas 1–3, radio labels, and qgi UDP/TCP carriage with hop admission and stream recovery.
+- Manifest-driven acceptance of all 435 WSJT-X/qgi vectors and 94 embedded re-encoding checks;
+  core-only feature tests, arbitrary event-JSON fuzzing, and CLI `decode` for files or standard input.
+- `cargo xtask verify` runs every check, including the fuzz smoke, and prints one pass/fail table.
+
+
 - Implementable draft core and WSJT-X profile for QGI-SPEC-001: Annexes A, B and F,
   independent conformance vectors and their deterministic generator; record issue #5 specification
   decisions and the first-release delivery order.
@@ -14,6 +23,13 @@
   QSO Graph Desktop as its proofs). Initial review items are tracked in #5.
 
 ### Changed
+
+- Emit specification NDJSON from `listen`; replace the earlier CLI JSON projection.
+- Use compatible dependency ranges and current workspace/fuzz lockfiles. Add optional pure Rust
+  `sha2-const-stable` for conformance manifest hashes with a recorded local source review.
+- Retire overlapping legacy protocol fixtures in favor of the specification vectors; retain the
+  synthetic 120-message variation corpus, prefix checks, randomized floats and native helper tests.
+
 
 - Revise QGI-SPEC-001 after the fourth review: composable `via` carriage, additive mapping
   compatibility and verification outcomes, open reader schema and strict producer validation,

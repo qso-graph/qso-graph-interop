@@ -22,18 +22,18 @@ without running) and `Demo` (observable by running).
 
 | ID | Requirement | Verify | Status |
 |---|---|---|---|
-| `QGI-RI-0001` | **The implementation follows the specification, never the reverse.** Where they disagree, the implementation has a defect or the specification changes first, by its own revision. | Inspection | Target |
+| `QGI-RI-0001` | **The implementation follows the specification, never the reverse.** Where they disagree, the implementation has a defect or the specification changes first, by its own revision. | Inspection | Met for WSJT-X and qgi (435 specification vectors; independent manifests unchanged) |
 | `QGI-RI-0002` | **Every delivery, ours or another team's, uses the library's public API.** No application has a private path; when one needs something the library lacks, the library gains it for everyone. | Inspection | Target (Desktop decodes WSJT-X itself, `qso-graph-desktop/extensions/wsjtx`) |
-| `QGI-RI-0003` | **Rust's own patterns, not new ones:** serde's split of a stable core and formats, sans-I/O codecs, `#[non_exhaustive]`, the Rust API Guidelines. A novel mechanism needs a written reason. | Inspection | Target |
+| `QGI-RI-0003` | **Rust's own patterns, not new ones:** serde's split of a stable core and formats, sans-I/O codecs, `#[non_exhaustive]`, the Rust API Guidelines. A novel mechanism needs a written reason. | Inspection | Met (public Codec/Profile, sans-I/O, serde, non-exhaustive types; bounded JSON rationale in docs/PROTOCOL.md) |
 | `QGI-RI-0004` | **The library holds protocol, applications hold policy** (`QGI-GEN-0004`). | Inspection | Met (`lib.rs`: "Callers own sockets, destinations and control policy") |
 
 ## 2. Packages
 
 | ID | Requirement | Verify | Status |
 |---|---|---|---|
-| `QGI-RI-0010` | **The library's core** (the event model, the family trait, the error type and the conformance kit) **depends on no family module**; transport helpers sit outside it so the core stays free of I/O. There is no separate `-core` crate: a third party uses `qso-graph-interop` with `default-features = false`. | Static | Target (`model.rs` imports `wsjtx::{QDateTime, QTime, Utf8}`) |
-| `QGI-RI-0011` | **The seven official families** may ship as feature-gated modules of one crate, using only the core's public API; a family moves to its own crate when its release pace needs it. | Static | Target |
-| `QGI-RI-0012` | **Features:** one per family, `serde`, one per transport helper, `conformance`. Defaults decided before 1.0. | Test | Target (`serde` is mandatory today) |
+| `QGI-RI-0010` | **The library's core** (the event model, the family trait, the error type and the conformance kit) **depends on no family module**; transport helpers sit outside it so the core stays free of I/O. There is no separate `-core` crate: a third party uses `qso-graph-interop` with `default-features = false`. | Static | Met (core imports no family; core-only build and tests) |
+| `QGI-RI-0011` | **The seven official families** may ship as feature-gated modules of one crate, using only the core's public API; a family moves to its own crate when its release pace needs it. | Static | Partly Met (wsjtx and qgi feature-gated modules); five families Target |
+| `QGI-RI-0012` | **Features:** one per family, `serde`, one per transport helper, `conformance`. Defaults decided before 1.0. | Test | Partly Met (wsjtx, qgi, optional serde integration and conformance features); other families and transport helpers Target |
 | `QGI-RI-0013` | **Crate names chosen before the first crates.io publish** (permanent), fitting the specification's scope, which is no longer UDP alone. | Inspection | Met (D1) |
 | `QGI-RI-0014` | **A separate `-ffi` crate** for the C ABI; the CLI is its own crate. | Static | CLI Met; FFI Target |
 | `QGI-RI-0015` | **The `-ffi` crate generates its C header with cbindgen;** the build and CI verify the generated header matches the ABI code so the two cannot drift. | Static, Test | Target |
@@ -42,11 +42,11 @@ without running) and `Demo` (observable by running).
 
 | ID | Requirement | Verify | Status |
 |---|---|---|---|
-| `QGI-RI-0020` | **The event model in Rust uses neutral core types** for time, frequency, text and identifiers (`QGI-MOD-0006`); a family's wire types stay in its native message. | Static | Target (Qt types in `Decode`, `LoggedQso`) |
-| `QGI-RI-0021` | **Every public enum and growable struct is `#[non_exhaustive]`.** | Static | Target (none today) |
-| `QGI-RI-0022` | **A family is a type implementing an open public trait**: decode to an outcome (zero or more events and skip notices, or one atomic error), encode commands from fields where the family sends, separately re-encode observations from native evidence, and declare framing and limits (datagram, stream, request/reply, publish/subscribe or templated records). Stream families decode from a caller-owned buffer, as `tokio-util`'s `Decoder` does, without depending on an async runtime. Another crate can implement it without forking. | Test | Target |
+| `QGI-RI-0020` | **The event model in Rust uses neutral core types** for time, frequency, text and identifiers (`QGI-MOD-0006`); a family's wire types stay in its native message. | Static | Met (neutral integer, instant, time of day, text and binary64; Qt types confined to wsjtx) |
+| `QGI-RI-0021` | **Every public enum and growable struct is `#[non_exhaustive]`.** | Static | Met (public enums and growable structs are non-exhaustive) |
+| `QGI-RI-0022` | **A family is a type implementing an open public trait**: decode to an outcome (zero or more events and skip notices, or one atomic error), encode commands from fields where the family sends, separately re-encode observations from native evidence, and declare framing and limits (datagram, stream, request/reply, publish/subscribe or templated records). Stream families decode from a caller-owned buffer, as `tokio-util`'s `Decoder` does, without depending on an async runtime. Another crate can implement it without forking. | Test | Met (open Codec/Profile; external session-state implementation and caller-buffer stream tests) |
 | `QGI-RI-0023` | **Codecs meet `QGI-SEC-0005`** (the specification owns the no-I/O rule). | Static, Test | Met for WSJT-X by reading; `cargo xtask policy` proves the network and process part only, not file, clock, environment or logging |
-| `QGI-RI-0024` | **Family errors are their own types, wrapped by a `#[non_exhaustive]` core error; `Display` is a message, not a debug dump.** | Test | Target (`wsjtx::Error` prints `Debug`) |
+| `QGI-RI-0024` | **Family errors are their own types, wrapped by a `#[non_exhaustive]` core error; `Display` is a message, not a debug dump.** | Test | Met (typed family sources in non-exhaustive core Error; prose Display) |
 | `QGI-RI-0025` | **Families are compile-time dependencies;** nothing loads plugins or dynamic libraries. | Static | Met |
 | `QGI-RI-0026` | **An optional strict-validation helper** applies rules an application chooses (encoding, character set, lengths); the library never applies it by itself. | Test | Target |
 
@@ -62,14 +62,14 @@ without running) and `Demo` (observable by running).
 
 | ID | Requirement | Verify | Status |
 |---|---|---|---|
-| `QGI-RI-0040` | **Passes every `QGI-SPEC-001` test vector for its seven families**, both directions where defined. | Test | Target (WSJT-X and qgi specification vectors published; implementation alignment remains pending) |
-| `QGI-RI-0041` | **Every decoder fuzzed with arbitrary input, the event-JSON reader included; fuzz targets assert no panic, hang or unbounded allocation.** | Test | Met for the WSJT-X binary decoder (`fuzz/fuzz_targets/wsjtx.rs`); the JSON reader only sees JSON made from decoded packets: Target |
+| `QGI-RI-0040` | **Passes every `QGI-SPEC-001` test vector for its seven families**, both directions where defined. | Test | Partly Met (all 400 WSJT-X and 35 qgi vectors); other families Target |
+| `QGI-RI-0041` | **Every decoder fuzzed with arbitrary input, the event-JSON reader included; fuzz targets assert no panic, hang or unbounded allocation.** | Test | Met for WSJT-X, qgi and arbitrary event JSON (pinned-nightly public-API fuzz harness); future families Target |
 | `QGI-RI-0042` | **Unsafe code is forbidden in every crate except the declared `-ffi` boundary crate,** which denies it and allows each unsafe construct individually with a `SAFETY` comment; proved by a planted case in policy tooling. | Static | Met for both crates; the FFI rule Target |
 | `QGI-RI-0043` | **Semantic versioning checked by `cargo-semver-checks`** against the last published release, in CI. | Static | Target |
 | `QGI-RI-0044` | **Every public item documented with an example compiled as a test.** | Static | Target |
 | `QGI-RI-0045` | **MSRV stated and tested.** | Test | Partly Met (`rust-version = "1.99"`) |
-| `QGI-RI-0046` | **Dependencies from crates.io with compatible version ranges and a committed `Cargo.lock`, no native code in what ships, through `cargo-vet`, `cargo-deny` and `cargo-audit`.** Exact pins only as a recorded exception. | Static | Partly Met: exact pins today (an exception to record or remove); the fuzz build contains native code and is outside the shipped graph by design (`docs/DEPENDENCIES.md`) |
-| `QGI-RI-0047` | **The conformance kit is exported** behind `conformance`: the vector runner, round trip, truncation at every prefix, limits, and a fuzz-target template, so a third-party family meets the same standard. | Test | Target |
+| `QGI-RI-0046` | **Dependencies from crates.io with compatible version ranges and a committed `Cargo.lock`, no native code in what ships, through `cargo-vet`, `cargo-deny` and `cargo-audit`.** Exact pins only as a recorded exception. | Static | Met (compatible ranges, committed lockfiles, pure Rust shipped graph, deny/vet/audit; optional conformance hash audit recorded) |
+| `QGI-RI-0047` | **The conformance kit is exported** behind `conformance`: the vector runner, round trip, truncation at every prefix, limits, and a fuzz-target template, so a third-party family meets the same standard. | Test | Met (exported runner, hash, round trip, prefixes, limits and fuzz template) |
 | `QGI-RI-0048` | **1.0 requires the core model and public codec interface to carry, without change, a release family of every protocol class and the `qgi` family:** datagram (WSJT-X and N1MM), stream (JS8Call), request/response (fldigi), publish/subscribe (PSK Reporter MQTT), templated (PSK Reporter IPFIX), and `qgi` event carriage over UDP and TCP. Evidence includes partial and multiple frames, faults, unavailable methods, retained publications, template/session boundaries and nested native evidence, as applicable. | Inspection, Test | Target |
 | `QGI-RI-0049` | **The first release (0.x) requires, for WSJT-X, N1MM Logger+ and fldigi:** the codec passing every vector of its family in both directions where defined, `qg-interop listen` and `decode`, the simulator (`QGI-RI-0061`, `QGI-RI-0064`), and the C ABI (`QGI-RI-0050` to `QGI-RI-0054`), with the CLI and simulator shipped as signed standalone programs that need no Rust toolchain. Any further family shipped in it meets every requirement for that family. | Inspection | Target |
 
@@ -93,7 +93,7 @@ against the peers' real wire protocols, without linking the Rust library.
 
 | ID | Requirement | Verify | Status |
 |---|---|---|---|
-| `QGI-RI-0060` | **CLI, `qg-interop`:** for each family, `listen` prints events (newline-delimited JSON per `QGI-SER-0004`, or a readable line), and `decode` turns a captured file into events. Proves codec and serialization against real traffic. | Test, Demo | WSJT-X `listen` exists, but prints its own format (`docs/user/listen-json.md`), not specification events: Target. `decode` of a file: Target. Not yet run against a live WSJT-X (`SECURITY.md`) |
+| `QGI-RI-0060` | **CLI, `qg-interop`:** for each family, `listen` prints events (newline-delimited JSON per `QGI-SER-0004`, or a readable line), and `decode` turns a captured file into events. Proves codec and serialization against real traffic. | Test, Demo | Met for WSJT-X listen and file/stdin decode specification NDJSON; other families and live-peer evidence Target |
 | `QGI-RI-0061` | **Simulator playback, `qg-interop sim`:** for every family in the release, play scripted traffic and captures using the peer's real wire protocol as that peer would send it, including `qgi` UDP and TCP event carriage. | Test, Demo | Met for WSJT-X built-in script only; all-family and capture playback: Target |
 | `QGI-RI-0062` | **QSO Graph Desktop:** consumes the library's events for live monitoring (Desktop 0.8.0's monitor panel and tabs), with Desktop's own policy (transports, senders, display rules) in Desktop. Proves the specification in a real application. Evidence, not a release condition: Desktop depends on Interop, never the reverse. | Test, Demo | Target |
 | `QGI-RI-0063` | **Interoperability is shown against real peers,** in addition to vectors and the simulator: captures from all release families are decoded, including WSJT-X, JS8Call-improved, N1MM Logger+, fldigi, PSK Reporter MQTT publications and IPFIX submissions, and independently produced `qgi` messages. Where a peer sends a response, that response is observed. PSK Reporter evidence uses existing operational captures; tests never connect to the service (`QGI-RI-0067`). | Demo | Target |

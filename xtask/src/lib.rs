@@ -10,6 +10,8 @@ use std::{
     process::Command,
 };
 
+pub mod verify;
+
 type Check = Result<(), String>;
 
 fn read(path: &Path) -> Result<String, String> {
@@ -101,7 +103,7 @@ pub fn source_tokens(tokens: TokenStream) -> Check {
                     )?;
                     if in_attribute {
                         require(
-                            !matches!(name, "path" | "feature" | "allow" | "expect" | "warn"),
+                            !matches!(name, "path" | "allow" | "expect" | "warn"),
                             format!("attribute can bypass policy: {name}"),
                         )?;
                     }
@@ -116,6 +118,10 @@ pub fn source_tokens(tokens: TokenStream) -> Check {
                         .next()
                         .map(|t| t.to_string())
                         .unwrap_or_default();
+                    require(
+                        !attribute || first != "feature",
+                        "unstable language feature attribute",
+                    )?;
                     // Rust's prose attributes and clap help text contain no Rust code.
                     if attribute && !matches!(first.as_str(), "doc" | "test" | "command" | "arg") {
                         for item in g.stream() {
@@ -225,6 +231,8 @@ pub fn network_tokens(tokens: TokenStream, library: bool) -> Check {
                         }
                         let path = segments.join("::");
                         let allowed = [
+                            "path::PathBuf",
+                            "fs::File",
                             "io",
                             "time",
                             "error",
@@ -397,8 +405,8 @@ pub fn manifest_policy(t: &toml::Table, fuzz: bool) -> Check {
                         .as_str()
                         .or_else(|| value.get("version").and_then(|v| v.as_str()));
                     require(
-                        version.is_some_and(exact_version),
-                        format!("dependency {key} must use an exact = version"),
+                        version.is_some_and(compatible_version),
+                        format!("dependency {key} must use a compatible version range"),
                     )?;
                     if key == "serde_json" {
                         require(
@@ -432,9 +440,12 @@ pub fn manifest_policy(t: &toml::Table, fuzz: bool) -> Check {
     }
     dependencies(&toml::Value::Table(t.clone()), false)
 }
-fn exact_version(v: &str) -> bool {
-    v.strip_prefix('=')
-        .is_some_and(|s| !s.is_empty() && !s.contains([',', '*', '^', '~', ' ', '>', '<']))
+fn compatible_version(v: &str) -> bool {
+    let v = v
+        .strip_prefix('^')
+        .or_else(|| v.strip_prefix('~'))
+        .unwrap_or(v);
+    !v.is_empty() && v.as_bytes()[0].is_ascii_digit() && !v.contains(['=', '*', '>', '<', ',', ' '])
 }
 
 // A new dependency can expose process/network APIs under arbitrary names. Reject additions
@@ -451,7 +462,7 @@ fn shipped_dependency_names(table: &toml::Table, library: bool) -> Check {
                     .ok_or("dependency section must be a table")?;
                 for (name, specification) in dependencies {
                     let allowed: &[&str] = match (library, key.as_str()) {
-                        (true, "dependencies") => &["serde"],
+                        (true, "dependencies") => &["serde", "serde_json", "sha2-const-stable"],
                         (true, "dev-dependencies") => &["serde_json"],
                         (false, "dependencies") => &["clap", "qso-graph-interop", "serde_json"],
                         _ => &[],
@@ -709,12 +720,73 @@ fn fuzz_policy(root: &Path) -> Check {
     Ok(())
 }
 
+/// Public named structs and enums must remain extensible across additive revisions.
+fn public_shapes(source: &str) -> Check {
+    fn items(item_list: &[syn::Item]) -> Check {
+        for item in item_list {
+            let attrs = match item {
+                syn::Item::Enum(e) if matches!(e.vis, syn::Visibility::Public(_)) => Some(&e.attrs),
+                syn::Item::Struct(s) if matches!(s.vis, syn::Visibility::Public(_)) => {
+                    Some(&s.attrs)
+                }
+                syn::Item::Mod(m) => {
+                    if let Some((_, content)) = &m.content {
+                        items(content)?;
+                    }
+                    None
+                }
+                _ => None,
+            };
+            if let Some(attrs) = attrs {
+                require(
+                    attrs.iter().any(|a| a.path().is_ident("non_exhaustive")),
+                    "public growable types must be non_exhaustive",
+                )?;
+            }
+        }
+        Ok(())
+    }
+    items(&syn::parse_file(source).map_err(|e| e.to_string())?.items)
+}
+fn core_family_free(tokens: TokenStream) -> Check {
+    for token in tokens {
+        match token {
+            TokenTree::Ident(i) => require(
+                !matches!(i.to_string().as_str(), "wsjtx" | "qgi"),
+                "core references a family module",
+            )?,
+            TokenTree::Group(g) => core_family_free(g.stream())?,
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
 pub fn policy(root: &Path) -> Check {
     let meta = metadata(root)?;
     compiler_policy(root)?;
     println!("policy: pinned compiler and flags: pass");
     workspace_policy(root, &meta)?;
-    println!("policy: roots, lints, tokens, dependency pins, codec without networking: pass");
+    for file in files(&root.join("crates/qso-graph-interop/src"))? {
+        if file.extension().is_some_and(|e| e == "rs") {
+            public_shapes(&read(&file)?)?;
+        }
+    }
+    for name in [
+        "model",
+        "codec",
+        "error",
+        "json",
+        "catalog",
+        "base64",
+        "conformance",
+    ] {
+        core_family_free(token_file(
+            &root.join(format!("crates/qso-graph-interop/src/{name}.rs")),
+        )?)?;
+    }
+    println!("policy: extensible public types and family-independent core: pass");
+    println!("policy: roots, lints, tokens, dependency ranges, codec without networking: pass");
     dependency_policy(&meta)?;
     println!("policy: crates.io only, no native code in shipped dependency graph: pass");
     fuzz_policy(root)?;
@@ -727,6 +799,18 @@ mod tests {
     use super::*;
 
     #[test]
+    fn planted_closed_types_family_imports_and_feature_bypasses() {
+        assert!(public_shapes("#[non_exhaustive] pub enum E { A } #[non_exhaustive] pub struct S { pub value:u32 }").is_ok());
+        assert!(public_shapes("pub enum E { A }").is_err());
+        assert!(public_shapes("pub struct S { pub value:u32 }").is_err());
+        assert!(public_shapes("pub struct T(pub Vec<u8>);").is_err());
+        assert!(core_family_free("use crate::model::Text;".parse().unwrap()).is_ok());
+        assert!(core_family_free("use crate::wsjtx::Utf8;".parse().unwrap()).is_err());
+        assert!(core_family_free("crate::qgi::Qgi::new();".parse().unwrap()).is_err());
+        assert!(source_tokens("#[cfg(feature = \"wsjtx\")] mod family;".parse().unwrap()).is_ok());
+        assert!(source_tokens("#![feature(something)]".parse().unwrap()).is_err());
+    }
+    #[test]
     fn planted_unsafe_and_macro_cases() {
         for source in [
             "unsafe {}",
@@ -737,6 +821,7 @@ mod tests {
             "#[path=\"hidden\"] mod m;",
             "#[allow(unsafe_code)] fn f() {}",
             "#[cfg_attr(any(), allow(unsafe_code))] fn f() {}",
+            "#![feature(something)]",
             "asm!(\"\")",
         ] {
             assert!(source_tokens(source.parse().unwrap()).is_err(), "{source}");
@@ -972,18 +1057,18 @@ fn main() {}
     #[test]
     fn unreviewed_dependency_apis_aliases_and_target_paths_are_rejected() {
         for source in [
-            "[dependencies]\nduct='=0.13.0'",
-            "[dependencies]\nclap={package='duct',version='=0.13.0'}",
-            "[target.'cfg(unix)'.dependencies]\nresolver='=1.0.0'",
-            "[dev-dependencies]\nprocess_wrapper='=1.0.0'",
-            "[build-dependencies]\nprocess_wrapper='=1.0.0'",
+            "[dependencies]\nduct='0.13.0'",
+            "[dependencies]\nclap={package='duct',version='0.13.0'}",
+            "[target.'cfg(unix)'.dependencies]\nresolver='1.0.0'",
+            "[dev-dependencies]\nprocess_wrapper='1.0.0'",
+            "[build-dependencies]\nprocess_wrapper='1.0.0'",
         ] {
             assert!(shipped_dependency_names(&toml::from_str(source).unwrap(), false).is_err());
         }
         assert!(
             shipped_dependency_names(
                 &toml::from_str(
-                    "[dependencies]\nserde='=1.0.229'\n[dev-dependencies]\nserde_json='=1.0.145'"
+                    "[dependencies]\nserde='1.0.229'\n[dev-dependencies]\nserde_json='1.0.145'"
                 )
                 .unwrap(),
                 true
@@ -993,7 +1078,7 @@ fn main() {}
         assert!(
             shipped_dependency_names(
                 &toml::from_str(
-                    "[dependencies]\nclap='=4.6.7'\nserde_json='=1.0.145'\nqso-graph-interop='=0.1.0'"
+                    "[dependencies]\nclap='4.6.7'\nserde_json='1.0.145'\nqso-graph-interop='0.1.0'"
                 )
                 .unwrap(),
                 false
@@ -1002,7 +1087,7 @@ fn main() {}
         );
         assert!(
             shipped_dependency_names(
-                &toml::from_str("[dependencies]\nwrapper='=1.0.0'").unwrap(),
+                &toml::from_str("[dependencies]\nwrapper='1.0.0'").unwrap(),
                 true
             )
             .is_err()
@@ -1012,27 +1097,29 @@ fn main() {}
     #[test]
     fn serde_json_requires_float_roundtrip_in_every_manifest() {
         for dependency in [
-            "serde_json='=1.0.145'",
-            "serde_json={version='=1.0.145',features=[]}",
+            "serde_json='1.0.145'",
+            "serde_json={version='1.0.145',features=[]}",
         ] {
             let source = format!("[lints]\nworkspace=true\n[dependencies]\n{dependency}");
             assert!(manifest_policy(&toml::from_str(&source).unwrap(), false).is_err());
         }
-        let source = "[lints]\nworkspace=true\n[dependencies]\nserde_json={version='=1.0.145',features=['float_roundtrip']}";
+        let source = "[lints]\nworkspace=true\n[dependencies]\nserde_json={version='1.0.145',features=['float_roundtrip']}";
         assert!(manifest_policy(&toml::from_str(source).unwrap(), false).is_ok());
     }
 
     #[test]
-    fn planted_floating_dependency_and_lint_override() {
-        let good: toml::Table =
-            toml::from_str("[lints]\nworkspace=true\n[dependencies]\nserde='=1.0.229'").unwrap();
-        assert!(manifest_policy(&good, false).is_ok());
-        for s in [
+    fn planted_incompatible_dependency_and_lint_override() {
+        for range in ["1", "1.0.229", "^1.0", "~1.0.229"] {
+            let source = format!("[lints]\nworkspace=true\n[dependencies]\nserde='{range}'");
+            assert!(manifest_policy(&toml::from_str(&source).unwrap(), false).is_ok());
+        }
+        for source in [
             "[dependencies]\nserde='1'",
-            "[lints]\nworkspace=true\n[dependencies]\nserde='^1'",
-            "[lints]\nworkspace=true\n[dependencies]\nserde={version='=1.0.229',git='https://example.com'}",
+            "[lints]\nworkspace=true\n[dependencies]\nserde='*'",
+            "[lints]\nworkspace=true\n[dependencies]\nserde='=1.0.229'",
+            "[lints]\nworkspace=true\n[dependencies]\nserde={version='1.0.229',git='https://example.com'}",
         ] {
-            assert!(manifest_policy(&toml::from_str(s).unwrap(), false).is_err());
+            assert!(manifest_policy(&toml::from_str(source).unwrap(), false).is_err());
         }
     }
 }

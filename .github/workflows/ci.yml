@@ -45,6 +45,8 @@ jobs:
       - run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
       - run: cargo test --workspace --all-features --locked
+      - run: cargo clippy -p qso-graph-interop --all-targets --no-default-features --locked -- -D warnings
+      - run: cargo test -p qso-graph-interop --no-default-features --locked
 
   policy:
     runs-on: ubuntu-latest

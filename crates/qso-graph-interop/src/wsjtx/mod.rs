@@ -3,6 +3,9 @@
 #![forbid(unsafe_code)]
 
 mod codec;
+mod family;
+mod mapping;
+pub use family::Wsjtx;
 pub(crate) mod float64;
 pub mod qt;
 mod types;
@@ -19,6 +22,7 @@ pub const MAX_ID: usize = 256;
 pub const WSJTX_TAG: &str = "v3.0.2";
 /// The original family payload and all unrecognized trailing bytes remain available.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct Packet {
     pub schema: u32,
     pub id: Utf8,
@@ -37,6 +41,7 @@ impl Packet {
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub enum Outcome {
     Message(Box<Packet>),
     Skipped {
@@ -46,16 +51,25 @@ pub enum Outcome {
     },
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub enum SkipReason {
     FutureSchema,
     UnknownType,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum Error {
-    Truncated { offset: usize },
+    Truncated {
+        offset: usize,
+    },
     WrongMagic,
     Length,
+    Event {
+        category: crate::Category,
+        message: String,
+    },
+    OddQStringLength,
     UnsupportedSchema(u32),
     InvalidTimeSpec(u8),
     InconsistentDateTime,
@@ -63,7 +77,17 @@ pub enum Error {
 }
 impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{self:?}")
+        match self {
+            Self::Truncated { offset } => write!(f, "WSJT-X field is truncated at byte {offset}"),
+            Self::WrongMagic => f.write_str("invalid WSJT-X magic"),
+            Self::Event { message, .. } => f.write_str(message),
+            Self::Length => f.write_str("WSJT-X resource bound exceeded"),
+            Self::OddQStringLength => f.write_str("QString byte count must be even"),
+            Self::UnsupportedSchema(n) => write!(f, "unsupported WSJT-X schema {n}"),
+            Self::InvalidTimeSpec(n) => write!(f, "invalid Qt time specification {n}"),
+            Self::InconsistentDateTime => f.write_str("inconsistent Qt date/time suffix"),
+            Self::NonContiguousTail => f.write_str("optional WSJT-X tail contains a hole"),
+        }
     }
 }
 impl std::error::Error for Error {}
@@ -162,5 +186,31 @@ pub fn mode_character(mode: &str) -> &str {
         "Q65" => ":",
         "FST4" => "`",
         other => other,
+    }
+}
+
+#[cfg(test)]
+mod encoder_guards {
+    use super::*;
+    #[test]
+    fn inconsistent_dates_tail_holes_and_extensions_are_rejected() {
+        let mut qso = QsoLogged::default();
+        qso.time_off.time_spec = 2;
+        let mut packet = Packet::new("synthetic-instance", Body::QsoLogged(Box::new(qso)));
+        assert_eq!(encode(&packet), Err(Error::InconsistentDateTime));
+        let Body::QsoLogged(qso) = &mut packet.body else {
+            panic!("QSO")
+        };
+        qso.time_off.time_spec = 99;
+        assert_eq!(encode(&packet), Err(Error::InvalidTimeSpec(99)));
+        let heartbeat = Heartbeat {
+            version: Some("synthetic".into()),
+            ..Heartbeat::default()
+        };
+        let packet = Packet::new("synthetic-instance", Body::Heartbeat(heartbeat));
+        assert_eq!(encode(&packet), Err(Error::NonContiguousTail));
+        let mut packet = Packet::new("synthetic-instance", Body::Heartbeat(Heartbeat::default()));
+        packet.extensions = vec![1, 2, 3];
+        assert_eq!(encode(&packet), Err(Error::NonContiguousTail));
     }
 }

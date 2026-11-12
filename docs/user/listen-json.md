@@ -1,45 +1,35 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-# Listener JSON lines reference
+# Event JSON guide
 
-Run `qg-interop listen --wsjtx --json` to emit one JSON object per decoded datagram.
-Every object has `type`, `received` (RFC 3339 UTC), `from` (numeric socket address),
-`schema`, and `client_id`. The remaining names match the protocol fields, in snake case.
-Frequencies are integer Hz, and flags are booleans. Qt times use `HH:MM:SS.mmm`;
-dates with a known UTC offset use RFC 3339. Invalid times and dates with an
-unknown local or named time zone are `null`. Schema 1 dates use the UTC clock
-stored on the wire. Null strings and absent optional fields are `null`; empty
-strings remain empty. Invalid UTF-8 is replaced with U+FFFD and the accompanying
-`<field>_bytes` array contains the complete original bytes. Nonfinite floating-point
-values use `ieee754:` followed by their 16 hexadecimal bit digits. Colors are
-objects with `spec` and `channels`.
+Run `qg-interop listen --wsjtx` to emit one QGI-SPEC-001 0.1.0 JSON event per line. The optional
+`--json` flag selects the same output. Read one captured native WSJT-X message with
+`qg-interop decode --wsjtx capture.bin`, or use `-` to read standard input. Each capture contains
+one complete datagram payload, without transport headers.
 
-For exact finite floating-point round trips, enable `float_roundtrip` in serde_json
-readers. Other JSON readers must correctly round binary64 numbers. See the
-[JSON float contract](../NORMALIZATION.md#json-float-preservation).
+Every event has `spec`, `family`, `mapping`, `kind`, `context`, and `fields`. WSJT-X observations
+also have `native_version`, `wire_id`, and `native`. The command-line tool supplies unknown direction and exchange;
+it never infers identity from a sender's network address or wire ID. Skip notices and malformed
+input diagnostics go to standard error and produce no event.
 
-These examples show the type-specific fields; the common fields and other fields
-are omitted for brevity. All fields of the decoded message are included in output.
+For example, this observed Close message has unknown direction:
 
-```jsonl
-{"type":"heartbeat","version":"2.7.0","max_schema":3}
-{"type":"status","dial_frequency_hz":14074000,"mode":"FT8","transmitting":false}
-{"type":"decode","time":"21:23:39.000","snr_db":-12,"message":"CQ W1AW FN31"}
-{"type":"clear","window":null}
-{"type":"reply","time":"21:23:39.000","snr_db":-12,"message":"CQ W1AW FN31"}
-{"type":"qso_logged","time_off":"2026-11-08T21:23:39.000Z","dx_call":"W1AW","frequency_hz":14074000}
-{"type":"close"}
-{"type":"replay"}
-{"type":"halt_tx","auto_tx_only":true}
-{"type":"free_text","text":"CQ","send":false}
-{"type":"wspr_decode","callsign":"W1AW","frequency_hz":14097000,"power_dbm":30}
-{"type":"location","location":"FN31"}
-{"type":"logged_adif","adif":"<CALL:4>W1AW<EOR>"}
-{"type":"highlight_callsign","callsign":"W1AW","background":{"spec":0,"channels":[0,0,0,0,0]}}
-{"type":"switch_configuration","configuration_name":"Default"}
-{"type":"configure","mode":"FT8","frequency_tolerance_hz":50}
-{"type":"annotation_info","dx_call":"W1AW","sort_order":1}
-{"type":"skipped","message_type":null,"reason":"future_schema"}
+```json
+{"spec":"0.1.0","family":"wsjtx","mapping":1,"native_version":"3","kind":"ambiguous","wire_id":"test-instance","context":{"direction":"unknown","exchange":"unknown"},"fields":{"operation":"close"},"native":{"format":"wsjtx_datagram","data":"rbzL2gAAAAMAAAAGAAAADXRlc3QtaW5zdGFuY2U="}}
 ```
 
-A skipped datagram has `client_id: null`; `message_type` is null when the schema
-is newer than the decoder supports. Its `reason` is `future_schema` or `unknown_type`.
+Common frequencies use integer hertz. WSJT-X clock values use `HH:MM:SS.mmm`; resolved UTC dates
+use RFC 3339 with three fractional digits and a final `Z`. Unresolved or invalid native times leave
+the corresponding common field absent. Their original bytes remain in `native.data`.
+
+A missing text field is omitted, native null is JSON `null`, and empty text is `""`. Invalid text
+uses `{"utf8_bytes":[255]}` or `{"utf16_units":[55296]}` without replacement characters. Finite
+binary64 values are numbers; nonfinite values use `ieee754:` and 16 lowercase hexadecimal digits.
+Consumers must round floating-point numbers correctly. Object member order does not affect equality.
+
+`fields.radio.instance` labels the radio instance carried by the family. It is never an authenticated
+sender identity. Common fields do not extract callsigns or grids from decode text or parse ADIF.
+Commands have `kind: "control"` and omit native evidence. Reading a command never sends it.
+
+The library also carries events through `qgi`: reception appends one `via` hop with the receiving
+observer's context while preserving the original event and evidence. Received context and hops
+remain untrusted. See the [protocol reference](../PROTOCOL.md) for validation and limits.

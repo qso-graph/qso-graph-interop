@@ -25,7 +25,7 @@
 The library implements the protocol; its caller chooses destinations and control policy.
 Public files describe this project only. Use American English and synthetic test QSOs.
 
-- Rust 1.99.1, edition 2024; exact `=` dependencies; keep both lockfiles current.
+- Rust 1.99.1, edition 2024; compatible dependency ranges; keep both lockfiles current.
 - Every crate root, including tests and fuzz targets, says `#![forbid(unsafe_code)]`.
   Every workspace member inherits the workspace lints. Our own code has no unsafe Rust
   and defines no macros. Dependencies may use unsafe Rust and define macros; they must
@@ -41,16 +41,16 @@ Public files describe this project only. Use American English and synthetic test
 - Keep the README a product page. Put validation details and limitations in docs/ or SECURITY.md.
 - SPDX GPL-3.0-or-later headers on new files, using that format's comment syntax.
 
+Run every check with one command before you report work as done:
+
 ```sh
-cargo fmt --all --check
-cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
-cargo test --workspace --all-features --locked
-cargo xtask policy
-python3 scripts/generate-fixtures.py --check
-cargo deny --locked check bans licenses sources
-cargo vet --locked
-cargo audit --file Cargo.lock
+cargo xtask verify                    # all checks plus 60 s of fuzzing; one pass/fail table
+cargo xtask verify --fuzz-seconds 0   # the same without fuzzing
 ```
+
+It runs formatting, Clippy, tests (full and core only), policy, fixtures, the specification
+vectors, cargo-vet, cargo-deny, cargo-audit and the fuzz smoke, and fails if a lockfile changed.
+Logs are in `target/verify/`. Report its table, not individual commands.
 
 For the dated-nightly fuzz commands, see CONTRIBUTING.md. CI checks Linux, macOS, and Windows,
 policy, dependency checks, fixtures, and fuzz smoke; ci-all-green requires every job to pass.

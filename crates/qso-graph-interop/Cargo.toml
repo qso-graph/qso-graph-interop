@@ -9,11 +9,25 @@ license.workspace = true
 repository.workspace = true
 readme = "README.md"
 
+[features]
+default = ["wsjtx", "qgi", "serde"]
+wsjtx = ["serde"]
+qgi = ["serde"]
+serde = ["dep:serde"]
+conformance = ["serde", "dep:sha2-const-stable"]
+
 [dependencies]
-serde = { version = "=1.0.229", features = ["derive"] }
+serde = { version = "1.0.229", features = ["derive"], optional = true }
+serde_json = { version = "1.0.145", features = ["float_roundtrip", "arbitrary_precision", "raw_value"] }
+sha2-const-stable = { version = "0.1.0", optional = true }
 
 [lints]
 workspace = true
 
-[dev-dependencies]
-serde_json = { version = "=1.0.145", features = ["float_roundtrip"] }
+[[test]]
+name = "protocol"
+required-features = ["wsjtx"]
+
+[[test]]
+name = "conformance"
+required-features = ["conformance", "wsjtx", "qgi"]

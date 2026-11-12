@@ -3,13 +3,14 @@
 #![forbid(unsafe_code)]
 
 mod numeric_udp;
-mod output;
 
 use clap::{Args, Parser, Subcommand};
 use numeric_udp::NumericUdp;
 use qso_graph_interop::wsjtx::{self, Body, Packet, QDateTime, QTime};
-use std::io::{self, Write};
+use qso_graph_interop::{Codec, codec::DecodeOptions};
+use std::io::{self, Read, Write};
 use std::net::SocketAddr;
+use std::path::PathBuf;
 use std::process::ExitCode;
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -18,7 +19,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
     name = "qg-interop",
     version,
     disable_help_subcommand = true,
-    about = "Listen to and simulate amateur radio UDP messages",
+    about = "Listen to, decode, and simulate amateur radio messages",
     after_help = "Examples:\n  qg-interop listen --wsjtx\n  qg-interop sim --wsjtx --to 127.0.0.1:2237"
 )]
 struct Cli {
@@ -38,6 +39,11 @@ enum Command {
         after_help = "Examples:\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call W1AW --mode FT4 --frequency 7074000"
     )]
     Sim(Sim),
+    /// Decode one complete native WSJT-X datagram from a file or standard input.
+    #[command(
+        after_help = "Examples:\n  qg-interop decode --wsjtx capture.bin\n  qg-interop decode --wsjtx -"
+    )]
+    Decode(Decode),
 }
 
 #[derive(Args)]
@@ -48,15 +54,21 @@ struct Listen {
     /// Numeric local address to bind (IPv6 uses brackets).
     #[arg(default_value = "127.0.0.1:2237")]
     address: SocketAddr,
-    /// Output one JSON object per datagram.
+    /// Emit specification NDJSON (also the default output).
     #[arg(long)]
     json: bool,
-    /// Include sender, schema, and client ID in human output.
-    #[arg(long)]
-    verbose: bool,
     /// Exit after this many datagrams (0 listens indefinitely).
     #[arg(long, default_value_t = 0)]
     count: u64,
+}
+
+#[derive(Args)]
+struct Decode {
+    #[arg(long, required = true)]
+    wsjtx: bool,
+    /// File containing one native datagram; '-' reads standard input.
+    #[arg(default_value = "-")]
+    file: PathBuf,
 }
 
 #[derive(Args)]
@@ -96,6 +108,7 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
     match cli.command {
         Command::Listen(options) => listen(options),
         Command::Sim(options) => simulate(options),
+        Command::Decode(options) => decode_file(options),
     }
 }
 
@@ -107,19 +120,8 @@ fn listen(options: Listen) -> Result<(), Box<dyn std::error::Error>> {
     let mut seen = 0_u64;
     loop {
         let (n, peer) = socket.recv_from(&mut bytes)?;
-        let received_ms = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
-        let received_ms = i64::try_from(received_ms)?;
-        match wsjtx::decode(&bytes[..n]) {
-            Ok(message) => {
-                let value = output::object(&message, peer, received_ms);
-                if options.json {
-                    serde_json::to_writer(&mut output, &value)?;
-                    writeln!(output)?;
-                } else {
-                    writeln!(output, "{}", output::human(&value, options.verbose))?;
-                }
-                output.flush()?;
-            }
+        match emit(&bytes[..n], &mut output) {
+            Ok(()) => output.flush()?,
             Err(e) => eprintln!("{peer}: {e}"),
         }
         seen += 1;
@@ -128,6 +130,37 @@ fn listen(options: Listen) -> Result<(), Box<dyn std::error::Error>> {
         }
     }
     Ok(())
+}
+
+fn emit(bytes: &[u8], output: &mut impl Write) -> Result<(), Box<dyn std::error::Error>> {
+    let outcome = wsjtx::Wsjtx::default().decode(bytes, &DecodeOptions::default())?;
+    for event in outcome.events {
+        output.write_all(&qso_graph_interop::json::write(
+            &event,
+            true,
+            Some(&wsjtx::Wsjtx::default()),
+        )?)?;
+        writeln!(output)?;
+    }
+    for skip in outcome.skips {
+        eprintln!(
+            "skipped native message: {}",
+            serde_json::to_string(&skip.reason)?
+        );
+    }
+    Ok(())
+}
+fn decode_file(options: Decode) -> Result<(), Box<dyn std::error::Error>> {
+    let input: Box<dyn Read> = if options.file.as_os_str() == "-" {
+        Box::new(io::stdin().lock())
+    } else {
+        Box::new(std::fs::File::open(options.file)?)
+    };
+    let mut bytes = Vec::new();
+    input
+        .take((wsjtx::MAX_DATAGRAM + 1) as u64)
+        .read_to_end(&mut bytes)?;
+    emit(&bytes, &mut io::stdout().lock())
 }
 
 fn simulate(options: Sim) -> Result<(), Box<dyn std::error::Error>> {
@@ -141,28 +174,30 @@ fn simulate(options: Sim) -> Result<(), Box<dyn std::error::Error>> {
 
 fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
     let make = |body| Packet::new(s.id.as_str(), body);
-    let mut status = wsjtx::Status {
-        dial_frequency_hz: s.frequency,
-        mode: s.mode.as_str().into(),
-        dx_call: "".into(),
-        report: "".into(),
-        tx_mode: s.mode.as_str().into(),
-        tx_enabled: false,
-        transmitting: false,
-        decoding: true,
-        rx_df_hz: 1200,
-        tx_df_hz: 1500,
-        de_call: Some(s.call.as_str().into()),
-        de_grid: Some(s.grid.as_str().into()),
-        dx_grid: Some("".into()),
-        tx_watchdog: Some(false),
-        sub_mode: Some("".into()),
-        fast_mode: Some(false),
-        special_operation_mode: Some(0),
-        frequency_tolerance_hz: Some(u32::MAX),
-        tr_period_seconds: Some(15),
-        configuration_name: Some("Default".into()),
-        tx_message: Some("".into()),
+    let mut status = {
+        let mut value = wsjtx::Status::default();
+        value.dial_frequency_hz = s.frequency;
+        value.mode = s.mode.as_str().into();
+        value.dx_call = "".into();
+        value.report = "".into();
+        value.tx_mode = s.mode.as_str().into();
+        value.tx_enabled = false;
+        value.transmitting = false;
+        value.decoding = true;
+        value.rx_df_hz = 1200;
+        value.tx_df_hz = 1500;
+        value.de_call = Some(s.call.as_str().into());
+        value.de_grid = Some(s.grid.as_str().into());
+        value.dx_grid = Some("".into());
+        value.tx_watchdog = Some(false);
+        value.sub_mode = Some("".into());
+        value.fast_mode = Some(false);
+        value.special_operation_mode = Some(0);
+        value.frequency_tolerance_hz = Some(u32::MAX);
+        value.tr_period_seconds = Some(15);
+        value.configuration_name = Some("Default".into());
+        value.tx_message = Some("".into());
+        value
     };
     let tx_frequency_hz = s
         .frequency
@@ -174,14 +209,16 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
             )
         })?;
     let mut messages = vec![
-        make(Body::Heartbeat(wsjtx::Heartbeat {
-            max_schema: Some(3),
-            version: Some(env!("CARGO_PKG_VERSION").into()),
-            revision: Some("qg-interop".into()),
+        make(Body::Heartbeat({
+            let mut value = wsjtx::Heartbeat::default();
+            value.max_schema = Some(3);
+            value.version = Some(env!("CARGO_PKG_VERSION").into());
+            value.revision = Some("qg-interop".into());
+            value
         })),
         make(Body::Status(status.clone())),
     ];
-    let time = QTime(((seconds % 86_400) * 1000) as u32);
+    let time = QTime::new(((seconds % 86_400) * 1000) as u32);
     for (index, text) in [
         format!("CQ {} {}", s.dx_call, s.grid),
         format!("{} {} -12", s.call, s.dx_call),
@@ -190,47 +227,57 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
     .into_iter()
     .enumerate()
     {
-        messages.push(make(Body::Decode(wsjtx::Decode {
-            new: true,
-            time,
-            snr_db: -12 + index as i32,
-            delta_time_seconds: 0.2,
-            delta_frequency_hz: 1500,
-            mode: wsjtx::mode_character(&s.mode).into(),
-            message: text.into(),
-            low_confidence: Some(false),
-            off_air: Some(false),
+        messages.push(make(Body::Decode({
+            let mut value = wsjtx::Decode::default();
+            value.new = true;
+            value.time = time;
+            value.snr_db = -12 + index as i32;
+            value.delta_time_seconds = 0.2;
+            value.delta_frequency_hz = 1500;
+            value.mode = wsjtx::mode_character(&s.mode).into();
+            value.message = text.into();
+            value.low_confidence = Some(false);
+            value.off_air = Some(false);
+            value
         })));
     }
     status.decoding = false;
     messages.push(make(Body::Status(status)));
-    let timestamp = |secs: u64| QDateTime {
-        julian_day: (secs / 86_400) as i64 + 2_440_588,
-        time: QTime(((secs % 86_400) * 1000) as u32),
-        time_spec: 1,
-        offset_seconds: None,
-        time_zone: None,
+    let timestamp = |secs: u64| {
+        let mut value = QDateTime::default();
+        value.julian_day = (secs / 86_400) as i64 + 2_440_588;
+        value.time = QTime::new(((secs % 86_400) * 1000) as u32);
+        value.time_spec = 1;
+        value.offset_seconds = None;
+        value.time_zone = None;
+        value
     };
-    messages.push(make(Body::QsoLogged(Box::new(wsjtx::QsoLogged {
-        time_off: timestamp(seconds),
-        dx_call: s.dx_call.as_str().into(),
-        dx_grid: s.grid.as_str().into(),
-        frequency_hz: tx_frequency_hz,
-        mode: s.mode.as_str().into(),
-        report_sent: "-12".into(),
-        report_received: "-10".into(),
-        tx_power: "5".into(),
-        comments: "Simulated QSO".into(),
-        name: "".into(),
-        time_on: Some(timestamp(seconds.saturating_sub(45))),
-        operator_call: Some(s.call.as_str().into()),
-        my_call: Some(s.call.as_str().into()),
-        my_grid: Some(s.grid.as_str().into()),
-        exchange_sent: Some("".into()),
-        exchange_received: Some("".into()),
-        propagation_mode: Some("".into()),
+    messages.push(make(Body::QsoLogged(Box::new({
+        let mut value = wsjtx::QsoLogged::default();
+        value.time_off = timestamp(seconds);
+        value.dx_call = s.dx_call.as_str().into();
+        value.dx_grid = s.grid.as_str().into();
+        value.frequency_hz = tx_frequency_hz;
+        value.mode = s.mode.as_str().into();
+        value.report_sent = "-12".into();
+        value.report_received = "-10".into();
+        value.tx_power = "5".into();
+        value.comments = "Simulated QSO".into();
+        value.name = "".into();
+        value.time_on = Some(timestamp(seconds.saturating_sub(45)));
+        value.operator_call = Some(s.call.as_str().into());
+        value.my_call = Some(s.call.as_str().into());
+        value.my_grid = Some(s.grid.as_str().into());
+        value.exchange_sent = Some("".into());
+        value.exchange_received = Some("".into());
+        value.propagation_mode = Some("".into());
+        value
     }))));
-    messages.push(make(Body::Clear(wsjtx::Clear { window: None })));
+    messages.push(make(Body::Clear({
+        let mut value = wsjtx::Clear::default();
+        value.window = None;
+        value
+    })));
     messages.push(make(Body::Close));
     Ok(messages)
 }
@@ -267,45 +314,6 @@ mod tests {
             panic!("listen");
         };
         assert_eq!(l.address.to_string(), "127.0.0.1:2237");
-    }
-
-    #[test]
-    fn simulator_output_has_expected_human_lines_and_json_types() {
-        let cli = Cli::try_parse_from(["qg-interop", "sim", "--wsjtx", "--to", "127.0.0.1:2237"])
-            .unwrap();
-        let Command::Sim(sim) = cli.command else {
-            panic!("sim")
-        };
-        let expected = [
-            "Heartbeat",
-            "Status",
-            "Decode",
-            "Decode",
-            "Decode",
-            "Status",
-            "QSO Logged",
-            "Clear",
-            "Close",
-        ];
-        for (packet, label) in script(&sim, 0).unwrap().into_iter().zip(expected) {
-            let value = output::object(
-                &wsjtx::Outcome::Message(Box::new(packet)),
-                "127.0.0.1:1234".parse().unwrap(),
-                0,
-            );
-            let line = output::human(&value, false);
-            assert!(line.starts_with(&format!("00:00:00  {label}")), "{line}");
-            assert!(!line.contains("Utf8"));
-            let json: serde_json::Value = serde_json::from_str(&value.to_string()).unwrap();
-            assert!(json["schema"].is_u64());
-            assert!(json["client_id"].is_string());
-            if label == "Decode" {
-                assert!(json["snr_db"].is_i64());
-                assert!(json["new"].is_boolean());
-                assert_eq!(json["time"], "00:00:00.000");
-                assert!(line.contains("CQ W1AW FN31") || line.contains("N0CALL W1AW"));
-            }
-        }
     }
 
     #[test]

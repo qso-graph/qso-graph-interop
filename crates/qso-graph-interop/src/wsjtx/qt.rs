@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 /// A UTF-8 QByteArray on the wire. Invalid UTF-8 remains available as bytes.
 /// `None` is null; `Some(vec![])` is empty.
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct Utf8 {
     pub bytes: Option<Vec<u8>>,
 }
@@ -36,6 +37,7 @@ impl Utf8 {
 
 /// QString's UTF-16 code units, including unpaired surrogates. Length is in bytes.
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct QString(pub Option<Vec<u16>>);
 impl From<&str> for QString {
     fn from(value: &str) -> Self {
@@ -45,6 +47,7 @@ impl From<&str> for QString {
 
 /// Raw milliseconds since midnight. `u32::MAX` is Qt's null/invalid time.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct QTime(pub u32);
 impl Default for QTime {
     fn default() -> Self {
@@ -56,6 +59,7 @@ impl Default for QTime {
 /// `i64::MIN` is Qt's null Julian day. Schema 1 stores a UTC clock value with
 /// the original time spec (Qt's documented bug); no offset/zone bytes follow it.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct QDateTime {
     pub julian_day: i64,
     pub time: QTime,
@@ -77,6 +81,7 @@ impl Default for QDateTime {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub enum TimeZone {
     Iana(QString),
     /// Qt's `OffsetFromUtc` serialization, including every custom-zone field.
@@ -93,6 +98,7 @@ pub enum TimeZone {
 /// QColor's spec byte and five 16-bit channels (including padding).
 /// Spec 0 is invalid, 1 RGB, 2 HSV, 3 CMYK, 4 HSL. Channels are kept verbatim.
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct QColor {
     pub spec: u8,
     pub channels: [u16; 5],
@@ -171,8 +177,11 @@ impl<'a> Reader<'a> {
             return Ok(QString(None));
         }
         let n = usize::try_from(n).map_err(|_| Error::Length)?;
-        if n > MAX_DATAGRAM || n % 2 != 0 {
+        if n > MAX_DATAGRAM {
             return Err(Error::Length);
+        }
+        if n % 2 != 0 {
+            return Err(Error::OddQStringLength);
         }
         let bytes = self.take(n)?;
         Ok(QString(Some(
@@ -423,7 +432,14 @@ mod tests {
                 at: 0,
                 schema: 3,
             };
-            assert_eq!(r.qstring(), Err(Error::Length));
+            assert_eq!(
+                r.qstring(),
+                Err(if n % 2 != 0 && n as usize <= MAX_DATAGRAM {
+                    Error::OddQStringLength
+                } else {
+                    Error::Length
+                })
+            );
         }
         let bytes = [0, 0, 0, 2, 0];
         let mut r = Reader {
@@ -481,6 +497,9 @@ mod tests {
 }
 
 impl QTime {
+    pub const fn new(milliseconds: u32) -> Self {
+        Self(milliseconds)
+    }
     /// Milliseconds since midnight, or None for an invalid Qt time.
     pub fn milliseconds_since_midnight(self) -> Option<u32> {
         (self.0 < 86_400_000).then_some(self.0)

@@ -14,9 +14,9 @@ cargo-fuzz = true
 members = ["."]
 
 [dependencies]
-serde_json = { version = "=1.0.145", features = ["float_roundtrip"] }
-libfuzzer-sys = "=0.4.13"
-qso-graph-interop = { version = "=0.1.0", path = "../crates/qso-graph-interop" }
+serde_json = { version = "1.0.145", features = ["float_roundtrip"] }
+libfuzzer-sys = "0.4.13"
+qso-graph-interop = { version = "0.1.0", path = "../crates/qso-graph-interop" }
 
 [lints.rust]
 unsafe_code = "forbid"

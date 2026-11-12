@@ -1,31 +1,32 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # Dependencies
 
-Every direct requirement uses `=`. Cargo.lock and fuzz/Cargo.lock pin transitive resolution.
-Only crates.io sources are allowed. The library has one direct dependency, serde; the CLI adds
-clap and serde_json. xtask adds TOML and Rust-token parsers without entering the shipped graph.
+Every direct requirement uses a compatible range. Cargo.lock and fuzz/Cargo.lock pin resolution.
+Only crates.io sources are allowed. The library uses serde and serde_json, plus optional sha2-const-stable for conformance. The CLI adds
+clap. xtask adds TOML and Rust-token parsers without entering the shipped graph.
 The isolated fuzz workspace adds libfuzzer-sys and serde_json JSON-path checks and never enters either shipped crate.
 
 ## Direct dependencies
 
-| Crate | Exact version | License | Why |
+| Crate | Range lower bound | License | Why |
 | --- | --- | --- | --- |
-| serde | 1.0.229 | MIT OR Apache-2.0 | Serialize complete family and normalized models. |
+| serde | 1.0.229 | MIT OR Apache-2.0 | Serialize native and neutral event models. |
 | clap | 4.6.7 | MIT OR Apache-2.0 | CLI parsing and help, without its color feature. |
-| serde_json | 1.0.145 | MIT OR Apache-2.0 | JSON lines, fixture tests, fuzz round trips, and cargo metadata; float_roundtrip enabled. |
-| toml | 1.1.8+spec-1.1.0 | MIT OR Apache-2.0 | Read manifests as TOML in xtask; no display feature. Requirement is `=1.1.8`, which resolves this metadata-qualified release. |
+| serde_json | 1.0.145 | MIT OR Apache-2.0 | Event values, bounded JSON, NDJSON, fixtures, and metadata; float_roundtrip, arbitrary_precision and raw_value in the library. |
+| toml | 1.1.8+spec-1.1.0 | MIT OR Apache-2.0 | Read manifests as TOML in xtask; no display feature. Requirement is `1.1.8`, which resolves this metadata-qualified release. |
 | syn | 3.0.9 | MIT OR Apache-2.0 | Parse actual crate-root attributes in xtask. |
 | proc-macro2 | 1.0.107 | MIT OR Apache-2.0 | Scan all Rust tokens, including disabled code, in xtask. |
 | libfuzzer-sys | 0.4.13 | (MIT OR Apache-2.0) AND NCSA | Coverage-guided decoder fuzzing, developer tooling only. |
-| qso-graph-interop | 0.1.0 | GPL-3.0-or-later | Internal exact-version path dependency of the CLI and fuzz workspace. |
+| sha2-const-stable | 0.1.0 | MIT OR Apache-2.0 | SHA-256 manifest hashes in optional conformance tooling; no dependencies or native code. |
+| qso-graph-interop | 0.1.0 | GPL-3.0-or-later | Internal compatible-range path dependency of the CLI and fuzz workspace. |
 
 ## Workspace resolution
 
 The full resolved list includes Cargo's inactive optional packages. cargo-vet covers this list:
-3 packages through imported audits and 24 exact-version exemptions. Exemptions mean **not audited
+4 fully audited packages (three imported audits and one local automated source review) and 24 exact-version exemptions. Exemptions mean **not audited
 yet**, not reviewed or certified. Each exemption records its purpose in supply-chain/config.toml.
-The configured audit sources are Bytecode Alliance, Google, Mozilla, and Zcash. No local audits or
-trusted-publisher policies were added. cargo-deny and cargo-audit are separate mechanical checks.
+The configured audit sources are Bytecode Alliance, Google, Mozilla, and Zcash. The optional hash crate has the local source review recorded below. No trusted-publisher policies
+were added. cargo-deny and cargo-audit are separate mechanical checks.
 
 | Crate | Locked version | Declared license | Why | cargo-vet |
 | --- | --- | --- | --- | --- |
@@ -48,6 +49,7 @@ trusted-publisher policies were added. cargo-deny and cargo-audit are separate m
 | serde_derive | 1.0.229 | MIT OR Apache-2.0 | Generates model serialization at build time. | Not audited yet; exact exemption |
 | serde_json | 1.0.145 | MIT OR Apache-2.0 | JSON lines in the CLI, fixtures in tests, metadata in xtask. | Not audited yet; exact exemption |
 | serde_spanned | 1.1.3 | MIT OR Apache-2.0 | Manifest values with source spans in xtask. | Not audited yet; exact exemption |
+| sha2-const-stable | 0.1.0 | MIT OR Apache-2.0 | Optional conformance manifest hashing. | Local automated source review |
 | strsim | 0.11.1 | MIT | CLI typo suggestions. | Imported audits |
 | syn | 3.0.9 | MIT OR Apache-2.0 | Parses Rust in derives and validates policy crate-root attributes. | Not audited yet; exact exemption |
 | toml | 1.1.8+spec-1.1.0 | MIT OR Apache-2.0 | Parses manifests in xtask; std, serde, parse only. | Not audited yet; exact exemption |
@@ -80,3 +82,11 @@ sources still forbid unsafe code. This exception does not apply to the library o
 CI installs cargo-vet 0.10.3, cargo-deny 0.20.2, cargo-audit 0.22.2, and cargo-fuzz 0.13.2,
 with their own `--locked` dependencies. These tools run during development and validation, never
 from qg-interop. The Rust compilers are pinned separately for shipped code and fuzzing.
+
+The optional `conformance` feature adds `sha2-const-stable` 0.1 for SHA-256 manifest verification.
+It has no dependencies, build script, native code, or I/O. The local cargo-vet entry records an
+explicit automated source review of all four source files and independent digest checks; it is
+not an independent human audit. The normal codec and CLI dependency graphs omit this feature.
+All manifests now use compatible ranges, with both committed lockfiles retaining resolved versions.
+`serde_json` is also a library dependency for preserved event values and bounded event JSON;
+`float_roundtrip` preserves binary64 and `arbitrary_precision` retains unknown exact numeric values.

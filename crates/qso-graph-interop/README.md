@@ -1,22 +1,37 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-# QG Interop library
+# QG Interop
 
-Encode and decode WSJT-X UDP messages with bounded Rust parsers.
-Applications choose which messages to send and supply their own sockets.
+QG Interop is a Rust library for applications that exchange amateur radio events and commands.
+It implements QGI-SPEC-001 0.1.0 for WSJT-X schemas 1–3 and QGI event carriage over UDP and TCP.
+Callers supply native bytes and context, and receive specification events with preserved evidence.
+Applications own transport, destinations, session identity, and control policy.
+
+Install with `cargo add qso-graph-interop`. Add `serde_json` with its `float_roundtrip` feature
+for the JSON construction in the example below. The default features are `wsjtx`, `qgi`, and `serde`.
+Use `default-features = false` for the family-independent core. Enable `conformance` to use the
+vector runner, manifest hashing, round-trip, prefix, and fuzz helpers for another codec.
+
+Build a command from common fields and an explicit wire target:
 
 ```rust
-use qso_graph_interop::wsjtx::{self, Body, Outcome, Packet};
-
-let original = Packet::new("WSJT-X", Body::Replay);
-let bytes = wsjtx::encode(&original)?;
-match wsjtx::decode(&bytes)? {
-    Outcome::Message(packet) => assert_eq!(*packet, original),
-    Outcome::Skipped { .. } => unreachable!(),
-}
-# Ok::<(), wsjtx::Error>(())
+use qso_graph_interop::{Context, Event, Text};
+use serde_json::json;
+let fields = json!({"operation": "send_text", "text": "CQ W1AAA FN42", "transmit": false});
+let command = Event::command("wsjtx", 1, Context::default(),
+    fields.as_object().unwrap().clone(), Some(Text::from("synthetic-instance")))?;
+assert!(command.is_command());
+# Ok::<(), qso_graph_interop::Error>(())
 ```
 
-The common model keeps the original family packet, including unrecognized trailing data.
-Byte arrays distinguish null, empty, absent, and invalid UTF-8 without replacing the original bytes.
+With `wsjtx`, pass the command to `Codec::encode_command` on `wsjtx::Wsjtx`.
+Use `Codec::decode` for observations and `Codec::reencode` to encode their native evidence.
+`Event::native_bytes` retrieves original bytes, including noncanonical booleans and extensions.
+`json::parse` reads bounded event JSON; `json::write` admits compact records before publication.
+`Event::recognized` returns a compatible view and a separate native verification status.
 
+The public `Codec` and `Profile` traits support third-party families without a fork. Stream codecs
+consume a caller-owned buffer; stateful codecs receive a caller session key and expiry input and
+support resetting one session or all sessions. No codec opens a socket or reads a clock.
+
+See [the user guides](../../docs/user/) and [protocol documentation](../../docs/PROTOCOL.md).
 Licensed under GPL-3.0-or-later.
