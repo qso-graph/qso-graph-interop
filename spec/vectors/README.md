@@ -31,14 +31,16 @@ one datagram or a TCP record including its delimiter. An unterminated TCP input 
 `expected.event` is the unchanged carried event with the receiving context appended in `via`;
 the original `context` and `native` remain intact. `reencode.event` checks the semantically
 forwarded event and `reencode.delimiter` selects the stream delimiter; JSON byte identity is not
-a carriage invariant. A carried command keeps its original command form. For a newer unknown kind,
-`expected.read` additionally describes the separate compatible recognized view.
+a carriage invariant. A carried command keeps its original command form. For a newer unknown kind
+or mapping addition, `expected.read` additionally describes the separate compatible recognized view.
 
-The `qgi` suite has 11 positive cases: carried observations and commands, LF/CRLF framing,
-a newer-MINOR unknown kind, two/eight hops, maximal receiving context, a valid escaped surrogate
-pair and exactly 1 MiB of output. Its 20 negative cases plant oversized frames, output/context
+The `qgi` suite has 13 positive cases: carried observations and commands, LF/CRLF framing,
+a newer-MINOR unknown kind, a newer mapping at the same specification version, two/eight hops,
+maximal receiving context, a valid escaped surrogate pair, exactly 1 MiB of output and exactly
+65,536 output elements. Its 22 negative cases plant oversized frames, output/context
 budget overflow, a ninth hop, invalid JSON/UTF-8/Unicode strings and keys, duplicates, schema/version
-errors, unfinished/empty streams, and depth, element-count and numeric-token limits. These need
+errors, unfinished/empty streams, and depth, element-count and numeric-token limits, including
+65,537 output elements and an input at the element limit with no room for the appended hop. These need
 only Annex I and the event schema, without an external protocol definition.
 
 The hypothetical 0.2.0 values exercise only the additions permitted by `QGI-GEN-0005`; they do not
@@ -46,8 +48,9 @@ publish version 0.2.0 or add real WSJT-X message types. An unknown operation tok
 its presence alone supplies no permission to act. Unknown fields are omitted from the reader's
 recognized view, while the original event remains available to the application. Mapping-revision
 vectors exercise a known kind with a new native type (`unavailable`), a known operation with
-a known native type (`verified`), unsupported-revision command encoding, and a nested QColor
-addition at the same base specification version. A new reader sees
+a known native type at a supported native version (`verified`), that same known operation/type at
+native schema 4 (`unavailable`, with uninterpreted fields), unsupported-revision command encoding,
+and a nested QColor addition at the same base specification version. A new reader sees
 an old writer's complete required envelope without depending on future fields.
 
 The suite covers all 17 message types in all three supported schemas, historical tails, all three
@@ -77,8 +80,10 @@ The `producer_strict=true` flag in `QGI-SER-0009` uses the same schema with the 
 member sets closed, known kinds/context tokens and the selected mapping revision. The runner
 constructs the strict WSJT-X structured-view profile from B.4's wire-type/member catalog and B.2's
 composites. Every generated positive observation, command and supplied view is checked; preserved
-newer-event contents use the reader profile while the new hop uses the producer profile. The
-strict profile deliberately requires an explicit extension profile for extension fields; this
+contents whose specification version or mapping revision is newer than the reader's use the reader
+profile while the new hop uses the producer profile on its own. Both compatibility paths plant an
+unknown member in the appended hop's context and require its rejection. The strict profile
+deliberately requires an explicit extension profile for extension fields; this
 runner's authored events use only revision 1 core and WSJT-X members. Nested color/header/
 dependency/radio/structured-view additions are tested for reader acceptance and producer rejection.
 For this pass, dependency installation and execution use `--offline` and a writable copy of the

@@ -37,6 +37,11 @@
 
 ### Fixed
 
+- Require a supported native version for specification verification, enforce carriage parser
+  bounds after appending `via`, and validate preserved newer mapping revisions with the reader
+  profile while checking the new hop strictly. Add regression vectors and clarify that applications
+  scope receiver instance labels by transport or session before associating receivers.
+
 - Apply CLI process and DNS restrictions to package Rust sources outside `src/`, with planted
   external binary and build script checks.
 

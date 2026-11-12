@@ -280,10 +280,11 @@ native error codes into a universal enum. Unmapped result data remains in native
 ## Consolidating receivers (informative)
 
 A WSJT-X WSPRDecode names the transmitting station and does not say who heard it. An application
-consolidating receivers can pair each decode with the latest `radio_state` from the same
-`radio.instance` to obtain the receiving station's call and grid. This is application-maintained
-state; the decode does not acquire those fields from an implicit codec join. A serialized instance
-label is untrusted and may need an application-scoped transport association.
+consolidating receivers first scopes `radio.instance` labels by its own transport or session
+association: labels can collide between programs or networks. Within that scope, it can pair each
+decode with the latest `radio_state` from the same instance to obtain the receiving station's call
+and grid. This is application-maintained state; the decode does not acquire those fields from an
+implicit codec join. A serialized instance label is untrusted and does not establish that association.
 
 The same station heard by three receivers during one period represents three spots, rather than
 duplicate evidence of a single receiver. A `time_of_day` supplies no date; the application supplies

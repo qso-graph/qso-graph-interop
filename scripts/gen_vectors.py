@@ -464,6 +464,15 @@ def compatibility(s):
         new['native']['data'] = b64(header(3, native_type) + (b'\x01' if native_type == 8 else b''))
         add(name, new)
         s.vectors['compat-' + name]['expected']['verification'] = 'verified' if native_type == 8 else 'unavailable'
+    new = copy.deepcopy(s.vectors['compat-known-operation-new-revision']['input']['event'])
+    new['native_version'] = '4'
+    # A familiar type number does not license interpreting an unsupported schema's payload.
+    # The zero byte deliberately disagrees with auto_tx_only under the schema 3 layout.
+    new['native']['data'] = b64(header(4, 8) + b'\x00')
+    add('known-operation-future-native-version', new, expected={
+        'kind': 'native', 'fields': {}, 'context': copy.deepcopy(new['context']),
+        'native': copy.deepcopy(new['native'])})
+    s.vectors['compat-known-operation-future-native-version']['expected']['verification'] = 'unavailable'
     new = copy.deepcopy(s.vectors['13-highlight-callsign-s3']['expected']['event'])
     new['mapping'] = 2
     new['fields']['background_color']['future_component'] = 7
@@ -685,6 +694,10 @@ def qgi_vectors(wsjtx):
     newer['fields'] = {'future_field': 17}
     positive('newer-minor-unknown-kind', newer)
     s.vectors['newer-minor-unknown-kind']['expected']['read'] = {'kind': 'native', 'fields': {}}
+    newer_mapping = copy.deepcopy(wsjtx.vectors['compat-nested-addition']['input']['event'])
+    positive('newer-mapping-same-spec', newer_mapping)
+    s.vectors['newer-mapping-same-spec']['expected']['read'] = copy.deepcopy(
+        wsjtx.vectors['compat-nested-addition']['expected']['read'])
     positive('two-hops', s.vectors['carried-decode']['expected']['event'],
              observer=dict(context('from_application'), source_id='second-observer'))
     eight = copy.deepcopy(observed)
@@ -697,6 +710,12 @@ def qgi_vectors(wsjtx):
     unicode_event = copy.deepcopy(command)
     unicode_event['fields']['text'] = '\U0001f4fb'
     positive('valid-unicode-surrogate-pair', unicode_event)
+
+    # Six envelope members, two context members, three fields and one text-wrapper
+    # member, plus six for the newly created via member, array entry and hop/context.
+    elements = copy.deepcopy(command)
+    elements['fields']['text'] = {'utf8_bytes': [255] * (65536 - 18)}
+    positive('output-element-boundary', elements, 'tcp', b'\n')
 
     # Exactly one MiB after appending the hop, using synthetic text padding. String length and JSON element bounds remain independent.
     boundary = copy.deepcopy(command)
@@ -732,6 +751,12 @@ def qgi_vectors(wsjtx):
     too_large = copy.deepcopy(boundary)
     too_large['fields']['text'] += 'a'
     negative('output-budget-overflow', wire(too_large) + b'\n', 'oversized', 'tcp')
+    too_many_elements = copy.deepcopy(elements)
+    too_many_elements['fields']['text']['utf8_bytes'].append(255)
+    negative('output-element-overflow', wire(too_many_elements) + b'\n', 'oversized', 'tcp')
+    # Exactly 65,536 input elements would become 65,542 after the hop is appended.
+    too_many_elements['fields']['text']['utf8_bytes'].extend([255] * 5)
+    negative('input-element-limit-no-hop-room', wire(too_many_elements) + b'\n', 'oversized', 'tcp')
     negative('invalid-unicode-surrogate', wire(command).replace(b'synthetic', b'\\ud800synthetic'), 'malformed')
     negative('invalid-unicode-key', b'{"\\udfff":0}', 'malformed')
     negative('not-an-object', b'[]', 'malformed')
@@ -897,16 +922,8 @@ def validate_qgi(suite, validator):
     def bad_constant(_):
         raise ValueError('malformed')
 
-    def parse(inp):
-        raw = base64.b64decode(inp['data'], validate=True)
-        limit = 65507 if inp['transport'] == 'udp' else 1048576
-        if inp['transport'] == 'tcp':
-            terminated = raw.endswith(b'\n')
-            raw = raw[:-2] if raw.endswith(b'\r\n') else raw[:-1] if terminated else raw
-        if len(raw) > limit:
-            raise ValueError('oversized')
-        if inp['transport'] == 'tcp' and not terminated:
-            raise ValueError('truncated')
+    def read_json(raw, limit):
+        # Apply the same parser limits to received JSON and the resulting event.
         try:
             event = json.loads(raw.decode('utf-8'), object_pairs_hook=pairs,
                                parse_int=bounded_number, parse_float=bounded_number,
@@ -934,6 +951,19 @@ def validate_qgi(suite, validator):
                     raise ValueError('malformed')
                 if len(value.encode('utf-8')) > limit:
                     raise ValueError('oversized')
+        return event
+
+    def parse(inp):
+        raw = base64.b64decode(inp['data'], validate=True)
+        limit = 65507 if inp['transport'] == 'udp' else 1048576
+        if inp['transport'] == 'tcp':
+            terminated = raw.endswith(b'\n')
+            raw = raw[:-2] if raw.endswith(b'\r\n') else raw[:-1] if terminated else raw
+        if len(raw) > limit:
+            raise ValueError('oversized')
+        if inp['transport'] == 'tcp' and not terminated:
+            raise ValueError('truncated')
+        event = read_json(raw, limit)
         version = event.get('spec')
         if isinstance(version, str) and version.split('.')[0].isdigit() and version.split('.')[0] != '0':
             raise ValueError('unsupported_version')
@@ -946,8 +976,10 @@ def validate_qgi(suite, validator):
             raise ValueError('oversized')
         output = copy.deepcopy(event)
         output.setdefault('via', []).append({'family': 'qgi', 'context': inp['context']})
-        if len(json.dumps(output, ensure_ascii=True, separators=(',', ':')).encode()) > 1048576:
+        output_raw = json.dumps(output, ensure_ascii=True, separators=(',', ':'), allow_nan=False).encode()
+        if len(output_raw) > 1048576:
             raise ValueError('oversized')
+        read_json(output_raw, limit)
         return event, output
 
     count = 0
@@ -970,6 +1002,8 @@ def validate_qgi(suite, validator):
         assert vector['reencode']['event'] == observed, name
         if name == 'output-budget-boundary':
             assert len(json.dumps(observed, ensure_ascii=True, separators=(',', ':')).encode()) == 1048576
+        if name == 'output-element-boundary':
+            assert len(observed['fields']['text']['utf8_bytes']) + 18 == 65536
         count += 1
     return count
 
@@ -1083,18 +1117,28 @@ def check_command_text(suite):
 
 
 def check_revision_outcomes(suite):
-    """Revision support comes from the type catalog, not recognition of an operation."""
-    for name in ('old-reader-new-operation', 'known-kind-new-revision', 'known-operation-new-revision'):
+    """Native verification requires both a supported schema and a known type."""
+    for name in ('old-reader-new-operation', 'known-kind-new-revision', 'known-operation-new-revision',
+                 'known-operation-future-native-version'):
         vector = suite.vectors['compat-' + name]
         event = vector['input']['event']
         assert event['mapping'] == 2
         raw = base64.b64decode(event['native']['data'])
-        typ = struct.unpack_from('>I', raw, 8)[0]
-        verification = 'verified' if typ in range(17) else 'unavailable'
-        assert vector['expected']['verification'] == verification
+        schema = struct.unpack_from('>I', raw, 4)[0]
+        assert event['native_version'] == str(schema), name
+        verification = 'unavailable'
+        if schema in (1, 2, 3):
+            typ = struct.unpack_from('>I', raw, 8)[0]
+            if typ in range(17):
+                verification = 'verified'
+            if typ == 8:
+                assert event['fields'] == {'operation': 'halt_tx', 'auto_tx_only': bool(raw[-1])}, name
+        else:
+            # Do not read a type or payload using an unsupported schema's layout.
+            assert vector['expected']['read']['kind'] == 'native', name
+            assert vector['expected']['read']['fields'] == {}, name
+        assert vector['expected']['verification'] == verification, name
         assert 'verification' not in event
-        if typ == 8:
-            assert event['fields'] == {'operation': 'halt_tx', 'auto_tx_only': bool(raw[-1])}
     vector = suite.vectors['command-error-known-operation-new-revision']
     assert vector['input']['event']['fields']['operation'] == 'send_text'
     assert vector['input']['event']['mapping'] == 2
@@ -1147,16 +1191,29 @@ def validate(suite, qgi, producer_strict=False):
     for case in shapes:
         assert validator.is_valid(case['event']) == case['valid'], case['name']
     qgi_count = validate_qgi(qgi, validator)
+    hop_profile = producer if producer_strict else producer_validator(schema, jsonschema)
+    hop_producer = hop_profile.evolve(schema={'$ref': '#/$defs/hop', '$defs': hop_profile.schema['$defs']})
+
+    def validate_forwarded(event):
+        newer_spec = tuple(map(int, event['spec'].split('.'))) > tuple(map(int, SPEC.split('.')))
+        newer_mapping = event['mapping'] > 1  # This runner supports family mapping revision 1.
+        (validator if newer_spec or newer_mapping else producer).validate(event)
+        hop_producer.validate(event['via'][-1])
+
     for vector in qgi.vectors.values():
         if vector['class'] == 'positive':
-            event = vector['expected']['event']
-            if event['spec'] == SPEC:
-                producer.validate(event)
-            else:
-                # Forwarded unknown event members are preserved, not newly authored.
-                producer_validator(schema, jsonschema).evolve(schema={'$ref': '#/$defs/hop',
-                    '$defs': producer.schema['$defs']}).validate(event['via'][-1])
+            validate_forwarded(vector['expected']['event'])
     if producer_strict:
+        for name in ('newer-minor-unknown-kind', 'newer-mapping-same-spec'):
+            event = copy.deepcopy(qgi.vectors[name]['expected']['event'])
+            event['via'][-1]['context']['future'] = 1
+            assert validator.is_valid(event) and not hop_producer.is_valid(event['via'][-1]), name
+            try:
+                validate_forwarded(event)
+            except jsonschema.ValidationError:
+                pass
+            else:
+                raise AssertionError(name + ' accepted an unknown member in the appended hop')
         # Plant nested additions where the reader must accept and producer must reject.
         event = copy.deepcopy(qgi.vectors['carried-decode']['expected']['event'])
         event['via'][0]['future'] = 1

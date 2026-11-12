@@ -1543,6 +1543,14 @@
       "sha256": "7ea99af63742404b58e6311878b6fbf1bcc4b4769341e2fdba63b0e8df30129a"
     },
     {
+      "file": "compat-known-operation-future-native-version.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "8ba28fe4638722cc3b083c86bfba3a830f72d62b4562df42867b0896d866d15b"
+    },
+    {
       "file": "compat-known-operation-new-revision.json",
       "class": "compatibility",
       "spec": "0.1.0",

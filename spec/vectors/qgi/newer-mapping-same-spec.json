@@ -1,0 +1,158 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "qgi",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "transport": "udp",
+    "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJ3c2p0eCIsIm1hcHBpbmciOjIsIm5hdGl2ZV92ZXJzaW9uIjoiMyIsImtpbmQiOiJjb250cm9sIiwid2lyZV9pZCI6InRlc3QtaW5zdGFuY2UiLCJjb250ZXh0Ijp7ImRpcmVjdGlvbiI6InRvX2FwcGxpY2F0aW9uIiwiZXhjaGFuZ2UiOiJ1bmtub3duIn0sImZpZWxkcyI6eyJvcGVyYXRpb24iOiJ3c2p0eC5oaWdobGlnaHRfY2FsbHNpZ24iLCJjYWxsIjoiVzFBQUEiLCJoaWdobGlnaHRfbGFzdCI6dHJ1ZSwiYmFja2dyb3VuZF9jb2xvciI6eyJzcGVjIjoxLCJjaGFubmVscyI6WzY1NTM1LDQzNjksODczOCwxMzEwNywxNzQ3Nl0sImZ1dHVyZV9jb21wb25lbnQiOjd9LCJmb3JlZ3JvdW5kX2NvbG9yIjp7InNwZWMiOjAsImNoYW5uZWxzIjpbMSwyLDMsNCw1XX19LCJuYXRpdmUiOnsiZm9ybWF0Ijoid3NqdHhfZGF0YWdyYW0iLCJkYXRhIjoicmJ6TDJnQUFBQU1BQUFBTkFBQUFEWFJsYzNRdGFXNXpkR0Z1WTJVQUFBQUZWekZCUVVFQi8vOFJFU0lpTXpORVJBQUFBUUFDQUFNQUJBQUZBUT09In19",
+    "context": {
+      "direction": "unknown",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 2,
+      "native_version": "3",
+      "kind": "control",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "wsjtx.highlight_callsign",
+        "call": "W1AAA",
+        "highlight_last": true,
+        "background_color": {
+          "spec": 1,
+          "channels": [
+            65535,
+            4369,
+            8738,
+            13107,
+            17476
+          ],
+          "future_component": 7
+        },
+        "foreground_color": {
+          "spec": 0,
+          "channels": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAANAAAADXRlc3QtaW5zdGFuY2UAAAAFVzFBQUEB//8RESIiMzNERAAAAQACAAMABAAFAQ=="
+      },
+      "via": [
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown"
+          }
+        }
+      ]
+    },
+    "read": {
+      "kind": "control",
+      "fields": {
+        "operation": "wsjtx.highlight_callsign",
+        "call": "W1AAA",
+        "highlight_last": true,
+        "background_color": {
+          "spec": 1,
+          "channels": [
+            65535,
+            4369,
+            8738,
+            13107,
+            17476
+          ]
+        },
+        "foreground_color": {
+          "spec": 0,
+          "channels": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      },
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAANAAAADXRlc3QtaW5zdGFuY2UAAAAFVzFBQUEB//8RESIiMzNERAAAAQACAAMABAAFAQ=="
+      }
+    }
+  },
+  "reencode": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 2,
+      "native_version": "3",
+      "kind": "control",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "wsjtx.highlight_callsign",
+        "call": "W1AAA",
+        "highlight_last": true,
+        "background_color": {
+          "spec": 1,
+          "channels": [
+            65535,
+            4369,
+            8738,
+            13107,
+            17476
+          ],
+          "future_component": 7
+        },
+        "foreground_color": {
+          "spec": 0,
+          "channels": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAANAAAADXRlc3QtaW5zdGFuY2UAAAAFVzFBQUEB//8RESIiMzNERAAAAQACAAMABAAFAQ=="
+      },
+      "via": [
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown"
+          }
+        }
+      ]
+    },
+    "delimiter": ""
+  }
+}

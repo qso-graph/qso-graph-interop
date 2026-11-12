@@ -4,7 +4,7 @@
   "family": "qgi",
   "mapping": 1,
   "source": "../../annex-i-qgi.md",
-  "source_sha256": "044fbc8f1d2d427b9944c20e7adb4b5294c914dc6a4c4cc377d7f1da8d19f717",
+  "source_sha256": "758b8eaa7645d1836e43deee6b076fff834a40d24060287f18ee6887d73bf1ae",
   "hash_scope": "SHA-256 of each complete vector file, including its final newline",
   "vectors": [
     {
@@ -88,6 +88,14 @@
       "sha256": "551d0de8ce734c6968243f6f448cba5c80de6ae2fde16fd8514951ae24691b48"
     },
     {
+      "file": "input-element-limit-no-hop-room.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "sha256": "8ef1994667f7383f0593c5900812eb63181fd6908148e4442b78fed707b1c369"
+    },
+    {
       "file": "invalid-json.json",
       "class": "negative",
       "spec": "0.1.0",
@@ -136,6 +144,14 @@
       "sha256": "59c57e76734ffa17e169da7faa30beef3246822787e8342e193a4b5ef2d681fe"
     },
     {
+      "file": "newer-mapping-same-spec.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "sha256": "562c71b35466f1a34c071734a57713b2cd19a7c1fed76402edb1a08e039ba018"
+    },
+    {
       "file": "newer-minor-unknown-kind.json",
       "class": "positive",
       "spec": "0.1.0",
@@ -182,6 +198,22 @@
       "family": "qgi",
       "mapping": 1,
       "sha256": "832cf165122ba2f75eb560701d740dff3fc18a5007c21a07731b9bfd0c4a25cd"
+    },
+    {
+      "file": "output-element-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "sha256": "c260097351aab20d2e229e11fe3aba46ed9f6fb72637a7cce142ab5ed554726d"
+    },
+    {
+      "file": "output-element-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "sha256": "3a38c89bc8df174a1d478ffd9077e68c23a220ce810bd3aa941ed2d131ed3f46"
     },
     {
       "file": "oversized-datagram.json",
