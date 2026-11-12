@@ -122,6 +122,19 @@ reader/writer policies separately. No upstream content was fetched during implem
 The appendix recommends broadcast/lookup port 12060; the CLI defaults to `127.0.0.1:12060`.
 Its listener supplies `from_application`; capture decoding supplies `unknown` direction.
 
+The scripted N1MM peer uses those same Annex D D.4 broadcast catalogs and the D.5 UTF-8
+declaration and text escaping conventions. The field-built library writer constructs inbound
+commands only, so the simulator builds broadcast XML directly and validates every datagram with
+the shared codec before sending it. No native layout or protocol revision is added.
+Annex D D.5 pins S1's [Setting N1MM's Frequency](https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/)
+statement that the QSY input changes N1MM's frequency and its connected radio's frequency.
+The simulator reflects that change in the selected radio's next scheduled `RadioInfo`, and in
+later contacts and spots. S1's **Sending Spectrum Data** describes display input, so it changes
+no broadcasts. Neither input has a documented acknowledgment, and the simulator sends none.
+The source pin is the dated document/hash in Annex D, not an invented logger build number.
+The simulated rig tunes in 10 Hz steps by dropping the requested single-Hz remainder; that
+precision choice is simulator policy, not an additional upstream acceptance rule.
+
 Contact/radio integers in 10 Hz units multiply exactly by 10. Spot, QSY, and scope decimal kHz
 convert exactly to integer hertz without floating point, including 137.5 and 475.0 kHz. Sub-Hz,
 out-of-range, duplicate, nested, and invalid-encoding scalars remain native-only. Radio labels,

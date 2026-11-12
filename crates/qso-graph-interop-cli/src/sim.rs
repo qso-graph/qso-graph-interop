@@ -345,6 +345,9 @@ pub fn wait_capture(socket: &NumericUdp, until: Instant) -> Result<()> {
 }
 
 pub fn run(s: Sim) -> Result<()> {
+    if s.n1mm {
+        return crate::n1mm_sim::run(&s);
+    }
     if s.capture.is_some() {
         return crate::capture::run(&s);
     }

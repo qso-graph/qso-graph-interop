@@ -4,6 +4,7 @@
 
 use qso_graph_interop_cli::alltxt;
 mod capture;
+mod n1mm_sim;
 mod numeric_udp;
 mod sim;
 
@@ -36,9 +37,9 @@ enum Command {
         after_help = "Examples:\n  qg-interop listen --wsjtx\n  qg-interop listen --n1mm\n  qg-interop listen --n1mm 127.0.0.1:12060 --json"
     )]
     Listen(Listen),
-    /// Play ALL.TXT or native NDJSON captures over UDP.
+    /// Simulate contest traffic, ALL.TXT, or native NDJSON captures over UDP.
     #[command(
-        after_help = "Examples:\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call W1AW --mode FT4 --frequency 7074000"
+        after_help = "Examples:\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --n1mm --to 127.0.0.1:12060 --radios 2 --speed 60\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call W1AW --mode FT4 --frequency 7074000"
     )]
     Sim(Box<Sim>),
     /// Decode one complete native datagram from a file or standard input.
@@ -80,8 +81,26 @@ struct Decode {
 
 #[derive(Args)]
 struct Sim {
-    #[arg(long, required_unless_present = "capture", conflicts_with = "qgi")]
+    #[arg(long, required_unless_present_any = ["capture", "n1mm"], conflicts_with_all = ["qgi", "n1mm"])]
     wsjtx: bool,
+    /// Simulate N1MM Logger+ contest broadcasts and QSY input.
+    #[arg(long, conflicts_with_all = ["capture", "qgi", "file", "from", "grid", "id", "dx_call", "mode", "frequency"])]
+    n1mm: bool,
+    /// Synthetic N1MM computer label (1–64 printable ASCII characters).
+    #[arg(long, requires = "n1mm", conflicts_with_all = ["wsjtx", "capture"], default_value = "SYNTHETIC-01", value_parser = n1mm_sim::station)]
+    station: String,
+    /// N1MM radios: 1, or 2 for SO2R.
+    #[arg(long, requires = "n1mm", conflicts_with_all = ["wsjtx", "capture"], default_value = "1", value_parser = clap::value_parser!(u8).range(1..=2))]
+    radios: u8,
+    /// New N1MM contacts per simulated hour (1–3600).
+    #[arg(long, requires = "n1mm", conflicts_with_all = ["wsjtx", "capture"], default_value = "120", value_parser = clap::value_parser!(u32).range(1..=3600))]
+    rate: u32,
+    /// Deterministic N1MM traffic seed.
+    #[arg(long, requires = "n1mm", conflicts_with_all = ["wsjtx", "capture"], default_value = "1")]
+    seed: u64,
+    /// Stop after N new N1MM contacts (1–100000), including with --loop.
+    #[arg(long, requires = "n1mm", conflicts_with_all = ["wsjtx", "capture"], value_parser = clap::value_parser!(u64).range(1..=100_000))]
+    count: Option<u64>,
     /// Play native.data from an NDJSON capture.
     #[arg(long, conflicts_with_all = ["file", "from", "dx_call", "mode", "frequency"])]
     capture: Option<PathBuf>,

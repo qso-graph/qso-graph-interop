@@ -101,3 +101,52 @@ cargo-vet exemptions are labeled **not audited yet**, matching the existing depe
 Unix SIGINT/SIGTERM process tests verify Clear/Close cleanup. Windows uses CRT signals with
 re-registration races; not every console Ctrl+C becomes SIGINT, and SIGTERM is not a Windows
 console termination mechanism. Windows runtime behavior still requires platform testing.
+
+## N1MM contest simulator
+
+`sim --n1mm` is a separate scripted peer using the existing numeric connected UDP boundary.
+The socket filters the complete configured target address, including the port, before commands
+reach the decoder. The library remains stateless and opens no sockets. The peer sends one
+`AppInfo`, one-second logical radio snapshots, and new contacts at `floor(n × 3600000 / rate)`
+logical milliseconds. This cumulative schedule avoids accumulating interval-rounding drift.
+The default is 12 new contacts; `--loop` removes that default limit, while an explicit `--count`
+always bounds the run. Looping keeps the clock, serials, IDs, random sequence, and score moving
+forward. A fixed UTC epoch and a wrapping 64-bit LCG make the stream reproducible without
+system time, a platform random generator, or additional dependencies.
+
+SO2R clears the previous transmitter's reported state before setting the next transmitter.
+Every fifth new contact changes callsign to `/P` and points from two to three; every seventh
+is deleted, including when the same contact was just changed. Scores follow every mutation,
+using retained QSO count and points without storing unbounded contact history. Spots are removed
+under their original keys even when the contact is edited. Contact bands track the tuned
+frequency on the supported HF/6 m bands; an unlisted frequency has an empty band label.
+
+The [protocol evidence](PROTOCOL.md#n1mm-mapping-and-evidence) cites Annex D's pinned QSY and
+Spectrum source. A recognized QSY updates only an existing selected radio. The next scheduled
+report and later contact/spot traffic use its new frequency. The simulated rig has 10 Hz tuning
+resolution: integer-Hz commands drop their single-Hz remainder. This explicitly chosen simulator
+policy is necessary because native `Freq`, `TXFreq`, `rxfreq`, and `txfreq` are integer 10 Hz
+values. It is not a claim about actual rigs or N1MM's precision. Spectrum input, invalid XML,
+missing or ambiguous frequency/selector fields, negative frequencies, and absent radios change
+nothing. No command causes an immediate response or acknowledgment.
+
+The hand-authored `tests/fixtures/n1mm-simulator.json` in the library crate supplies initial
+AppInfo/RadioInfo bytes, the first contact's fields, and the final score for a 35-contact script.
+It follows Annex D independently of the simulator serializer and is explicitly synthetic,
+not a live N1MM capture. The CLI's `tests/n1mm_simulator.rs` runs the binary over loopback and
+decodes every datagram using the library, requiring exactly one event, no skips, and original
+byte retention. A separate receiver ledger applies contact IDs, edits, and deletions and checks
+every score snapshot. Latest per-radio state checks detect simultaneous transmitters and
+require contacts to use the active transmitting radio. The tests check alternating radios,
+focus bounds, a single running radio, frequency units, spot-key lifetimes, UTC stamps, serials,
+counts, shutdown flags, seed reproducibility, and unchanged logical traffic at different speeds.
+
+QSY tests command both radios, require the next report to reflect tuning, then inject commands
+from a different source port and Spectrum from the target. The complete stream must equal a
+run with only the valid QSY inputs, catching extra RadioInfo acknowledgments as well as frequency
+changes. Planted valid-XML mutations introduce two transmitters, obedience to a foreign QSY,
+a score inconsistent with contacts, and a contact on the wrong radio; the same oracles reject
+all four. Option rejection tests cover protocol conflicts and numeric/string bounds before
+sending. Unit checks cover UTC day/month/leap-year rollover, decimal kHz, sub-10-Hz QSY policy,
+malformed/ambiguous commands, and selection of an absent radio. Unix process tests interrupt
+indefinite looping with SIGINT and SIGTERM and require final non-transmitting radio reports.

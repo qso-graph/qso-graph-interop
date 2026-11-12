@@ -1,8 +1,12 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # Test a receiver with the simulator
 
-`qg-interop sim` plays WSJT-X decodes without a radio or a Python installation. Point it at the
-numeric address and port where your app listens. The built-in synthetic ALL.TXT sample
+`qg-interop sim` generates N1MM contest traffic and plays WSJT-X decodes without a radio or a Python
+installation. Point it at the numeric address and port where your app listens.
+
+## Play WSJT-X traffic
+
+The built-in synthetic ALL.TXT sample
 contains 120 decodes in seven cycles.
 
 ```sh
@@ -41,6 +45,60 @@ receiver's exact address and port can issue commands, using the simulator's Id. 
 decodes played so far, marked old, then Status. Clearing Band Activity clears that Replay window.
 Close requests graceful exit. Changed settings produce Status; there is no separate command
 acknowledgment. See [reaction details and validation](../simulator-validation.md).
+
+## Play N1MM contest traffic
+
+Test a contest dashboard, logger bridge, or band map without running N1MM Logger+:
+
+```sh
+qg-interop sim --n1mm --to 127.0.0.1:12060 --speed 60
+qg-interop sim --n1mm --to '[::1]:12060' --call W1ZZZ --station SYNTHETIC-02 --radios 2 --rate 240 --speed 60 --seed 42 --count 35
+qg-interop sim --n1mm --to 127.0.0.1:12060 --radios 2 --loop
+```
+
+Each run starts with `AppInfo`, radio reports, and a zero score. `RadioInfo` follows every
+simulated second and at contact transitions. New `contactinfo` messages follow the chosen rate.
+Every fifth contact gets a `contactreplace` with its previous callsign and timestamp. Every
+seventh contact gets a `contactdelete`. Each contact also produces a spot addition and deletion.
+`dynamicresults` follows each contact change with the current count and points: two points per
+contact, three after a replacement, and no points for deleted contacts. The synthetic contest
+uses points as its total score, with no multipliers. All generated callsigns and station labels
+are synthetic. Set `--call` and `--station` to use your own test identities.
+
+With two radios, focus and active radio alternate between 1 and 2 for successive contacts.
+Radio 1 runs and radio 2 searches and pounces. Only the active radio transmits, and each
+contact's `radionr` matches that radio. Initial frequencies are 14.025 MHz and 7.025 MHz, in CW.
+
+| Option | Behavior |
+| --- | --- |
+| `--n1mm` | Select the scripted N1MM Logger+ peer. |
+| `--to IP:PORT` | Required numeric IPv4 or IPv6 destination, port 1–65535. |
+| `--call CALL` | Station and operator callsign, up to 13 ASCII letters, digits, or slashes. Converts to uppercase. Empty or omitted uses `N0CALL`. |
+| `--station NAME` | Computer label, 1–64 printable ASCII characters with a non-space character. Default `SYNTHETIC-01`. |
+| `--radios 1\|2` | One radio by default. Select 2 for single operator, two radio (SO2R) traffic. |
+| `--rate QSOS_PER_HOUR` | Integer new-contact rate, 1–3600. Default 120. Edits and deletions don't count toward this rate. |
+| `--speed N` | Scale waiting time, with 0 < N ≤ 1000. Default 1. |
+| `--seed N` | Unsigned 64-bit seed, 0–18446744073709551615. Default 1. |
+| `--loop` | Continue until interrupted, unless `--count` supplies a limit. |
+| `--count N` | Stop after 1–100000 new contacts, including with `--loop`. Without either option, send 12 new contacts. |
+
+The logical clock starts at `2026-01-01 00:00:00` UTC. The first contact arrives after
+`3600 / rate` simulated seconds. Timestamps use N1MM's unzoned UTC format, `YYYY-MM-DD HH:MM:SS`.
+Radio and contact frequencies use integer 10 Hz units, and spots use decimal kHz.
+Speed changes only the waiting time. The same seed and options reproduce the same bytes,
+including timestamps, when incoming commands are the same.
+
+Send `radio_setfrequency` to the simulator's source address and port from the exact configured
+target address. The selected radio's next scheduled `RadioInfo` reports the new frequency.
+Later contacts and spots use that frequency too. Tuning uses 10 Hz resolution, dropping any
+single-Hz remainder. `Spectrum` input changes no outgoing traffic. Neither input produces an
+acknowledgment. This follows the documented QSY and display effects in
+[Annex D's pinned source S1](../../spec/annex-d-n1mm.md#d5-commands-from-fields),
+**Setting N1MM's Frequency** and **Sending Spectrum Data**.
+
+Ctrl+C or a termination signal stops playback and sends final radio reports with transmission
+cleared. There is no N1MM Close message. Use N1MM options without WSJT-X or capture selection.
+See [validation and precision policy](../simulator-validation.md#n1mm-contest-simulator).
 
 ## Play an NDJSON capture
 

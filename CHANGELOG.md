@@ -5,6 +5,10 @@
 
 ### Added
 
+- `qg-interop sim --n1mm` contest traffic with seeded synthetic contacts, UTC timing,
+  periodic radio reports, SO2R handoffs, edits and deletions, spots, and matching scores.
+  Adds target-filtered QSY reactions without acknowledgments, rate/speed/count/loop controls,
+  independent synthetic expectations, loopback tests, and planted invariant failures.
 - Default-feature N1MM Logger+ codec implementing Annex D revision 1: bounded XML,
   all documented roots, radio and SO2R state, exact frequency units, UTC timestamps,
   canonical frequency/spectrum commands, and byte-preserving observed re-encoding.
