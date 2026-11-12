@@ -26,6 +26,7 @@
           "instance": "K1AAA"
         },
         "call": "W1AAA",
+        "frequency_hz": 7061200,
         "spotter_call": "K1BBB",
         "mode": "CW",
         "text": "synthetic spot "

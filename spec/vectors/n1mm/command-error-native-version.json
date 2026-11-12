@@ -23,9 +23,6 @@
         "frequency_hz": 14053284
       },
       "native_version": "1"
-    },
-    "options": {
-      "frequency_unit": "kHz"
     }
   },
   "expected": {

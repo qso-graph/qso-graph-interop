@@ -26,6 +26,20 @@ layout, direction, description, and documented unit. **Reader policies** and
 **writer policies** in this annex are QGI decisions where those sources do not
 supply a grammar, requiredness rule, or unit; they are not additional N1MM facts.
 
+The kHz unit for spot, frequency-command and Spectrum scope frequencies is
+**derived from the documented examples**, rather than an explicit unit label:
+S1 **Spot Data** gives `frequency` 7061.2; S1 **Setting N1MM's
+Frequency** gives 14053.284; S1 **Sending Spectrum Data** (also S3 Spectrum)
+gives LowScopeFrequency 14000 and HighScopeFrequency 14055. In kHz these are
+7.0612 MHz, 14.053284 MHz and 14.000–14.055 MHz, respectively, all amateur-band
+frequencies; interpreting the values as Hz or MHz puts none in those bands.
+S1 **Contact notes** explicitly states 10 Hz units for contact and radio
+frequencies. The spot and command examples occupy the same bands at one
+thousandth of the corresponding Hz values. This derivation is to be confirmed by
+the live captures required by `QGI-RI-0063` when they exist; no such confirmation
+is claimed here. Values below 1,000 kHz use the same unit, including 475.0 kHz
+on 630 m and 137.5 kHz on 2200 m; magnitude MUST NOT select MHz instead.
+
 ## D.2 Message boundary, version and outcomes
 
 | ID | Requirement | Verify |
@@ -101,8 +115,8 @@ comment, CDATA, or unclosed element is `truncated`; a conflicting closing tag is
 Every listed observation leaf is **O**: optional to this reader, zero or one for
 mapping. S1/S3 give examples, not a required/optional schema. Duplicate handling is
 D.3. Types in these tables describe QGI conversion, not an undocumented N1MM XSD.
-`text` includes empty/invalid text; `int` and `bool` use D.3; `decimal text` remains
-text without an inferred unit. “Native only” is retained by `native.data` and the
+`text` includes empty/invalid text; `int` and `bool` use D.3; decimal kHz uses
+`QGI-N1M-0036`. “Native only” is retained by `native.data` and the
 optional D.6 view. No table implies fields absent from the payload.
 
 | Root | Documented native direction | Kind / operation | Evidence |
@@ -299,7 +313,7 @@ Evidence for every row: **S1 Spot Data; S3 spot** (S3 omits app, mode, statuslis
 | `app` | text / — | O | native only |
 | `StationName` | text / station label | O | `radio.instance` |
 | `dxcall` | text / spotted callsign | O | `call` |
-| `frequency` | decimal text / unit not explicitly stated | O | native only, no guessed Hz |
+| `frequency` | decimal / kHz (D.1 derivation) | O | `frequency_hz` = value × 1,000 (`QGI-N1M-0036`) |
 | `spottercall` | text / spotter callsign | O | `spotter_call` |
 | `timestamp` | text / unresolved spot time | O | native only |
 | `action` | text / add or delete per S1 | O | native only |
@@ -312,6 +326,20 @@ S1 names busy, bust, cq, dupe, qtc, single mult, double mult and new qso statuse
 They are not a QGI enum. A `spot` event alone does not mean addition: consumers
 inspect native `action` before maintaining a spot list. No source field is inferred
 from `app`, `StationName`, or `spottercall`.
+
+**`QGI-N1M-0036` — Exact kHz conversion and native retention.** For spot
+`frequency`, `radio_setfrequency/frequency`, and Spectrum LowScopeFrequency and
+HighScopeFrequency, a reader MUST parse decimal kHz exactly, without binary
+floating point, and multiply by 1,000 to obtain the Hz integer in D.4's mapped
+field. The grammar is optional `+` or `-`, one or more ASCII digits, optionally
+followed by `.` and one or more ASCII digits; only surrounding XML whitespace is
+ignored. Exponents and other spellings are not accepted. If the text is invalid,
+empty, not a whole number of Hz after conversion, or outside the common integer
+range −9,007,199,254,740,991 through 9,007,199,254,740,991, the reader MUST omit
+that mapped field. D.3's duplicate, nested-leaf and numeric-token rules still
+apply. The original native text MUST remain unchanged in `native.data`, including
+when conversion succeeds or the common field is omitted; conversion MUST NOT
+round, truncate or rewrite native evidence. No separate native-text field is added.
 
 ### dynamicresults
 
@@ -366,38 +394,38 @@ requiredness is separately defined in D.5.
 |---|---|---|---|
 | `radio_setfrequency/app` | text / sender program label | O | `app` |
 | `radio_setfrequency/radionr` | int / radio selector | O | `radio.number` |
-| `radio_setfrequency/frequency` | decimal text / unit not explicitly stated | O | native only |
+| `radio_setfrequency/frequency` | decimal / kHz (D.1 derivation) | O | `frequency_hz` = value × 1,000 (`QGI-N1M-0036`) |
 | `radio_setfrequency/mousebutton` | text / Left selects 1, Right selects 2 in SO2V/R | O | native only |
 | `Spectrum/app` | text / sender program label | O | `app` |
 | `Spectrum/Name` | text / UI source name | O | `spectrum_name` |
-| `Spectrum/LowScopeFrequency` | decimal text / unspecified frequency unit | O | `low_scope_frequency` |
-| `Spectrum/HighScopeFrequency` | decimal text / unspecified frequency unit | O | `high_scope_frequency` |
+| `Spectrum/LowScopeFrequency` | decimal / kHz (D.1 derivation) | O | `low_scope_frequency`, integer Hz (`QGI-N1M-0036`) |
+| `Spectrum/HighScopeFrequency` | decimal / kHz (D.1 derivation) | O | `high_scope_frequency`, integer Hz (`QGI-N1M-0036`) |
 | `Spectrum/ScalingFactor` | decimal text / factor to display dB | O | `scaling_factor` |
 | `Spectrum/DataCount` | integer text / number of levels | O | native only |
 | `Spectrum/SpectrumData` | text / comma-separated integer levels 0–65,535 per S1 | O | native only on observation |
 
 ## D.5 Commands from fields
 
-These writers are QGI canonical encodings of S1's examples. The sources do not
-establish all acceptance ranges or frequency units. Requiring explicit units below
-is a caller assertion, not a claim that the appendix establishes those units.
+These writers are QGI canonical encodings of S1's examples, using the kHz unit
+derived in D.1. The construction ranges below are QGI policies; the sources do
+not establish all acceptance ranges.
 
 | ID | Requirement | Verify |
 |---|---|---|
 | `QGI-N1M-0040` | A command writer MUST support `set_frequency` and `n1mm.spectrum` from the fields below without native evidence; it MUST reject other operations or missing/disallowed arguments as `invalid_value`. | Test |
-| `QGI-N1M-0041` | For `set_frequency`, a writer MUST require `frequency_hz` (integer 0–9,007,199,254,740,991), `radio: {"number": 1 or 2}` and `app` (valid XML text string), plus explicit encoding option `frequency_unit: "Hz"` or `"kHz"`; an absent/unknown unit MUST be `invalid_value`. | Test |
-| `QGI-N1M-0042` | A `set_frequency` writer MUST divide the supplied Hz exactly by 1 or 1,000 according to that option, write a plain nonnegative decimal with no leading zeros or trailing fractional zeros, and select `mousebutton` Left for radio 1 or Right for radio 2 (S1 selection rule). | Test |
-| `QGI-N1M-0043` | For `n1mm.spectrum`, a writer MUST require valid XML text strings `app` and `spectrum_name`, nonnegative decimal strings `low_scope_frequency` and `high_scope_frequency` with high greater than low, positive decimal string `scaling_factor`, and `spectrum_data` containing 1–4,096 integers in 0–65,535; it MUST derive DataCount from the array length. | Test |
+| `QGI-N1M-0041` | For `set_frequency`, a writer MUST require `frequency_hz` (integer 0–9,007,199,254,740,991), `radio: {"number": 1 or 2}` and `app` (valid XML text string). There is no `frequency_unit` encoding option; all encoding options are disallowed (`QGI-N1M-0046`). | Test |
+| `QGI-N1M-0042` | A frequency writer MUST divide supplied integer Hz exactly by 1,000 and write kHz as a plain nonnegative decimal with no leading zeros (except zero itself or the zero before a fractional point), no exponent and no trailing fractional zeros or bare decimal point: 14,053,284 Hz becomes `14053.284`, 7,000,000 Hz becomes `7000`, and 1 Hz becomes `0.001`. A `set_frequency` writer MUST select `mousebutton` Left for radio 1 or Right for radio 2 (S1 selection rule). | Test |
+| `QGI-N1M-0043` | For `n1mm.spectrum`, a writer MUST require valid XML text strings `app` and `spectrum_name`, integer Hz arguments `low_scope_frequency` and `high_scope_frequency` in 0–9,007,199,254,740,991 with high greater than low, positive decimal string `scaling_factor`, and `spectrum_data` containing 1–4,096 integers in 0–65,535; it MUST encode both scope frequencies as kHz under `QGI-N1M-0042` and derive DataCount from the array length. | Test |
 | `QGI-N1M-0044` | A writer MUST emit UTF-8 with the exact declaration `<?xml version="1.0" encoding="utf-8"?>`, then the root and children in the order below, with no BOM, whitespace between tags, newline, or delimiter. | Test |
 | `QGI-N1M-0045` | A writer MUST escape text ampersands, less-than and greater-than signs as `&amp;`, `&lt;`, `&gt;`, and CR as `&#13;`, in one pass; it MUST reject null, raw wrappers, surrogates and forbidden XML characters in command strings. Quotes, tabs and LF remain literal in element text. | Test |
-| `QGI-N1M-0046` | A writer MUST reject unsupported family mapping revisions as `unsupported_version`, any `native_version` or `wire_id`, any other encoding option or argument outside the operation's catalog, and any radio selector containing `instance` or members other than `number` as `invalid_value`. | Test |
+| `QGI-N1M-0046` | A writer MUST reject unsupported family mapping revisions as `unsupported_version`, any `native_version` or `wire_id`, any encoding option or argument outside the operation's catalog, and any radio selector containing `instance` or members other than `number` as `invalid_value`. | Test |
 | `QGI-N1M-0047` | A writer MUST apply D.3's datagram/text/token bounds to its result before returning bytes, failing atomically as `oversized`. | Test |
 
-The spectrum decimal grammar is `[0-9]+` optionally followed by `.` and one or more
-digits, at most 128 characters; signs, exponent notation and whitespace are not
-accepted for construction. Its supplied lexical spelling is kept. No spectrum
-frequency unit is guessed or converted: the caller supplies those native decimal
-arguments. `spectrum_data` construction is a family argument, not a common measured
+The spectrum `scaling_factor` decimal grammar is `[0-9]+` optionally followed by
+`.` and one or more digits, at most 128 characters; signs, exponent notation and whitespace are not
+accepted for construction. Its supplied lexical spelling is kept. Scope frequency
+arguments are Hz integers, with the same canonical kHz encoding as `set_frequency`.
+`spectrum_data` construction is a family argument, not a common measured
 spectrum field. No inferred DataCount or levels are added to observed events.
 
 | Operation | Root | Child order |
@@ -406,8 +434,8 @@ spectrum field. No inferred DataCount or levels are added to observed events.
 | `n1mm.spectrum` | `Spectrum` | app, Name, LowScopeFrequency, HighScopeFrequency, ScalingFactor, DataCount, SpectrumData |
 
 For example, fields `{"operation":"set_frequency","app":"synthetic-client",
-"radio":{"number":2},"frequency_hz":14053284}` with option
-`{"frequency_unit":"kHz"}` encode to exactly these UTF-8 bytes (no final LF):
+"radio":{"number":2},"frequency_hz":14053284}` encode to exactly these UTF-8
+bytes (no final LF):
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?><radio_setfrequency><app>synthetic-client</app><radionr>2</radionr><frequency>14053.284</frequency><mousebutton>Right</mousebutton></radio_setfrequency>
@@ -417,7 +445,8 @@ S1 says the QSY input changes N1MM and its connected radio's frequency; S1 says 
 spectrum input supplies levels for display after the user selects that source.
 Neither documents an acknowledgment or correlated response. No result, subsequent
 RadioInfo, or response timeout is synthesized. Reading never performs either effect.
-Actual acceptance of the explicit unit choice remains a live-capture question.
+Live captures under `QGI-RI-0063` will confirm the documented-example derivation
+and establish actual peer precision and acceptance ranges.
 
 ## D.6 Re-encoding and structured view
 
@@ -467,7 +496,7 @@ must not misuse `wire_id`. It changes no existing meaning or required field. The
 `high_scope_frequency`, `scaling_factor`, and `spectrum_data` are **N1MM profile
 members only**, enabled by the schema's `family: n1mm` condition; they do not
 change the shared field catalog. No score/QSO capacity is added. In particular,
-TXFreq, unresolved times, spot frequency and exchange templates remain native-only
+RadioInfo TXFreq, unresolved times and exchange templates remain native-only
 instead of changing or overloading existing common members.
 
 ## D.8 Numbered questions for live captures (QGI-RI-0063)
@@ -476,7 +505,7 @@ These questions do not authorize changing the policies above without a mapping
 revision. The read-only comparison with the local Python adapter is implementation
 evidence only, never a protocol source; it motivates Q12–Q15 below.
 
-1. What are the exact units and accepted precision/range of spot `frequency`,
+1. What are the accepted precision/range of spot `frequency`,
    `radio_setfrequency/frequency`, LowScopeFrequency and HighScopeFrequency?
 2. Are contact, spot and score timestamps UTC, local, or configurable? What is their
    exact grammar, fractional precision and behavior at DST transitions?

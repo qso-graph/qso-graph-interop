@@ -23,9 +23,6 @@
         "frequency_hz": 14053284
       },
       "wire_id": "synthetic"
-    },
-    "options": {
-      "frequency_unit": "kHz"
     }
   },
   "expected": {

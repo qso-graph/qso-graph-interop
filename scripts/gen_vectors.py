@@ -1301,7 +1301,7 @@ def n1mm_vectors():
         row('FunctionKeyCaption', 'synthetic-CQ'), row('RadioName', 'synthetic-radio'), row('AuxAntSelected', '-1'),
         row('AuxAntSelectedName', ''), row('IsConnected', '')]
     spot = [row('app', 'synthetic-logger'), row('StationName', 'K1AAA', 'radio', {'instance': 'K1AAA'}),
-        row('dxcall', 'W1AAA', 'call'), row('frequency', '7061.2'), row('spottercall', 'K1BBB', 'spotter_call'),
+        row('dxcall', 'W1AAA', 'call'), row('frequency', '7061.2', 'frequency_hz', 7061200), row('spottercall', 'K1BBB', 'spotter_call'),
         row('timestamp', '2026-11-12 12:34:56'), row('action', 'add'), row('mode', 'CW', 'mode'),
         row('comment', 'synthetic spot ', 'text'), row('status', 'single mult'), row('statuslist', 'single mult')]
     app = [row('app', 'synthetic-logger'), row('dbname', 'synthetic.s3db'), row('contestnr', '23'),
@@ -1311,10 +1311,10 @@ def n1mm_vectors():
         row('ops', 'K1BBB'), row('class', ''), row('club', 'synthetic-club'), row('qth', ''),
         row('breakdown', ''), row('score', '4321', 'total_score', 4321), row('timestamp', '2026-11-12 12:34:56')]
     qsy = [row('app', 'synthetic-client', 'app'), row('radionr', '2', 'radio', {'number': 2}),
-           row('frequency', '14053.284'), row('mousebutton', 'Right')]
+           row('frequency', '14053.284', 'frequency_hz', 14053284), row('mousebutton', 'Right')]
     spectrum = [row('app', 'synthetic-client', 'app'), row('Name', 'synthetic-spectrum', 'spectrum_name'),
-        row('LowScopeFrequency', '14000', 'low_scope_frequency'),
-        row('HighScopeFrequency', '14055', 'high_scope_frequency'), row('ScalingFactor', '0.3125', 'scaling_factor'),
+        row('LowScopeFrequency', '14000', 'low_scope_frequency', 14000000),
+        row('HighScopeFrequency', '14055', 'high_scope_frequency', 14055000), row('ScalingFactor', '0.3125', 'scaling_factor'),
         row('DataCount', '4'), row('SpectrumData', '0,1,160,65535')]
     catalogs = {'AppInfo': (app, 'native'), 'contactinfo': (contact + historical, 'qso_logged'),
         'contactreplace': (contact + historical, 'qso_changed'), 'contactdelete': (deletion, 'qso_deleted'),
@@ -1423,6 +1423,35 @@ def n1mm_vectors():
             ('negative', '-1', {key: -10}), ('maximum', '900719925474099', {key: 9007199254740990}),
             ('overflow', '900719925474100', {}), ('decimal', '14.5', {}), ('invalid', 'synthetic', {})]:
             positive(f'number-{root}-{freq}-{label}', f'<{root}><{freq}>{val}</{freq}></{root}>'.encode(), kind, out)
+    # QGI-N1M-0036: independently authored kHz text / integer-Hz oracles.
+    for root, tag, kind, key in [('spot', 'frequency', 'spot', 'frequency_hz'),
+            ('radio_setfrequency', 'frequency', 'control', 'frequency_hz'),
+            ('Spectrum', 'LowScopeFrequency', 'control', 'low_scope_frequency'),
+            ('Spectrum', 'HighScopeFrequency', 'control', 'high_scope_frequency')]:
+        for label, val, hz in [('whole-khz', '7000', 7000000),
+            ('fractional', '14053.284', 14053284), ('630m', '475.0', 475000),
+            ('2200m', '137.5', 137500), ('zero', '0', 0), ('one-hz', '0.001', 1),
+            ('minimum', '-9007199254740.991', -9007199254740991),
+            ('maximum', '9007199254740.991', 9007199254740991),
+            ('underflow', '-9007199254740.992', None), ('overflow', '9007199254740.992', None),
+            ('sub-hz', '7061.2001', None), ('sub-hz-zero', '0.0001', None),
+            ('trailing-zeros', '7061.2000', 7061200), ('signed', ' \t+007061.200\r\n', 7061200),
+            ('negative', '-0.001', -1), ('exponent', '7e3', None),
+            ('leading-point', '.001', None), ('trailing-point', '7000.', None),
+            ('invalid', 'synthetic', None), ('empty', '', None)]:
+            expected = {} if hz is None else {key: hz}
+            if kind == 'control':
+                expected['operation'] = 'set_frequency' if root == 'radio_setfrequency' else 'n1mm.spectrum'
+            positive(f'khz-{root}-{tag}-{label}', f'<{root}><{tag}>{val}</{tag}></{root}>'.encode(),
+                     kind, expected, 'to_application' if kind == 'control' else 'from_application', view=True)
+        for label, content in [('duplicate', f'<{tag}>7000</{tag}><{tag}>7001</{tag}>'),
+                ('nested', f'<{tag}><part>7000</part></{tag}>')]:
+            expected = {} if kind == 'spot' else {'operation': 'set_frequency' if root == 'radio_setfrequency' else 'n1mm.spectrum'}
+            positive(f'khz-{root}-{tag}-{label}', f'<{root}>{content}</{root}>'.encode(), kind, expected)
+        s.add(f'khz-{root}-{tag}-token-overflow', {'class': 'negative',
+            'input': {'data': b64(f'<{root}><{tag}>{"1" * 129}</{tag}></{root}>'.encode()),
+                      'context': context('to_application' if kind == 'control' else 'from_application')},
+            'expected': {'error': {'category': 'oversized'}}})
     for label, raw, out in [
         ('entities', b'<RadioInfo><StationName>A&amp;B&lt;C&gt;&quot;&apos;&#65;&#x42;</StationName></RadioInfo>', {'radio': {'instance': 'A&B<C>"\'AB'}}),
         ('cdata', b'<RadioInfo><StationName>a<![CDATA[<b>]]>c</StationName></RadioInfo>', {'radio': {'instance': 'a<b>c'}}),
@@ -1529,19 +1558,28 @@ def n1mm_commands(s):
 
     qsy = {'operation': 'set_frequency', 'app': 'synthetic-client', 'radio': {'number': 2}, 'frequency_hz': 14053284}
     spectrum = {'operation': 'n1mm.spectrum', 'app': 'synthetic-client', 'spectrum_name': 'synthetic-spectrum',
-        'low_scope_frequency': '14000', 'high_scope_frequency': '14055', 'scaling_factor': '0.3125',
+        'low_scope_frequency': 14000000, 'high_scope_frequency': 14055000, 'scaling_factor': '0.3125',
         'spectrum_data': [0, 1, 160, 65535]}
-    for nr, hz, unit, native in [(1, 14053284, 'kHz', '14053.284'), (2, 14053284, 'kHz', '14053.284'),
-        (2, 14053284, 'Hz', '14053284'), (1, 14053000, 'kHz', '14053'), (2, 1, 'kHz', '0.001'),
-        (1, 0, 'kHz', '0'), (2, 9007199254740991, 'kHz', '9007199254740.991')]:
+    for nr, hz, native in [(1, 14053284, '14053.284'), (2, 14053284, '14053.284'),
+        (1, 7000000, '7000'), (2, 1, '0.001'), (1, 0, '0'),
+        (2, 9007199254740991, '9007199254740.991'), (1, 475000, '475'), (2, 137500, '137.5'),
+        (1, 7061200, '7061.2'), (2, 7061020, '7061.02')]:
         command = event(dict(qsy, radio={'number': nr}, frequency_hz=hz))
         raw = (XML_DECL + f'<radio_setfrequency><app>synthetic-client</app><radionr>{nr}</radionr><frequency>{native}</frequency><mousebutton>{"Left" if nr == 1 else "Right"}</mousebutton></radio_setfrequency>').encode()
-        s.add(f'command-qsy-{nr}-{hz}-{unit}', {'class': 'command', 'input': {'event': command, 'options': {'frequency_unit': unit}},
+        s.add(f'command-qsy-{nr}-{hz}', {'class': 'command', 'input': {'event': command},
               'expected': {'data': b64(raw)}})
     for label, name, escaped in [('normal', 'synthetic-spectrum', 'synthetic-spectrum'),
         ('xml-text', 'A&B<C>\r"\t\n', 'A&amp;B&lt;C&gt;&#13;"\t\n'), ('empty', '', '')]:
         command = event(dict(spectrum, spectrum_name=name))
         raw = (XML_DECL + '<Spectrum><app>synthetic-client</app><Name>' + escaped + '</Name><LowScopeFrequency>14000</LowScopeFrequency><HighScopeFrequency>14055</HighScopeFrequency><ScalingFactor>0.3125</ScalingFactor><DataCount>4</DataCount><SpectrumData>0,1,160,65535</SpectrumData></Spectrum>').encode()
+        s.add('command-spectrum-' + label, {'class': 'command', 'input': {'event': command}, 'expected': {'data': b64(raw)}})
+    for label, low, high, low_text, high_text in [
+        ('minimum', 0, 1, '0', '0.001'),
+        ('maximum', 9007199254740990, 9007199254740991, '9007199254740.99', '9007199254740.991'),
+        ('fractional', 14053284, 14053285, '14053.284', '14053.285'),
+        ('630m', 472000, 475000, '472', '475'), ('2200m', 135700, 137500, '135.7', '137.5')]:
+        command = event(dict(spectrum, low_scope_frequency=low, high_scope_frequency=high))
+        raw = (XML_DECL + f'<Spectrum><app>synthetic-client</app><Name>synthetic-spectrum</Name><LowScopeFrequency>{low_text}</LowScopeFrequency><HighScopeFrequency>{high_text}</HighScopeFrequency><ScalingFactor>0.3125</ScalingFactor><DataCount>4</DataCount><SpectrumData>0,1,160,65535</SpectrumData></Spectrum>').encode()
         s.add('command-spectrum-' + label, {'class': 'command', 'input': {'event': command}, 'expected': {'data': b64(raw)}})
 
     def negative(label, fields, options=None, category='invalid_value', mutate=None):
@@ -1553,7 +1591,7 @@ def n1mm_commands(s):
             inp['options'] = options
         s.add('command-error-' + label, {'class': 'command_negative', 'input': inp,
               'expected': {'error': {'category': category}}})
-    for label, baseline, opts in [('qsy', qsy, {'frequency_unit': 'kHz'}), ('spectrum', spectrum, {})]:
+    for label, baseline, opts in [('qsy', qsy, {}), ('spectrum', spectrum, {})]:
         for key in baseline:
             missing = copy.deepcopy(baseline)
             missing.pop(key)
@@ -1565,22 +1603,26 @@ def n1mm_commands(s):
         ('radio-instance', {'radio': {'number': 2, 'instance': 'synthetic'}}), ('offset', {'rx_offset_hz': 100}),
         ('null-app', {'app': None}), ('raw-app', {'app': {'utf8_bytes': [255]}}), ('nul-app', {'app': '\x00'}),
         ('surrogate-app', {'app': '\ud800'}), ('unknown-operation', {'operation': 'n1mm.unknown'})]:
-        negative(label, dict(qsy, **changes), {'frequency_unit': 'kHz'})
-    for label, opts in [('missing-units', None), ('unknown-units', {'frequency_unit': 'MHz'}),
-                        ('schema-option', {'frequency_unit': 'kHz', 'schema': 1})]:
+        negative(label, dict(qsy, **changes))
+    for label, opts in [('schema-option', {'schema': 1})]:
         negative(label, qsy, opts)
     for label, changes in [('empty-levels', {'spectrum_data': []}), ('negative-level', {'spectrum_data': [-1]}),
         ('level-overflow', {'spectrum_data': [65536]}), ('level-bool', {'spectrum_data': [True]}),
         ('too-many-levels', {'spectrum_data': [1] * 4097}), ('zero-scale', {'scaling_factor': '0'}),
-        ('reversed-endpoints', {'high_scope_frequency': '1'}), ('negative-endpoint', {'low_scope_frequency': '-1'}),
+        ('reversed-endpoints', {'high_scope_frequency': 1}), ('negative-endpoint', {'low_scope_frequency': -1}),
         ('exponent', {'scaling_factor': '1e3'}), ('decimal-whitespace', {'scaling_factor': ' 1'}),
-        ('number-not-text', {'low_scope_frequency': 14000})]:
+        ('endpoint-text', {'low_scope_frequency': '14000'})]:
         negative(label, dict(spectrum, **changes))
+    for key in ('low_scope_frequency', 'high_scope_frequency'):
+        for label, value in [('underflow', -1), ('overflow', 9007199254740992),
+                ('boolean', True), ('fractional', 1.5)]:
+            negative(key + '-' + label, dict(spectrum, **{key: value}))
+    negative('equal-endpoints', dict(spectrum, high_scope_frequency=14000000))
     negative('numeric-token-bound', dict(spectrum, scaling_factor='1' * 129), category='oversized')
     negative('datagram-bound', dict(spectrum, spectrum_name='a' * 65507), category='oversized')
-    negative('revision', qsy, {'frequency_unit': 'kHz'}, 'unsupported_version', lambda e: e.update(mapping=2))
-    negative('native-version', qsy, {'frequency_unit': 'kHz'}, mutate=lambda e: e.update(native_version='1'))
-    negative('wire-id', qsy, {'frequency_unit': 'kHz'}, mutate=lambda e: e.update(wire_id='synthetic'))
+    negative('revision', qsy, category='unsupported_version', mutate=lambda e: e.update(mapping=2))
+    negative('native-version', qsy, mutate=lambda e: e.update(native_version='1'))
+    negative('wire-id', qsy, mutate=lambda e: e.update(wire_id='synthetic'))
 
 
 def n1mm_compatibility(s):
@@ -1601,7 +1643,7 @@ def n1mm_compatibility(s):
             read.update(kind='native', fields={})
         s.add('compat-' + label, {'class': 'compatibility', 'writer_spec': writer, 'reader_spec': reader,
             'input': {'event': event}, 'expected': {'read': read, 'verification': verification}})
-    cmd = copy.deepcopy(s.vectors['command-qsy-2-14053284-kHz']['input']['event'])
+    cmd = copy.deepcopy(s.vectors['command-qsy-2-14053284']['input']['event'])
     for label, event, reader in [('new-reader-old-command', cmd, '0.2.0'),
             ('old-reader-new-command', dict(cmd, spec='0.2.0', mapping=2), SPEC)]:
         s.add('compat-' + label, {'class': 'compatibility', 'writer_spec': event['spec'], 'reader_spec': reader,
@@ -1677,7 +1719,8 @@ def check_n1mm_xml(raw):
     depth, count, attrs, expanded = 0, 0, 0, 0
     stack = []
     pending_namespaces = 0
-    interpreted = {'Freq', 'RadioNr', 'FocusRadioNr', 'ActiveRadioNr', 'rxfreq', 'txfreq', 'radionr', 'score', 'qso', 'point'}
+    interpreted = {'Freq', 'RadioNr', 'FocusRadioNr', 'ActiveRadioNr', 'rxfreq', 'txfreq', 'radionr', 'score', 'qso', 'point',
+                   'frequency', 'LowScopeFrequency', 'HighScopeFrequency'}
 
     def add_text(value):
         nonlocal expanded
@@ -1761,20 +1804,22 @@ def check_n1mm_commands(suite):
                 raise ValueError('invalid_value')
             return Decimal(val)
 
+        def khz(key):
+            hz = f[key]
+            if type(hz) is not int or not 0 <= hz <= 9007199254740991:
+                raise ValueError('invalid_value')
+            q, r = divmod(hz, 1000)
+            return str(q) + ('.' + f'{r:03}'.rstrip('0') if r else '')
+
         try:
             if f['operation'] == 'set_frequency':
-                if set(f) != {'operation', 'app', 'frequency_hz', 'radio'} or set(options) != {'frequency_unit'}:
+                if set(f) != {'operation', 'app', 'frequency_hz', 'radio'} or options:
                     raise ValueError('invalid_value')
                 hz, radio = f['frequency_hz'], f['radio']
                 if type(hz) is not int or not 0 <= hz <= 9007199254740991 or not isinstance(radio, dict) or set(radio) != {'number'} or type(radio['number']) is not int or radio['number'] not in (1, 2):
                     raise ValueError('invalid_value')
-                if options['frequency_unit'] not in ('Hz', 'kHz'):
-                    raise ValueError('invalid_value')
                 # Integer arithmetic, independent from the expected decimal strings.
-                native = str(hz)
-                if options['frequency_unit'] == 'kHz':
-                    q, r = divmod(hz, 1000)
-                    native = str(q) + ('.' + f'{r:03}'.rstrip('0') if r else '')
+                native = khz('frequency_hz')
                 nr = radio['number']
                 root = 'radio_setfrequency'
                 children = [('app', string('app')), ('radionr', str(nr)), ('frequency', native),
@@ -1782,14 +1827,15 @@ def check_n1mm_commands(suite):
             elif f['operation'] == 'n1mm.spectrum':
                 if set(f) != {'operation', 'app', 'spectrum_name', 'low_scope_frequency', 'high_scope_frequency', 'scaling_factor', 'spectrum_data'} or options:
                     raise ValueError('invalid_value')
-                if decimal('low_scope_frequency') < 0 or decimal('high_scope_frequency') <= decimal('low_scope_frequency') or decimal('scaling_factor') <= 0:
+                low, high = khz('low_scope_frequency'), khz('high_scope_frequency')
+                if f['high_scope_frequency'] <= f['low_scope_frequency'] or decimal('scaling_factor') <= 0:
                     raise ValueError('invalid_value')
                 levels = f['spectrum_data']
                 if not isinstance(levels, list) or not 1 <= len(levels) <= 4096 or any(type(v) is not int or not 0 <= v <= 65535 for v in levels):
                     raise ValueError('invalid_value')
                 root = 'Spectrum'
                 children = [('app', string('app')), ('Name', string('spectrum_name')),
-                    ('LowScopeFrequency', f['low_scope_frequency']), ('HighScopeFrequency', f['high_scope_frequency']),
+                    ('LowScopeFrequency', low), ('HighScopeFrequency', high),
                     ('ScalingFactor', f['scaling_factor']), ('DataCount', str(len(levels))),
                     ('SpectrumData', ','.join(map(str, levels)))]
             else:
@@ -1828,8 +1874,48 @@ def validate_n1mm(suite, producer_strict):
             assert vector['class'] != 'negative', name + ' planted XML failure accepted'
         if vector['class'] == 'positive':
             assert vector['expected']['event']['native']['data'] == vector['input']['data'] == vector['reencode']['data'], name
-    # Read native SO2R sentinels independently of the fixture row/oracle catalog.
+    # Exact rational arithmetic checks the separately authored frequency oracles.
+    import re
+    from fractions import Fraction
     import xml.etree.ElementTree as ET
+    conversions = {'spot': [('frequency', 'frequency_hz')],
+        'radio_setfrequency': [('frequency', 'frequency_hz')],
+        'Spectrum': [('LowScopeFrequency', 'low_scope_frequency'), ('HighScopeFrequency', 'high_scope_frequency')]}
+
+    def frequencies_match(root, fields):
+        for tag, key in conversions.get(root.tag, []):
+            leaves = root.findall(tag)
+            hz = None
+            if len(leaves) == 1 and not len(leaves[0]):
+                text = ''.join(leaves[0].itertext()).strip(' \t\r\n')
+                if re.fullmatch(r'[+-]?[0-9]+(?:\.[0-9]+)?', text):
+                    exact = Fraction(text) * 1000
+                    if exact.denominator == 1 and abs(exact) <= 9007199254740991:
+                        hz = int(exact)
+            if not (key not in fields if hz is None else fields.get(key) == hz):
+                return False
+        return True
+
+    frequency_checks = 0
+    for name, vector in suite.vectors.items():
+        if vector['class'] != 'positive':
+            continue
+        try:
+            root = ET.fromstring(base64.b64decode(vector['input']['data']))
+        except ET.ParseError:
+            continue  # Invalid-code-unit oracles are checked separately.
+        assert frequencies_match(root, vector['expected']['event']['fields']), name
+        frequency_checks += len(conversions.get(root.tag, []))
+    # Plant unit, truncation, rounding and boundary errors against the same checker.
+    for name, changed in [('khz-spot-frequency-630m', 475000000),
+            ('khz-spot-frequency-2200m', 137), ('khz-spot-frequency-sub-hz', 7061200),
+            ('khz-spot-frequency-overflow', 9007199254740991)]:
+        vector = suite.vectors[name]
+        fields = dict(vector['expected']['event']['fields'], frequency_hz=changed)
+        root = ET.fromstring(base64.b64decode(vector['input']['data']))
+        assert not frequencies_match(root, fields), name + ' planted frequency failure accepted'
+    assert frequency_checks > 0
+    # Read native SO2R sentinels independently of the fixture row/oracle catalog.
     vector = suite.vectors['RadioInfo-full']
     root = ET.fromstring(base64.b64decode(vector['input']['data']))
     actual = {'focus_radio': int(root.findtext('FocusRadioNr')),
@@ -1885,7 +1971,7 @@ def validate_n1mm(suite, producer_strict):
         event = copy.deepcopy(suite.vectors['RadioInfo-full']['expected']['event'])
         event['native']['message'] = dict(suite.vectors['RadioInfo-full']['expected_message'], future=1)
         assert reader.is_valid(event) and not producer.is_valid(event)
-    return 'N1MM XML isolation/bounds, command bytes/errors, radio swap sentinels, positive/command schemas and same-MAJOR compatibility shapes checked'
+    return 'N1MM XML isolation/bounds, exact kHz/Hz oracles, command bytes/errors, radio swap sentinels, positive/command schemas and same-MAJOR compatibility shapes checked'
 
 
 def main():

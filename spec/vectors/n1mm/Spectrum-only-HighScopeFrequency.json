@@ -22,7 +22,7 @@
         "exchange": "unknown"
       },
       "fields": {
-        "high_scope_frequency": "14055",
+        "high_scope_frequency": 14055000,
         "operation": "n1mm.spectrum"
       },
       "native": {

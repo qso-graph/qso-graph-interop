@@ -6,7 +6,7 @@
 ### Added
 
 - Complete draft Annex D N1MM profile with dated source hashes, XML isolation policies,
-  contact/radio/spot/score mappings, explicit-unit QSY and spectrum command writers,
+  contact/radio/spot/score mappings, QSY and spectrum command writers,
   independent conformance vectors and numbered questions for live captures.
 - Shared control radio selection and N1MM-only command argument schema capacity.
 
@@ -35,6 +35,9 @@
 
 ### Changed
 
+- Derive N1MM spot, QSY and Spectrum scope frequency units as kHz from the pinned
+  examples. Map exact whole-Hz observations, encode integer-Hz commands as canonical
+  decimal kHz without a unit option, and cover limits and 630 m/2200 m in vectors.
 - Emit specification NDJSON from `listen`; replace the earlier CLI JSON projection.
 - Use compatible dependency ranges and current workspace/fuzz lockfiles. Add optional pure Rust
   `sha2-const-stable` for conformance manifest hashes with a recorded local source review.

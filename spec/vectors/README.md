@@ -50,9 +50,9 @@ examples download-page HTML and downloaded XML response pinned in Annex D. Retri
 is 2026-11-12; the example download page identifies its update as 2019-09-30.
 No upstream documentation is bundled. XML data in these vectors is synthetic.
 
-The N1MM suite has **704 positive**, **10 command**, **45 command_negative**,
-**38 negative**, **4 skip**, and **9 compatibility** vectors (810 total), plus
-**704 embedded re-encoding checks**. It covers all 11 documented root spellings, including historical
+The N1MM suite has **792 positive**, **18 command**, **52 command_negative**,
+**42 negative**, **4 skip**, and **9 compatibility** vectors (917 total), plus
+**792 embedded re-encoding checks**. It covers all 11 documented root spellings, including historical
 `lookup`, inbound `radio_setfrequency` and inbound `Spectrum`. Every catalog leaf
 has an individual present and empty case; a minimal case for every root checks
 all leaves absent. Nested score leaves and category/selector attributes have
@@ -64,11 +64,14 @@ and nested leaves, namespaces, unknown children/roots, XML isolation attacks,
 limits and limit-plus-one failures. Byte-preserving re-encoding is embedded in
 every positive observation. Optional whole-document views are checked separately.
 
-QSY commands explicitly provide `input.options.frequency_unit` (`Hz` or `kHz`);
-spot frequencies and unzoned timestamps remain native-only because the pinned
-sources do not establish their units/timezone. Spectrum construction uses native
-decimal arguments and derives DataCount. Command failures include absent and
-out-of-range fields, radio selectors, XML text, ambiguous units, unsupported
+Spot, QSY and Spectrum scope frequencies use kHz derived from the pinned examples
+in Annex D. Exact decimal observations map to integer Hz only when representable;
+sub-Hz and out-of-range values retain native evidence with the mapped field omitted.
+QSY and Spectrum commands take integer Hz and encode canonical decimal kHz without
+unit options. Vectors cover whole and fractional kHz, integer limits, trailing
+zeros, and 475.0/137.5 kHz on 630 m/2200 m without magnitude-based unit selection.
+Unzoned timestamps remain native-only. Spectrum construction derives DataCount.
+Command failures include absent and out-of-range fields, radio selectors, XML text, unsupported
 revisions, token/datagram bounds and disallowed arguments. Compatibility covers
 both directions, newer program labels, additions, unknown roots/kinds, unavailable
 native verification and preserved commands. These vectors establish the draft

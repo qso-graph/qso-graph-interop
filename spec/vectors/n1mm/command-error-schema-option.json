@@ -24,7 +24,6 @@
       }
     },
     "options": {
-      "frequency_unit": "kHz",
       "schema": 1
     }
   },

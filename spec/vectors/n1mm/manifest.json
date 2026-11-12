@@ -530,7 +530,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "8fbc2333c5c27e7352204146b2081cb05c68a9074b7aee041361b23d39cb1895"
+      "sha256": "5352f0df9e7e440d1f859ffbe9b9e5862c40bc7d0c11fe24769390e60820ece0"
     },
     {
       "file": "Spectrum-empty-LowScopeFrequency.json",
@@ -538,7 +538,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "ecc49cffcbdf9efa13584a70ce3a4c28ddcdee2f7c96382bda700efa9b459a74"
+      "sha256": "da2917077023d23cf72d70d0a5804b8b382ded95b42128bad4529502b26826de"
     },
     {
       "file": "Spectrum-empty-Name.json",
@@ -578,7 +578,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "ff7a99e121948e86297f51d6c89a285d0d210295c33a8b510ee0236eb8e89713"
+      "sha256": "e08c4366dad9e7ca5b6e7767283003cc32b436c2468a0e2d2bdd33f67e841391"
     },
     {
       "file": "Spectrum-only-DataCount.json",
@@ -594,7 +594,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "b0eb12b22827a170c1b45615b69c38096b74c9fdbff2c610d433b00e58ea5d26"
+      "sha256": "6c47d29feac39907064e69104a22003fec6b758b70aa63ca72a675e557928d01"
     },
     {
       "file": "Spectrum-only-LowScopeFrequency.json",
@@ -602,7 +602,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "904198b15ec8929c603016e55c859b87b1ba96c7ab13ab943064657d51d1b3a7"
+      "sha256": "bfef093b08d6f4f8d878c9891fcc4bdad98f98541273e2c2f4b71c47f486594c"
     },
     {
       "file": "Spectrum-only-Name.json",
@@ -890,7 +890,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "07166a2c3384a3f704e4195c74d56c66a3c7e2ec98c0bbe2863fb6a6c003d7ba"
+      "sha256": "12af4c77651c354cd2d91ad2625c0992772802682975beb00eaa9f452fbe9b35"
     },
     {
       "file": "command-error-datagram-bound.json",
@@ -898,7 +898,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "40274035a3d6df15867493ab950b51da913785b649d374b5cbe9fc3f7d99e449"
+      "sha256": "5dbc7918db6e282fe763b1fff9e4b71c17040ff51cb7c199026649dd6df535cf"
     },
     {
       "file": "command-error-decimal-whitespace.json",
@@ -906,7 +906,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "866ee56aa913cf238a9914752235dba99908e6cbd6b9a49946522164a2f3e7a1"
+      "sha256": "d8b988194f78f70e5777bac82d8606178f1af3ffab3090fae89f30a5b62a37bb"
     },
     {
       "file": "command-error-empty-levels.json",
@@ -914,7 +914,23 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "c318455567282fd555f22de6771ed7348423cb8dbda7c78732fd55ab2d3974c4"
+      "sha256": "ebc98855d23e90e07f12337becada03df84d8c15bcb4725285629c5d713fe8b2"
+    },
+    {
+      "file": "command-error-endpoint-text.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "49acfd07b36f24648caf25df1cd38b95ed13b3388669f38e475236fa10b10d55"
+    },
+    {
+      "file": "command-error-equal-endpoints.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "30ebe718b2df1564cff27a0e517b2a933463de0e6d2ba39b87920b0f2a14ab7e"
     },
     {
       "file": "command-error-exponent.json",
@@ -922,7 +938,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "7a5b971041b12b92211bdc85c13790e4afffa87788a334cedbfcc7d643ab6d67"
+      "sha256": "71cb53a02bf6794a6bea02e1fa30c3b658e7f6df86df5d74d7eec73ea922a162"
     },
     {
       "file": "command-error-fractional-frequency.json",
@@ -930,7 +946,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "f27c2b97f3601fa202511ce5f043600ca99c63622ea5e33026769822e6957fb6"
+      "sha256": "3a726ab0fe8f852ccd23ae59fa1b983b1eb7fde01595e9ffc746cdf7a26c3aae"
     },
     {
       "file": "command-error-frequency-overflow.json",
@@ -938,7 +954,39 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "c565906b18d00ab6bfd78c2bf7f7b937c93cfb86de0b6ac9f925e8b6ec04a533"
+      "sha256": "5d5dc4158b291f545bbb5cb8f1e783183ba4ceae666afdff2c89f121cd4080c9"
+    },
+    {
+      "file": "command-error-high_scope_frequency-boolean.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "79c21500264b000d2f7bb3c94c8458a87e677652e3ae0140908cf922bd8ee004"
+    },
+    {
+      "file": "command-error-high_scope_frequency-fractional.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fe05916ce985b2821d17cdc43760b8d78990f39659ebb408955d2f42bdbf94b4"
+    },
+    {
+      "file": "command-error-high_scope_frequency-overflow.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "77d6cf7ceb26a9f52d2dbae6ab9888dfb48e64152bf1517f895cc81fba710bc7"
+    },
+    {
+      "file": "command-error-high_scope_frequency-underflow.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2fda85b2fff177b6771eee303099474e300e7ddaa6115914dc8312c82b8dde36"
     },
     {
       "file": "command-error-level-bool.json",
@@ -946,7 +994,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "407a5989aaed4f90fc6ae951c09fe53bd48a9c2410a42669a2328cb33933602e"
+      "sha256": "a08620c346475aa15fcdff4e79c7aeb3b3644af9ec3dd4a255379b0ff00506e9"
     },
     {
       "file": "command-error-level-overflow.json",
@@ -954,15 +1002,39 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "5f25b87b2cfaa9a10f85a14b5d9530e8ae7ddf4f642f3d4c05eeba035e3551d6"
+      "sha256": "6e7ff666fdab4ec6c8a6d8fe7e1256516f936518fb1bbc82fd7f018f92fc3ac8"
     },
     {
-      "file": "command-error-missing-units.json",
+      "file": "command-error-low_scope_frequency-boolean.json",
       "class": "command_negative",
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "2c2126cb0e38630f2ffd2aaae006b95cad26f132614a13ff67835ad2cc436f21"
+      "sha256": "b40848a3b778282dd1c91e7be81ea13c7d38b5db1b9c4990a5ccad516469c60a"
+    },
+    {
+      "file": "command-error-low_scope_frequency-fractional.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "680dc4108b6f7ca4993014f945da60c0b63e04039c5fe300a3921e7b5f58e421"
+    },
+    {
+      "file": "command-error-low_scope_frequency-overflow.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "00f8e2352dcb148e2e862fc99384d994f4bd4e1b4fa622098e38f99af65cf0b9"
+    },
+    {
+      "file": "command-error-low_scope_frequency-underflow.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ae2b0b66f38e8c37ca1d935faa8316efba1aab9b3d508d14520eb146fbcb4749"
     },
     {
       "file": "command-error-native-version.json",
@@ -970,7 +1042,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "c8c26bc35c984a01fc201308da28931819f653d2805db9572797c19bdb1cd454"
+      "sha256": "ee06ef3914a4038054342b16892940a99a991ab7303553f9a874a419f0be8255"
     },
     {
       "file": "command-error-negative-endpoint.json",
@@ -978,7 +1050,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "2acdee64032864920e4bd41ba0daa60e9feb951b80fb8bcd28fc817c4cc563f8"
+      "sha256": "ae2b0b66f38e8c37ca1d935faa8316efba1aab9b3d508d14520eb146fbcb4749"
     },
     {
       "file": "command-error-negative-frequency.json",
@@ -986,7 +1058,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "7b531976981a1a95eb36e5ebdb2d944f84583fb70894617cd06e4bf43a31cb85"
+      "sha256": "557ff76bbbb021cd630dd5584a8e0e554a2b5177feb1b33d5995d8221301a6ad"
     },
     {
       "file": "command-error-negative-level.json",
@@ -994,7 +1066,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "fe6c7053d52efeafe4d3877da4a3978cc4cf2dc6888f6524d7221b7e37d0cce1"
+      "sha256": "91154d239cd3d072396cabcf8d73a61aa6600125145eb88f5180d297d57a9ef6"
     },
     {
       "file": "command-error-nul-app.json",
@@ -1002,7 +1074,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "ff28d02ebac73c5ecc543b2ad0052481a771ae2afc7a90e5b731db23e15a42d6"
+      "sha256": "ab5070e6579101d2111e221f3aa763b0ba9fa7e3e7d9dca467b90954c4445457"
     },
     {
       "file": "command-error-null-app.json",
@@ -1010,15 +1082,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "65e13e6f0b9e60ba8201fc11639dbacc084a8165a5ffa0e3b7ce5c8584d23cbd"
-    },
-    {
-      "file": "command-error-number-not-text.json",
-      "class": "command_negative",
-      "spec": "0.1.0",
-      "family": "n1mm",
-      "mapping": 1,
-      "sha256": "0d514d3816a09bea741d8574880985b119ef72670f24add364737241454cf037"
+      "sha256": "75fe1386790f9efd7f4197bf3747594380a6f4aa468de32a4060bf0bfd0512ca"
     },
     {
       "file": "command-error-numeric-token-bound.json",
@@ -1026,7 +1090,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "5e48eed77cc856d504f672a7952a721c2195f24dcc045d79e4b5ba943bb27a10"
+      "sha256": "d1e4bb56b209bd3f9d21678a87fa34f2e70910c79c84f4875ce1b7583f91d9da"
     },
     {
       "file": "command-error-offset.json",
@@ -1034,7 +1098,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "f7ccf0c50c31c8ec92424bfb81c91e63bad56cb953e19eda1cb134e5aa997ffb"
+      "sha256": "bdbbd3c8f2f227dc9187fe18c330155a5109bd56171601a632bc868e81f4516d"
     },
     {
       "file": "command-error-qsy-missing-app.json",
@@ -1042,7 +1106,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "eb2d60f8059f896a87be62c0f711adcf871d3def0d5c832f46078b8758d254e5"
+      "sha256": "e80bc4d8b0cb7c16047a73973cf3bae306ac126158677625223cbef113eac4c4"
     },
     {
       "file": "command-error-qsy-missing-frequency_hz.json",
@@ -1050,7 +1114,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "8b504a18d017142e796e1f586971a57e88ff12875cff69f6e257bb1e56408ec9"
+      "sha256": "d2f7dd6a8b01eb49328ad9b2afc4ed4ee71454c7e7d925718081ccdb066b83a7"
     },
     {
       "file": "command-error-qsy-missing-operation.json",
@@ -1058,7 +1122,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "7ed8b1518f03302173fc9c752d6c149334ae3bb89dfa71715d6d326075a378ff"
+      "sha256": "89d77dabfe7846dc6962d92d54eb53b331b1c22213fc1104b5eaed66aafd2056"
     },
     {
       "file": "command-error-qsy-missing-radio.json",
@@ -1066,7 +1130,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "8635050bc99276145fd394045b47aa42a79c658385f6e06924e1325c1e31cf43"
+      "sha256": "68270255bda21761e2ca5ed89948089350254e732a1a4ed1bed082210fe6f867"
     },
     {
       "file": "command-error-radio-bool.json",
@@ -1074,7 +1138,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "fdd0431fd69d49ebe0e6c1bef3fa0b05a725c58a1033df7f06153fbf4ef25a1c"
+      "sha256": "7be83ed993f44e4df3ce2fc38c278a265344578a7a20f92eb529c6c07885949b"
     },
     {
       "file": "command-error-radio-instance.json",
@@ -1082,7 +1146,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "645cddf648c775898a2a0ccec87b9df619912a60eb328bd641683c67609b7439"
+      "sha256": "22f00b708c7f2e368a06deb1abf7862c1780c54ed9a431acd30fe77d9d483a78"
     },
     {
       "file": "command-error-radio-string.json",
@@ -1090,7 +1154,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "0ade735954f2d45c3ba7a8a830d920d986bf81eb9a4dbfa63688eaee62f1e8b6"
+      "sha256": "1b4faaebe27e8637d229f4dc67dbf8366020bf9d49872079bfc5b71dcb057d88"
     },
     {
       "file": "command-error-radio-three.json",
@@ -1098,7 +1162,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "21c9ec34f1a1a7bf93ad23cd62a411207ecf04ab774c92f604c27c19b9dc872b"
+      "sha256": "1bb6b4939b1d493beb73f46a9bd56a25b94e4af72711bd95ba626cbeeabef875"
     },
     {
       "file": "command-error-radio-zero.json",
@@ -1106,7 +1170,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "c275cea2ab12c92290b0628763fbbbe09650ce580134891ebc96273757b43172"
+      "sha256": "c08ded19e2bc3c858528e7389edabe47269289aed99c1e980c3a4664c6a2751b"
     },
     {
       "file": "command-error-raw-app.json",
@@ -1114,7 +1178,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "72090b591262b53bddbf63d17d6d789783967a5d73b5c666eecd2c6b8d0a7e8a"
+      "sha256": "f8d0a49146582132ff5c773d35bf189fc9f86fbddb5d3516b31bb8dab02d13ee"
     },
     {
       "file": "command-error-reversed-endpoints.json",
@@ -1122,7 +1186,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "ebeb2d098f6e90d520d6a9268bf236b284ca961ff8a6524ee15b1e743da7fc7d"
+      "sha256": "912e8fc05f52413b1e7911f903716c9c4474c508a0cba772b053311c445771a6"
     },
     {
       "file": "command-error-revision.json",
@@ -1130,7 +1194,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "a28d0db20c1c68aa59b884997778dfd2c06b633f2f6377a0099b1cfc6b60449d"
+      "sha256": "ff7d6f9760be3ad3d29d92462579d2c595f7f7878c653b8b65fad61c5bec3c7d"
     },
     {
       "file": "command-error-schema-option.json",
@@ -1138,7 +1202,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "8778671f057d558daf2cb9cdb1cc12553c5059204e0f45f72d4fb73250ba79cb"
+      "sha256": "001f71018d4e95809091a74610f114567845649461a6724907a7f7e1178c4063"
     },
     {
       "file": "command-error-spectrum-missing-app.json",
@@ -1146,7 +1210,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "618f511a8bc7b95ef75b04b75195429e68ab8f8014fecffb04b06323e8eb205f"
+      "sha256": "3efbfb7aecae507689eebc0a78943b01393194436892500fcc3044cf14ee95d7"
     },
     {
       "file": "command-error-spectrum-missing-high_scope_frequency.json",
@@ -1154,7 +1218,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "01543b43365e374ab4cfe9104a78542b2330d91cc4dc797ce718fb1e9e5becea"
+      "sha256": "e46d78528e67c893dad5f6eb0d1f8982eef35266bc6ccef83496b7a3a9fafe90"
     },
     {
       "file": "command-error-spectrum-missing-low_scope_frequency.json",
@@ -1162,7 +1226,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "106dc5478cea6feb028c7966d82afa9a63458c45c0c66194d313bd15016d3d94"
+      "sha256": "84d7aed7179efbf7c01ee0419bae79d4ae7811d9d211e4b33a28365ef492b61d"
     },
     {
       "file": "command-error-spectrum-missing-operation.json",
@@ -1170,7 +1234,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "e4568d8bbe5e7d25cd3d91f1419895202065abd13d867c116ce5596ae43ec133"
+      "sha256": "4ea3d8cbef03579279373816380195aca3a389f6ff607d85875ee049f3d389ed"
     },
     {
       "file": "command-error-spectrum-missing-scaling_factor.json",
@@ -1178,7 +1242,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "e72cdf0e8655629ba71e544495cebf5c5762a6a497fb5b915215eccb5534afc4"
+      "sha256": "6c7ab5b1e76fb89f459fd2f8f4b8fedde10d140b4690e1f961ea9a451c2fdea1"
     },
     {
       "file": "command-error-spectrum-missing-spectrum_data.json",
@@ -1186,7 +1250,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "e8ceb900e5e56c4a958899173af1d984df4d6329f458559368efdf838ce6f0c6"
+      "sha256": "e0680ef6a3c0c72775a12241fb4d2046ff4e3e6c46a84c7f0a0b73ff57ce2996"
     },
     {
       "file": "command-error-spectrum-missing-spectrum_name.json",
@@ -1194,7 +1258,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "2f1bba8abfc36db291bba2e9cc1f99be066975f82f74ee7af503418f585e8cae"
+      "sha256": "61761c8e9c5004fd79713e4e1a25f056033004d9885117c1c297ba7eccf6a28b"
     },
     {
       "file": "command-error-surrogate-app.json",
@@ -1202,7 +1266,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "4b915353d386ef604bc4f733ef6c79325b86f0c24ec9f51dbe68542345942c82"
+      "sha256": "e369c06466f4ab70b45966302b1b15b9f1890b5ebf77303e39d83d39dbf82a2d"
     },
     {
       "file": "command-error-too-many-levels.json",
@@ -1210,7 +1274,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "e5d75559335196c927a2abb8848756f586e7233eb963f3690522dbc26ea1b566"
+      "sha256": "336402015a59faf360130c3585769d89126efa55dbdeebd3a4ca5bc96e288c5b"
     },
     {
       "file": "command-error-unknown-operation.json",
@@ -1218,15 +1282,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "699fb5d152cc477bd71d17f1bb73e517989af8c4cdec3252e726cf3f13d95807"
-    },
-    {
-      "file": "command-error-unknown-units.json",
-      "class": "command_negative",
-      "spec": "0.1.0",
-      "family": "n1mm",
-      "mapping": 1,
-      "sha256": "e7dd001d100dddb853b2d3f1c5813932a2a4554cdfbf423372be6c74f8f00ea9"
+      "sha256": "6b63d793151d72fd46bdd1ae2425342487b2d9d76237c2568aa3d81cd5f4ca49"
     },
     {
       "file": "command-error-wire-id.json",
@@ -1234,7 +1290,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "4eb4d6f13158f2d2467e9cf6ab43c643d4c12f6a1de3bec1edf3cc37ba6f41b0"
+      "sha256": "2bd9bb6b3206a0089d6cee9ab0f18bffa258ed0ad752712e672987e3a14e77bb"
     },
     {
       "file": "command-error-zero-scale.json",
@@ -1242,63 +1298,103 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "0034f88b63f2a4f004bd4d3a1e49224ea01481cc65fbc463ff21fd2978509d96"
+      "sha256": "7cb1fc0835bf486d07f9deabb38099c5b708cc14f065b80a2d3e4f3604ef1ef2"
     },
     {
-      "file": "command-qsy-1-0-kHz.json",
+      "file": "command-qsy-1-0.json",
       "class": "command",
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "89ae084f6270e78895645ae4d0033b80fcbbd4746ebd43b123048e1edbf68ba2"
+      "sha256": "c5b550033fe500c25a013704de1233388d39b783e31ab3b1da0d4b5c7e58387e"
     },
     {
-      "file": "command-qsy-1-14053000-kHz.json",
+      "file": "command-qsy-1-14053284.json",
       "class": "command",
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "e0642281d561496995b15eca7de00c7dfeab246c9fc1ae69acc1c34358bc1f90"
+      "sha256": "d025bfc11d919beb3a93743219eca214b80d2145461bea40e2e289087e1b60d9"
     },
     {
-      "file": "command-qsy-1-14053284-kHz.json",
+      "file": "command-qsy-1-475000.json",
       "class": "command",
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "c5d7a75f4aa1fa0510433ff7c496e78fd71d432b91efca158af47628e341f574"
+      "sha256": "c88b8677063e850503a6b027a8c3c82fc6e2e650f0817bf202d67a4b21b2287c"
     },
     {
-      "file": "command-qsy-2-1-kHz.json",
+      "file": "command-qsy-1-7000000.json",
       "class": "command",
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "56a11a4f3c9fb5fd607cecbe9db875581f6e13e80f0e55c9765c31554688e238"
+      "sha256": "b207182fc97fe7a91bcb0e8b66c1ebd2acf84a41b455fe9c4b9e60fa17173d89"
     },
     {
-      "file": "command-qsy-2-14053284-Hz.json",
+      "file": "command-qsy-1-7061200.json",
       "class": "command",
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "e4b866ac49f934c9714e388e938128daafbea7f4a4ba24ff0584feb7c270b5bd"
+      "sha256": "e846b51a2f7153f382733c0a02e9deb48505146b6c6a5bed79db192152636248"
     },
     {
-      "file": "command-qsy-2-14053284-kHz.json",
+      "file": "command-qsy-2-1.json",
       "class": "command",
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "d500047f75ca1b5b8c1983222a0ab82d4e560ef493c7b28f0c4674d079056a37"
+      "sha256": "821c7dc3cf699a456f4bd5ecc25b1af61b399d83afdcd73dee3b2bc8f7c05adb"
     },
     {
-      "file": "command-qsy-2-9007199254740991-kHz.json",
+      "file": "command-qsy-2-137500.json",
       "class": "command",
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "7c07dccb50816088adfcdcc1e6eb86953514aec97d0eaac797144c173e518e67"
+      "sha256": "788f0521c88f2d74734b23711f5d9fe88b559325d57dc89d044b4ceb06257f7b"
+    },
+    {
+      "file": "command-qsy-2-14053284.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fead09ec344af236628403110a386920182700e304eecdb25a78c55d4017f627"
+    },
+    {
+      "file": "command-qsy-2-7061020.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "997facd0b552a41774040d9cc54deed2167c33725b67de0f152a4b65d6feefe3"
+    },
+    {
+      "file": "command-qsy-2-9007199254740991.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0b60f4f1d758f39bf33b42ab9d968a67c9cc9b178182402c00d382d9fc75143d"
+    },
+    {
+      "file": "command-spectrum-2200m.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b4e1078a69a07137ba3fd5a9ba55e5d7f6a5dc43daf147fd19e426b8bcfb1433"
+    },
+    {
+      "file": "command-spectrum-630m.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "55424c61fa8f48b1e6e4906b23fcf1a958c4f093e36a36ff8cf74e6226a8044b"
     },
     {
       "file": "command-spectrum-empty.json",
@@ -1306,7 +1402,31 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "9bde3ff7d7677b5e4d338f1091e4d1fc339c3bd1552b448391e5a401d91a9d73"
+      "sha256": "d846d9745c7ee5f9acbe38f47f01533c36c2e1a25a34eacdda97163417fb9946"
+    },
+    {
+      "file": "command-spectrum-fractional.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b54998e1c91bb88e6cfd9a326c318d0cceb7d11ec5a1719a689e98502b0dc839"
+    },
+    {
+      "file": "command-spectrum-maximum.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9779825a7f48caa2dcf8e28140de9b866b038bca1b9647d994fd0b187d690069"
+    },
+    {
+      "file": "command-spectrum-minimum.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1e3ceabc379bdd3fe4821128dfda7f4f3e0f2646c56c487938d207209d474efb"
     },
     {
       "file": "command-spectrum-normal.json",
@@ -1314,7 +1434,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "704601059367a746c8115ea6535dc88ebf54a27fcd8bd8c9e28e93463ec4677d"
+      "sha256": "c69d1f607819b41f02a30b33d215caddddc2d0dac3abebb2597f07ce83181060"
     },
     {
       "file": "command-spectrum-xml-text.json",
@@ -1322,7 +1442,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "113fa696192bf45ff95838f34bba2eee7e66eb04ab103353f25998abcc45e73a"
+      "sha256": "33b239017b6c93f3ef4008c3d09366e8c43526c09f85e33833de76726d3f31ef"
     },
     {
       "file": "compat-known-root-new-revision.json",
@@ -3773,6 +3893,742 @@
       "sha256": "2b8fefd34d4828349c64a281ff44a7d017693b5f3af4cd4c14f2ff6a42e50828"
     },
     {
+      "file": "khz-Spectrum-HighScopeFrequency-2200m.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1d2e466038e2fcdeb3b9ca91de5bb09e45be62292ae00f421f3ea1526f7e0c4b"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-630m.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6ef386debbb88fae4bb0e9afca9363e20d1503f79d9ebdd998d8a8efaefe462e"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bab5847d5a15ebfd4343f744aaa2653d43b8d2d9928cbe2fd5ee66220505859d"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8eaaecd344e099018bec3ed2e6610ec3fc9397bfd9bec05b77b69aebd38170c1"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-exponent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "31e138bd0c8726e087f394ce26fc4a1b8d96e9e2fc94a2583cd07c5e0515e60f"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-fractional.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1f48c1d20a1b50cedec07eb5fbb8d09c615e17fe839cd8c898fc54cbe8576bde"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-invalid.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9ef73f626abf56f66e100bee3f89611c9f84b768a1fdf63437d24f16821cf609"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-leading-point.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e2f06d64386a6ff432c0afe0e50c63570bc4d4cd748db89beb85518142b217b0"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-maximum.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9a6acbb518f4b462d9514178b9bdefeef2c71aa49e54dc8f1570815c6ba0dd42"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-minimum.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1c768de98982db1368808e5b5754c864d2ab72486603f8ec556d663f38fe7751"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-negative.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1b8e90a58b0bf6b4def254dd83cd7f4b23cd97fca3219db44c29930b40d744a2"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "17288f5d86f061345ddeb9c8e473e2eaf1b5956a22e67914d6d20a7d044e28cf"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-one-hz.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8121e0d3b22c9678642369f03343d52b6f24a9e35450667448cb71b7b6c6421a"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-overflow.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dfd204d227f429f665b210f9b6a6f3ba42f3ebf8303a23d5486366b10c728f7c"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-signed.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "20c8ee69be1b9c714d2b5603da73efe6c6834bd14e9443ee7c8921e5d44f8cd7"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-sub-hz-zero.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ff4de6b5c671551bc33e0826cea40c863fc684db052be86fc117ef4a90507b4f"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-sub-hz.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b21e315ca22a5380760b4c8e3ec6db508d37533593130ebe2aa4387e609e51a3"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-token-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8fca79319278f41c7e00ac7a24f9f315ba09c23c44c200022571a34d847205e6"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-trailing-point.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6802ea7194de6be030b2a6b8a65dd30c62d8ec0c25fdf8b56672fb2b6187d2dc"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-trailing-zeros.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "afd08662c3bcc6eaef1b4ab8b480bc36fea6c714585c8fd9c3326cb01c02f255"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-underflow.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4aa1957aa2c9dc52486650a92e0e38d5c53ff7b854a6cedf8c398a61cf6fd444"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-whole-khz.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "781f7969807af0abe23965800c4435fa463dda492d87f2cf68f47a2da1cbc735"
+    },
+    {
+      "file": "khz-Spectrum-HighScopeFrequency-zero.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1e2a26924282dc0ded905f13e6da2442a6e6a96aef8cb22917ddf570ff446c34"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-2200m.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6d7b233b71c136f1649d2c2350a3ecb40b811c9528fa2519f357daa1674af046"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-630m.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "032a5ea2f61a59d5dc99a813afe3bedcdf23c9bc12592ad2c1729bb453a2dc8b"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9f92a88220943a41ccd5f91a326e6214588313f178ea6c5c1ea72b656e251659"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9807e8bc59531256d3a8eb0c7b901597f7ccf38e1e376fd2d1485de06a560463"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-exponent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e100a44bb55162a0367eef3dd49a339aa7cd160d46a56177bc9c68ea94aa7c64"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-fractional.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e762dca77b5bcae2ebfafd3ecd109225eb6641e1d1e549fa3f35d4826f1fa8fc"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-invalid.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dbf9c07175a8ebe6738fcecb7b531446dd8c5732749cd5912cd4e9cb4537c8b3"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-leading-point.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c3fdc59cdd430a63651a4d0611f91ec0451c1526e1b46368220351b494b3cebe"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-maximum.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b3efef95b82d7eb827b3d9496d64b6c6f99dcd7e96da2209c62609db1acbb6de"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-minimum.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b39f44eb9e914c352579ec5521a8674167dc9b2e5737e5632e14e6ffe4768cbe"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-negative.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "298d942948a93d701dc14ec51e4a5375217961da9434052bce3520b64e590f97"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a37b36205d45c9ba7d86b354ca8911a068af699380f6a7001286376390612dee"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-one-hz.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2a9d45c9ffac9c27f346bb46ea75d3b8a7590a21f0eaa9792f2622198d9f614d"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-overflow.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cf393835b6945e39dd3e17015638e0a63d02ff02e690327d048074d385593146"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-signed.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9f755ae465fe9fd34786774721c306f3419f89709dd79601d104be8ebea67c56"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-sub-hz-zero.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b1235a3ea59f4cc13f8d2e8ef2b1f352bf3745426cbe5009f2a0e50c7f7bd130"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-sub-hz.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fad6595e4b3c6ddbfdbc144a271b741e836051422b4121b8d1d9321cc6d11c93"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-token-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c5008ffe5daee3b9ba27f8d2ec8669362b5310f7b752ac23e55c3527c83e4b51"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-trailing-point.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a625def33ea74201dd13a9fe3e6eb86ab5907661d38d433d659d2f64c16b7c71"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-trailing-zeros.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "eb0614474ff21c7d3a3c2323a1394436654d71a7e7bf501f8513456b5e6b8016"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-underflow.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c066e3f4bf99d22480f32972be24377a2c01fe66e439da13ac411093ff8d1de9"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-whole-khz.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2374b3166c4b014175e819f599633a4146265517b13d6752c89c63f5b2dcc242"
+    },
+    {
+      "file": "khz-Spectrum-LowScopeFrequency-zero.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f5e4018f062afa6b7b64700d5c31c85eaade72b4b7740010198d29ca08c3ee24"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-2200m.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b6cf8e908a92fec3d87896e36ed758bd4e504ba737db1ed48e2f763a759b966b"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-630m.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c1c529e98a6827adfc0c6f9cb1040aed2ccd7f8423abed8729d4bc67907f2d9d"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "78d0f248936ff291ab2543f27ca62e5851dd615ff7d3954896466ffb75f2c5f0"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "df19e0d4bb11775a94ba8b16a9abf709a038f71239db17b9e3e0e7ce9a4bbb69"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-exponent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "05bca23e2a07fb0084cb10f35b4a111d3a5e8e7c4d51a3a69dd10bbcc9ee9e6d"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-fractional.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "10456b269ff2f85a9e21f35fcdbc15830b5b0651f0cbd5db248b4efb1abb56bb"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-invalid.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "87219f21b4bc50c48a2c7dd71857f99dc61847dabdc5b4744b22d63e26dc22b7"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-leading-point.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1135b0da48bce79fe68308ab76aa5ede76679bc5c876bfd547ca3ef529129822"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-maximum.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c3cc377fe937c2f73a55d3eaf623ba0bf6390b54c593387fe532bac3fc7d1416"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-minimum.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b439c64bb4145be54da2a4ae2a64037e5ed4a3943c3a79725e72df183f46edab"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-negative.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cd795cebeebdadac31065dc7b18cec5dba61d0b5400996c07cbbe4d0caf2301f"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9a27dd2d3c574813bc9b32412c85117f5578159b6b4310f4ea97df6883d9e107"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-one-hz.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "08f4b7faf0262a524c8b9c1fb0610f9511aa8f20a552877c35213703609cfa35"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-overflow.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3f4c7fde30cf086f6165b0a20daf182a2702f61b890f43d0ed4d12aece5d9b20"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-signed.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9f04b556f878ba6395ae0a969e6127b0ac09f65271f5f0f6918dd79b71da452c"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-sub-hz-zero.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "390f0107f296681400d1ffa1e3abab0afe4f2adc560d0d5cae932a0fd6da1627"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-sub-hz.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e3afa05bbd006196b15b027708a258182a8b8669eddad939122b8f9087050e23"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-token-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1dba54e9d37fcbd7c950773580a4d86fdfe885fef80a358bf9353d9c9206be2d"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-trailing-point.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "490c6446c600ac6261a33a6d9853b6701f19168bd31acffdbb3f0a8f0c1fcb63"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-trailing-zeros.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "14326d78d4426fb86880c0c442ca2ff8015dff33c03e29b2c7ba2ab267526fea"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-underflow.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0b14a3942dadac6631b68165b8d4d82fbb64608d8e7f0da45d37905bb7db1a07"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-whole-khz.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "08033fa0c7cee4e54585387100f0f4362a08886231f4a26dbeef9d85bff313cf"
+    },
+    {
+      "file": "khz-radio_setfrequency-frequency-zero.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "90dc8a3a87634267be5f5577e57f20ca5c3774d01b7684a66514cc94356c60e4"
+    },
+    {
+      "file": "khz-spot-frequency-2200m.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c226b32d9f28bee040de6c7b2c246fbbeb601c9e0f795ca59377d8680528e2b8"
+    },
+    {
+      "file": "khz-spot-frequency-630m.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3e1e8b12b46fc2057749d27d9e08ab0b512d18e56bc45ac268f273e839382a05"
+    },
+    {
+      "file": "khz-spot-frequency-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e9b91dc14667a83e8a3a790a0abbcfe6009545e0295c2035a8500168ca46f968"
+    },
+    {
+      "file": "khz-spot-frequency-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f1f15a720c8f3b98fcf5358ebe72d01a5ee2e4d3520af95110322c57172bede7"
+    },
+    {
+      "file": "khz-spot-frequency-exponent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6dff7ee56d2cb1a14ae2b5854588628d812d96ddc934a4bd81546c3887eb431b"
+    },
+    {
+      "file": "khz-spot-frequency-fractional.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d6dd79568c65c1ade1032d94a2e187281af1111968a25f22a114f1fa173e22af"
+    },
+    {
+      "file": "khz-spot-frequency-invalid.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6fe02e74cdeac6ffb56a36b491cbc98a9d2e439baf4620abfd9fa331d185fcad"
+    },
+    {
+      "file": "khz-spot-frequency-leading-point.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e446acd319d9e6731380c9e1b97d8298bca81e78c755c914899ee873be701b71"
+    },
+    {
+      "file": "khz-spot-frequency-maximum.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "93cce4ecc5002e1ecfffb7966b3fb9316ad44105ac4f3ad2f226cce164bd46f4"
+    },
+    {
+      "file": "khz-spot-frequency-minimum.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0172ea4da42eb7c167cbb6b1c0957060c3d0712492478fe1571e287134947e8a"
+    },
+    {
+      "file": "khz-spot-frequency-negative.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9ae003090d2dd4eb21a366d49a181b930cf3c9f04df5d480db350ef7977f0fe1"
+    },
+    {
+      "file": "khz-spot-frequency-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d99909671e1efeecd0def7ebaad7168cb697c03e8bc3666fb5e8ffb9d0c53837"
+    },
+    {
+      "file": "khz-spot-frequency-one-hz.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "77ec44dcf434f9b3c2ba2028b092009e72b4fd916f422c68c734bc63a037e211"
+    },
+    {
+      "file": "khz-spot-frequency-overflow.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d3c8cf86e26761769dd283eeba4e8cdfbc521a389ecb7cb57d132f71c3a2a661"
+    },
+    {
+      "file": "khz-spot-frequency-signed.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a63a50d3f56546723f5e44eeb1f3ebfbd2e753591ace1983c9d792c432be876f"
+    },
+    {
+      "file": "khz-spot-frequency-sub-hz-zero.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9ab5faed97a34d03816f773665125c01fd7ee631f5694efbe0b6117e7ca2e77b"
+    },
+    {
+      "file": "khz-spot-frequency-sub-hz.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9faea329fe3a1710feddb8a78995d1e294741cd3ff79ed33b60a030607b20cc1"
+    },
+    {
+      "file": "khz-spot-frequency-token-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "040b0e40f5ea0e8c3b803d5bfd57cb7659beb831b6cfb505202e6ee588c268af"
+    },
+    {
+      "file": "khz-spot-frequency-trailing-point.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "433d095237fb87cf9008adc2d515d3109f98dd16f210fa0a53a7135122cf137d"
+    },
+    {
+      "file": "khz-spot-frequency-trailing-zeros.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "496e4db40c3a6a7c4620ee36cbcd1094f4d447673ddfd15a2a1b8edcc2618699"
+    },
+    {
+      "file": "khz-spot-frequency-underflow.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5acd49e194bb32aa7d625bd59d1177a819dd6189f9172295df5a3e2c66329d96"
+    },
+    {
+      "file": "khz-spot-frequency-whole-khz.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5d8d27f567c0b843515d47a8f59f5214af375d32c5e53388a11b9252f7998031"
+    },
+    {
+      "file": "khz-spot-frequency-zero.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f4144f697093b9b53081df19748745cce41f0984d477dd3a9d745cb6d2e014bc"
+    },
+    {
       "file": "lookup-absent.json",
       "class": "positive",
       "spec": "0.1.0",
@@ -5698,7 +6554,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "bbb36207cd7bba1ba1e355b891dea83be6408747f2a40c155018514fba59d880"
+      "sha256": "eecb611560e5943596d3625bc54a2b1fbd128566180f7913d1ce686866bb18cb"
     },
     {
       "file": "radio_setfrequency-only-app.json",
@@ -5714,7 +6570,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "7cd3e2fda172eb71cf8909c9dc598753fd486c98f0c9044fe7fb3caa2e322531"
+      "sha256": "887f052732c0eea3ada1c9264c0f22eb497bf23fbdaf9bdb8555e80c12fc60fc"
     },
     {
       "file": "radio_setfrequency-only-mousebutton.json",
@@ -6298,7 +7154,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "fb5e900ba138f696a18f1d16221984cf37709ca003375c962f55c8c5c9263f51"
+      "sha256": "09b09e76eabf28a8a94dfdf4e816482eb4a23514c887b41505eeca70622d3e96"
     },
     {
       "file": "spot-only-StationName.json",
@@ -6346,7 +7202,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "460c43472fe7e2238b19e89456569e858a20e842f3bc26d2b2adaa8055851ee7"
+      "sha256": "9339282860f5870c6d286eff1e434187559353417c8e295b8c00e377db9ff02a"
     },
     {
       "file": "spot-only-mode.json",

@@ -24,8 +24,8 @@
       "fields": {
         "app": "synthetic-client",
         "spectrum_name": "synthetic-spectrum",
-        "low_scope_frequency": "14000",
-        "high_scope_frequency": "14055",
+        "low_scope_frequency": 14000000,
+        "high_scope_frequency": 14055000,
         "scaling_factor": "0.3125",
         "operation": "n1mm.spectrum"
       },

@@ -18,7 +18,7 @@
         "operation": "n1mm.spectrum",
         "app": "synthetic-client",
         "spectrum_name": "synthetic-spectrum",
-        "low_scope_frequency": "14000",
+        "low_scope_frequency": 14000000,
         "scaling_factor": "0.3125",
         "spectrum_data": [
           0,

@@ -21,7 +21,9 @@
         "direction": "from_application",
         "exchange": "unknown"
       },
-      "fields": {},
+      "fields": {
+        "frequency_hz": 7061200
+      },
       "native": {
         "format": "n1mm_xml",
         "data": "PHNwb3Q+PGZyZXF1ZW5jeT43MDYxLjI8L2ZyZXF1ZW5jeT48L3Nwb3Q+"

@@ -22,9 +22,6 @@
         },
         "frequency_hz": 14053284
       }
-    },
-    "options": {
-      "frequency_unit": "kHz"
     }
   },
   "expected": {

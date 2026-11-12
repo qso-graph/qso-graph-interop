@@ -22,9 +22,6 @@
         },
         "frequency_hz": true
       }
-    },
-    "options": {
-      "frequency_unit": "kHz"
     }
   },
   "expected": {

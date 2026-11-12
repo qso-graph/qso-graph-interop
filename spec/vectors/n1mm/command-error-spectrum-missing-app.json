@@ -17,8 +17,8 @@
       "fields": {
         "operation": "n1mm.spectrum",
         "spectrum_name": "synthetic-spectrum",
-        "low_scope_frequency": "14000",
-        "high_scope_frequency": "14055",
+        "low_scope_frequency": 14000000,
+        "high_scope_frequency": 14055000,
         "scaling_factor": "0.3125",
         "spectrum_data": [
           0,

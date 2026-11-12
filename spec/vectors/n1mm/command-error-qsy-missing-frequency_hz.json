@@ -22,9 +22,7 @@
         }
       }
     },
-    "options": {
-      "frequency_unit": "kHz"
-    }
+    "options": {}
   },
   "expected": {
     "error": {

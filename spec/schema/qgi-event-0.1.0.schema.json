@@ -1644,10 +1644,10 @@
           "$ref": "#/$defs/text"
         },
         "low_scope_frequency": {
-          "$ref": "#/$defs/text"
+          "$ref": "#/$defs/integer"
         },
         "high_scope_frequency": {
-          "$ref": "#/$defs/text"
+          "$ref": "#/$defs/integer"
         },
         "scaling_factor": {
           "$ref": "#/$defs/text"

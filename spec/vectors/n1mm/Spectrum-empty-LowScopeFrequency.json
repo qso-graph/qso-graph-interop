@@ -22,7 +22,6 @@
         "exchange": "unknown"
       },
       "fields": {
-        "low_scope_frequency": "",
         "operation": "n1mm.spectrum"
       },
       "native": {

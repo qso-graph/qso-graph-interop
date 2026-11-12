@@ -1,0 +1,40 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PHNwb3Q+PGZyZXF1ZW5jeT4gCSswMDcwNjEuMjAwDQo8L2ZyZXF1ZW5jeT48L3Nwb3Q+",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "spot",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "frequency_hz": 7061200
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PHNwb3Q+PGZyZXF1ZW5jeT4gCSswMDcwNjEuMjAwDQo8L2ZyZXF1ZW5jeT48L3Nwb3Q+"
+      }
+    }
+  },
+  "reencode": {
+    "data": "PHNwb3Q+PGZyZXF1ZW5jeT4gCSswMDcwNjEuMjAwDQo8L2ZyZXF1ZW5jeT48L3Nwb3Q+"
+  },
+  "expected_message": {
+    "root": "spot",
+    "xml": "<spot><frequency> \t+007061.200\r\n</frequency></spot>"
+  }
+}

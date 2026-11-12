@@ -22,6 +22,7 @@
         "exchange": "unknown"
       },
       "fields": {
+        "frequency_hz": 14053284,
         "operation": "set_frequency"
       },
       "native": {

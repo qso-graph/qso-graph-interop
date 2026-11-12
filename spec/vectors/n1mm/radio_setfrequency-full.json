@@ -26,6 +26,7 @@
         "radio": {
           "number": 2
         },
+        "frequency_hz": 14053284,
         "operation": "set_frequency"
       },
       "native": {
