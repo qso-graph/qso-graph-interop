@@ -1,0 +1,40 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PFJhZGlvSW5mbz48UmFkaW9Ocj4xPC9SYWRpb05yPjxGb2N1c1JhZGlvTnI+MjwvRm9jdXNSYWRpb05yPjxBY3RpdmVSYWRpb05yPjE8L0FjdGl2ZVJhZGlvTnI+PC9SYWRpb0luZm8+",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "radio_state",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "radio": {
+          "number": 1
+        },
+        "focus_radio": 2,
+        "active_radio": 1
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PFJhZGlvSW5mbz48UmFkaW9Ocj4xPC9SYWRpb05yPjxGb2N1c1JhZGlvTnI+MjwvRm9jdXNSYWRpb05yPjxBY3RpdmVSYWRpb05yPjE8L0FjdGl2ZVJhZGlvTnI+PC9SYWRpb0luZm8+"
+      }
+    }
+  },
+  "reencode": {
+    "data": "PFJhZGlvSW5mbz48UmFkaW9Ocj4xPC9SYWRpb05yPjxGb2N1c1JhZGlvTnI+MjwvRm9jdXNSYWRpb05yPjxBY3RpdmVSYWRpb05yPjE8L0FjdGl2ZVJhZGlvTnI+PC9SYWRpb0luZm8+"
+  }
+}

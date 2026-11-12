@@ -1,0 +1,44 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48cmFkaW9fc2V0ZnJlcXVlbmN5PjxhcHA+c3ludGhldGljLWNsaWVudDwvYXBwPjxyYWRpb25yPjI8L3JhZGlvbnI+PGZyZXF1ZW5jeT4xNDA1My4yODQ8L2ZyZXF1ZW5jeT48bW91c2VidXR0b24+UmlnaHQ8L21vdXNlYnV0dG9uPjwvcmFkaW9fc2V0ZnJlcXVlbmN5Pg==",
+    "context": {
+      "direction": "to_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "control",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "app": "synthetic-client",
+        "radio": {
+          "number": 2
+        },
+        "operation": "set_frequency"
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48cmFkaW9fc2V0ZnJlcXVlbmN5PjxhcHA+c3ludGhldGljLWNsaWVudDwvYXBwPjxyYWRpb25yPjI8L3JhZGlvbnI+PGZyZXF1ZW5jeT4xNDA1My4yODQ8L2ZyZXF1ZW5jeT48bW91c2VidXR0b24+UmlnaHQ8L21vdXNlYnV0dG9uPjwvcmFkaW9fc2V0ZnJlcXVlbmN5Pg=="
+      }
+    }
+  },
+  "reencode": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48cmFkaW9fc2V0ZnJlcXVlbmN5PjxhcHA+c3ludGhldGljLWNsaWVudDwvYXBwPjxyYWRpb25yPjI8L3JhZGlvbnI+PGZyZXF1ZW5jeT4xNDA1My4yODQ8L2ZyZXF1ZW5jeT48bW91c2VidXR0b24+UmlnaHQ8L21vdXNlYnV0dG9uPjwvcmFkaW9fc2V0ZnJlcXVlbmN5Pg=="
+  },
+  "expected_message": {
+    "root": "radio_setfrequency",
+    "xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?><radio_setfrequency><app>synthetic-client</app><radionr>2</radionr><frequency>14053.284</frequency><mousebutton>Right</mousebutton></radio_setfrequency>"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48QXBwSW5mbz48YXBwPnN5bnRoZXRpYy1sb2dnZXI8L2FwcD48ZGJuYW1lPnN5bnRoZXRpYy5zM2RiPC9kYm5hbWU+PGNvbnRlc3Rucj4yMzwvY29udGVzdG5yPjxjb250ZXN0bmFtZT5TWU5USEVUSUM8L2NvbnRlc3RuYW1lPjxTdGF0aW9uTmFtZT5TWU5USEVUSUMtUEM8L1N0YXRpb25OYW1lPjxteWNhbGw+SzFBQUE8L215Y2FsbD48L0FwcEluZm8+",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "native",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {},
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48QXBwSW5mbz48YXBwPnN5bnRoZXRpYy1sb2dnZXI8L2FwcD48ZGJuYW1lPnN5bnRoZXRpYy5zM2RiPC9kYm5hbWU+PGNvbnRlc3Rucj4yMzwvY29udGVzdG5yPjxjb250ZXN0bmFtZT5TWU5USEVUSUM8L2NvbnRlc3RuYW1lPjxTdGF0aW9uTmFtZT5TWU5USEVUSUMtUEM8L1N0YXRpb25OYW1lPjxteWNhbGw+SzFBQUE8L215Y2FsbD48L0FwcEluZm8+"
+      }
+    }
+  },
+  "reencode": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48QXBwSW5mbz48YXBwPnN5bnRoZXRpYy1sb2dnZXI8L2FwcD48ZGJuYW1lPnN5bnRoZXRpYy5zM2RiPC9kYm5hbWU+PGNvbnRlc3Rucj4yMzwvY29udGVzdG5yPjxjb250ZXN0bmFtZT5TWU5USEVUSUM8L2NvbnRlc3RuYW1lPjxTdGF0aW9uTmFtZT5TWU5USEVUSUMtUEM8L1N0YXRpb25OYW1lPjxteWNhbGw+SzFBQUE8L215Y2FsbD48L0FwcEluZm8+"
+  },
+  "expected_message": {
+    "root": "AppInfo",
+    "xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?><AppInfo><app>synthetic-logger</app><dbname>synthetic.s3db</dbname><contestnr>23</contestnr><contestname>SYNTHETIC</contestname><StationName>SYNTHETIC-PC</StationName><mycall>K1AAA</mycall></AppInfo>"
+  }
+}

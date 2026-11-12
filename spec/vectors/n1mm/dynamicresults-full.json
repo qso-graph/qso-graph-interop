@@ -1,0 +1,42 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48ZHluYW1pY3Jlc3VsdHM+PGNvbnRlc3Q+U1lOVEhFVElDPC9jb250ZXN0PjxjYWxsPksxQUFBPC9jYWxsPjxvcHM+SzFCQkI8L29wcz48Y2xhc3M+PC9jbGFzcz48Y2x1Yj5zeW50aGV0aWMtY2x1YjwvY2x1Yj48cXRoPjwvcXRoPjxicmVha2Rvd24+PC9icmVha2Rvd24+PHNjb3JlPjQzMjE8L3Njb3JlPjx0aW1lc3RhbXA+MjAyNi0xMS0xMiAxMjozNDo1NjwvdGltZXN0YW1wPjwvZHluYW1pY3Jlc3VsdHM+",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "score",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "contest_name": "SYNTHETIC",
+        "station_call": "K1AAA",
+        "total_score": 4321
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48ZHluYW1pY3Jlc3VsdHM+PGNvbnRlc3Q+U1lOVEhFVElDPC9jb250ZXN0PjxjYWxsPksxQUFBPC9jYWxsPjxvcHM+SzFCQkI8L29wcz48Y2xhc3M+PC9jbGFzcz48Y2x1Yj5zeW50aGV0aWMtY2x1YjwvY2x1Yj48cXRoPjwvcXRoPjxicmVha2Rvd24+PC9icmVha2Rvd24+PHNjb3JlPjQzMjE8L3Njb3JlPjx0aW1lc3RhbXA+MjAyNi0xMS0xMiAxMjozNDo1NjwvdGltZXN0YW1wPjwvZHluYW1pY3Jlc3VsdHM+"
+      }
+    }
+  },
+  "reencode": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48ZHluYW1pY3Jlc3VsdHM+PGNvbnRlc3Q+U1lOVEhFVElDPC9jb250ZXN0PjxjYWxsPksxQUFBPC9jYWxsPjxvcHM+SzFCQkI8L29wcz48Y2xhc3M+PC9jbGFzcz48Y2x1Yj5zeW50aGV0aWMtY2x1YjwvY2x1Yj48cXRoPjwvcXRoPjxicmVha2Rvd24+PC9icmVha2Rvd24+PHNjb3JlPjQzMjE8L3Njb3JlPjx0aW1lc3RhbXA+MjAyNi0xMS0xMiAxMjozNDo1NjwvdGltZXN0YW1wPjwvZHluYW1pY3Jlc3VsdHM+"
+  },
+  "expected_message": {
+    "root": "dynamicresults",
+    "xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?><dynamicresults><contest>SYNTHETIC</contest><call>K1AAA</call><ops>K1BBB</ops><class></class><club>synthetic-club</club><qth></qth><breakdown></breakdown><score>4321</score><timestamp>2026-11-12 12:34:56</timestamp></dynamicresults>"
+  }
+}

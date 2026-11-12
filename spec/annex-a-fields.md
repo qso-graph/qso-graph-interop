@@ -12,9 +12,9 @@ ASCII lowercase identifier (`[a-z][a-z0-9_]*`); an operation additionally permit
 are defined by `QGI-MOD-0006`; no time field accepts null. No optional field has an implied default.
 Standard common member names use `snake_case`; extension names follow `QGI-EXT-0003`.
 
-**Catalog scope (informative).** The expected-family column is a core design check, not an unwritten protocol mapping. Only `wsjtx`
-is assigned by a completed family annex here. Other entries identify intended uses to verify when
-Annexes C–E, G and H are pinned. They do not authorize guessing a value or its units. In particular, an
+**Catalog scope (informative).** The expected-family column is a core design check, not an unwritten protocol mapping. The completed `wsjtx` and `n1mm` annexes assign only their explicit mappings; unassigned
+expected-family entries remain capacity, not support claims. Other entries identify intended uses
+to verify when Annexes C, E, G and H are pinned. They do not authorize guessing a value or its units. In particular, an
 XML-RPC result can use common fields only when the caller supplies the associated method; a response
 body alone does not name that method. Extra contest exchange components remain in `native` unless
 a later annex assigns a named common field. Serial numbers are text to preserve leading zeros.
@@ -64,7 +64,7 @@ event contains the fields the native change carries, not a reconstructed complet
 | `mode` | text | — | wsjtx, n1mm, fldigi, js8call |
 | `tx_mode` | text | — | wsjtx, n1mm, fldigi, js8call |
 | `tx_enabled` | boolean | — | wsjtx, n1mm, fldigi, js8call |
-| `transmitting` | boolean | — | wsjtx; n1mm SO2R to be confirmed in Annex D; fldigi, js8call |
+| `transmitting` | boolean | — | wsjtx, n1mm (Annex D), fldigi, js8call |
 | `decoding` | boolean | — | wsjtx |
 | `tx_watchdog` | boolean | — | wsjtx |
 | `fast_mode` | boolean | — | wsjtx |
@@ -79,10 +79,10 @@ event contains the fields the native change carries, not a reconstructed complet
 | `band` | text | — | n1mm |
 | `frequency_tolerance_hz` | integer | Hz | wsjtx |
 | `tr_period_seconds` | integer | seconds | wsjtx |
-| `focus_radio` | integer | native radio number | n1mm; to be confirmed in Annex D |
-| `active_radio` | integer | native radio number | n1mm; to be confirmed in Annex D |
-| `running` | boolean | — | n1mm; to be confirmed in Annex D |
-| `stereo` | boolean | — | n1mm; to be confirmed in Annex D |
+| `focus_radio` | integer | native radio number | n1mm (Annex D) |
+| `active_radio` | integer | native radio number | n1mm (Annex D) |
+| `running` | boolean | — | n1mm (Annex D) |
+| `stereo` | boolean | — | n1mm (Annex D) |
 
 ## qso_logged, qso_changed and qso_deleted
 
@@ -165,6 +165,7 @@ onto a sender reception event. These choices specify model capacity, not a compl
 
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|
+| `radio` | radio object (`QGI-MOD-0016`) | — | n1mm `set_frequency` selector; Annex D |
 | `operation` | operation token | — | wsjtx, n1mm, fldigi, js8call |
 | `window` | integer | — | wsjtx |
 | `time_of_day` | time_of_day | UTC | wsjtx |
@@ -205,13 +206,13 @@ onto a sender reception event. These choices specify model capacity, not a compl
 | `QGI-MOD-0022` | An operation MUST retain the action and argument meanings in the registry below; a family annex MUST define supported argument combinations and reject unsupported combinations as `invalid_value`. Each shared operation's possible side effects are **family-defined; see the family annex** (WSJT-X: B.3). `send_text.text` is the native text argument; it does not guarantee the transmitted content. The operation registry below defines no cross-family guarantee about buffering, timing or RF state. | Test |
 
 This is a capability catalog, not permission to transmit or a claim that the placeholder codecs
-exist. Every non-WSJT-X entry is **to be confirmed in the family's annex**. A dash means no
+exist. The N1MM entry is defined in Annex D; other non-WSJT-X entries are **to be confirmed in the family's annex**. A dash means no
 support established here, not a claim that the program can never offer the action.
 
-| Shared operation | Shared arguments and meaning | WSJT-X | Other published capability (provisional) | Possible side effects |
+| Shared operation | Shared arguments and meaning | WSJT-X | Other published capability (Annex D or provisional) | Possible side effects |
 |---|---|---|---|---|
 | `halt_tx` | Stop transmission; optional `auto_tx_only` restricts automatic TX | HaltTx, requires `auto_tx_only` | fldigi `main.abort`; JS8Call-improved `RIG.TX_HALT` — to be confirmed in the family's annex | family-defined; see the family annex |
-| `set_frequency` | `frequency_hz`: absolute radio dial frequency; optional `rx_offset_hz`: audio offset | — (see Configure effects in B.3) | N1MM `radio_setfrequency`; fldigi `rig.set_frequency`; JS8Call `RIG.SET_FREQ` — to be confirmed in the family's annex | family-defined; see the family annex |
+| `set_frequency` | `frequency_hz`: absolute radio dial frequency; `radio`: family-defined selection; optional `rx_offset_hz`: audio offset | — (see Configure effects in B.3) | N1MM `radio_setfrequency` (Annex D requires an explicit unit option); fldigi `rig.set_frequency`; JS8Call `RIG.SET_FREQ` — to be confirmed in the family's annex | family-defined; see the family annex |
 | `send_text` | `text`: native text argument; `transmit`: request transmission; staging and empty-text behavior are family-defined | FreeText | fldigi `text.add_tx` with `main.tx`; JS8Call `TX.SET_TEXT` / `TX.SEND_MESSAGE` — to be confirmed in the family's annex | family-defined; see the family annex |
 | `reply` | Select a decode to reply to; `time_of_day`, `snr_db`, `dt_seconds`, `audio_offset_hz`, `mode`, `text`; optional `low_confidence`, `modifiers` | Reply | — | family-defined; see the family annex |
 | `clear` | Clear activity display; optional `window` | Clear | — | family-defined; see the family annex |
@@ -222,9 +223,10 @@ support established here, not a claim that the program can never offer the actio
 family's mapping. A family-specific action uses a prefixed token: WSJT-X registers
 `wsjtx.heartbeat`, `wsjtx.location`, `wsjtx.highlight_callsign`, `wsjtx.switch_configuration`,
 `wsjtx.configure` and `wsjtx.annotation_info`. Heartbeat is a protocol maintenance command;
-its observed form remains `lifecycle`. Annex B defines every required and optional argument.
+its observed form remains `lifecycle`. Annex B defines every required and optional argument
+for those operations. Annex D additionally defines `n1mm.spectrum` and its family arguments.
 
-Published references consulted 2026-11-12, pending dated/hash pins in C–E:
+Published references consulted 2026-11-12; N1MM is pinned in Annex D, and C/E pins remain pending:
 [N1MM External UDP Messages](https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/),
 [fldigi 4.2.00 XML-RPC methods](https://www.w1hkj.org/FldigiHelp/xmlrpc_control_page.html), and
 [JS8Call-improved API v3.0.0](https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html).

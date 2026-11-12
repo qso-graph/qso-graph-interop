@@ -5,6 +5,11 @@
 
 ### Added
 
+- Complete draft Annex D N1MM profile with dated source hashes, XML isolation policies,
+  contact/radio/spot/score mappings, explicit-unit QSY and spectrum command writers,
+  independent conformance vectors and numbered questions for live captures.
+- Shared control radio selection and N1MM-only command argument schema capacity.
+
 - Timed `qg-interop sim` ALL.TXT playback with an embedded synthetic sample, Python-compatible
   options, target-filtered Replay and WSJT-X state reactions, bounded local input, UDP NDJSON
   capture playback and qgi carriage, signal cleanup, and independent Desktop capture checks.

@@ -1,0 +1,33 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "command",
+  "input": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "control",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "set_frequency",
+        "app": "synthetic-client",
+        "radio": {
+          "number": 2
+        },
+        "frequency_hz": 1
+      }
+    },
+    "options": {
+      "frequency_unit": "kHz"
+    }
+  },
+  "expected": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48cmFkaW9fc2V0ZnJlcXVlbmN5PjxhcHA+c3ludGhldGljLWNsaWVudDwvYXBwPjxyYWRpb25yPjI8L3JhZGlvbnI+PGZyZXF1ZW5jeT4wLjAwMTwvZnJlcXVlbmN5Pjxtb3VzZWJ1dHRvbj5SaWdodDwvbW91c2VidXR0b24+PC9yYWRpb19zZXRmcmVxdWVuY3k+"
+  }
+}

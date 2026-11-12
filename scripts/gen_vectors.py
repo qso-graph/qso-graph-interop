@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Generate QGI 0.1.0 vectors from Annexes B and I and the pinned released header.
+"""Generate QGI 0.1.0 vectors from Annexes B, D and I and the pinned released header.
 
 No implementation imports, subprocesses, third-party generation dependencies or network access.
 The byte packers transcribe wire primitives; expected common fields are explicit test oracles.
@@ -1054,7 +1054,11 @@ def producer_validator(schema, jsonschema):
         message['allOf'].append({'if': {'properties': {'type': {'const': typ}}},
             'then': {'properties': {'body': {'$ref': '#/$defs/' + body_name}}}})
     strict['$defs']['wsjtx_message'] = message
-    strict['$defs']['native_payload']['properties']['message'] = {'$ref': '#/$defs/wsjtx_message'}
+    strict['$defs']['n1mm_message'] = {'type': 'object', 'required': ['root', 'xml'],
+        'properties': {'root': {'type': 'string'}, 'xml': {'$ref': '#/$defs/text'}}}
+    strict['allOf'].append({'if': {'properties': {'family': {'const': 'n1mm'}}},
+        'then': {'properties': {'native': {'properties': {'message': {'$ref': '#/$defs/n1mm_message'}}}}},
+        'else': {'properties': {'native': {'properties': {'message': {'$ref': '#/$defs/wsjtx_message'}}}}}})
     # Full definitions are closed; conditional fragments and the discriminator's
     # body placeholder remain open so their referenced type can define members.
     pending = list(strict['$defs'].values())
@@ -1246,6 +1250,644 @@ def validate(suite, qgi, producer_strict=False):
     return f"schema checked {len(shapes)} planted core shapes; validated {count} WSJT-X and {qgi_count} qgi positive observations, all positive commands and same-MAJOR compatibility inputs; qgi negative parsing/bounds cases checked; producer_strict={producer_strict}; all three Status boolean swap mutations rejected"
 
 
+# Annex D fixture catalogs are independent of every implementation. Each row has
+# native sample text and a separately authored common-field oracle, not a decoder.
+N1MM_SOURCES = {
+    'https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/':
+        '4bd29b8de620b867d8573d2f0dbff78b7af1f50d64f40804d809b4c281bafab9',
+    'https://n1mmwp.hamdocs.com/mmfiles/udp_external_udp_broadcasts-xml/':
+        '784c869b8a7d56ca57e6bb8d6c0308e36ebf6caed44ed28fd6b4c8619c6a5d51',
+    'https://n1mmwp.hamdocs.com/mmfile/get/file/UDP_External_UDP_Broadcasts.xml':
+        '58e0d335c325d1fde94a285b581fdaa4d75965b1aaa564e40969dcbf7eb8400a',
+}
+XML_DECL = '<?xml version="1.0" encoding="utf-8"?>'
+
+
+def n1mm_vectors():
+    s = Suite('n1mm')
+
+    def row(name, value, key=None, oracle=None):
+        return name, value, {} if key is None else {key: value if oracle is None else oracle}
+
+    contact = [row('app', 'synthetic-logger'), row('contestname', 'SYNTHETIC', 'contest_name'),
+        row('contestnr', '23'), row('timestamp', '2026-11-12 12:34:56'),
+        row('mycall', 'K1AAA', 'station_call'), row('band', '3,5', 'band'),
+        row('rxfreq', '352519', 'dial_frequency_hz', 3525190),
+        row('txfreq', '352621', 'tx_frequency_hz', 3526210),
+        row('operator', 'K1BBB', 'operator_call'), row('mode', 'CW', 'mode'), row('call', 'W1AAA', 'call'),
+        row('countryprefix', 'K'), row('wpxprefix', 'W1'), row('stationprefix', 'K1AAA'),
+        row('continent', 'NA'), row('snt', '599', 'report_sent'), row('sntnr', '005', 'serial_sent'),
+        row('rcv', '579', 'report_received'), row('rcvnr', '009', 'serial_received'),
+        row('gridsquare', 'FN42', 'grid'), row('exchangel', 'synthetic exchange', 'exchange_received'),
+        row('section', 'SYN', 'section'), row('comment', 'synthetic comment', 'comments'), row('qth', 'Synthetic City'),
+        row('name', 'Synthetic Operator', 'name'), row('power', '100'), row('misctext', 'synthetic'),
+        row('zone', '5'), row('prec', 'A', 'precedence'), row('ck', '07', 'check'),
+        row('ismultiplierl', '1'), row('ismultiplier2', '0'), row('ismultiplier3', '0'),
+        row('points', '2'), row('radionr', '2', 'radio', {'number': 2}), row('run1run2', '1'),
+        row('RoverLocation', 'synthetic-rover'), row('RadioInterfaced', '1'), row('NetworkedCompNr', '3'),
+        row('IsOriginal', 'False'), row('NetBiosName', 'SYNTHETIC-ORIG'), row('IsRunQSO', '0'),
+        row('StationName', 'SYNTHETIC-PC', 'radio', {'instance': 'SYNTHETIC-PC'}),
+        row('ID', '0123456789abcdef0123456789abcdef', 'record_id'), row('IsClaimedQso', '1'),
+        row('oldtimestamp', '2026-11-12 12:30:00'), row('oldcall', 'W1BBB'), row('SentExchange', '# SYN')]
+    historical = [row('exchange1', 'historical exchange', 'exchange_received'), row('ismultiplier1', '1'),
+                  row('Run1Run2', '2'), row('ContactType', 'synthetic')]
+    radio = [row('app', 'synthetic-logger'), row('StationName', 'SYNTHETIC-PC', 'radio', {'instance': 'SYNTHETIC-PC'}),
+        row('RadioNr', '2', 'radio', {'number': 2}), row('Freq', '1407123', 'dial_frequency_hz', 14071230),
+        row('TXFreq', '1407234'), row('Mode', 'USB', 'mode'), row('mycall', 'K1AAA', 'station_call'),
+        row('OpCall', 'K1BBB'), row('IsRunning', 'True', 'running', True), row('FocusEntry', '12345'),
+        row('EntryWindowHwnd', '23456'), row('Antenna', '8'), row('Rotors', 'synthetic-rotor'),
+        row('FocusRadioNr', '1', 'focus_radio', 1), row('IsStereo', 'True', 'stereo', True), row('IsSplit', 'False'),
+        row('ActiveRadioNr', '2', 'active_radio', 2), row('IsTransmitting', 'False', 'transmitting', False),
+        row('FunctionKeyCaption', 'synthetic-CQ'), row('RadioName', 'synthetic-radio'), row('AuxAntSelected', '-1'),
+        row('AuxAntSelectedName', ''), row('IsConnected', '')]
+    spot = [row('app', 'synthetic-logger'), row('StationName', 'K1AAA', 'radio', {'instance': 'K1AAA'}),
+        row('dxcall', 'W1AAA', 'call'), row('frequency', '7061.2'), row('spottercall', 'K1BBB', 'spotter_call'),
+        row('timestamp', '2026-11-12 12:34:56'), row('action', 'add'), row('mode', 'CW', 'mode'),
+        row('comment', 'synthetic spot ', 'text'), row('status', 'single mult'), row('statuslist', 'single mult')]
+    app = [row('app', 'synthetic-logger'), row('dbname', 'synthetic.s3db'), row('contestnr', '23'),
+        row('contestname', 'SYNTHETIC'), row('StationName', 'SYNTHETIC-PC'), row('mycall', 'K1AAA')]
+    deletion = [r for r in contact if r[0] in ('app', 'timestamp', 'mycall', 'band', 'call', 'contestnr', 'StationName', 'ID')]
+    score = [row('contest', 'SYNTHETIC', 'contest_name'), row('call', 'K1AAA', 'station_call'),
+        row('ops', 'K1BBB'), row('class', ''), row('club', 'synthetic-club'), row('qth', ''),
+        row('breakdown', ''), row('score', '4321', 'total_score', 4321), row('timestamp', '2026-11-12 12:34:56')]
+    qsy = [row('app', 'synthetic-client', 'app'), row('radionr', '2', 'radio', {'number': 2}),
+           row('frequency', '14053.284'), row('mousebutton', 'Right')]
+    spectrum = [row('app', 'synthetic-client', 'app'), row('Name', 'synthetic-spectrum', 'spectrum_name'),
+        row('LowScopeFrequency', '14000', 'low_scope_frequency'),
+        row('HighScopeFrequency', '14055', 'high_scope_frequency'), row('ScalingFactor', '0.3125', 'scaling_factor'),
+        row('DataCount', '4'), row('SpectrumData', '0,1,160,65535')]
+    catalogs = {'AppInfo': (app, 'native'), 'contactinfo': (contact + historical, 'qso_logged'),
+        'contactreplace': (contact + historical, 'qso_changed'), 'contactdelete': (deletion, 'qso_deleted'),
+        'lookupinfo': (contact + historical, 'native'), 'lookup': (contact + historical, 'native'),
+        'RadioInfo': (radio, 'radio_state'), 'spot': (spot, 'spot'), 'dynamicresults': (score, 'score'),
+        'radio_setfrequency': (qsy, 'control'), 'Spectrum': (spectrum, 'control')}
+
+    def xml(root, rows):
+        # Only synthetic ASCII sample content; dedicated escaping cases are below.
+        return ('<' + root + '>' + ''.join('<' + n + '>' + v + '</' + n + '>' for n, v, _ in rows)
+                + '</' + root + '>').encode()
+
+    def fields(root, rows):
+        out = {}
+        for name, _, oracle in rows:
+            if root in ('AppInfo', 'lookupinfo', 'lookup'):
+                continue
+            if name == 'exchangel' and any(n == 'exchange1' for n, _, _ in rows):
+                continue
+            for key, value in oracle.items():
+                if key == 'radio':
+                    out.setdefault(key, {}).update(value)
+                else:
+                    out[key] = value
+        if root in ('radio_setfrequency', 'Spectrum'):
+            out['operation'] = 'set_frequency' if root == 'radio_setfrequency' else 'n1mm.spectrum'
+        return out
+
+    def positive(name, raw, kind, expected, direction='from_application', view=False, supplied=None):
+        ctx = supplied or context(direction)
+        event = {'spec': SPEC, 'family': 'n1mm', 'mapping': 1, 'kind': kind,
+                 'context': copy.deepcopy(ctx), 'fields': copy.deepcopy(expected),
+                 'native': {'format': 'n1mm_xml', 'data': b64(raw)}}
+        value = {'class': 'positive', 'input': {'data': b64(raw), 'context': copy.deepcopy(ctx)},
+                 'expected': {'event': event}, 'reencode': {'data': b64(raw)}}
+        if view:
+            import re
+            content = raw.decode('utf-8-sig')
+            value['expected_message'] = {'root': re.search(r'<([A-Za-z_][\w.-]*)[\s>]', content)[1], 'xml': content}
+        s.add(name, value)
+        return event
+
+    for root, (rows, kind) in catalogs.items():
+        direction = 'to_application' if root in ('radio_setfrequency', 'Spectrum') else 'from_application'
+        positive(root + '-full', XML_DECL.encode() + xml(root, rows), kind, fields(root, rows), direction, view=True)
+        positive(root + '-absent', ('<' + root + '/>').encode(), kind, fields(root, []), direction)
+        # Each documented leaf has separate presence and empty oracles; absence is
+        # the minimal case above, without a required-field assumption from examples.
+        for name, value, oracle in rows:
+            positive(root + '-only-' + name, xml(root, [(name, value, oracle)]), kind,
+                     fields(root, [(name, value, oracle)]), direction)
+            empty_oracle = {k: ({'instance': ''} if k == 'radio' and 'instance' in v else '')
+                            for k, v in oracle.items()
+                            if isinstance(v, str) or k == 'radio' and 'instance' in v}
+            positive(root + '-empty-' + name, xml(root, [(name, '', {})]), kind,
+                     fields(root, [(name, '', empty_oracle)]), direction)
+    # Score nested children and every optional category/selector attribute.
+    score_raw = (b'<dynamicresults><contest>SYNTHETIC</contest><call>K1AAA</call><ops>K1BBB</ops>'
+        b'<class power="HIGH" assisted="ASSISTED" transmitter="UNLIMITED" ops="MULTI-OP" bands="ALL" mode="MIXED" overlay="N/A"/>'
+        b'<club>synthetic-club</club><qth><dxcccountry>K</dxcccountry><cqzone>5</cqzone><iaruzone>8</iaruzone>'
+        b'<arrlsection>SYN</arrlsection><stprvoth>SYN</stprvoth><grid6>FN42AA</grid6></qth>'
+        b'<breakdown><qso band="20" mode="CW">11</qso><point band="20" mode="CW">22</point>'
+        b'<qso band="total" mode="ALL">33</qso><point band="total" mode="ALL">44</point></breakdown>'
+        b'<score>55</score><timestamp>2026-11-12 12:34:56</timestamp></dynamicresults>')
+    positive('score-nested', score_raw, 'score', {'contest_name': 'SYNTHETIC', 'station_call': 'K1AAA',
+        'qso_count': 33, 'points': 44, 'total_score': 55}, view=True)
+    for attr in ('power', 'assisted', 'transmitter', 'ops', 'bands', 'mode', 'overlay'):
+        positive('score-class-attribute-' + attr, f'<dynamicresults><class {attr}="synthetic"/></dynamicresults>'.encode(), 'score', {})
+        positive('score-class-empty-attribute-' + attr, f'<dynamicresults><class {attr}=""/></dynamicresults>'.encode(), 'score', {})
+    for tag in ('dxcccountry', 'cqzone', 'iaruzone', 'arrlsection', 'stprvoth', 'grid6'):
+        for label, val in (('present', 'synthetic'), ('empty', '')):
+            positive('score-qth-' + tag + '-' + label,
+                f'<dynamicresults><qth><{tag}>{val}</{tag}></qth></dynamicresults>'.encode(), 'score', {})
+    for tag, key, count in (('qso', 'qso_count', 33), ('point', 'points', 44)):
+        for label, attrs, val, out in [
+            ('total', 'band="total" mode="ALL"', str(count), {key: count}),
+            ('empty', 'band="total" mode="ALL"', '', {}),
+            ('no-band', 'mode="ALL"', str(count), {}), ('no-mode', 'band="total"', str(count), {}),
+            ('no-attributes', '', str(count), {}), ('empty-band', 'band="" mode="ALL"', str(count), {}),
+            ('empty-mode', 'band="total" mode=""', str(count), {}),
+            ('other-band', 'band="20" mode="ALL"', str(count), {}),
+            ('unknown-attribute', 'band="total" mode="ALL" extra="synthetic"', str(count), {key: count}),
+        ]:
+            raw = f'<dynamicresults><breakdown><{tag} {attrs}>{val}</{tag}></breakdown></dynamicresults>'.encode()
+            positive('score-' + tag + '-' + label, raw, 'score', out)
+    for raw, name in [
+        (b'<dynamicresults><breakdown><qso band="total" mode="ALL">1</qso><qso band="total" mode="ALL">2</qso></breakdown></dynamicresults>', 'duplicate-totals'),
+        (b'<dynamicresults><breakdown/><breakdown><qso band="total" mode="ALL">1</qso></breakdown></dynamicresults>', 'duplicate-breakdown'),
+        (b'<dynamicresults><qth grid6="FN42AA"/></dynamicresults>', 'qth-attribute-not-child'),
+    ]:
+        positive('score-' + name, raw, 'score', {})
+    for spelling, value in [('True', True), ('true', True), ('1', True), ('False', False), ('false', False), ('0', False)]:
+        for tag, key in [('IsRunning', 'running'), ('IsStereo', 'stereo'), ('IsTransmitting', 'transmitting')]:
+            positive('bool-' + tag + '-' + spelling, f'<RadioInfo><{tag}>{spelling}</{tag}></RadioInfo>'.encode(),
+                     'radio_state', {key: value})
+    for spelling in ('yes', 'no', 'TRUE', 'FALSE', '2', ''):
+        positive('bool-unmapped-' + (spelling or 'empty'), f'<RadioInfo><IsRunning>{spelling}</IsRunning></RadioInfo>'.encode(), 'radio_state', {})
+    positive('bool-whitespace', b'<RadioInfo><IsRunning> \ttrue\r\n</IsRunning></RadioInfo>', 'radio_state', {'running': True})
+    for nr, focus, active in [(1, 2, 1), (2, 1, 2), (1, 1, 2), (2, 2, 1), (0, 3, 4)]:
+        positive(f'so2r-{nr}-{focus}-{active}', f'<RadioInfo><RadioNr>{nr}</RadioNr><FocusRadioNr>{focus}</FocusRadioNr><ActiveRadioNr>{active}</ActiveRadioNr></RadioInfo>'.encode(),
+            'radio_state', {'radio': {'number': nr}, 'focus_radio': focus, 'active_radio': active})
+    for root, freq, factor, kind, key in [('RadioInfo', 'Freq', 10, 'radio_state', 'dial_frequency_hz'),
+            ('contactinfo', 'rxfreq', 10, 'qso_logged', 'dial_frequency_hz'),
+            ('contactinfo', 'txfreq', 10, 'qso_logged', 'tx_frequency_hz')]:
+        for label, val, out in [('signed', ' +001234 ', {key: 12340}), ('zero', '0', {key: 0}),
+            ('negative', '-1', {key: -10}), ('maximum', '900719925474099', {key: 9007199254740990}),
+            ('overflow', '900719925474100', {}), ('decimal', '14.5', {}), ('invalid', 'synthetic', {})]:
+            positive(f'number-{root}-{freq}-{label}', f'<{root}><{freq}>{val}</{freq}></{root}>'.encode(), kind, out)
+    for label, raw, out in [
+        ('entities', b'<RadioInfo><StationName>A&amp;B&lt;C&gt;&quot;&apos;&#65;&#x42;</StationName></RadioInfo>', {'radio': {'instance': 'A&B<C>"\'AB'}}),
+        ('cdata', b'<RadioInfo><StationName>a<![CDATA[<b>]]>c</StationName></RadioInfo>', {'radio': {'instance': 'a<b>c'}}),
+        ('line-endings', b'<RadioInfo><StationName> a\r\nb\rc </StationName></RadioInfo>', {'radio': {'instance': ' a\nb\nc '}}),
+        ('self-closing', b'<RadioInfo><StationName/></RadioInfo>', {'radio': {'instance': ''}}),
+        ('unknown', b'<RadioInfo future="yes"><Future><Freq>999</Freq></Future><Freq>1407123</Freq></RadioInfo>', {'dial_frequency_hz': 14071230}),
+        ('duplicate-leaf', b'<RadioInfo><Freq>1</Freq><Freq>2</Freq></RadioInfo>', {}),
+        ('nested-leaf', b'<RadioInfo><Freq><part>1</part></Freq></RadioInfo>', {}),
+        ('attribute-not-leaf', b'<RadioInfo Freq="1407123"/>', {}),
+        ('comments-pi', b'<?synthetic test?><RadioInfo><!-- <!DOCTYPE innocent> --><StationName>synthetic</StationName></RadioInfo>', {'radio': {'instance': 'synthetic'}}),
+        ('invalid-utf8', b'<RadioInfo><StationName>A\xffB</StationName></RadioInfo>', {'radio': {'instance': {'utf8_bytes': [65, 255, 66]}}}),
+    ]:
+        positive('xml-' + label, raw, 'radio_state', out)
+    positive('aliases-prefer-digit', b'<contactinfo><exchangel>old</exchangel><exchange1>new</exchange1></contactinfo>', 'qso_logged', {'exchange_received': 'new'})
+    positive('aliases-prefer-empty', b'<contactinfo><exchangel>old</exchangel><exchange1/></contactinfo>', 'qso_logged', {'exchange_received': ''})
+    positive('aliases-no-fallback-on-duplicate', b'<contactinfo><exchangel>old</exchangel><exchange1>a</exchange1><exchange1>b</exchange1></contactinfo>', 'qso_logged', {})
+    positive('spot-delete', b'<spot><action>delete</action><dxcall>W1AAA</dxcall></spot>', 'spot', {'call': 'W1AAA'})
+    positive('unresolved-time', b'<contactinfo><timestamp>2026-11-12 12:34:56</timestamp></contactinfo>', 'qso_logged', {})
+    for encoding in ('utf-8-sig', 'utf-16-le', 'utf-16-be'):
+        declaration = '<?xml version="1.0" encoding="UTF-16"?>' if encoding.startswith('utf-16') else XML_DECL
+        raw = (declaration + '<RadioInfo><StationName>synthetic-α</StationName></RadioInfo>').encode(encoding)
+        if encoding.startswith('utf-16'):
+            raw = (b'\xff\xfe' if encoding.endswith('le') else b'\xfe\xff') + raw
+        positive('encoding-' + encoding, raw, 'radio_state', {'radio': {'instance': 'synthetic-α'}})
+    for encoding in ('utf-8-sig', 'utf-16-le', 'utf-16-be'):
+        v = s.vectors['encoding-' + encoding]
+        v['expected_message'] = {'root': 'RadioInfo',
+            'xml': base64.b64decode(v['input']['data'])[3 if encoding == 'utf-8-sig' else 2:].decode('utf-8' if encoding == 'utf-8-sig' else encoding)}
+    positive('encoding-utf16-signature', '<?xml version="1.0" encoding="UTF-16BE"?><RadioInfo/>'.encode('utf-16-be'), 'radio_state', {})
+    raw = b'\xff\xfe' + '<RadioInfo><StationName>A\ud800B</StationName></RadioInfo>'.encode('utf-16-le', 'surrogatepass')
+    positive('invalid-utf16-leaf', raw, 'radio_state', {'radio': {'instance': {'utf16_units': [65, 0xd800, 66]}}})
+    positive('caller-context', b'<RadioInfo/>', 'radio_state', {}, supplied={
+        'direction': 'unknown', 'exchange': 'request', 'source_id': 'synthetic-observer',
+        'target_id': 'synthetic-target', 'correlation_id': 'synthetic-request'})
+    positive('depth-boundary', b'<RadioInfo>' + b'<x>' * 15 + b'</x>' * 15 + b'</RadioInfo>', 'radio_state', {})
+    positive('element-boundary', b'<RadioInfo>' + b'<x/>' * 1023 + b'</RadioInfo>', 'radio_state', {})
+    positive('attributes-per-element-boundary', ('<RadioInfo ' + ' '.join(f'a{i}=""' for i in range(16)) + '/>').encode(), 'radio_state', {})
+    positive('attributes-total-boundary', ('<RadioInfo>' + ''.join('<x ' + ' '.join(f'a{i}=""' for i in range(16)) + '/>' for _ in range(16)) + '</RadioInfo>').encode(), 'radio_state', {})
+    positive('name-boundary', ('<RadioInfo><' + 'x' * 128 + '/></RadioInfo>').encode(), 'radio_state', {})
+    positive('numeric-token-boundary', b'<RadioInfo><Freq>' + b'9' * 128 + b'</Freq></RadioInfo>', 'radio_state', {})
+    pad = 'a' * (65507 - len(b'<RadioInfo><StationName></StationName></RadioInfo>'))
+    positive('datagram-output-boundary', ('<RadioInfo><StationName>' + pad + '</StationName></RadioInfo>').encode(),
+             'radio_state', {'radio': {'instance': pad}}, view=True)
+    for name, raw, category in [
+        ('doctype', b'<!DOCTYPE RadioInfo><RadioInfo/>', 'malformed'),
+        ('entity-declaration', b'<!ENTITY x "synthetic"><RadioInfo/>', 'malformed'),
+        ('entity-expansion', b'<!DOCTYPE RadioInfo [<!ENTITY a "aaaaaaaa"><!ENTITY b "&a;&a;&a;&a;">]><RadioInfo>&b;</RadioInfo>', 'malformed'),
+        ('external-entity', b'<!DOCTYPE RadioInfo [<!ENTITY x SYSTEM "https://example.invalid/synthetic">]><RadioInfo>&x;</RadioInfo>', 'malformed'),
+        ('external-file', b'<!DOCTYPE RadioInfo SYSTEM "file:///synthetic"><RadioInfo/>', 'malformed'),
+        ('parameter-entity', b'<!DOCTYPE RadioInfo [<!ENTITY % x SYSTEM "https://example.invalid/synthetic">%x;]><RadioInfo/>', 'malformed'),
+        ('depth-overflow', b'<RadioInfo>' + b'<x>' * 16 + b'</x>' * 16 + b'</RadioInfo>', 'oversized'),
+        ('elements-overflow', b'<RadioInfo>' + b'<x/>' * 1024 + b'</RadioInfo>', 'oversized'),
+        ('attributes-overflow', ('<RadioInfo ' + ' '.join(f'a{i}=""' for i in range(17)) + '/>').encode(), 'oversized'),
+        ('total-attributes-overflow', ('<RadioInfo>' + ''.join('<x ' + ' '.join(f'a{i}=""' for i in range(16)) + '/>' for _ in range(17)) + '</RadioInfo>').encode(), 'oversized'),
+        ('name-overflow', ('<RadioInfo><' + 'x' * 129 + '/></RadioInfo>').encode(), 'oversized'),
+        ('numeric-token-overflow', b'<RadioInfo><Freq>' + b'9' * 129 + b'</Freq></RadioInfo>', 'oversized'),
+        ('datagram-overflow', b' ' * 65508, 'oversized'), ('size-before-attack', b'<!DOCTYPE x>' + b' ' * 65500, 'oversized'),
+        ('empty', b'', 'truncated'), ('unfinished', b'<RadioInfo><Freq>1', 'truncated'),
+        ('unfinished-tag', b'<RadioInfo', 'truncated'), ('unfinished-entity', b'<RadioInfo>&am', 'truncated'),
+        ('mismatched', b'<RadioInfo><x></y></RadioInfo>', 'malformed'), ('multiple-roots', b'<RadioInfo/><AppInfo/>', 'malformed'),
+        ('invalid-nul', b'<RadioInfo><StationName>\x00</StationName></RadioInfo>', 'malformed'),
+        ('undeclared-entity', b'<RadioInfo>&synthetic;</RadioInfo>', 'malformed'),
+        ('duplicate-attribute', b'<RadioInfo x="a" x="b"/>', 'malformed'),
+        ('unbound-prefix', b'<RadioInfo><x:y/></RadioInfo>', 'malformed'),
+        ('invalid-markup-utf8', b'<Radio\xffInfo/>', 'malformed'),
+        ('odd-utf16', b'\xff\xfe<\x00R', 'truncated'),
+        ('encoding-conflict', b'<?xml version="1.0" encoding="utf-16"?><RadioInfo/>', 'malformed'),
+        ('unsupported-encoding', b'<?xml version="1.0" encoding="iso-8859-1"?><RadioInfo/>', 'unsupported_version'),
+        ('unsupported-xml-version', b'<?xml version="1.1"?><RadioInfo/>', 'unsupported_version'),
+        ('source-declaration-typo', b'<?xml version="1 .0"?><AppInfo/>', 'malformed'),
+        ('source-run-tag-typo', b'<contactinfo><run1run2>1<run1run2></contactinfo>', 'malformed'),
+    ]:
+        s.negative('error-' + name, raw, category)
+    for name, raw, typ in [('future', b'<FutureRadio><Freq>1</Freq></FutureRadio>', 'FutureRadio'),
+        ('case', b'<radioinfo/>', 'radioinfo'), ('namespace', b'<n:RadioInfo xmlns:n="urn:synthetic"/>', 'n:RadioInfo')]:
+        s.add('skip-' + name, {'class': 'skip', 'input': {'data': b64(raw), 'context': context()},
+            'expected': {'skip': {'reason': 'unknown_type', 'type': typ}}})
+    # A known/unknown root never bypasses complete isolation and bounds checks.
+    s.negative('error-unknown-root-depth', b'<FutureRadio>' + b'<x>' * 16 + b'</x>' * 16 + b'</FutureRadio>', 'oversized')
+    s.negative('error-unknown-root-doctype', b'<!DOCTYPE FutureRadio><FutureRadio/>', 'malformed')
+    s.negative('error-namespace-attribute-overflow', ('<RadioInfo ' + ' '.join(f'xmlns:n{i}="urn:synthetic:{i}"' for i in range(17)) + '/>').encode(), 'oversized')
+    s.negative('error-utf16-doctype', ('<?xml version="1.0" encoding="utf-16"?><!DOCTYPE RadioInfo><RadioInfo/>').encode('utf-16'), 'malformed')
+    s.negative('error-invalid-attribute-text', b'<RadioInfo label="\xff"/>', 'malformed')
+    s.add('skip-default-namespace', {'class': 'skip',
+        'input': {'data': b64(b'<RadioInfo xmlns="urn:synthetic"/>'), 'context': context()},
+        'expected': {'skip': {'reason': 'unknown_type', 'type': 'RadioInfo'}}})
+    # Namespace-bound children do not match an unqualified mapped leaf.
+    positive('xml-namespaced-child', b'<RadioInfo xmlns:n="urn:synthetic"><n:StationName>synthetic</n:StationName></RadioInfo>', 'radio_state', {})
+    positive('invalid-utf8-view', b'<RadioInfo><StationName>A\xffB</StationName></RadioInfo>',
+        'radio_state', {'radio': {'instance': {'utf8_bytes': [65, 255, 66]}}})
+    s.vectors['invalid-utf8-view']['expected_message'] = {'root': 'RadioInfo',
+        'xml': {'utf8_bytes': list(b'<RadioInfo><StationName>A\xffB</StationName></RadioInfo>')}}
+    positive('xml-attribute-normalization', b'<dynamicresults><breakdown><qso band="total" mode="A&#76;L">17</qso></breakdown></dynamicresults>', 'score', {'qso_count': 17})
+    s.negative('error-future-xml-declaration', b'<?xml version="1.9"?><RadioInfo/>', 'unsupported_version')
+    n1mm_commands(s)
+    n1mm_compatibility(s)
+    return s
+
+
+def n1mm_commands(s):
+    def event(fields):
+        return {'spec': SPEC, 'family': 'n1mm', 'mapping': 1, 'kind': 'control',
+                'context': context('to_application'), 'fields': fields}
+
+    qsy = {'operation': 'set_frequency', 'app': 'synthetic-client', 'radio': {'number': 2}, 'frequency_hz': 14053284}
+    spectrum = {'operation': 'n1mm.spectrum', 'app': 'synthetic-client', 'spectrum_name': 'synthetic-spectrum',
+        'low_scope_frequency': '14000', 'high_scope_frequency': '14055', 'scaling_factor': '0.3125',
+        'spectrum_data': [0, 1, 160, 65535]}
+    for nr, hz, unit, native in [(1, 14053284, 'kHz', '14053.284'), (2, 14053284, 'kHz', '14053.284'),
+        (2, 14053284, 'Hz', '14053284'), (1, 14053000, 'kHz', '14053'), (2, 1, 'kHz', '0.001'),
+        (1, 0, 'kHz', '0'), (2, 9007199254740991, 'kHz', '9007199254740.991')]:
+        command = event(dict(qsy, radio={'number': nr}, frequency_hz=hz))
+        raw = (XML_DECL + f'<radio_setfrequency><app>synthetic-client</app><radionr>{nr}</radionr><frequency>{native}</frequency><mousebutton>{"Left" if nr == 1 else "Right"}</mousebutton></radio_setfrequency>').encode()
+        s.add(f'command-qsy-{nr}-{hz}-{unit}', {'class': 'command', 'input': {'event': command, 'options': {'frequency_unit': unit}},
+              'expected': {'data': b64(raw)}})
+    for label, name, escaped in [('normal', 'synthetic-spectrum', 'synthetic-spectrum'),
+        ('xml-text', 'A&B<C>\r"\t\n', 'A&amp;B&lt;C&gt;&#13;"\t\n'), ('empty', '', '')]:
+        command = event(dict(spectrum, spectrum_name=name))
+        raw = (XML_DECL + '<Spectrum><app>synthetic-client</app><Name>' + escaped + '</Name><LowScopeFrequency>14000</LowScopeFrequency><HighScopeFrequency>14055</HighScopeFrequency><ScalingFactor>0.3125</ScalingFactor><DataCount>4</DataCount><SpectrumData>0,1,160,65535</SpectrumData></Spectrum>').encode()
+        s.add('command-spectrum-' + label, {'class': 'command', 'input': {'event': command}, 'expected': {'data': b64(raw)}})
+
+    def negative(label, fields, options=None, category='invalid_value', mutate=None):
+        cmd = event(copy.deepcopy(fields))
+        if mutate:
+            mutate(cmd)
+        inp = {'event': cmd}
+        if options is not None:
+            inp['options'] = options
+        s.add('command-error-' + label, {'class': 'command_negative', 'input': inp,
+              'expected': {'error': {'category': category}}})
+    for label, baseline, opts in [('qsy', qsy, {'frequency_unit': 'kHz'}), ('spectrum', spectrum, {})]:
+        for key in baseline:
+            missing = copy.deepcopy(baseline)
+            missing.pop(key)
+            negative(label + '-missing-' + key, missing, opts)
+    for label, changes in [('negative-frequency', {'frequency_hz': -1}), ('frequency-overflow', {'frequency_hz': 9007199254740992}),
+        ('boolean-frequency', {'frequency_hz': True}), ('fractional-frequency', {'frequency_hz': 1.5}),
+        ('radio-zero', {'radio': {'number': 0}}), ('radio-three', {'radio': {'number': 3}}),
+        ('radio-bool', {'radio': {'number': True}}), ('radio-string', {'radio': {'number': '2'}}),
+        ('radio-instance', {'radio': {'number': 2, 'instance': 'synthetic'}}), ('offset', {'rx_offset_hz': 100}),
+        ('null-app', {'app': None}), ('raw-app', {'app': {'utf8_bytes': [255]}}), ('nul-app', {'app': '\x00'}),
+        ('surrogate-app', {'app': '\ud800'}), ('unknown-operation', {'operation': 'n1mm.unknown'})]:
+        negative(label, dict(qsy, **changes), {'frequency_unit': 'kHz'})
+    for label, opts in [('missing-units', None), ('unknown-units', {'frequency_unit': 'MHz'}),
+                        ('schema-option', {'frequency_unit': 'kHz', 'schema': 1})]:
+        negative(label, qsy, opts)
+    for label, changes in [('empty-levels', {'spectrum_data': []}), ('negative-level', {'spectrum_data': [-1]}),
+        ('level-overflow', {'spectrum_data': [65536]}), ('level-bool', {'spectrum_data': [True]}),
+        ('too-many-levels', {'spectrum_data': [1] * 4097}), ('zero-scale', {'scaling_factor': '0'}),
+        ('reversed-endpoints', {'high_scope_frequency': '1'}), ('negative-endpoint', {'low_scope_frequency': '-1'}),
+        ('exponent', {'scaling_factor': '1e3'}), ('decimal-whitespace', {'scaling_factor': ' 1'}),
+        ('number-not-text', {'low_scope_frequency': 14000})]:
+        negative(label, dict(spectrum, **changes))
+    negative('numeric-token-bound', dict(spectrum, scaling_factor='1' * 129), category='oversized')
+    negative('datagram-bound', dict(spectrum, spectrum_name='a' * 65507), category='oversized')
+    negative('revision', qsy, {'frequency_unit': 'kHz'}, 'unsupported_version', lambda e: e.update(mapping=2))
+    negative('native-version', qsy, {'frequency_unit': 'kHz'}, mutate=lambda e: e.update(native_version='1'))
+    negative('wire-id', qsy, {'frequency_unit': 'kHz'}, mutate=lambda e: e.update(wire_id='synthetic'))
+
+
+def n1mm_compatibility(s):
+    base = s.vectors['RadioInfo-full']['expected']['event']
+    for label, writer, reader, mutate, kind, verification in [
+        ('new-reader-old-writer', SPEC, '0.2.0', lambda e: None, 'radio_state', 'verified'),
+        ('newer-program-label', SPEC, SPEC, lambda e: e['native'].update(data=b64(base64.b64decode(e['native']['data']).replace(b'synthetic-logger', b'synthetic-newer-program'))), 'radio_state', 'verified'),
+        ('old-reader-new-member', '0.2.0', SPEC, lambda e: e.update(future_member='synthetic'), 'radio_state', 'verified'),
+        ('known-root-new-revision', SPEC, SPEC, lambda e: e.update(mapping=2), 'radio_state', 'verified'),
+        ('unknown-root-known-kind', SPEC, SPEC, lambda e: (e.update(mapping=2), e['native'].update(data=b64(b'<FutureRadio/>'))), 'native', 'unavailable'),
+        ('unknown-kind', '0.2.0', SPEC, lambda e: (e.update(mapping=2, kind='future_kind'), e['native'].update(data=b64(b'<FutureRadio/>'))), 'native', 'unavailable'),
+    ]:
+        event = copy.deepcopy(base)
+        event['spec'] = writer
+        mutate(event)
+        read = {k: copy.deepcopy(event[k]) for k in ('kind', 'fields', 'context', 'native')}
+        if label == 'unknown-kind':
+            read.update(kind='native', fields={})
+        s.add('compat-' + label, {'class': 'compatibility', 'writer_spec': writer, 'reader_spec': reader,
+            'input': {'event': event}, 'expected': {'read': read, 'verification': verification}})
+    cmd = copy.deepcopy(s.vectors['command-qsy-2-14053284-kHz']['input']['event'])
+    for label, event, reader in [('new-reader-old-command', cmd, '0.2.0'),
+            ('old-reader-new-command', dict(cmd, spec='0.2.0', mapping=2), SPEC)]:
+        s.add('compat-' + label, {'class': 'compatibility', 'writer_spec': event['spec'], 'reader_spec': reader,
+            'input': {'event': event}, 'expected': {'read': {k: copy.deepcopy(event[k]) for k in ('kind', 'fields', 'context')},
+                                                  'preserved_command': copy.deepcopy(event)}})
+    event = copy.deepcopy(base)
+    event['spec'] = '1.0.0'
+    s.add('compat-major', {'class': 'compatibility', 'writer_spec': '1.0.0', 'reader_spec': SPEC,
+        'input': {'event': event}, 'expected': {'error': {'category': 'unsupported_version'}}})
+    event = copy.deepcopy(base)
+    event['fields']['focus_radio'] = 2
+    s.add('event-native-disagreement', {'class': 'negative', 'input': {'event': event},
+        'expected': {'error': {'category': 'invalid_value'}}})
+
+
+def check_n1mm_xml(raw):
+    """Test-only isolation/bounds checker, not an event codec or upstream parser.
+
+    Oracles are authored independently above. No I/O or entity resolution occurs.
+    Invalid leaf code units are masked only to check XML structure; the suite keeps
+    and separately checks their raw-wrapper oracles.
+    """
+    import re
+    from xml.parsers import expat
+    if len(raw) > 65507:
+        raise ValueError('oversized')
+    if not raw:
+        raise ValueError('truncated')
+    enc = 'utf-8'
+    bom = 0
+    if raw.startswith(b'\xff\xfe'):
+        enc, bom = 'utf-16-le', 2
+    elif raw.startswith(b'\xfe\xff'):
+        enc, bom = 'utf-16-be', 2
+    elif raw.startswith(b'\xef\xbb\xbf'):
+        bom = 3
+    elif raw.startswith(b'<\x00?\x00'):
+        enc = 'utf-16-le'
+    elif raw.startswith(b'\x00<\x00?'):
+        enc = 'utf-16-be'
+    if enc.startswith('utf-16') and (len(raw) - bom) % 2:
+        raise ValueError('truncated')
+    content = raw[bom:].decode(enc, 'surrogatepass' if enc.startswith('utf-16') else 'surrogateescape')
+    declared = re.match(r'<\?xml\s+version=[\'"]([^\'"]+)[\'"](?:\s+encoding=[\'"]([^\'"]+)[\'"])?', content)
+    if declared:
+        version, label = declared.groups()
+        if version != '1.0' and re.fullmatch(r'[0-9]+\.[0-9]+', version):
+            raise ValueError('unsupported_version')
+        if version != '1.0':
+            raise ValueError('malformed')
+        if label:
+            label = label.lower()
+            if label not in ('utf-8', 'utf-16', 'utf-16le', 'utf-16be'):
+                raise ValueError('unsupported_version')
+            compatible = {'utf-8': ['utf-8'], 'utf-16-le': ['utf-16', 'utf-16le'], 'utf-16-be': ['utf-16', 'utf-16be']}
+            if label not in compatible[enc]:
+                raise ValueError('malformed')
+    # Ignore comment/CDATA contents only for declaration detection.
+    isolation = re.sub(r'<!--.*?-->|<!\[CDATA\[.*?\]\]>', '', content, flags=re.S)
+    if re.search(r'<!\s*(?:DOCTYPE|ENTITY)\b', isolation):
+        raise ValueError('malformed')
+    parts = re.split(r'(<[^>]*>)', content)
+    for i, part in enumerate(parts):
+        if any(0xd800 <= ord(c) <= 0xdfff for c in part):
+            if i % 2:
+                raise ValueError('malformed')
+            parts[i] = ''.join('\ue000' if 0xd800 <= ord(c) <= 0xdfff else c for c in part)
+    masked = ''.join(parts)
+    # Expat receives Unicode, so its declaration must describe that Unicode input.
+    masked = re.sub(r'(<\?xml[^?]*encoding=[\'"])[^\'"]+', r'\1utf-8', masked, count=1)
+    parser = expat.ParserCreate(namespace_separator='|')
+    parser.ordered_attributes = True
+    depth, count, attrs, expanded = 0, 0, 0, 0
+    stack = []
+    pending_namespaces = 0
+    interpreted = {'Freq', 'RadioNr', 'FocusRadioNr', 'ActiveRadioNr', 'rxfreq', 'txfreq', 'radionr', 'score', 'qso', 'point'}
+
+    def add_text(value):
+        nonlocal expanded
+        expanded += len(value.encode('utf-8'))
+        if expanded > 65507:
+            raise ValueError('oversized')
+
+    def start(name, attributes):
+        nonlocal depth, count, attrs, pending_namespaces
+        depth += 1
+        count += 1
+        attrs += len(attributes) // 2
+        if depth > 16 or count > 1024 or len(attributes) // 2 + pending_namespaces > 16 or attrs > 256:
+            raise ValueError('oversized')
+        if len(name.encode('utf-8')) > 128 or any(len(a.encode('utf-8')) > 128 for a in attributes[::2]):
+            raise ValueError('oversized')
+        for val in attributes[1::2]:
+            add_text(val)
+        pending_namespaces = 0
+        stack.append([name, ''])
+
+    def end(name):
+        nonlocal depth
+        tag, val = stack.pop()
+        if tag in interpreted and len(val.strip(' \t\r\n')) > 128:
+            raise ValueError('oversized')
+        depth -= 1
+
+    def chars(value):
+        add_text(value)
+        if stack:
+            stack[-1][1] += value
+
+    def namespace(prefix, uri):
+        nonlocal attrs, pending_namespaces
+        attrs += 1
+        pending_namespaces += 1
+        if attrs > 256:
+            raise ValueError('oversized')
+        add_text(uri or '')
+
+    parser.StartElementHandler = start
+    parser.EndElementHandler = end
+    parser.CharacterDataHandler = chars
+    parser.StartNamespaceDeclHandler = namespace
+    try:
+        parser.Parse(masked, True)
+    except expat.ExpatError as error:
+        unfinished = {expat.errors.codes[k] for k in (expat.errors.XML_ERROR_NO_ELEMENTS,
+            expat.errors.XML_ERROR_UNCLOSED_TOKEN, expat.errors.XML_ERROR_PARTIAL_CHAR,
+            expat.errors.XML_ERROR_UNCLOSED_CDATA_SECTION)}
+        if error.code in unfinished or error.code == expat.errors.codes[expat.errors.XML_ERROR_INVALID_TOKEN] and depth and not content.rstrip().endswith('>'):
+            raise ValueError('truncated') from error
+        raise ValueError('malformed') from error
+
+
+def check_n1mm_commands(suite):
+    """A small independent writer checker exercises command oracles and errors."""
+    import re
+    from decimal import Decimal
+
+    def encode(inp):
+        event, options = inp['event'], inp.get('options', {})
+        if event['mapping'] != 1:
+            raise ValueError('unsupported_version')
+        if 'wire_id' in event or 'native_version' in event or 'native' in event:
+            raise ValueError('invalid_value')
+        f = event['fields']
+
+        def string(key):
+            val = f[key]
+            if not isinstance(val, str) or any(not (ord(c) in (9, 10, 13) or 32 <= ord(c) <= 0xd7ff or 0xe000 <= ord(c) <= 0xfffd or 0x10000 <= ord(c) <= 0x10ffff) for c in val):
+                raise ValueError('invalid_value')
+            return val.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('\r', '&#13;')
+
+        def decimal(key):
+            val = f[key]
+            if isinstance(val, str) and len(val) > 128:
+                raise ValueError('oversized')
+            if not isinstance(val, str) or not re.fullmatch(r'[0-9]+(?:\.[0-9]+)?', val):
+                raise ValueError('invalid_value')
+            return Decimal(val)
+
+        try:
+            if f['operation'] == 'set_frequency':
+                if set(f) != {'operation', 'app', 'frequency_hz', 'radio'} or set(options) != {'frequency_unit'}:
+                    raise ValueError('invalid_value')
+                hz, radio = f['frequency_hz'], f['radio']
+                if type(hz) is not int or not 0 <= hz <= 9007199254740991 or not isinstance(radio, dict) or set(radio) != {'number'} or type(radio['number']) is not int or radio['number'] not in (1, 2):
+                    raise ValueError('invalid_value')
+                if options['frequency_unit'] not in ('Hz', 'kHz'):
+                    raise ValueError('invalid_value')
+                # Integer arithmetic, independent from the expected decimal strings.
+                native = str(hz)
+                if options['frequency_unit'] == 'kHz':
+                    q, r = divmod(hz, 1000)
+                    native = str(q) + ('.' + f'{r:03}'.rstrip('0') if r else '')
+                nr = radio['number']
+                root = 'radio_setfrequency'
+                children = [('app', string('app')), ('radionr', str(nr)), ('frequency', native),
+                            ('mousebutton', 'Left' if nr == 1 else 'Right')]
+            elif f['operation'] == 'n1mm.spectrum':
+                if set(f) != {'operation', 'app', 'spectrum_name', 'low_scope_frequency', 'high_scope_frequency', 'scaling_factor', 'spectrum_data'} or options:
+                    raise ValueError('invalid_value')
+                if decimal('low_scope_frequency') < 0 or decimal('high_scope_frequency') <= decimal('low_scope_frequency') or decimal('scaling_factor') <= 0:
+                    raise ValueError('invalid_value')
+                levels = f['spectrum_data']
+                if not isinstance(levels, list) or not 1 <= len(levels) <= 4096 or any(type(v) is not int or not 0 <= v <= 65535 for v in levels):
+                    raise ValueError('invalid_value')
+                root = 'Spectrum'
+                children = [('app', string('app')), ('Name', string('spectrum_name')),
+                    ('LowScopeFrequency', f['low_scope_frequency']), ('HighScopeFrequency', f['high_scope_frequency']),
+                    ('ScalingFactor', f['scaling_factor']), ('DataCount', str(len(levels))),
+                    ('SpectrumData', ','.join(map(str, levels)))]
+            else:
+                raise ValueError('invalid_value')
+        except (KeyError, TypeError) as error:
+            raise ValueError('invalid_value') from error
+        raw = (XML_DECL + '<' + root + '>' + ''.join('<' + k + '>' + v + '</' + k + '>' for k, v in children) + '</' + root + '>').encode()
+        check_n1mm_xml(raw)
+        return raw
+
+    for name, vector in suite.vectors.items():
+        if vector['class'] not in ('command', 'command_negative'):
+            continue
+        try:
+            actual = encode(vector['input'])
+        except ValueError as error:
+            assert vector['class'] == 'command_negative', (name, error)
+            assert str(error) == vector['expected']['error']['category'], (name, error)
+        else:
+            assert vector['class'] == 'command', name + ' planted command failure accepted'
+            assert b64(actual) == vector['expected']['data'], name
+
+
+def validate_n1mm(suite, producer_strict):
+    check_n1mm_commands(suite)
+    for name, vector in suite.vectors.items():
+        if vector['class'] not in ('positive', 'negative', 'skip') or 'data' not in vector['input']:
+            continue
+        raw = base64.b64decode(vector['input']['data'], validate=True)
+        try:
+            check_n1mm_xml(raw)
+        except ValueError as error:
+            assert vector['class'] == 'negative', (name, error)
+            assert str(error) == vector['expected']['error']['category'], (name, error)
+        else:
+            assert vector['class'] != 'negative', name + ' planted XML failure accepted'
+        if vector['class'] == 'positive':
+            assert vector['expected']['event']['native']['data'] == vector['input']['data'] == vector['reencode']['data'], name
+    # Read native SO2R sentinels independently of the fixture row/oracle catalog.
+    import xml.etree.ElementTree as ET
+    vector = suite.vectors['RadioInfo-full']
+    root = ET.fromstring(base64.b64decode(vector['input']['data']))
+    actual = {'focus_radio': int(root.findtext('FocusRadioNr')),
+        'active_radio': int(root.findtext('ActiveRadioNr')),
+        'running': root.findtext('IsRunning') in ('True', 'true', '1'),
+        'stereo': root.findtext('IsStereo') in ('True', 'true', '1'),
+        'transmitting': root.findtext('IsTransmitting') in ('True', 'true', '1')}
+    expected = vector['expected']['event']['fields']
+    assert all(actual[k] == expected[k] for k in actual)
+    assert expected['radio']['number'] == int(root.findtext('RadioNr'))
+    for a, b in [('focus_radio', 'active_radio'), ('running', 'transmitting'), ('stereo', 'transmitting')]:
+        planted = dict(expected)
+        planted[a], planted[b] = expected[b], expected[a]
+        assert any(actual[k] != planted[k] for k in actual), 'undetected N1MM swap'
+    disagreement = suite.vectors['event-native-disagreement']['input']['event']
+    assert any(actual[k] != disagreement['fields'][k] for k in actual)
+    for name, vector in suite.vectors.items():
+        if name.startswith('compat-') and 'verification' in vector['expected']:
+            known = ET.fromstring(base64.b64decode(vector['input']['event']['native']['data'])).tag == 'RadioInfo'
+            assert vector['expected']['verification'] == ('verified' if known else 'unavailable'), name
+    try:
+        import jsonschema
+    except ImportError:
+        if producer_strict:
+            raise SystemExit('--producer-strict requires jsonschema')
+        return 'N1MM XML bounds/command checks passed; schema validation skipped'
+    schema = json.loads((ROOT / 'spec/schema/qgi-event-0.1.0.schema.json').read_text())
+    reader = jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
+    producer = producer_validator(schema, jsonschema) if producer_strict else reader
+    for name, vector in suite.vectors.items():
+        if vector['class'] == 'positive':
+            event = vector['expected']['event']
+            reader.validate(event)
+            producer.validate(event)
+            assert 'native_version' not in event and 'wire_id' not in event, name
+            if 'expected_message' in vector:
+                event = copy.deepcopy(event)
+                event['native']['message'] = vector['expected_message']
+                producer.validate(event)
+            assert len(json.dumps(event, ensure_ascii=False, separators=(',', ':')).encode()) <= 1048576, name
+        elif vector['class'] == 'command':
+            reader.validate(vector['input']['event'])
+            producer.validate(vector['input']['event'])
+        elif vector['class'] == 'compatibility' and vector['writer_spec'].startswith('0.'):
+            reader.validate(vector['input']['event'])
+    if producer_strict:
+        for name, mutation in [('RadioInfo-full', lambda e: e['fields']['radio'].update(future=1)),
+            ('radio_setfrequency-full', lambda e: e['fields']['radio'].update(future=1)),
+            ('Spectrum-full', lambda e: e['fields'].update(future=1))]:
+            event = copy.deepcopy(suite.vectors[name]['expected']['event'])
+            mutation(event)
+            assert reader.is_valid(event) and not producer.is_valid(event), name
+        event = copy.deepcopy(suite.vectors['RadioInfo-full']['expected']['event'])
+        event['native']['message'] = dict(suite.vectors['RadioInfo-full']['expected_message'], future=1)
+        assert reader.is_valid(event) and not producer.is_valid(event)
+    return 'N1MM XML isolation/bounds, command bytes/errors, radio swap sentinels, positive/command schemas and same-MAJOR compatibility shapes checked'
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true', help='check exact generated files without writing')
@@ -1255,6 +1897,8 @@ def main():
     suite = build()
     qgi = qgi_vectors(suite)
     validation = validate(suite, qgi, args.producer_strict)
+    n1mm = n1mm_vectors()
+    n1mm_validation = validate_n1mm(n1mm, args.producer_strict)
     outputs = {name + '.json': dump(vector) for name, vector in suite.vectors.items()}
     manifest = {'$comment': 'SPDX-License-Identifier: GPL-3.0-or-later', 'spec': SPEC, 'family': 'wsjtx', 'mapping': 1, 'source_sha256': PIN,
                 'hash_scope': 'SHA-256 of each complete vector file, including its final newline',
@@ -1278,6 +1922,15 @@ def main():
                      'family': 'qgi', 'mapping': 1, 'sha256': hashlib.sha256(data).hexdigest()}
                     for name, data in sorted(qgi_outputs.items())]})
     outputs.update({'qgi/' + name: data for name, data in qgi_outputs.items()})
+    n1mm_outputs = {name + '.json': dump(vector) for name, vector in n1mm.vectors.items()}
+    n1mm_outputs['manifest.json'] = dump({
+        '$comment': 'SPDX-License-Identifier: GPL-3.0-or-later', 'spec': SPEC, 'family': 'n1mm', 'mapping': 1,
+        'retrieved': '2026-11-12', 'examples_updated': '2019-09-30', 'source_sha256': N1MM_SOURCES,
+        'hash_scope': 'SHA-256 of each complete vector file, including its final newline',
+        'vectors': [{'file': name, 'class': n1mm.vectors[name[:-5]]['class'], 'spec': SPEC,
+                     'family': 'n1mm', 'mapping': 1, 'sha256': hashlib.sha256(data).hexdigest()}
+                    for name, data in sorted(n1mm_outputs.items())]})
+    outputs.update({'n1mm/' + name: data for name, data in n1mm_outputs.items()})
     vector_root = DEST.parent
     if args.check:
         missing_or_different = [name for name, data in outputs.items()
@@ -1297,6 +1950,9 @@ def main():
     print(('Checked' if args.check else 'Wrote') + ' WSJT-X: ' + ', '.join(f'{n} {k}' for k, n in counts.items()))
     print('qgi: ' + ', '.join(f"{sum(v['class'] == kind for v in qgi.vectors.values())} {kind}"
                             for kind in ('positive', 'negative')))
+    print('N1MM: ' + ', '.join(f"{sum(v['class'] == kind for v in n1mm.vectors.values())} {kind}"
+        for kind in ('positive', 'command', 'command_negative', 'negative', 'skip', 'compatibility')))
+    print(n1mm_validation)
     print(validation)
     return 0
 

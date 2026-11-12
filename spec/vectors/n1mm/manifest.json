@@ -1,0 +1,6496 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "retrieved": "2026-11-12",
+  "examples_updated": "2019-09-30",
+  "source_sha256": {
+    "https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/": "4bd29b8de620b867d8573d2f0dbff78b7af1f50d64f40804d809b4c281bafab9",
+    "https://n1mmwp.hamdocs.com/mmfiles/udp_external_udp_broadcasts-xml/": "784c869b8a7d56ca57e6bb8d6c0308e36ebf6caed44ed28fd6b4c8619c6a5d51",
+    "https://n1mmwp.hamdocs.com/mmfile/get/file/UDP_External_UDP_Broadcasts.xml": "58e0d335c325d1fde94a285b581fdaa4d75965b1aaa564e40969dcbf7eb8400a"
+  },
+  "hash_scope": "SHA-256 of each complete vector file, including its final newline",
+  "vectors": [
+    {
+      "file": "AppInfo-absent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2fb560118d3caa23f964e0678190086338c87ca4f191664ca2e5e560a739c8aa"
+    },
+    {
+      "file": "AppInfo-empty-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a4073eccb9d25e6550ae0aeaa7c01c82923efbba899d0f7416d95df3ea6b7846"
+    },
+    {
+      "file": "AppInfo-empty-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "58fd3f56050d4364ad2c3529cf800339786fee3253b7dab6563ec9f064c93d61"
+    },
+    {
+      "file": "AppInfo-empty-contestname.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2d01f5c5dc4579524b415e36accd98164a082877d3f6599aaac53f7a15e59572"
+    },
+    {
+      "file": "AppInfo-empty-contestnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b2a1dc71c0b027ac58d8ace39ef42c16c80006cd5554443d437f464e2bd25700"
+    },
+    {
+      "file": "AppInfo-empty-dbname.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "823e59a29b96a5fd3337c476885185f4ebaa8899a20da5f87393bbefd7371b0d"
+    },
+    {
+      "file": "AppInfo-empty-mycall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "703b1b7caf1fb3199151755d5df4c04f8b1a8971a773d73582b85b4853680b87"
+    },
+    {
+      "file": "AppInfo-full.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "482afee2cd5226fc77c0c5aa7790e098833c4627cdda69bfbe4d09f6a3e713c6"
+    },
+    {
+      "file": "AppInfo-only-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d3a457dc96c699d3aa2b85b9f019860a7fc66e32c9eba2e7f0a38057faf54351"
+    },
+    {
+      "file": "AppInfo-only-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "99c6fe664b1e2c3238b5cd338157211e1a86dd0e50c00860d3df4db23a30c926"
+    },
+    {
+      "file": "AppInfo-only-contestname.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0650aebbff02862c4ec95a4b8cb856252de25e369d309d3022d3ac414531a22e"
+    },
+    {
+      "file": "AppInfo-only-contestnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c37edf609c9f9c3e6ac75dd121731dd667317f1ca983d48b5a4c6b6bf160f86a"
+    },
+    {
+      "file": "AppInfo-only-dbname.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "da536ad687580ad5d52214e7e06e7cb18c3cc296ddabee1aa99e9ea091044c64"
+    },
+    {
+      "file": "AppInfo-only-mycall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e3b55c4c0823db7fb3275ea40f8012e8880fba760120f37b8604e9a1c3364da5"
+    },
+    {
+      "file": "RadioInfo-absent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c766e79431bfd5a73082421ffe5e0a1bd3f8cb5ceeb1f495b8c422d7ee43370e"
+    },
+    {
+      "file": "RadioInfo-empty-ActiveRadioNr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f87360868f845edd11ab4de2dd0e781f2eb4b6fea2f6e80018fd4993c3cc6aa1"
+    },
+    {
+      "file": "RadioInfo-empty-Antenna.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9ac74cf89e75cafddca3fdc6a32744ea21c5fd6b80ba70cf7be5860ffc70fc79"
+    },
+    {
+      "file": "RadioInfo-empty-AuxAntSelected.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8b7446cd6b2760f438b6839b0b9505a0f35b55972b41679d3f7c5a04b9ce8885"
+    },
+    {
+      "file": "RadioInfo-empty-AuxAntSelectedName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "663fb050fb7553481b21f6a3305065ffc7bc7b5f098f563ac2bae776c6af0dc2"
+    },
+    {
+      "file": "RadioInfo-empty-EntryWindowHwnd.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ee1a67e5ee0add04b7c74391be150fd730a36ac72d0feb40f9423263251ae2d4"
+    },
+    {
+      "file": "RadioInfo-empty-FocusEntry.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7378e9f14f2d92ff5774372688e510d413d0b4a17631ba2dfab3f783cce814e1"
+    },
+    {
+      "file": "RadioInfo-empty-FocusRadioNr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7803c39097b1319a70ca9e1adc04fd120f6779205bf9dae09bc5895b6b1654a3"
+    },
+    {
+      "file": "RadioInfo-empty-Freq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f0d09c1b7d491ee06c407746caea92be4fc15bfcc0520f15c0b2650c761bfc35"
+    },
+    {
+      "file": "RadioInfo-empty-FunctionKeyCaption.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b9bc74602571f9078a1cefdd943360b29de96fba455305fd38f3558a9fa404dd"
+    },
+    {
+      "file": "RadioInfo-empty-IsConnected.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0095e797413b32be314035a019ae54db27b448cb87880efe086619144d7db9f9"
+    },
+    {
+      "file": "RadioInfo-empty-IsRunning.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1174478f6ed002f851dd4994dfd6dc1938558fbc4059eea615763749cdeb6fc0"
+    },
+    {
+      "file": "RadioInfo-empty-IsSplit.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7458159920b2d300822cd6514fe0edadd17220d8c0114ae5ad2087f1f781ee46"
+    },
+    {
+      "file": "RadioInfo-empty-IsStereo.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f63928957d360d77a7c1a642f230e4c51af09ff6fa3bff99080b5332fc4f9794"
+    },
+    {
+      "file": "RadioInfo-empty-IsTransmitting.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "37579c336c74b3fadbcfc5e443b3fec3204ffe9feee9301b3b6ee5e3a7b26060"
+    },
+    {
+      "file": "RadioInfo-empty-Mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "25024d249fcaa3b100fbdf1ddf14bbbf02cce61aaa7a0fa72dc6b4c9bb9f42ea"
+    },
+    {
+      "file": "RadioInfo-empty-OpCall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7eed9735ef301f71c0417b065da019a2c7176d2b1b5f50203627bee9340f02fa"
+    },
+    {
+      "file": "RadioInfo-empty-RadioName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5540cbfa44eff5c974f9a10dd8b3e7c26f7e079498223747d0e60b00f79ecabc"
+    },
+    {
+      "file": "RadioInfo-empty-RadioNr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fcecac6a0dc9f29d302f8868045c8b51c5cc0668abb32a0d9a47a6054596bf60"
+    },
+    {
+      "file": "RadioInfo-empty-Rotors.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d602247efc083ff92838eb233bcc55e34178a53341b211a37c744bc915bc3239"
+    },
+    {
+      "file": "RadioInfo-empty-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6c4d10566c8d26366d55ad35993a1b98d08b38e6528cb9e859f5c42d866ea6e8"
+    },
+    {
+      "file": "RadioInfo-empty-TXFreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dfe51222d4b5ede75f749a5449620f312ee8a6ee63e309d457ecc2e21f3c2623"
+    },
+    {
+      "file": "RadioInfo-empty-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "748ca913f0de8f9d24331d9b8789445b46ee635fc1440ae5f968862c9736b547"
+    },
+    {
+      "file": "RadioInfo-empty-mycall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4ce35e66b0150fc5db8aee8f881a7b7ec6a8c61e66258caba3378c97410dacb0"
+    },
+    {
+      "file": "RadioInfo-full.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "95b4db56a1a73113b85f55cfdd277495b9643dc438b91edbc499c25af50d3f50"
+    },
+    {
+      "file": "RadioInfo-only-ActiveRadioNr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f6a1808cb957a6727b8c8a10a1360df9711b0cbd1bf8bdc660b23c7ced3d1191"
+    },
+    {
+      "file": "RadioInfo-only-Antenna.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c33c2cf7cba7519af74c29eae34725b41b922381dae7b0e9c26e0fb33db7e131"
+    },
+    {
+      "file": "RadioInfo-only-AuxAntSelected.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "91fba9593b60e31746b08fd7405340627ae86487ebcfae77af407101bc0ef0af"
+    },
+    {
+      "file": "RadioInfo-only-AuxAntSelectedName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "663fb050fb7553481b21f6a3305065ffc7bc7b5f098f563ac2bae776c6af0dc2"
+    },
+    {
+      "file": "RadioInfo-only-EntryWindowHwnd.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "45c8a284d0efe159b3a1251b03320e262a4aed30ee835f629cbf22852706c157"
+    },
+    {
+      "file": "RadioInfo-only-FocusEntry.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d85aac956599abcfc0266ef9e8604faf9ca157821bf8f797b05dbaaf06672800"
+    },
+    {
+      "file": "RadioInfo-only-FocusRadioNr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f5a61543b1e609b231ac4afe5ffbf026fe689e0a2db34df1f2dbabba10aae5c0"
+    },
+    {
+      "file": "RadioInfo-only-Freq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a5a42d1d302cebcfd42c4c2dbf3fd859e2207b9ae644ae00441531760f1326f6"
+    },
+    {
+      "file": "RadioInfo-only-FunctionKeyCaption.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "62e8c764d739ace9e567cb0f105520fdecea70e200ceb6c74413c0336f3139ee"
+    },
+    {
+      "file": "RadioInfo-only-IsConnected.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0095e797413b32be314035a019ae54db27b448cb87880efe086619144d7db9f9"
+    },
+    {
+      "file": "RadioInfo-only-IsRunning.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2d0c3f2e97e5256d0ab8d10d7fc72df43f40410d13c0b3bf0e4e9242fc9b945b"
+    },
+    {
+      "file": "RadioInfo-only-IsSplit.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c3546dc7cffa27fbad1b95b531b375d9a9a486e89d6edfab398ea05a7fdd52b0"
+    },
+    {
+      "file": "RadioInfo-only-IsStereo.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e2ca8d5de1bac4e5291ea3e79697a5adc1f87f3d5ea07b5872d3472083e27bfc"
+    },
+    {
+      "file": "RadioInfo-only-IsTransmitting.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "82645072ebd0e99bc847c3cbe2548e508d4f01b47effedbd40d3661dde90e452"
+    },
+    {
+      "file": "RadioInfo-only-Mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f866f588e580771035559177d409e992dfc5778a994f8996c3471847cbcd2604"
+    },
+    {
+      "file": "RadioInfo-only-OpCall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b2642d70610f84593eaf2ba69708492f6ac5fb193b5609a4ec2cf6495da519c5"
+    },
+    {
+      "file": "RadioInfo-only-RadioName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fced76d30de6fa2ed37a2a99ece9a03942ad987da3c3fc6a8c7ecb68cba509ab"
+    },
+    {
+      "file": "RadioInfo-only-RadioNr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ed891b05ef3bbef5e0f8f7d9a76544668b356d2b6f3286d1b910c7c6404bcfc3"
+    },
+    {
+      "file": "RadioInfo-only-Rotors.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fd9263ec177d8a60ee71b248fdc524b6bcff57e7af90566e5f454003a026c13f"
+    },
+    {
+      "file": "RadioInfo-only-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "27cb5685496a5ae59c44eda0b0610b30abb233eeebff7a3004e983456cfe9ab6"
+    },
+    {
+      "file": "RadioInfo-only-TXFreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "11dbe60e9fb0c1809d0753e29cc1ef86ff595dae71d01260372df6ab3ee271c7"
+    },
+    {
+      "file": "RadioInfo-only-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0e9c131c7d20e10d5cb62c095414661a69c4392ee1ea680063b703ff74e546c3"
+    },
+    {
+      "file": "RadioInfo-only-mycall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3e1055bc60d2fbf24226139d75883845549e5905166e0aed0b1c441054ac6153"
+    },
+    {
+      "file": "Spectrum-absent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6ebf786d96cf89fdadfe44f3378d01ccc0686e21ead3b028b0f3bf7e73c4c9bc"
+    },
+    {
+      "file": "Spectrum-empty-DataCount.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fe8bdea15e308b9a260be0d31b3dd8368b4520748060a299c3bf05e0e2b66a1f"
+    },
+    {
+      "file": "Spectrum-empty-HighScopeFrequency.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8fbc2333c5c27e7352204146b2081cb05c68a9074b7aee041361b23d39cb1895"
+    },
+    {
+      "file": "Spectrum-empty-LowScopeFrequency.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ecc49cffcbdf9efa13584a70ce3a4c28ddcdee2f7c96382bda700efa9b459a74"
+    },
+    {
+      "file": "Spectrum-empty-Name.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c4acf4c3279fd188569328c253dca6055a7e1a862caa14d15d160db05faf8d17"
+    },
+    {
+      "file": "Spectrum-empty-ScalingFactor.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7c973287ca23fbe40a85ec6789468771a0f26c55581e66b0c2338127837022af"
+    },
+    {
+      "file": "Spectrum-empty-SpectrumData.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a5e6fc5472d7c7ad58044c9950a9481eb2d07902dcd9cc842c2d0f6b37c6404c"
+    },
+    {
+      "file": "Spectrum-empty-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6e01bf95cc6b1711a062e02193e43227515e342785eb331f72f8bd967c6f6fe4"
+    },
+    {
+      "file": "Spectrum-full.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ff7a99e121948e86297f51d6c89a285d0d210295c33a8b510ee0236eb8e89713"
+    },
+    {
+      "file": "Spectrum-only-DataCount.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5fa717707587f13435dd39f2cd2caee47cccc68eb46d7a982e099fd28b076d71"
+    },
+    {
+      "file": "Spectrum-only-HighScopeFrequency.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b0eb12b22827a170c1b45615b69c38096b74c9fdbff2c610d433b00e58ea5d26"
+    },
+    {
+      "file": "Spectrum-only-LowScopeFrequency.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "904198b15ec8929c603016e55c859b87b1ba96c7ab13ab943064657d51d1b3a7"
+    },
+    {
+      "file": "Spectrum-only-Name.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "956fe8d4044994e477e3c7dbd69ee1687c3039bde31d1f0c314b72a2772e0fdd"
+    },
+    {
+      "file": "Spectrum-only-ScalingFactor.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d6ee719b58ebc8a570da1f09b1ade1156fefe0aa4f2b38c5715d43a8b740492b"
+    },
+    {
+      "file": "Spectrum-only-SpectrumData.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3117d20880654951601cd5115a4eef3f9e7b852bc966a322b34536b37ed227d3"
+    },
+    {
+      "file": "Spectrum-only-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6406f57194be3f1241f79b6938f4f3aae4b4d9df2b86455354de351b7fe3d645"
+    },
+    {
+      "file": "aliases-no-fallback-on-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1621df1489340f0a520ffb1c7b998f3e42c0b3323d382f79cfb9a918dff1520f"
+    },
+    {
+      "file": "aliases-prefer-digit.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b489c0aa4ab13a1be9f0b9f876f8387de1c3cb5623ca458dffd8a6cfb4db0835"
+    },
+    {
+      "file": "aliases-prefer-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4a514f79bdb4f997ef1737c404533f9721619823488e8bc568612a66e57b868d"
+    },
+    {
+      "file": "attributes-per-element-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "987e2f88baf24dcdeb9ffba969ee99df0e153b7ae205c8d11bf1d7207a91caa9"
+    },
+    {
+      "file": "attributes-total-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c8a3a1e0d97994e0ea89985afa205a4b01fa9baf9596193f7306f0eb6014c5d3"
+    },
+    {
+      "file": "bool-IsRunning-0.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9cd207af9d2c18282dc6d794b018535fd4125a2ee8423a6f1c238badd01d1298"
+    },
+    {
+      "file": "bool-IsRunning-1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "45b28c4b0172603707e3c37f633ed09724a652ce403b7819378e3026ec337c2e"
+    },
+    {
+      "file": "bool-IsRunning-False.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fe82918057c362411a3f8a806ea8fec7bbbac56740a6c5c0b6f9f3ca0c8a8ae6"
+    },
+    {
+      "file": "bool-IsRunning-True.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2d0c3f2e97e5256d0ab8d10d7fc72df43f40410d13c0b3bf0e4e9242fc9b945b"
+    },
+    {
+      "file": "bool-IsRunning-false.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "76549839eb7603df93e53c6971a178348bdc225b1f013ca99b5694909648f8cd"
+    },
+    {
+      "file": "bool-IsRunning-true.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8de8aea3bb2584d9b10e37162a827dc6bcd619bd20dfccf4be459897de8c0603"
+    },
+    {
+      "file": "bool-IsStereo-0.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "42e00f676f021823781075f6bd3c05026803791338b774564bbd4cfd93c672d8"
+    },
+    {
+      "file": "bool-IsStereo-1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "98e8e2b8f30435c2ed07e533ae2f01529f877c5452b1f1d7c5aaea6a220b34b6"
+    },
+    {
+      "file": "bool-IsStereo-False.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9e63609ad76068f232afae754d3725643df7560baa4b8ca1cfed621693a5d04f"
+    },
+    {
+      "file": "bool-IsStereo-True.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e2ca8d5de1bac4e5291ea3e79697a5adc1f87f3d5ea07b5872d3472083e27bfc"
+    },
+    {
+      "file": "bool-IsStereo-false.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5940e9156fc0b1fba8c88b1b7a7136fc450fc81daabfb2587333547143b2273d"
+    },
+    {
+      "file": "bool-IsStereo-true.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "aff96281f7522fa1ef5d550343d49b736f5fad169475cbf2615039f43f378219"
+    },
+    {
+      "file": "bool-IsTransmitting-0.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "914f62b1273457f1109ed777e034b24bb7c9b6145e11f4ba6fcf5ebb9cc73992"
+    },
+    {
+      "file": "bool-IsTransmitting-1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4b9c1ad58a7e97bd4c25c040f5ed2fc4091a7151efa480fe21988ba01b5c9ce1"
+    },
+    {
+      "file": "bool-IsTransmitting-False.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "82645072ebd0e99bc847c3cbe2548e508d4f01b47effedbd40d3661dde90e452"
+    },
+    {
+      "file": "bool-IsTransmitting-True.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d3e915d927ab71405c3a840b8943a00b7f6fcd6610a2a91ab865e328a002bce2"
+    },
+    {
+      "file": "bool-IsTransmitting-false.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fac46023b4d43a1b1f050ac157ecd32ef5b608a06bf399a57c0cec1486b23d88"
+    },
+    {
+      "file": "bool-IsTransmitting-true.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3b3fe729ed5affe603d9242943b4fa6b331945d0886d95d74c77557c0ca69bf4"
+    },
+    {
+      "file": "bool-unmapped-2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7c0f39db6a2dac57c4aa9ad88e9a06930e8dd4d229cdac1f0166a4b2d94b488e"
+    },
+    {
+      "file": "bool-unmapped-FALSE.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "acebd623686ff0230d0624efd80d0f3f795889a9ca956eda34200a386c9bd785"
+    },
+    {
+      "file": "bool-unmapped-TRUE.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f8dbe0338b1e9c2e68b48f23e2b9a8f45d0c04000f898b604423b5f6c457fc5d"
+    },
+    {
+      "file": "bool-unmapped-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1174478f6ed002f851dd4994dfd6dc1938558fbc4059eea615763749cdeb6fc0"
+    },
+    {
+      "file": "bool-unmapped-no.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1c7e72d4e156d242005d633228b26034402f0cb93b95340c71e585c5fee67c47"
+    },
+    {
+      "file": "bool-unmapped-yes.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "160a83ad3685ee82b16012e3409dda5f5eaed56c638c93f20cecc1040004a8a7"
+    },
+    {
+      "file": "bool-whitespace.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1dec2953a39b97e86148d347142f9a12f42b12fa2bcadbcc8686f758b9338692"
+    },
+    {
+      "file": "caller-context.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c66456a53be7d06e9cf0c4b2f405719d6210a50438ef88edb104de296b5bc8ab"
+    },
+    {
+      "file": "command-error-boolean-frequency.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "07166a2c3384a3f704e4195c74d56c66a3c7e2ec98c0bbe2863fb6a6c003d7ba"
+    },
+    {
+      "file": "command-error-datagram-bound.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "40274035a3d6df15867493ab950b51da913785b649d374b5cbe9fc3f7d99e449"
+    },
+    {
+      "file": "command-error-decimal-whitespace.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "866ee56aa913cf238a9914752235dba99908e6cbd6b9a49946522164a2f3e7a1"
+    },
+    {
+      "file": "command-error-empty-levels.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c318455567282fd555f22de6771ed7348423cb8dbda7c78732fd55ab2d3974c4"
+    },
+    {
+      "file": "command-error-exponent.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7a5b971041b12b92211bdc85c13790e4afffa87788a334cedbfcc7d643ab6d67"
+    },
+    {
+      "file": "command-error-fractional-frequency.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f27c2b97f3601fa202511ce5f043600ca99c63622ea5e33026769822e6957fb6"
+    },
+    {
+      "file": "command-error-frequency-overflow.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c565906b18d00ab6bfd78c2bf7f7b937c93cfb86de0b6ac9f925e8b6ec04a533"
+    },
+    {
+      "file": "command-error-level-bool.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "407a5989aaed4f90fc6ae951c09fe53bd48a9c2410a42669a2328cb33933602e"
+    },
+    {
+      "file": "command-error-level-overflow.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5f25b87b2cfaa9a10f85a14b5d9530e8ae7ddf4f642f3d4c05eeba035e3551d6"
+    },
+    {
+      "file": "command-error-missing-units.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2c2126cb0e38630f2ffd2aaae006b95cad26f132614a13ff67835ad2cc436f21"
+    },
+    {
+      "file": "command-error-native-version.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c8c26bc35c984a01fc201308da28931819f653d2805db9572797c19bdb1cd454"
+    },
+    {
+      "file": "command-error-negative-endpoint.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2acdee64032864920e4bd41ba0daa60e9feb951b80fb8bcd28fc817c4cc563f8"
+    },
+    {
+      "file": "command-error-negative-frequency.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7b531976981a1a95eb36e5ebdb2d944f84583fb70894617cd06e4bf43a31cb85"
+    },
+    {
+      "file": "command-error-negative-level.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fe6c7053d52efeafe4d3877da4a3978cc4cf2dc6888f6524d7221b7e37d0cce1"
+    },
+    {
+      "file": "command-error-nul-app.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ff28d02ebac73c5ecc543b2ad0052481a771ae2afc7a90e5b731db23e15a42d6"
+    },
+    {
+      "file": "command-error-null-app.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "65e13e6f0b9e60ba8201fc11639dbacc084a8165a5ffa0e3b7ce5c8584d23cbd"
+    },
+    {
+      "file": "command-error-number-not-text.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0d514d3816a09bea741d8574880985b119ef72670f24add364737241454cf037"
+    },
+    {
+      "file": "command-error-numeric-token-bound.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5e48eed77cc856d504f672a7952a721c2195f24dcc045d79e4b5ba943bb27a10"
+    },
+    {
+      "file": "command-error-offset.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f7ccf0c50c31c8ec92424bfb81c91e63bad56cb953e19eda1cb134e5aa997ffb"
+    },
+    {
+      "file": "command-error-qsy-missing-app.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "eb2d60f8059f896a87be62c0f711adcf871d3def0d5c832f46078b8758d254e5"
+    },
+    {
+      "file": "command-error-qsy-missing-frequency_hz.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8b504a18d017142e796e1f586971a57e88ff12875cff69f6e257bb1e56408ec9"
+    },
+    {
+      "file": "command-error-qsy-missing-operation.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7ed8b1518f03302173fc9c752d6c149334ae3bb89dfa71715d6d326075a378ff"
+    },
+    {
+      "file": "command-error-qsy-missing-radio.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8635050bc99276145fd394045b47aa42a79c658385f6e06924e1325c1e31cf43"
+    },
+    {
+      "file": "command-error-radio-bool.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fdd0431fd69d49ebe0e6c1bef3fa0b05a725c58a1033df7f06153fbf4ef25a1c"
+    },
+    {
+      "file": "command-error-radio-instance.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "645cddf648c775898a2a0ccec87b9df619912a60eb328bd641683c67609b7439"
+    },
+    {
+      "file": "command-error-radio-string.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0ade735954f2d45c3ba7a8a830d920d986bf81eb9a4dbfa63688eaee62f1e8b6"
+    },
+    {
+      "file": "command-error-radio-three.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "21c9ec34f1a1a7bf93ad23cd62a411207ecf04ab774c92f604c27c19b9dc872b"
+    },
+    {
+      "file": "command-error-radio-zero.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c275cea2ab12c92290b0628763fbbbe09650ce580134891ebc96273757b43172"
+    },
+    {
+      "file": "command-error-raw-app.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "72090b591262b53bddbf63d17d6d789783967a5d73b5c666eecd2c6b8d0a7e8a"
+    },
+    {
+      "file": "command-error-reversed-endpoints.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ebeb2d098f6e90d520d6a9268bf236b284ca961ff8a6524ee15b1e743da7fc7d"
+    },
+    {
+      "file": "command-error-revision.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a28d0db20c1c68aa59b884997778dfd2c06b633f2f6377a0099b1cfc6b60449d"
+    },
+    {
+      "file": "command-error-schema-option.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8778671f057d558daf2cb9cdb1cc12553c5059204e0f45f72d4fb73250ba79cb"
+    },
+    {
+      "file": "command-error-spectrum-missing-app.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "618f511a8bc7b95ef75b04b75195429e68ab8f8014fecffb04b06323e8eb205f"
+    },
+    {
+      "file": "command-error-spectrum-missing-high_scope_frequency.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "01543b43365e374ab4cfe9104a78542b2330d91cc4dc797ce718fb1e9e5becea"
+    },
+    {
+      "file": "command-error-spectrum-missing-low_scope_frequency.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "106dc5478cea6feb028c7966d82afa9a63458c45c0c66194d313bd15016d3d94"
+    },
+    {
+      "file": "command-error-spectrum-missing-operation.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e4568d8bbe5e7d25cd3d91f1419895202065abd13d867c116ce5596ae43ec133"
+    },
+    {
+      "file": "command-error-spectrum-missing-scaling_factor.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e72cdf0e8655629ba71e544495cebf5c5762a6a497fb5b915215eccb5534afc4"
+    },
+    {
+      "file": "command-error-spectrum-missing-spectrum_data.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e8ceb900e5e56c4a958899173af1d984df4d6329f458559368efdf838ce6f0c6"
+    },
+    {
+      "file": "command-error-spectrum-missing-spectrum_name.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2f1bba8abfc36db291bba2e9cc1f99be066975f82f74ee7af503418f585e8cae"
+    },
+    {
+      "file": "command-error-surrogate-app.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4b915353d386ef604bc4f733ef6c79325b86f0c24ec9f51dbe68542345942c82"
+    },
+    {
+      "file": "command-error-too-many-levels.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e5d75559335196c927a2abb8848756f586e7233eb963f3690522dbc26ea1b566"
+    },
+    {
+      "file": "command-error-unknown-operation.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "699fb5d152cc477bd71d17f1bb73e517989af8c4cdec3252e726cf3f13d95807"
+    },
+    {
+      "file": "command-error-unknown-units.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e7dd001d100dddb853b2d3f1c5813932a2a4554cdfbf423372be6c74f8f00ea9"
+    },
+    {
+      "file": "command-error-wire-id.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4eb4d6f13158f2d2467e9cf6ab43c643d4c12f6a1de3bec1edf3cc37ba6f41b0"
+    },
+    {
+      "file": "command-error-zero-scale.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0034f88b63f2a4f004bd4d3a1e49224ea01481cc65fbc463ff21fd2978509d96"
+    },
+    {
+      "file": "command-qsy-1-0-kHz.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "89ae084f6270e78895645ae4d0033b80fcbbd4746ebd43b123048e1edbf68ba2"
+    },
+    {
+      "file": "command-qsy-1-14053000-kHz.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e0642281d561496995b15eca7de00c7dfeab246c9fc1ae69acc1c34358bc1f90"
+    },
+    {
+      "file": "command-qsy-1-14053284-kHz.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c5d7a75f4aa1fa0510433ff7c496e78fd71d432b91efca158af47628e341f574"
+    },
+    {
+      "file": "command-qsy-2-1-kHz.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "56a11a4f3c9fb5fd607cecbe9db875581f6e13e80f0e55c9765c31554688e238"
+    },
+    {
+      "file": "command-qsy-2-14053284-Hz.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e4b866ac49f934c9714e388e938128daafbea7f4a4ba24ff0584feb7c270b5bd"
+    },
+    {
+      "file": "command-qsy-2-14053284-kHz.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d500047f75ca1b5b8c1983222a0ab82d4e560ef493c7b28f0c4674d079056a37"
+    },
+    {
+      "file": "command-qsy-2-9007199254740991-kHz.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7c07dccb50816088adfcdcc1e6eb86953514aec97d0eaac797144c173e518e67"
+    },
+    {
+      "file": "command-spectrum-empty.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9bde3ff7d7677b5e4d338f1091e4d1fc339c3bd1552b448391e5a401d91a9d73"
+    },
+    {
+      "file": "command-spectrum-normal.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "704601059367a746c8115ea6535dc88ebf54a27fcd8bd8c9e28e93463ec4677d"
+    },
+    {
+      "file": "command-spectrum-xml-text.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "113fa696192bf45ff95838f34bba2eee7e66eb04ab103353f25998abcc45e73a"
+    },
+    {
+      "file": "compat-known-root-new-revision.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4e7cdc533e91433fa828daf9d51cb643673a76633a607be8a0d287b945979392"
+    },
+    {
+      "file": "compat-major.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b400b2ae8916df4d774d5cf519988fc77a7a3be0b4ed564ff004fe68e26cc5d9"
+    },
+    {
+      "file": "compat-new-reader-old-command.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cb21ed3330bd5582c91e0c4d2fc2ac2d692c13f7abc4eb1b420f4f3153a88d8b"
+    },
+    {
+      "file": "compat-new-reader-old-writer.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b6e801ff56d5f7774864c31a2697e8901b425b475c3008017e4335cd19853332"
+    },
+    {
+      "file": "compat-newer-program-label.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e1d3bc963ccc49235d0264bc54415c0e6565ddc0cd0726cfcb56edc4a2d24b58"
+    },
+    {
+      "file": "compat-old-reader-new-command.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "05ea218cd9f3f91fbe4459c45b49eb190a4e16ead17d51ef22e34b4bb0d537bc"
+    },
+    {
+      "file": "compat-old-reader-new-member.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3d3857d47faf4b0d1d9566c0be6ff579d234c5c443856d13d265357c0feb08a5"
+    },
+    {
+      "file": "compat-unknown-kind.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4efafdb418d9c7018dab530ef76029dda8fc714e82c7b85fbde572daa6202a47"
+    },
+    {
+      "file": "compat-unknown-root-known-kind.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9b52060ec21538d8d2bde198b0082f983b5c883296e4e13d9425abc28431cbaa"
+    },
+    {
+      "file": "contactdelete-absent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5b88fb7d10b65980b12870bfdf0469fea4530b29dd0fdc0dfbbfaab24c135872"
+    },
+    {
+      "file": "contactdelete-empty-ID.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bf0dc6e488f24a6e234db011439585a98659f613576dffad1fa77805625da308"
+    },
+    {
+      "file": "contactdelete-empty-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fe7d892063dfb202464b1b81d3aea8b1851ca3c983c24a4ea9e5377cbaf6c930"
+    },
+    {
+      "file": "contactdelete-empty-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4944d563eac19ba1e80141b9ee2abcd9dde16eca0de0498af548c9d06c95202d"
+    },
+    {
+      "file": "contactdelete-empty-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7c24bc18a24a18254ec0e45cc8444c56f41926ff8cd4a5589cdca49dcc92667d"
+    },
+    {
+      "file": "contactdelete-empty-call.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bb1f97cb9565e5e4a8969fc9c38c2d3345a6654855137e2ca8a1f26143e77f3f"
+    },
+    {
+      "file": "contactdelete-empty-contestnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fb01dbba8fa9b2e8f0660c49ddc3842e66c58769c2021fd344c33646ff9e1ff8"
+    },
+    {
+      "file": "contactdelete-empty-mycall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5965111a5e3b6ccb60e066ad662187eb855d95f441452d9213a160a29601a717"
+    },
+    {
+      "file": "contactdelete-empty-timestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "738980dec4abe32b838f46a0ce6b24f37626ec78bbf295e9c1f25114ba276ce8"
+    },
+    {
+      "file": "contactdelete-full.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "12ee1ff2e96966efa8643e1c8d6704d6dce619d2996b72a4e3d0e2913fb93a19"
+    },
+    {
+      "file": "contactdelete-only-ID.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "04e601e50d285a89884d2571dd4c7d8ca3fb3da1202cc22a150b5bf0c6646abd"
+    },
+    {
+      "file": "contactdelete-only-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9e4b58a62c8ba650764992a7c676f69eb7f4fafa0630aec04027be7d5f7c09c4"
+    },
+    {
+      "file": "contactdelete-only-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "04a484b06bb274fd690c88132f7761515316aa281cc812abff64a30f3ac34bd6"
+    },
+    {
+      "file": "contactdelete-only-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "be24b368322d6cc63d309115737b288c01e9acebbdc562a4e8d2a858bd98d72a"
+    },
+    {
+      "file": "contactdelete-only-call.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "84916d4f15e1efb679434ace14e78fdab899eda909eb266afd26605a0812f72c"
+    },
+    {
+      "file": "contactdelete-only-contestnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3a1c36244c7b6f6d2d1b12229b14d860fb23358ad7c8735fa129ffa927e67ecc"
+    },
+    {
+      "file": "contactdelete-only-mycall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b87c59c2924af634f7cf89f03760158600171553d844569f7384ab8abe0ccc82"
+    },
+    {
+      "file": "contactdelete-only-timestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9b76b39462a3a4cce722d965ea97f97c18438682052dbdc09ab7c03c77295b28"
+    },
+    {
+      "file": "contactinfo-absent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "40c9d42b20f9c738f5e9f2cc145e2f4953fd562106949f71c580a530d563b99b"
+    },
+    {
+      "file": "contactinfo-empty-ContactType.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "af930d08f89f673d9b8dccbf9f51c2b4b9046d9262ac4130229c242d13bd0d0d"
+    },
+    {
+      "file": "contactinfo-empty-ID.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "02694a2f2f237bb213e5bb4560e25493dac2b3a719769dc7e75bba9dc96a6ec3"
+    },
+    {
+      "file": "contactinfo-empty-IsClaimedQso.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1ea7c8e1f3896d3235e1bfb629b2116be2e7445103de732f48149f9679e052af"
+    },
+    {
+      "file": "contactinfo-empty-IsOriginal.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a3bf002b31796c522da6cd222d3ea0718e41c9147b699d1edbd2d4443e52e8dd"
+    },
+    {
+      "file": "contactinfo-empty-IsRunQSO.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "14c987271eb051270defab96802088914f85d0f6da37ce9ef3b963a070139643"
+    },
+    {
+      "file": "contactinfo-empty-NetBiosName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "950544d4b3b012f04a0613c7043ff61a017da99d644a704c48697e9b5797b1c1"
+    },
+    {
+      "file": "contactinfo-empty-NetworkedCompNr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "21ed7f3739589f4149d55f3b2cd5553447e21e84bb4ae0c9768a571453f8ba78"
+    },
+    {
+      "file": "contactinfo-empty-RadioInterfaced.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0c1474801afed5f1ef43ad439b6cf474a3e845f7407f0167455c2ddf1219603e"
+    },
+    {
+      "file": "contactinfo-empty-RoverLocation.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4e6936ba3215dc213b90ecb1a6d306140a96b80966bd51d7a812bea305a95796"
+    },
+    {
+      "file": "contactinfo-empty-Run1Run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "07f4dbf5f979ed3fec1b2bac0aee09a2d04be346654c00c2bb3d7f8cc5ebd4f6"
+    },
+    {
+      "file": "contactinfo-empty-SentExchange.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ae033f8a69090901ecea8c83aca6eeae27e43870c48169606210e74c170765bd"
+    },
+    {
+      "file": "contactinfo-empty-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "aa041097b722a0d590654f46b12ebea1fff454517bbc63a0ebf5a7bc5d0153eb"
+    },
+    {
+      "file": "contactinfo-empty-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2682dba22c696a0d37613018c363fd9119767aac7df9663d73d2c79f76105d17"
+    },
+    {
+      "file": "contactinfo-empty-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "14cc2c39ac55a896f9e6766786721ac8dafb3e25e82e5d082bf0ce38981e86de"
+    },
+    {
+      "file": "contactinfo-empty-call.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dd39ad3379ef241a08546d6ed6f9057a35d6ae162268d7a9685896b08a4f3c83"
+    },
+    {
+      "file": "contactinfo-empty-ck.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "07095b5a2556c02619351a62b5a1093a6fc3f355ac8d2b7d3480948115609c8b"
+    },
+    {
+      "file": "contactinfo-empty-comment.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "320841a2d3b82b1732fdf6b1c85e2d2d67730d09b840e299cb8f23877313c16a"
+    },
+    {
+      "file": "contactinfo-empty-contestname.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d5f8dbb1a6013029193cd596db363dd1ec8df1f9626b473dfdb5e08bca8f9a0c"
+    },
+    {
+      "file": "contactinfo-empty-contestnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "330ed5546084a45c2c88e3289f38e28e27975826e48e9d9f5d6d282b21ca4b5d"
+    },
+    {
+      "file": "contactinfo-empty-continent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a93de40c2e667be0a068978c522cbf5256a31732f677f5545d6f7bdc69d6db6f"
+    },
+    {
+      "file": "contactinfo-empty-countryprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "264269ec3aac606e845b29d58f6aef5eb241f2cea877bacd2a9a2cb68d8ee8ee"
+    },
+    {
+      "file": "contactinfo-empty-exchange1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5d1f4b74cc5ebf9bc2c773b94a557df6ae7646dcc60cd258c297bfd38c622a3a"
+    },
+    {
+      "file": "contactinfo-empty-exchangel.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6e2595f1c0414f00c00420dd2509c5644b446dc88ff0ec7c9b3ea23a139328dc"
+    },
+    {
+      "file": "contactinfo-empty-gridsquare.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "72ce13bf61eb4c9374ef06db644575c47c6b74424ffee9c3339449ecd77da501"
+    },
+    {
+      "file": "contactinfo-empty-ismultiplier1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "632ae9ff5551ccfe5373e3974f5e27b5f557007c909cba64116262eed4a0de74"
+    },
+    {
+      "file": "contactinfo-empty-ismultiplier2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "275a6da9a944cef1d1b273918d27d13ecd66300ff76980492199efae801d41f6"
+    },
+    {
+      "file": "contactinfo-empty-ismultiplier3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b939d29e4efca728c8bae6eac214dd23c481e0e5f4ce1dd462744280959201ee"
+    },
+    {
+      "file": "contactinfo-empty-ismultiplierl.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "269f1aa6d2ec3bb056255d8b2583c8cec1bdde903ae2c4b41b46bac0fb4ac718"
+    },
+    {
+      "file": "contactinfo-empty-misctext.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2e8757d998fc1cf423a9157e641048c80e44a623dbaebf516ab10d12d9fe1ace"
+    },
+    {
+      "file": "contactinfo-empty-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cc56b9c3917e5906b5e5fc3b760c0782a7b2d2ed71c28c1d30de30326f74c427"
+    },
+    {
+      "file": "contactinfo-empty-mycall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a2535d52a31197804ac282cefea01fe16907ba58d7bfb33e3cb4e7eafaafaef3"
+    },
+    {
+      "file": "contactinfo-empty-name.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "09bbd28872c62c2db4adcc504ad3a4b9dba3a97deabe2405ecd58a58832722ce"
+    },
+    {
+      "file": "contactinfo-empty-oldcall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "693d39407cee4b1b23610deeefac7ab1ce62507273eefe1e792a4d9f574c542e"
+    },
+    {
+      "file": "contactinfo-empty-oldtimestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "180f1b7d9460c8bf5d07955d0ede8d30ebddc8e63355fa4a45d2391da87d155d"
+    },
+    {
+      "file": "contactinfo-empty-operator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "578cb2233ae2bb1cc121fd39f903bf242444ef595e78954737143e231865896a"
+    },
+    {
+      "file": "contactinfo-empty-points.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "20e4189e896688a4a41f0aaab7d642d526a2c97e62986b8ba66c5cf9cd2750f5"
+    },
+    {
+      "file": "contactinfo-empty-power.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ae6b657a3da50155d79542e623c554a3d5dcadc691ee27cde11a9cac166fb526"
+    },
+    {
+      "file": "contactinfo-empty-prec.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "10f215a75c31f25d2e88e543d8bd24cba859216e83b8d5bc8c59f3de7d39e0d9"
+    },
+    {
+      "file": "contactinfo-empty-qth.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "470a26c2a0a54e4b99c863371eb2cfecbb1926ea8b1fc3c8041c88a617fd3aea"
+    },
+    {
+      "file": "contactinfo-empty-radionr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dd9b4c46b31695c374b8ce7fff5127ad0723631db0512654ace9a0e6ceb8b116"
+    },
+    {
+      "file": "contactinfo-empty-rcv.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fcbd1f7335f96de57eae6c7cda011a73adb433df36507623cdc296f53d50bb56"
+    },
+    {
+      "file": "contactinfo-empty-rcvnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d6c4f6125cff67da20a884df9bebbca937991f682ea1c0ce2cee161c199d5647"
+    },
+    {
+      "file": "contactinfo-empty-run1run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3a26807473efed08454e4abebfddf7ee5052f45929bda1f139046eb24d0b9cdf"
+    },
+    {
+      "file": "contactinfo-empty-rxfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "84151818582d921fa4531a1a58e12c42a2376353ca5c657c79535975397587c6"
+    },
+    {
+      "file": "contactinfo-empty-section.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "93bda21e54b6343a1eab5375a9b029fee1a9ed8812ff75d727630ad070ce57c3"
+    },
+    {
+      "file": "contactinfo-empty-snt.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0a198e94db4be44434aa2d2fc80068c13aafc34b7d44b1b5d4138aff060e365a"
+    },
+    {
+      "file": "contactinfo-empty-sntnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "058d18025634304f38bfbcadf308d33b7f5a5fe35cebff0ca32f77b3bf881b41"
+    },
+    {
+      "file": "contactinfo-empty-stationprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e2c5374ff2522132c7464622ffbc8ccb5fd0157553f8e1aeee1ca8fe934542b6"
+    },
+    {
+      "file": "contactinfo-empty-timestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "284bea41581900efe8aeeda97d6dc288a986fcaf193d2a2d72cb78f70496e819"
+    },
+    {
+      "file": "contactinfo-empty-txfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "620309bf765abeaff57b5e36eb6d7da42caf31fa912095b63d3cc8301b214eed"
+    },
+    {
+      "file": "contactinfo-empty-wpxprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b162a50f25626c260917863083a4129aa810d88778c33df5c0c6cb48d36dfb80"
+    },
+    {
+      "file": "contactinfo-empty-zone.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "54af2207ddadd9c84f6a2b56e3f5ae45a3b49cf45bf3779cc2d572582a7744b1"
+    },
+    {
+      "file": "contactinfo-full.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "26c941be2b9c19fcfdd76b94a0789a7e18870bb021a0eb1d3969d9d79820ede4"
+    },
+    {
+      "file": "contactinfo-only-ContactType.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6c549ba51dc62f20d4d1100a59ec06e327c51b8d61b4395882f94169dc8a50c7"
+    },
+    {
+      "file": "contactinfo-only-ID.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a7e3bab4fd84f92bd886379bd3ace1aaa8fe9e957419e25dccbc85a5a53c924f"
+    },
+    {
+      "file": "contactinfo-only-IsClaimedQso.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5f70511189e3ddfe29a9521717496b175c8e5a8d973b99a05dd883220e3929e2"
+    },
+    {
+      "file": "contactinfo-only-IsOriginal.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dc05a2c29a01cdcb165609948966d3494577e73e2ee66ed1765211cec6b5e986"
+    },
+    {
+      "file": "contactinfo-only-IsRunQSO.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c62feb9cbd1e65d838bf239948b0fbe69c7bc2069c570f8ef89b129e5b7aae2d"
+    },
+    {
+      "file": "contactinfo-only-NetBiosName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "40b05e2bc3492c9eddd0b78de8d1ccde547d4caae0eee9cb1bc7648a0c85c0b6"
+    },
+    {
+      "file": "contactinfo-only-NetworkedCompNr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b9e59bd6959ceed7ad6caff77c46bf63f60b220524359f6da28cda2fcb6b73a7"
+    },
+    {
+      "file": "contactinfo-only-RadioInterfaced.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3edefcf811bddf032f7ea6c180f49d865632f974f187dcd2cb3aa94fee81ceb6"
+    },
+    {
+      "file": "contactinfo-only-RoverLocation.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f54675610d83b4a3e01b83a5a52bc73a47486159c98e0c2c1fcef8b7be4c9bec"
+    },
+    {
+      "file": "contactinfo-only-Run1Run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "976b1c895098ca7ec349f3c00a9756e0f63510a81835b48001dd9cce23ace52b"
+    },
+    {
+      "file": "contactinfo-only-SentExchange.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e28f4c14d73ed3211043266bfb3733fc4fe50afe5816ff757710405c3e03a264"
+    },
+    {
+      "file": "contactinfo-only-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0c9200ee2a062c277b8561a2961ed49e74e9bc19543b2bdb30f51b1ed71daa9d"
+    },
+    {
+      "file": "contactinfo-only-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "39c129716870ea628c01280a0d44a81a342cfc0c165b29a4c5c3eb1f40e471a0"
+    },
+    {
+      "file": "contactinfo-only-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ac28e0c0741ec9270f4c4eee744870a1d40ff52b3bcd248086ac67bed03b8a68"
+    },
+    {
+      "file": "contactinfo-only-call.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b21cb4cac7ab1fba4cc9f14684d82528ec26cfbf330dc60ad05fac64992f8855"
+    },
+    {
+      "file": "contactinfo-only-ck.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bf0c70e24dbe8744ad8623dc3d5524a6132a5948c46b7e0efc6c3d1722107968"
+    },
+    {
+      "file": "contactinfo-only-comment.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3918a9b65bd78c423e9ba02e54f712d441241194afe024a3434a380f2b7af0ea"
+    },
+    {
+      "file": "contactinfo-only-contestname.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3e00e8a80a5d2aebcfd56d5a479db72bd832c290bc4edcf0bf2d04762217c7d2"
+    },
+    {
+      "file": "contactinfo-only-contestnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2e7c7e9dbc05fb62e50dc761ee3e57011ddc2fabdd7f5e4b5efa63e5c6f03ca6"
+    },
+    {
+      "file": "contactinfo-only-continent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6621c1107f1223be82eeaae42e338925a94e41e9e47a190ac031e0b2ae899d12"
+    },
+    {
+      "file": "contactinfo-only-countryprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a388a5d8ae08dd104aa170e94b55d4d8d8671455b877912d46bc4a61b83c7bbe"
+    },
+    {
+      "file": "contactinfo-only-exchange1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e41580c8ceaa4b6a92d0b5b9d9fcca5a2e052b23d99490ca5b7f1149a5084396"
+    },
+    {
+      "file": "contactinfo-only-exchangel.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "11e8efece771307df8f7cca0acdb783f9b9d55ec850633e046d22a7ed974717b"
+    },
+    {
+      "file": "contactinfo-only-gridsquare.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8c098b0aec467bffc4afee70447919896fa8ec7a06b58dd47f26bb0d0e58e46e"
+    },
+    {
+      "file": "contactinfo-only-ismultiplier1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6750e474c6f0dc230ded3a88ced72eaa3cc392cf4007619fa7b7474146e1de65"
+    },
+    {
+      "file": "contactinfo-only-ismultiplier2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "30337441f6cfa2b6b98936e1ebcbf0f01516ce83a48cca0fa338230dfbabe3b4"
+    },
+    {
+      "file": "contactinfo-only-ismultiplier3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9ebfa3142f9492dcd216f5c7c214292160640fb5bbf8ec7ca573660aa7d6c79e"
+    },
+    {
+      "file": "contactinfo-only-ismultiplierl.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ee5fa59b82b74daba75df5ef1a1e159915e69c4fa018b0678043811e9b8ec384"
+    },
+    {
+      "file": "contactinfo-only-misctext.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cdebc8ce1a7ae82dc8a5557a0c082855b906b9d10193a39fddcbc50c820f02ae"
+    },
+    {
+      "file": "contactinfo-only-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ce77a585e18061a10c102b4926455f6cab7baf16f87f4f02ebc90cf829dff270"
+    },
+    {
+      "file": "contactinfo-only-mycall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "81337376b94e475a597ae87f49671647e5c98701302ec5661653f9cf0515eea8"
+    },
+    {
+      "file": "contactinfo-only-name.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d5fb2d5e1c60f5f13cf0980694f2cbc94ffe5fc14e91694d88b284a6c3ccd7df"
+    },
+    {
+      "file": "contactinfo-only-oldcall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ca52552c0bef2e985605f5a52816a8c58fde6ffc8741e2784584541543c5c936"
+    },
+    {
+      "file": "contactinfo-only-oldtimestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "78d1876692d826db192e93735558cc1c1c189a9f34497239e92d28fbca372b91"
+    },
+    {
+      "file": "contactinfo-only-operator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "72fba3d667260c0bb7408996004c1f7c5300759bafa30f5f4bc1f91a82400881"
+    },
+    {
+      "file": "contactinfo-only-points.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "eb0f05ab7a4a5cb31384ee48f7a7cefb269f4abc9449f6ffe4c5b778491ffa40"
+    },
+    {
+      "file": "contactinfo-only-power.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "57e8e3925f515392f04628d8956c129bf9453ab0c72cd04f6f5440c777edf4cc"
+    },
+    {
+      "file": "contactinfo-only-prec.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8da94679a9d8751046fb5c0fc76f7415791cf6956a7520454fb499d643bbcbdd"
+    },
+    {
+      "file": "contactinfo-only-qth.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2f78e155f78f8431042dc9cb9c9db7c1d8460f233e5ba6abb9f5aeb19eaa9876"
+    },
+    {
+      "file": "contactinfo-only-radionr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "65cb739afde1c05020f6ba575f98fb9ee4be1a3db2ff441efd08a8f75d6f01b8"
+    },
+    {
+      "file": "contactinfo-only-rcv.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9bf2429e6baef5071d14a0de1c8b9c3ada9b3b2d3c9a8cc15742c6ba0369831d"
+    },
+    {
+      "file": "contactinfo-only-rcvnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b7fb9af9ca131decbdcf8c46c982a712d772d1cc59a2b49896868f8576bb47b3"
+    },
+    {
+      "file": "contactinfo-only-run1run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dc55c33fbccaca5a6c5afcb0687d5462fd570634c6581b7328feea5ebf419a92"
+    },
+    {
+      "file": "contactinfo-only-rxfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ab448c491823f441e16b9d032ac8138bc0b01dbad80406405643dcbac4fe214c"
+    },
+    {
+      "file": "contactinfo-only-section.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b8301b5231a601cb971a2355e4c57ab1e7666c3d8bf9bf3a23c50447b4321475"
+    },
+    {
+      "file": "contactinfo-only-snt.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "93478793e29a5e4cef1c3db09e1ca813a4fe4fdbc461608d9e72d7129c4f0fa4"
+    },
+    {
+      "file": "contactinfo-only-sntnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a59701286726d2aa75a47dd4ac5761f86df7c6fdc501817049d6edc88bf7d1a1"
+    },
+    {
+      "file": "contactinfo-only-stationprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a3dc705959187142f738df4a01a43faacfac3400a348bfd79f6e21f7368cd17d"
+    },
+    {
+      "file": "contactinfo-only-timestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ba0c62f91e899e8d7a7e77c9ad1718e844af32417bdfe9b2779ba9858fbcb754"
+    },
+    {
+      "file": "contactinfo-only-txfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f4ce319869bfe38791810d56736b0e5bf03eb330543a82746665170b3a8c7ece"
+    },
+    {
+      "file": "contactinfo-only-wpxprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "989c99fbed4e3659e163b2a841aaefb425a1ad04ff3ea958b63cc1d64b02e4b5"
+    },
+    {
+      "file": "contactinfo-only-zone.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ffcee2722a6a698a8022eacb33b43779b01501ae013bf9bf71518d59b5b722a6"
+    },
+    {
+      "file": "contactreplace-absent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4d4220d6667412425fee36feba112ffd8d7b4ec5bf4cd338e8e7ce17504612a8"
+    },
+    {
+      "file": "contactreplace-empty-ContactType.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ebb8b02adafac088abf91c1c46733e571df87443b773894b597925d4c22d1f90"
+    },
+    {
+      "file": "contactreplace-empty-ID.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "79f6378970e738b99dab61f40dfe8c1841375eaea37630dff3d6facd012b8583"
+    },
+    {
+      "file": "contactreplace-empty-IsClaimedQso.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "00e9126f2e6288113dbcb34c8b0942aa90c1cce3d386b4f74d90b9fcd60b4465"
+    },
+    {
+      "file": "contactreplace-empty-IsOriginal.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d1e13e44356e79de5307361db3af5717584388ee45d3a478751cff92654da498"
+    },
+    {
+      "file": "contactreplace-empty-IsRunQSO.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "65f1c4c73d75d842c24be6dc008789fdf4ba09d0aef5873bc7f81cae202c0039"
+    },
+    {
+      "file": "contactreplace-empty-NetBiosName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "182d769797bca22e56aae3f7d36910fd3846c3188d98bb0443515723b035f74f"
+    },
+    {
+      "file": "contactreplace-empty-NetworkedCompNr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ad76c79dcec07a6773a0e957c70d20bc3e027f5db97d6a4bb68d7effc8866016"
+    },
+    {
+      "file": "contactreplace-empty-RadioInterfaced.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bb1c21cb90dfdfdd70cbd924ce646e1fcdbb3691a51269f7fad326041803d368"
+    },
+    {
+      "file": "contactreplace-empty-RoverLocation.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "090f6a9a45d5ac9988ed4c78336573fbc7d01f5791ad281e2e660a32a7010883"
+    },
+    {
+      "file": "contactreplace-empty-Run1Run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bd764945955bd9ade383fb12da2ca522854b846ec77fa35d5dfcaa6c7961adf6"
+    },
+    {
+      "file": "contactreplace-empty-SentExchange.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "29e06d5c4745b37208e15e00d18383ce062bc2f5e924c4fd46563234bdcb2e9c"
+    },
+    {
+      "file": "contactreplace-empty-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5b4cd767823ac319772031583776b0d20940502adcdb6d4efc1bb4f74f17e864"
+    },
+    {
+      "file": "contactreplace-empty-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e6f19755c8ff2c43869060292fd43ca67990d17cbaacac6be4b75fee22d08084"
+    },
+    {
+      "file": "contactreplace-empty-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4bc82280a7d252ffba97de57794b6a6e52080599041dfadee5077de1514e0b0b"
+    },
+    {
+      "file": "contactreplace-empty-call.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "702e678fbdd4e89567baa4dc29d19e14ed19064a8c909dc24ddeb2663897d684"
+    },
+    {
+      "file": "contactreplace-empty-ck.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "150926f72b94432975c6d9e2b773cac05666e1cd250169676b8558f8a3d800de"
+    },
+    {
+      "file": "contactreplace-empty-comment.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "eec63d25817fcb8714d53fb0511334efc06f48ad208ced72f2ae17f28c51d482"
+    },
+    {
+      "file": "contactreplace-empty-contestname.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "66d14956306bf94c508e6eaca29514f8e54b3d4ed205ecd9faebb18a14caf9a0"
+    },
+    {
+      "file": "contactreplace-empty-contestnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0fd6da8354531c7a37fd30f20fd9c05e7bfc11624faa9f46c2aa616c45c625db"
+    },
+    {
+      "file": "contactreplace-empty-continent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "efad20cbe69cc9377b0b562cd41eb24941cee6afba17b7cc5441252c9868ebf8"
+    },
+    {
+      "file": "contactreplace-empty-countryprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "26ddff2c00c6b1f4a28408ed88bcb0b9f7a85f8f55eda2e45cf7e6038e2d6df2"
+    },
+    {
+      "file": "contactreplace-empty-exchange1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a285db626a8ced50d0b464aa6d58ba5cf346129835bcb4cc1b2faf15e92eb49c"
+    },
+    {
+      "file": "contactreplace-empty-exchangel.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6c3124fa973e25df3c973180a75cc7d726499918577ad067cfbcf929c1406b93"
+    },
+    {
+      "file": "contactreplace-empty-gridsquare.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f9fbe803a17483eb590820523d70652355978e0815adb54bee5ddd6a07242f54"
+    },
+    {
+      "file": "contactreplace-empty-ismultiplier1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "412388404b4d3d6cbd8a9d70d402c7be7341216649b8bac617b05a40fa55f55b"
+    },
+    {
+      "file": "contactreplace-empty-ismultiplier2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d8a0fad8489b12f98faeff5eeac6325e830495851e13fceaac0aa9c6148fa041"
+    },
+    {
+      "file": "contactreplace-empty-ismultiplier3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4fe589bb107c6695e95478b92a89a13a266359f87fd9f63073ff998b2cd168a3"
+    },
+    {
+      "file": "contactreplace-empty-ismultiplierl.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "726482011aceb2658e7d8147cce553d23d1d3e9c0ddc22137ecb14c635bb813b"
+    },
+    {
+      "file": "contactreplace-empty-misctext.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "aba2721cbceeb7536030dc20233668ec4140a5a37c63926ee877e1d46082b382"
+    },
+    {
+      "file": "contactreplace-empty-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "280f19a44e0f6c40f19322d8eacf159d8a90ae31af6175cb7322e9e548372295"
+    },
+    {
+      "file": "contactreplace-empty-mycall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a1a384e5f2587a4d0b0009750ffbb80f8200591df40c179981c8550a7b0c71d8"
+    },
+    {
+      "file": "contactreplace-empty-name.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4b26950ff175ded79f2418660243a9127866f05f6b3ca628f4e5ddb77a1d8a3e"
+    },
+    {
+      "file": "contactreplace-empty-oldcall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4294ac5bccbde90f12f140cfa8ef31c2ca8b496fb2b53c0ff90e19784f158c4d"
+    },
+    {
+      "file": "contactreplace-empty-oldtimestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f42acf6756c346a123009a03ee25fe1d0c3f44cea4b74128ff815bd2b2beb592"
+    },
+    {
+      "file": "contactreplace-empty-operator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d014d25467cefeb92e3468dfe3a2302f54ccd3c4b341dca2ad3bed88cc6469a8"
+    },
+    {
+      "file": "contactreplace-empty-points.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cc0dabde4b24deed61b1f0a7c18b6cacdcb9d612c577cf1c7d4f7e03944247a5"
+    },
+    {
+      "file": "contactreplace-empty-power.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9db7f1a6035ebb5d6f37f21ec9a1839aa83170e90704cb2096125093a6ad212f"
+    },
+    {
+      "file": "contactreplace-empty-prec.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "220186ddab62a9509d484d89d6dc2fcdb019ec0726457c9e2c1fb77e911141cf"
+    },
+    {
+      "file": "contactreplace-empty-qth.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5593998e202c625258a276aa8272b73a75b51b1fbe9cf54b53b9697068c630c7"
+    },
+    {
+      "file": "contactreplace-empty-radionr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a0dd2c9591c1edf578ca27686125a0e581bdb9a34f1db049b66493100c6b50d0"
+    },
+    {
+      "file": "contactreplace-empty-rcv.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "85ba747b367cb0b15aeccb55e968bbfcfaa5bd918f5827d67230e3c68688dd12"
+    },
+    {
+      "file": "contactreplace-empty-rcvnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e1ce1c22c8fa18330a7dacc654af3a22f99c3eaae247ac1ef187ffa1fe38163a"
+    },
+    {
+      "file": "contactreplace-empty-run1run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8c6137f5235be47b9b028c8f3e98541abb5fc51db88d52e62019ec0f14f35b21"
+    },
+    {
+      "file": "contactreplace-empty-rxfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1161c272c7d5ef11918f931768a1ca111e47fcfd6592f7f2303652037cd7d346"
+    },
+    {
+      "file": "contactreplace-empty-section.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cdaaba345db8f21d4581ab1a2b1112e88d7e22473598473ac78492b453da4f47"
+    },
+    {
+      "file": "contactreplace-empty-snt.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0c13899a0e95033247fafcb3ab02ad6c7dac4e6f3de4849a45a2e5b3bfe96adc"
+    },
+    {
+      "file": "contactreplace-empty-sntnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f693085e4b258c8e6bda58151b27fa1733ec5984afac3a804b06961326454ba9"
+    },
+    {
+      "file": "contactreplace-empty-stationprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2235d6aadcbeee9e4db3f557924031a2eb49fe122b6d681130fb8b3e42e9c93a"
+    },
+    {
+      "file": "contactreplace-empty-timestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "01849ea943cbbbe6a8d2093a051e6bee1c9e856a090ea2f290d5c1e706e655ad"
+    },
+    {
+      "file": "contactreplace-empty-txfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a98d735da2983e88d7009f13655c63595b815a78fbb13a8b415112329ce8bd60"
+    },
+    {
+      "file": "contactreplace-empty-wpxprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5b4fabd9ae9ce9c9193366f96c1295cb6e4aa6bc4e94a87fb051b17d5f64ab67"
+    },
+    {
+      "file": "contactreplace-empty-zone.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5419f63068dd1463be7fccc2ce3004536393a8bd8b645ab7f71f31c68d56b8d4"
+    },
+    {
+      "file": "contactreplace-full.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e162edc8e0e885c5acea72c41a0c25abeb26d214b0cb0a8c93b9048c85080a96"
+    },
+    {
+      "file": "contactreplace-only-ContactType.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "736ebc9a1be9e77d72d8b87fe4a0b4187b51019d49e5b05889379008aa7eb175"
+    },
+    {
+      "file": "contactreplace-only-ID.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "afca76ab71125a632264dd9bfbb4b4c64acb08f4be0b7bb4437aeaf3218f5600"
+    },
+    {
+      "file": "contactreplace-only-IsClaimedQso.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e77c3b6e1fb41c3094c7913c7eab3207675fa77b1c74dd5dd69dee92ad23f87a"
+    },
+    {
+      "file": "contactreplace-only-IsOriginal.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2bbf7455c92df6b0c731918d36f8630611fa2d8d4c51a99de646b35b6ce1890a"
+    },
+    {
+      "file": "contactreplace-only-IsRunQSO.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dcf8bed45753b19701360a44796a03e5043b4276ff80037d186ad13098068b5f"
+    },
+    {
+      "file": "contactreplace-only-NetBiosName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1869d2aa84b3a570480a11fd1f5710f7183377e7ed1e56bd5b2d9a6eb8f245f3"
+    },
+    {
+      "file": "contactreplace-only-NetworkedCompNr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bce2da69e1f42f6432df2824df9e1e32a2f667c2ad0e68dae6530c31488d1a50"
+    },
+    {
+      "file": "contactreplace-only-RadioInterfaced.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a1165b131cb06b3f6a373a85c46aa62562d571d03ee026fa499964838c4763d6"
+    },
+    {
+      "file": "contactreplace-only-RoverLocation.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4c2ce7c71bb944c8ac73bc24d511680d57c7c23a445b7685a009f9691f73fc7d"
+    },
+    {
+      "file": "contactreplace-only-Run1Run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "428d89607abaa03cdb766029a2120b0b1ad51664a7a0b6bc0810c2f7ca202ea6"
+    },
+    {
+      "file": "contactreplace-only-SentExchange.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "291ed6fb0e5529bcf7bc1f0f46ccc1faa2748f66616b49af3a3bbaf098793153"
+    },
+    {
+      "file": "contactreplace-only-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "748fdf66d529f7547935fe3dd1778e21cd4ba0b1a0de572e8150ecb30a8c0ecf"
+    },
+    {
+      "file": "contactreplace-only-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c72debc4719bc781e2da1d4de7d0fc1c68755b7fa9ebe3ac605c7609d5ceb4d5"
+    },
+    {
+      "file": "contactreplace-only-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "68d47263121548612684fb28df8262b38aff4ec41dc5cb045bd567b91ad81e17"
+    },
+    {
+      "file": "contactreplace-only-call.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "37971d232530f0d0f68c9e839aeb683f73a61ddbfae9b7350e3fc60bbf1b87dd"
+    },
+    {
+      "file": "contactreplace-only-ck.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fdcaf8f2be7c77f21232e806a5fa00c546248f688645a31df5ee28af0d01a18c"
+    },
+    {
+      "file": "contactreplace-only-comment.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "df17b4e411653416466c632de21b4bbbdb1a5ad96f0ce185a6381309dc26f280"
+    },
+    {
+      "file": "contactreplace-only-contestname.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0c47979b571f87755bae4e5955fdbfe3bf5586794b47197e13824428e1915311"
+    },
+    {
+      "file": "contactreplace-only-contestnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c49ea8ca13a08dcb451bcc45c45ac8489a5adfffe1666209f83f9421b600065b"
+    },
+    {
+      "file": "contactreplace-only-continent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e8f67a8027089fb9c47f982dcb028c6f546eebecaeade7bae61f38e0e82c5f19"
+    },
+    {
+      "file": "contactreplace-only-countryprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "97c672412b0fad689d2bfd16b9043757275f99173a4519203a9241c8e968b138"
+    },
+    {
+      "file": "contactreplace-only-exchange1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "01607c3650c712b1d4babb84ecb8f49c572f5fa4eca90572a7c8ec4845c80d45"
+    },
+    {
+      "file": "contactreplace-only-exchangel.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f635763715fec136bd54da6f4e7470a77407ad7acb8e217f2582955815e5cdd6"
+    },
+    {
+      "file": "contactreplace-only-gridsquare.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0a1070cfdce213afc4669f91447982a37ce74e2d90f793ab0f110566dc76eb2e"
+    },
+    {
+      "file": "contactreplace-only-ismultiplier1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1a85de8c9022018edd0bc62a2b400ca603b7663d7a84bdf1fb5b5c78cf4054e5"
+    },
+    {
+      "file": "contactreplace-only-ismultiplier2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ddcdc60529d3805c408d1f2d059af88d22af78b99c8eff895814bd7f9de253e0"
+    },
+    {
+      "file": "contactreplace-only-ismultiplier3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "274dc968e894d9f75d26d52ce883e16b294983588cae88936d7e91191830c94d"
+    },
+    {
+      "file": "contactreplace-only-ismultiplierl.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0c95086c92f28c2577c80b78413e7aa311cdf48438446bcc593d1e2ffc24c470"
+    },
+    {
+      "file": "contactreplace-only-misctext.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "593b6f5622be3530f29b82030121714d66728882bdeb81ebde92bb746425127a"
+    },
+    {
+      "file": "contactreplace-only-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "025b43cb7a590e2fd808f43585fe13894a73bd464065d4ed8889a27fbac7c8c0"
+    },
+    {
+      "file": "contactreplace-only-mycall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1f1ee631c4feb7b83fce14f929864c91374d1e46fa67d52a0ba52934f6182de8"
+    },
+    {
+      "file": "contactreplace-only-name.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6fec3097874d2cfcb5eb357ed27bba197121a22800a378ef60dd054767d089d5"
+    },
+    {
+      "file": "contactreplace-only-oldcall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9229afe8229018d7d71b173e3e4efbc7d6b02ca2af047df3c0915a2df1a6a2d8"
+    },
+    {
+      "file": "contactreplace-only-oldtimestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a4086901f8e2804a9d15850799fd4f384af07449fc3cf654c9a4f5f468214b8c"
+    },
+    {
+      "file": "contactreplace-only-operator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1eca049b117fea8cfabf41857117d7173e9f141a1de48398bc1119e095f09d6c"
+    },
+    {
+      "file": "contactreplace-only-points.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2cfc79e23e4dafd51f83d7f5f94983c4b0cf5a57433e8d0829bc08a18f2ff194"
+    },
+    {
+      "file": "contactreplace-only-power.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "70997d5f57d34f966ce361cd081f65c7afa350a1e02776ae4f7443537c1141a1"
+    },
+    {
+      "file": "contactreplace-only-prec.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "41dfe0b0b30a217eaf33ee344a4d94a82d6fa77a9780ed4f70e1889673c982fb"
+    },
+    {
+      "file": "contactreplace-only-qth.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b2aa97d014964197aa7c556bdae6587b0140b3e691db38b33b4098f4b2f80ae6"
+    },
+    {
+      "file": "contactreplace-only-radionr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "696bcdec7ed3ba8ba084bc85740e1bc6ea9e34c99ab286f43e657da8e8bbbc15"
+    },
+    {
+      "file": "contactreplace-only-rcv.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0e7f5664f82c51072769ddfd248eb4e56d7dc17a0def958d977d9d0b5e6f3326"
+    },
+    {
+      "file": "contactreplace-only-rcvnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b1641aa89637644bd20410ba0f37950c5baf929f19afd26765c8e14cacc4b875"
+    },
+    {
+      "file": "contactreplace-only-run1run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "79db0e2a7a988f95515032c1bb632d7ef331f2dab81588a32ac544cbf85c2e73"
+    },
+    {
+      "file": "contactreplace-only-rxfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a16adae344afb184dd95a3a756fa8cf20b9d6fb9d02c2f89558e0b7b01b4779e"
+    },
+    {
+      "file": "contactreplace-only-section.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f83c1cc70120d29f8a047464b84428ed6763cc82dac8446c922a4280b9a275ed"
+    },
+    {
+      "file": "contactreplace-only-snt.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "afd86078839357e846a5c89de3f05f9f8e12cd4ffb59524a4fa073b954e5e9cc"
+    },
+    {
+      "file": "contactreplace-only-sntnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b60ddb2c5a0c62809e64c4e3ea92af61c5be0267f25f8e175e177c2f0bd5720a"
+    },
+    {
+      "file": "contactreplace-only-stationprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5c38a808227787fba2bcc30bf6dad4bd7bdbadd313b2facebff31b1ba4b842bf"
+    },
+    {
+      "file": "contactreplace-only-timestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a33accd8d874535c8d5e39717884c89a712d117b6dda8dfe40f359524581f894"
+    },
+    {
+      "file": "contactreplace-only-txfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cf826f6f44d8e038cdc80c8bb6220347704a3297222f0c936d7f4267646afe4f"
+    },
+    {
+      "file": "contactreplace-only-wpxprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "348638be64a7c116931f6200cc889b14ac37091a40666bb2907564485641f7e7"
+    },
+    {
+      "file": "contactreplace-only-zone.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8e4fdb37e1762d740b23742f65d4512e04d33c1589d374c0df668ebc25e9c26f"
+    },
+    {
+      "file": "datagram-output-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "12722b4b7ab2c3e5f8d20c0c415eb129a32c7cfdddd67d184c9fe867ca7a6e66"
+    },
+    {
+      "file": "depth-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f0e63d0724d560b63e4044bf1faab26ef4b3c62512cc50b0e759e4426606c082"
+    },
+    {
+      "file": "dynamicresults-absent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b8ec12427880b8d914d827a550f4a61b572435564dfd8242091819e97750e537"
+    },
+    {
+      "file": "dynamicresults-empty-breakdown.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "10a9dbd937b85e10892cbfe7f70e97cd61fc88291fb99283d5511285773621e6"
+    },
+    {
+      "file": "dynamicresults-empty-call.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e3657b566edbd9183561f5da8a339678aa39aa56bdebb3b5c897a1d9f05636ae"
+    },
+    {
+      "file": "dynamicresults-empty-class.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bc5672ac8cc6a3a635bd39ec03f6a5af095a2b2a391eb5d6afae5ceec81d1b31"
+    },
+    {
+      "file": "dynamicresults-empty-club.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "48fb2bb3be86b3708ef0274f9fb7fd730b2907cd620196736eaa6bd44725b2af"
+    },
+    {
+      "file": "dynamicresults-empty-contest.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5dbdf77b67fdd50d09bca0fa999f6c5496084e9dcc038b98113338efac28da4c"
+    },
+    {
+      "file": "dynamicresults-empty-ops.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "738058982f4a86eea00475dd6afa172f243cd1c971e1a640a60a82a5a4ddfc21"
+    },
+    {
+      "file": "dynamicresults-empty-qth.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4aa4d868fa1cd87c05638d1ddd480f83b762e41979d373d271299b9193ee8d75"
+    },
+    {
+      "file": "dynamicresults-empty-score.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3e518f83c7c572da7a98427450602bc1a510c22296782a4fe5fb4d662a1c7b76"
+    },
+    {
+      "file": "dynamicresults-empty-timestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4e89cc39954f311e4ff495302db42df78a7ba2b663fbc76896f90db1388d328d"
+    },
+    {
+      "file": "dynamicresults-full.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "347667858265679fdc8fd5eb8ad9e3b41d99efb58fc340127270393dc9d40b01"
+    },
+    {
+      "file": "dynamicresults-only-breakdown.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "10a9dbd937b85e10892cbfe7f70e97cd61fc88291fb99283d5511285773621e6"
+    },
+    {
+      "file": "dynamicresults-only-call.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8041bdc0b00a697b0291d97a03d48befcd97f372b1d7e375cdfa3fb22d2a13eb"
+    },
+    {
+      "file": "dynamicresults-only-class.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bc5672ac8cc6a3a635bd39ec03f6a5af095a2b2a391eb5d6afae5ceec81d1b31"
+    },
+    {
+      "file": "dynamicresults-only-club.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "010a863467e2037cc45cd46fe2b0696d0658e0ad7712f1beded4560f81989d09"
+    },
+    {
+      "file": "dynamicresults-only-contest.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f17354d75712e001f73097f54adb934f954660170f7ab739112dcd73eaf61a9e"
+    },
+    {
+      "file": "dynamicresults-only-ops.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4c7e5352cecd707b06fc95b7c8d8335aeda059a380d52c37191aa93a2b7c36fe"
+    },
+    {
+      "file": "dynamicresults-only-qth.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4aa4d868fa1cd87c05638d1ddd480f83b762e41979d373d271299b9193ee8d75"
+    },
+    {
+      "file": "dynamicresults-only-score.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9e617c03ec30ced9e47146970a86c101d19a4ff2480e2e77a42fe0d0ae95a89d"
+    },
+    {
+      "file": "dynamicresults-only-timestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d431a0f3d51aea492c7eecb00f973c81fba4ad008ec3067fb8e7b87d294e5f54"
+    },
+    {
+      "file": "element-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5531e675142f0fc81a3f8c2bd1d3afce88b13d73bd55394218eafcfe8de8407b"
+    },
+    {
+      "file": "encoding-utf-16-be.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "939092219254b011034b32c117f6a447efe4d8e9d217011f2b68cfaaf97903cc"
+    },
+    {
+      "file": "encoding-utf-16-le.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "623c321900bf0e0ed649f20017e3d88c2f7c75559982c88196ea7c79737fabe8"
+    },
+    {
+      "file": "encoding-utf-8-sig.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2a70966b10993c24aac46ece9fd306b70b48e35d6a8563cf28a390799a72fbaa"
+    },
+    {
+      "file": "encoding-utf16-signature.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "eb2aae148d304775a9c783e12fd131a65be310a0b593a37c09c7b4781c8d5cfe"
+    },
+    {
+      "file": "error-attributes-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "91b27682b3c78bb17075eaacb486da5a1c02f77301d46208e6ced5fae3b5ad2e"
+    },
+    {
+      "file": "error-datagram-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "420ff5c866d9e52978fb664ed5236c0063abc0f31b8db333298a6c18d80a2f03"
+    },
+    {
+      "file": "error-depth-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "70d8aaaff1e8a8e74ba0f728e2aabf7fd918df9900483109f8b994d4dfe4aaa7"
+    },
+    {
+      "file": "error-doctype.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6c87d799d8bec7e8174bdc9f3efe7a6d0edcba1745eecab7cc1f5bc8ce43e2e0"
+    },
+    {
+      "file": "error-duplicate-attribute.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "72f3611127838dd4314c5fef31d33b5d04aae38ee2ff6c52eeef3085d2bb3662"
+    },
+    {
+      "file": "error-elements-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b6d24ad0253123ca69c46d61533b3ad827b1f5e60e8cbf96f7727ae53e00f135"
+    },
+    {
+      "file": "error-empty.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2ee096ce66cdeee719d32d5f9ab4a9c0d34e02301d4a1ff8a8be2747d882376c"
+    },
+    {
+      "file": "error-encoding-conflict.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f49e66bb347d67dfc7e09dc75d4aa856184a17c5dc6a5775a0123a9823c94b95"
+    },
+    {
+      "file": "error-entity-declaration.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4462a5dd62802ecd4bd249acf085c92825fba56f78be83225bb61c2609458b6b"
+    },
+    {
+      "file": "error-entity-expansion.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e3a06b19446ffccf3ad093c195c2c3be2c7920946ed39839b4756865112bd993"
+    },
+    {
+      "file": "error-external-entity.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d34319b4f6972d29bd764ccb205a6f146a6c5691de71cdd172b36837aa3c761c"
+    },
+    {
+      "file": "error-external-file.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "609ce8bf18668d20a24e54ec58df4c4db992eb90a9bef7f79ae4e206e4ba71d9"
+    },
+    {
+      "file": "error-future-xml-declaration.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bb31afeff0547ef2c9f44544919dc057b947b30cf853ecc87409f51446a97cc8"
+    },
+    {
+      "file": "error-invalid-attribute-text.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c09c87e2353dfeb30d4abd99b379da02a33c6cab855dc6d67e518be3f34c5a53"
+    },
+    {
+      "file": "error-invalid-markup-utf8.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b0023acfc93b4e27a5add64a31967d2382169d6a21138184fdb983745921b1a5"
+    },
+    {
+      "file": "error-invalid-nul.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6c7386175304985cf3d326a2583a6a1bbaecad2be197b6d1039e3c1b8457f031"
+    },
+    {
+      "file": "error-mismatched.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c36501467b226edf6eca160790a08d094fb08b89622c2344429bd95093845f9c"
+    },
+    {
+      "file": "error-multiple-roots.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "06449ea3c7cbfcf781cdac937833b322c4e4d7f791d3f4015e792df75b6c0499"
+    },
+    {
+      "file": "error-name-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "042b2b6ca891c418f2f7a4aecdc34dc84ddcaa8f9da7b745e9162aed1e352425"
+    },
+    {
+      "file": "error-namespace-attribute-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a3b1016061cb7c75f4e7c3443314078212253fa7582a749305a8a2693589f994"
+    },
+    {
+      "file": "error-numeric-token-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8244f6e4c26867ca03a7e33f04c6a7c088cbd3754205fe09f5bd6f43aed07380"
+    },
+    {
+      "file": "error-odd-utf16.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "869341bc21b8f96c011cb84e95fbf5b343f80c376527261795ed0bdd16083e79"
+    },
+    {
+      "file": "error-parameter-entity.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a2931a40e28b697203c875b57da0437d31cf29d7ea8882c23759ab5ab35a3bf7"
+    },
+    {
+      "file": "error-size-before-attack.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8f7ddcabb2d01cf0e0d87d515d23c1a8b77ffe0f67b08e098cb4a355308ff57b"
+    },
+    {
+      "file": "error-source-declaration-typo.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6f76ebbefd1c3f5b22e0f36a49086e4aa3d622c99061e71b43c71492daf3173b"
+    },
+    {
+      "file": "error-source-run-tag-typo.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9725f5810dc1cccf2c768ca22afe6ccd3fc290050911a38b0d2c1efca936e649"
+    },
+    {
+      "file": "error-total-attributes-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0f96134436030a4b3857a15af482328b6518838527eecbc2036fcf85e7b60040"
+    },
+    {
+      "file": "error-unbound-prefix.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e8b85eb346cbdbf294ae5dd4d24eb7a2dd283a68974e26c48cc59d07f66b08cc"
+    },
+    {
+      "file": "error-undeclared-entity.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7f545efc05fd003fb2ebd02b461708020161c86dce688092500b6e13b0836785"
+    },
+    {
+      "file": "error-unfinished-entity.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "65574b2815014f1cb26cedf094b7e22146864a9512677bc4c993e7839cb034b3"
+    },
+    {
+      "file": "error-unfinished-tag.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d8595df77c8401fe90c35777ea9904778aabbdee970d6bdd28af10a2f51000d8"
+    },
+    {
+      "file": "error-unfinished.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "049bd8f16160d9672eabe1d571f9f3474caed1805a7bec7eeb0af84158a522d5"
+    },
+    {
+      "file": "error-unknown-root-depth.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "87ce01d1ca6974f86732a8279527d63ed2f35d3112f644a0fd1ab3633ad29e9a"
+    },
+    {
+      "file": "error-unknown-root-doctype.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c218df86b5c3ba67860684aadafe1fa660341482fbfbbb66016e3634d832c0d4"
+    },
+    {
+      "file": "error-unsupported-encoding.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d08cb6c8f9b1a0cf103446947be1b5397ed988a7e8aa69faf46b476ba3bc4833"
+    },
+    {
+      "file": "error-unsupported-xml-version.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c895673addff771a9a213db3fb8b72d862c0b7c86110db56b809cf63cad2f8fa"
+    },
+    {
+      "file": "error-utf16-doctype.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e723697157d59c90b11c5a81bada5fe866fafb05c93bb1b95ed3dc0167c7e152"
+    },
+    {
+      "file": "event-native-disagreement.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "745cc5ec7beed532cd63bf6a301c73eeb5c5cf5daff8e543c83f844f7806b516"
+    },
+    {
+      "file": "invalid-utf16-leaf.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "be141550057a9b93d1c69f8bd0faac69d6e701e0d3a26ed614207f89030b02a0"
+    },
+    {
+      "file": "invalid-utf8-view.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2b8fefd34d4828349c64a281ff44a7d017693b5f3af4cd4c14f2ff6a42e50828"
+    },
+    {
+      "file": "lookup-absent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c32fc864bfedeab7448f0625a95fc3e1b8e89c745a2a9d54a36e1227195ca896"
+    },
+    {
+      "file": "lookup-empty-ContactType.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e1e71093a30ebe8137199111a5366af233a6cb78c013e4baac170f9cc2d174b4"
+    },
+    {
+      "file": "lookup-empty-ID.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6e4664173dcf011c5a09752b041fe895c4b070ee287b721b40a79c86beb821f9"
+    },
+    {
+      "file": "lookup-empty-IsClaimedQso.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "38fea06deeb0e2facfd190a9c63140fca5c05ce1fd7d43fb28935139cdcfa72c"
+    },
+    {
+      "file": "lookup-empty-IsOriginal.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c959bb1b4c043c3a953b60f821665212ad2e0b4754ba8aa6cfad551473603a60"
+    },
+    {
+      "file": "lookup-empty-IsRunQSO.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2657a213f88e8d32e1d4052fbe516f0ee17b4444f59be1ab1ccd21092ac07ce0"
+    },
+    {
+      "file": "lookup-empty-NetBiosName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b4b7280d8b59711e5644f1ca451062874be5f71a2100d02b7d7376e31c1f88d6"
+    },
+    {
+      "file": "lookup-empty-NetworkedCompNr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dfc8b5bca6fd3af985e8d1a882fbf9276c8a16a714c005e62ae3be4e1f9eeff0"
+    },
+    {
+      "file": "lookup-empty-RadioInterfaced.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ddd89ad73ef77098784e5589a14a0f20313fadc54babebbd24bf0a93ff0e6948"
+    },
+    {
+      "file": "lookup-empty-RoverLocation.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "aa627c2d9f1b3a452747d6723c8ed8da555cf06ed55aa4e32db7699439b6d994"
+    },
+    {
+      "file": "lookup-empty-Run1Run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "91c74e419d14fdf7d81ffcca18e47132864872193d5c724c1610518dd2a072fb"
+    },
+    {
+      "file": "lookup-empty-SentExchange.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6546fee43b29bd903c740bb413550d02f555543c43226987158384c39fae487b"
+    },
+    {
+      "file": "lookup-empty-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "605b9d5bcfb872002b38cc8ebf76e75dfa64f075aa06a1ca53e68d183eb63603"
+    },
+    {
+      "file": "lookup-empty-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "693b7a3da7d6debd69a714242394e6ffee9ea90ff41b4107aff4e41f097bf633"
+    },
+    {
+      "file": "lookup-empty-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6ecb2a7c51799653b6e8f9df8c87c9eb6813fcaf22440c967d4e2eb842259b52"
+    },
+    {
+      "file": "lookup-empty-call.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5e3f2e713195ba76a0ff890e78926b47a2d01205d5875e46382ea32984810523"
+    },
+    {
+      "file": "lookup-empty-ck.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b56019b1793339fdd343b0190fd59de30c919f6f2e8968cc667dd0ed724249d2"
+    },
+    {
+      "file": "lookup-empty-comment.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "eaf601a3f6920aad5be73e5e3ee8c928f4c5da33b2edacb563b0977b104023e8"
+    },
+    {
+      "file": "lookup-empty-contestname.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3fc4d6b388927c4dacf365094f74f0ed58669e25a734bce8cad70ce4b226c730"
+    },
+    {
+      "file": "lookup-empty-contestnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "77ee7c9ec9a3236793fe55cef4a52bb286f62f1774d41e4f36932d265a8e3186"
+    },
+    {
+      "file": "lookup-empty-continent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6d5e844d2de12816f04b8aa9b713ed4c6e6a0ce0bc0781cde2162ccf8d7c5a77"
+    },
+    {
+      "file": "lookup-empty-countryprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "95c8d7c458e1d3db4cc4be58709c805ca9b603943d3e772b43cf5cd064022c8b"
+    },
+    {
+      "file": "lookup-empty-exchange1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f9756ecdd4285024699a2e3fee4268a88a278e349420c4675325c897889e5edd"
+    },
+    {
+      "file": "lookup-empty-exchangel.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "37a8d1d2eb46b5217fef7dd4a0a37a96600d058581b801cec839716402679c3f"
+    },
+    {
+      "file": "lookup-empty-gridsquare.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "33dbd47686a48778f1714729aaaab5285901458b5aaacf27770d5216bfb5e1dd"
+    },
+    {
+      "file": "lookup-empty-ismultiplier1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d63e4c8a2ab6ce4d2716854df149399c0fbfecc7d4ffc3cb586115e29587a478"
+    },
+    {
+      "file": "lookup-empty-ismultiplier2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "11167e5e014843cfb0acae08d62dc80fff5f1d163d8b0748f9c77b3cf8151a0b"
+    },
+    {
+      "file": "lookup-empty-ismultiplier3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8b7c7f6cf07e20bd6c76bcfabe8215280d6174f4a78907e53d716f4a5e09bd4f"
+    },
+    {
+      "file": "lookup-empty-ismultiplierl.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ab0e30558401cd6469316f04edb67ac4b30cc1e9b13d5b6bd09bba686f14913f"
+    },
+    {
+      "file": "lookup-empty-misctext.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dacf28630263b195c12f2955a5505322ce33f3cabb16c40b69c5fdf3e66cf080"
+    },
+    {
+      "file": "lookup-empty-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "faee2caac7c2cc149be9a1afd6085ba21358842a2d76d010a8d1a6ad76c0e1f3"
+    },
+    {
+      "file": "lookup-empty-mycall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "81b5bae008a15ec1c21e8b61afd09db46e510c88475e8a91d7cc3011c09f5801"
+    },
+    {
+      "file": "lookup-empty-name.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dc62da5024f7c81f585b3a59109457f03a82bba2892cbb726a48c2c1ddd9a823"
+    },
+    {
+      "file": "lookup-empty-oldcall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d881ce5fb66cb30722f4cbb486c89708477de30971a2b988baa72f377fbee638"
+    },
+    {
+      "file": "lookup-empty-oldtimestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "691b2bb6cfab1f12211a6ace65cc1f7da5715b899c586fe314de8aa285b75182"
+    },
+    {
+      "file": "lookup-empty-operator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "742f7a8237d924cd517fa40a8a9d9a13b3d8181eac27b6ea59b5b226fa0060b7"
+    },
+    {
+      "file": "lookup-empty-points.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fc040ff4b7069879a6ed1e1d6f4a5f9c3bb44c79f3e027b2f572c63699f23da9"
+    },
+    {
+      "file": "lookup-empty-power.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4717872172825c055604d38e5a8ab59b6af908f01c556410998305c7c3e8ee25"
+    },
+    {
+      "file": "lookup-empty-prec.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d035e79ce4f3b24389d632ffe662b30973e9b06ae56fb1a64c569ac6ba251d62"
+    },
+    {
+      "file": "lookup-empty-qth.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "96e3890611b9ce541b4e435e7c76e653b3caad0f5ea2ea45894a3e87429b1070"
+    },
+    {
+      "file": "lookup-empty-radionr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6563f71d83d346ff3fecc39d1ff45ccf8a2228bf9cd580811c89beaeba74ead2"
+    },
+    {
+      "file": "lookup-empty-rcv.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e8499bc23f258609546200ecb0576b87f7220ee02ddc91c852e412bf1bffb0c3"
+    },
+    {
+      "file": "lookup-empty-rcvnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cd3bbacf53c26725ab9ee39e81e3d2d0df6bf92a9e0908a5dd7b5015c8928902"
+    },
+    {
+      "file": "lookup-empty-run1run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "afbf50230943844ab7dabf5017a5e1f33894d6e806482bf1c6cceff3cdbc789a"
+    },
+    {
+      "file": "lookup-empty-rxfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ff5ff0f1c13365bab206fb23fd46b574a8992b5a565336a172b4aadd525de8dd"
+    },
+    {
+      "file": "lookup-empty-section.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "44f38c7280af0527ca77222a512812a727ed2c0d635659725a126d911d854d14"
+    },
+    {
+      "file": "lookup-empty-snt.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "adb1b5725770d5a6e3ed85be57bf57ab11c3b0dd03e9fdabec715ff35adae449"
+    },
+    {
+      "file": "lookup-empty-sntnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4355ba7d378d5402e44c1cf91626e46142de088b331a1daf1a7f4cf94e38a913"
+    },
+    {
+      "file": "lookup-empty-stationprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "704697f8eb51bd4bb0b4ed177d707763e3fda655e3a0b9cbbf5b20a5e3d08bb3"
+    },
+    {
+      "file": "lookup-empty-timestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3dc165a3a162c76043cb7ca4d51d1c2d698f1f244ab6a002913c6b7280f57a8e"
+    },
+    {
+      "file": "lookup-empty-txfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "df0166750e920f6e43064d7271566dc5b8c9c0652fa3865fbe82b8f7c3bdf830"
+    },
+    {
+      "file": "lookup-empty-wpxprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "81d370309e6959654d0997776af2184d3ad5e9b4fee98f9733a8404294b8e2b1"
+    },
+    {
+      "file": "lookup-empty-zone.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4d060022f1e97106d2c4f077eab8d1a10456fb1a066bb3f0027fe5775361d04a"
+    },
+    {
+      "file": "lookup-full.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b544b0c200e3463a271e2bb5339db020e44d42f1ac862f561a886aef926a85bf"
+    },
+    {
+      "file": "lookup-only-ContactType.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "540f23558544c2bd1e786a62585e4d0f648691a975ff8d2a99d7707ca929d70a"
+    },
+    {
+      "file": "lookup-only-ID.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a939e5de51c0e1036c5d2f5d7191f464b554740718e9e26080c5ddc11d9e2dcb"
+    },
+    {
+      "file": "lookup-only-IsClaimedQso.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a44dee24e576422a55f8ec078c1a791aaae807ccde1a0016a4929e12443f5e5e"
+    },
+    {
+      "file": "lookup-only-IsOriginal.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "406345a2805ea3f32defd6f0e3df6b055eb48c1694230de0fcf23f7f796d59ec"
+    },
+    {
+      "file": "lookup-only-IsRunQSO.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e537eb37e71db7ccef25c19ce092a07ac7908286d0dc153fe076254ad10e2adf"
+    },
+    {
+      "file": "lookup-only-NetBiosName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "17d8ea7ee331e64d0549983285f70d10fa663f7b54a91252d44e6c6db1b6d256"
+    },
+    {
+      "file": "lookup-only-NetworkedCompNr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "432adfd186c1be2673b01eef7075775e26fd32659b84df8e94994a7e791cc5df"
+    },
+    {
+      "file": "lookup-only-RadioInterfaced.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "61086685d942d747f7771bc29ee4639d14b45329b623577654b1633f2298b8c0"
+    },
+    {
+      "file": "lookup-only-RoverLocation.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "947e3f509ecd3220a62380fbc9d80411e9323152766f7e996a512d609a0305bd"
+    },
+    {
+      "file": "lookup-only-Run1Run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b359ff4236bf07051c395050c8d8a3b3a8f90dcd5a710fa834f51e58d8cf4c97"
+    },
+    {
+      "file": "lookup-only-SentExchange.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6c041c8630894b52137200865abb6cbb5fedf6fffbfa8359da1045949d87c22d"
+    },
+    {
+      "file": "lookup-only-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "71e65ad7b43402727979238d77ba271beb1d6eea64addec5687d662f25ee3052"
+    },
+    {
+      "file": "lookup-only-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "942dd54a21ba3586faa33494554b07822c9ea20e57c46d927ed4fac90d82f33e"
+    },
+    {
+      "file": "lookup-only-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8243e82a08bf224f05bbe576c0d4f03180413578c8f71893281038d04e1e5d68"
+    },
+    {
+      "file": "lookup-only-call.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8f5a5b27fc8d58ffe97f6b56fdac9eec68aad811b051dc062d2e30f74495b6e1"
+    },
+    {
+      "file": "lookup-only-ck.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d3b28fd644a484597572b6fbd0a03c8540c285bf7ffc92f7fceae495e218389b"
+    },
+    {
+      "file": "lookup-only-comment.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "937532173cfa6f70f167b06dcfbd9f87dc7fd1f87aaca1f6ac44a3bf080b1011"
+    },
+    {
+      "file": "lookup-only-contestname.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a07d759fd7ec439177c3984219960711bba2d6216155663bc3833bd9ec39be5c"
+    },
+    {
+      "file": "lookup-only-contestnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "743119b28227d548954e109d78b4ddafab88111b02add0a21c7c82d7a9255774"
+    },
+    {
+      "file": "lookup-only-continent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a77f143058d51d6e8c2136a594f4607dd6ee0dbeef663661e600f540c6771094"
+    },
+    {
+      "file": "lookup-only-countryprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4a8afd73d6c585cb35a1964a9ff88539099065ff013373b8b358f8eabedea6d5"
+    },
+    {
+      "file": "lookup-only-exchange1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "916029a4ca4008d4f064101896f8997f8a45437b4d912a6b24f241412bb69dd5"
+    },
+    {
+      "file": "lookup-only-exchangel.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e8fc26633b4c20ee24abee109646078cd2de9b5e4a2a4fc3d5063355c0446a9c"
+    },
+    {
+      "file": "lookup-only-gridsquare.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5eea09814e63369fded66f8bfd3dd60b12c8c52630523a96021c78d1247c22e1"
+    },
+    {
+      "file": "lookup-only-ismultiplier1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "955e6186c2e19d11fba9810a6cfa78f706a7f0c920e6c41560a90295350a848d"
+    },
+    {
+      "file": "lookup-only-ismultiplier2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ee3ab386e68c94767273fd7e57b89830ac116182060038daf7c7212b71caae95"
+    },
+    {
+      "file": "lookup-only-ismultiplier3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7c67dfb70eb35494bf7594679272d047cc6fbac327329213a1403f7ac999a5b8"
+    },
+    {
+      "file": "lookup-only-ismultiplierl.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cc6102b3cd320913fe37a15934d71633e68e843ba5f8bde3e1c7337f7db49c28"
+    },
+    {
+      "file": "lookup-only-misctext.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f7d1db5e9b3d61c5bc45e6a0cbfb696f623d0395b43f09942a0821e98225b15d"
+    },
+    {
+      "file": "lookup-only-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b34ed9579a38617788f85e6a49333f4d151e7040fb92e219c05a3bedece43a2b"
+    },
+    {
+      "file": "lookup-only-mycall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "005914016b578dd4d2c93e12ef50fb01e18a84d5aa226f5c80301a22d6fff65f"
+    },
+    {
+      "file": "lookup-only-name.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b520d9df5c860d511c3e62aef7f2376c3629c90022f005662e221839c8675ed9"
+    },
+    {
+      "file": "lookup-only-oldcall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "51281abe90fce4618a1d63370fd867da6d87885649422923c70d0d0a04ace03f"
+    },
+    {
+      "file": "lookup-only-oldtimestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7d9671aeed96107aed4a3df8129cfa4b93185efc4668e1852e222a5d104899e9"
+    },
+    {
+      "file": "lookup-only-operator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3a908c9f21d22e149404b1a23281825f40264f22af0bc31f6a9f7404badc679b"
+    },
+    {
+      "file": "lookup-only-points.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "959929c5797211cd7fa5643d00efa28e369caae47b7fce14179f42200f8cfc15"
+    },
+    {
+      "file": "lookup-only-power.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a5042f3b5192469c2937da95d225c2eeb85ccd8186e5506f55f864b88db07357"
+    },
+    {
+      "file": "lookup-only-prec.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f012a84778630e521004cb3614d0a954dd8bdf704a01c414d3d0c0cfa8bb9432"
+    },
+    {
+      "file": "lookup-only-qth.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9a05a74d16635646314c659f9dd9d40e80790ad0a33b8321eab839f922393e30"
+    },
+    {
+      "file": "lookup-only-radionr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6316d0ccbb6539b2684051170ea7d67919c03f7b4c784337097367ae6659f5e2"
+    },
+    {
+      "file": "lookup-only-rcv.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8ea0afaecbd197cc9c734a8f29ea3d3aa9e5e715c35f185ab19734f1be3c0cc9"
+    },
+    {
+      "file": "lookup-only-rcvnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "43433d3c4abc9fdae564a502c4020617594f85ee4cb1ff2f71d74323bf338b8a"
+    },
+    {
+      "file": "lookup-only-run1run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c9101fd12432f7023217c843ec86423d89da2f690472722073d7eaf69de92b91"
+    },
+    {
+      "file": "lookup-only-rxfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2ff460986ccc1354de236bfa9003fa1ac2b634a4204a37b32894357ed74691fc"
+    },
+    {
+      "file": "lookup-only-section.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f3bf3ffe1600543c51e1fa8b360fa5bae8be74b16873b23a07c8d98df88b0620"
+    },
+    {
+      "file": "lookup-only-snt.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b786c5310a3c08259be2318cb7dbb9ceb05ee10240187c1940d1c8820b932d4b"
+    },
+    {
+      "file": "lookup-only-sntnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "54515570c5f2a351a30b67afd76afe2e959ce544b2daf8b6b8136ac97dd41aa5"
+    },
+    {
+      "file": "lookup-only-stationprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d9e5ecaedc2546652a9ed523b82e067aef4333de63f56785a9954c5587a91d0c"
+    },
+    {
+      "file": "lookup-only-timestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c7dbd797edaab60573457b13fc2dfb5f6203e6bfd81674f33ede6651141f2462"
+    },
+    {
+      "file": "lookup-only-txfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "204a4254fa1220ac0fb518db66d115ec0ce55e6f23236ab68d5465b83386f4e6"
+    },
+    {
+      "file": "lookup-only-wpxprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cb8f1668f0efca69e95bb5fb268f0b52528048c1ef11c74499683657d3351653"
+    },
+    {
+      "file": "lookup-only-zone.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dc0c23ef3bea98aa386829f53fca51ae2e0e2da5afd157d618d831f03d18cc4d"
+    },
+    {
+      "file": "lookupinfo-absent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1ea2074415e60533bb56ff72dfac5f740b47386796687c89f45582b0bedb4ca1"
+    },
+    {
+      "file": "lookupinfo-empty-ContactType.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fe4be48d70015fd1f204afd9657e9935658ace242fe80d9d8205703f19e71b2d"
+    },
+    {
+      "file": "lookupinfo-empty-ID.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "86abba1ab3e0b949e6d64f357e1a13204b2c3b0a18731e80d6a9671efb496900"
+    },
+    {
+      "file": "lookupinfo-empty-IsClaimedQso.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "27b34dfa424586fe5e06bdd23b7409c9acfc8b566de22610c27bbc7910a31dea"
+    },
+    {
+      "file": "lookupinfo-empty-IsOriginal.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1184e3d5f71b7033bf8996557bbf91682943edeb4dbc7c177711783d68295ba4"
+    },
+    {
+      "file": "lookupinfo-empty-IsRunQSO.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4c4b337907d831941feba9c510d4a5435c9abc54d6e4a307911c444a8a4e4844"
+    },
+    {
+      "file": "lookupinfo-empty-NetBiosName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "18ab0eaf20609b7281259d8a1d2f5fb29f16ffb2dd3c5e067a9e057f50870464"
+    },
+    {
+      "file": "lookupinfo-empty-NetworkedCompNr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "50c4608bcf0385818e7a1e3fbbf3ad56cec75b7e2c685b8c418b5ae9de0fe17d"
+    },
+    {
+      "file": "lookupinfo-empty-RadioInterfaced.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6062fb0cec9679ec9570f8036de0a64ec62bf37bb678000ce57c63b3672b666c"
+    },
+    {
+      "file": "lookupinfo-empty-RoverLocation.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5a2227e93fc00652282764b04d19cdff1bca4be17dedcee5590f3203360b42b6"
+    },
+    {
+      "file": "lookupinfo-empty-Run1Run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "224a895007d4d3ca9ac6b25efbab63e466c35a2fb0a3afc8b8d52b2db3796d55"
+    },
+    {
+      "file": "lookupinfo-empty-SentExchange.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "915cf217021f92e1d7e0a46bf9f99ec91bb5e02af98dbd69187775537dc000db"
+    },
+    {
+      "file": "lookupinfo-empty-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f128b9a3b1a53517740a737c88243b2bc3ef917542eb79c038fa8b110cceef1a"
+    },
+    {
+      "file": "lookupinfo-empty-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8c7eceeee7849ec5a6698e89c443cf853e24cdae923ba9f7d774f2da54dd3666"
+    },
+    {
+      "file": "lookupinfo-empty-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "88d90b89d34ef554c74df4cba7a3a3f0e8e7a334497b8d1108a4cd3100efb6b8"
+    },
+    {
+      "file": "lookupinfo-empty-call.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "43e1bc3fe861cfe6e6a83d8a5771a0412f8218fae72278ac25fb3b2cac216012"
+    },
+    {
+      "file": "lookupinfo-empty-ck.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4a4f5b1152aeeb2168cc7a869b24b5dbe3911186f038225d15805b5d9ab2d9a5"
+    },
+    {
+      "file": "lookupinfo-empty-comment.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "561aafcd4468a5f5ad1e0f1ae2143dd3e454feb0052459ca2cdc23ae123da080"
+    },
+    {
+      "file": "lookupinfo-empty-contestname.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6a722d9354ac5fba6207aadecd068d1ece7188d26ff28ac28b573ce5d40b06b3"
+    },
+    {
+      "file": "lookupinfo-empty-contestnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fc56d831ecc8a344e4fe744edac257e80b4ccd7cbf6b1848f04bd54d8b7ad308"
+    },
+    {
+      "file": "lookupinfo-empty-continent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bebc76e6f52f57721c552decb6da4d73e631729132002fcff9db1c54476c797f"
+    },
+    {
+      "file": "lookupinfo-empty-countryprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bbd0bd67171cc9dbaa9a257e706d101370a7c1edeeca24ec3a88a351e3987de8"
+    },
+    {
+      "file": "lookupinfo-empty-exchange1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b54a4dfebf5870af6029e12815b3490cbcf7e5e0a2221b93e9fe6d721873bde7"
+    },
+    {
+      "file": "lookupinfo-empty-exchangel.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "73c9f3bd73641f7d076d5d054c9e257940584abf9c0920f73a83bbb0213c2b72"
+    },
+    {
+      "file": "lookupinfo-empty-gridsquare.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "25ecd3bc07b13510d8d5acf972861abb6e0972bd47d6f2a23e55446a762b2c76"
+    },
+    {
+      "file": "lookupinfo-empty-ismultiplier1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4568b3af6f727fec65e0497f86cc6cf6f3f70a57801a7bfb2a4b9af382eb1ba4"
+    },
+    {
+      "file": "lookupinfo-empty-ismultiplier2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0fe4b88588e525f093af5f8c2b851331a27cfae3c9fb28939086ec55c82e94ad"
+    },
+    {
+      "file": "lookupinfo-empty-ismultiplier3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "018891cb55209aa946c60988945b854c0671c8cb19e0444c242eb9e9b29def51"
+    },
+    {
+      "file": "lookupinfo-empty-ismultiplierl.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3c9f817af16df67fd93422715b8d1f2adb3a40c3f59e616a7bfd183a02b8e341"
+    },
+    {
+      "file": "lookupinfo-empty-misctext.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3b95a2a5080a5a9bb0de9086a4e38cb2beb159035f2e1c764b58c0d93ef7f67f"
+    },
+    {
+      "file": "lookupinfo-empty-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2aec9af74211b080b2ac141a11b2e23aaac6238d08f1e71d5de295b1ce0d9e58"
+    },
+    {
+      "file": "lookupinfo-empty-mycall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6207567db331e37bafb889fa6db52479b6ad211be70b3a3f31ef5f6dc65dce8f"
+    },
+    {
+      "file": "lookupinfo-empty-name.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3ce0087e7d57e1c2a0397e86c8f278a6965b2ad489fe01cee0378110a40b4a17"
+    },
+    {
+      "file": "lookupinfo-empty-oldcall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cbb3c6c0bb1e4ee670d47305db4286ffdcb3f51f729140a692dfa381b1d8dd29"
+    },
+    {
+      "file": "lookupinfo-empty-oldtimestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4a159efe5e8552d8915818fbc9d65241e2117021bf2aedc58ab3ef916a5a8d9d"
+    },
+    {
+      "file": "lookupinfo-empty-operator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f722e761ea8ed33b56ac48b3d5258571d6e01101f934bf1db23c53376d689792"
+    },
+    {
+      "file": "lookupinfo-empty-points.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "17fb01da624f17fae613698778042b6602305cf1038ffd818ee2baaab03c78fe"
+    },
+    {
+      "file": "lookupinfo-empty-power.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d20945da8bf0edae655d8c67a35684b4e47efdaf1c8a06b180b6f8126b646d81"
+    },
+    {
+      "file": "lookupinfo-empty-prec.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fd1ac0c1133555d882a863036f9d8b6336e429ce622127d19b81762f50b9e2a0"
+    },
+    {
+      "file": "lookupinfo-empty-qth.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c8c8e15d45501d2e9f1fc647f4802e5d095fbb28f3e58e9a3b600dd310573c9f"
+    },
+    {
+      "file": "lookupinfo-empty-radionr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d89e085b639d6f8cd8ac575d3e299a5dc2d32c08dfef15d0c5b32d4ee3c620e2"
+    },
+    {
+      "file": "lookupinfo-empty-rcv.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "724743d2cc95e6ce080054fca08a063fff3a6ffceadedbbed8c7fbfb16e8c271"
+    },
+    {
+      "file": "lookupinfo-empty-rcvnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3f8cbccd680f9662365f706b153845ff346d1a67b1cb902e774af902b1a0a39c"
+    },
+    {
+      "file": "lookupinfo-empty-run1run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "15559d1556fc54762f90708d3abf1f0512402fd81c5f85e4c3ee183389cc1562"
+    },
+    {
+      "file": "lookupinfo-empty-rxfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e25622caa188ee76fe460d2fe05f70ee73f94d6e179fa80930365e292690820b"
+    },
+    {
+      "file": "lookupinfo-empty-section.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0a1b639f26dce1cc753ba331b41976103d20fb2fbaa2f493fbbeb097c243d9a2"
+    },
+    {
+      "file": "lookupinfo-empty-snt.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3e048857c2e0caca1b57ef81502e13929f9947c371f31617c82f87b0852e21a4"
+    },
+    {
+      "file": "lookupinfo-empty-sntnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bbf69612a0055352980cc5e693b12cd50aedf6517630fa003f0e79755b74f2fd"
+    },
+    {
+      "file": "lookupinfo-empty-stationprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f50e026bf6c262c5dc6d739a47ab30b65866b2dad9740c6aa9b62b0f9cc5c49e"
+    },
+    {
+      "file": "lookupinfo-empty-timestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "18fc430b9c9e90230b8804a77057233e553b462546c98fe72a41c94b5827dc0c"
+    },
+    {
+      "file": "lookupinfo-empty-txfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2cc57891e30bda6ad67d1eecb9f7e671896dc5402360a161ea822db24797d4db"
+    },
+    {
+      "file": "lookupinfo-empty-wpxprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fca7f5aa049e5bd901a0fe1b63f041044e96f945ec84f93d464df3fbe5462a02"
+    },
+    {
+      "file": "lookupinfo-empty-zone.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0824bdc57ddff96857a3148294c31007e3462e88472bcfd6c79307cd64d8c315"
+    },
+    {
+      "file": "lookupinfo-full.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5d481c838e5e473c3a27526a028a1f42ff0fd43c4b0cee26f564cab19585435c"
+    },
+    {
+      "file": "lookupinfo-only-ContactType.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5e39fb25fe2fbd7e0df168cd77051cfad9f7bd8d3ddfaa80ac5122a4fa94796a"
+    },
+    {
+      "file": "lookupinfo-only-ID.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f00dd702827b348654b464c8f9749737b3918ba8a1101bddecc15f0393501273"
+    },
+    {
+      "file": "lookupinfo-only-IsClaimedQso.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bf2aa4064cc61987f527232568bb4c2f14397b1399e1fa1b38b805c4df230b43"
+    },
+    {
+      "file": "lookupinfo-only-IsOriginal.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "faf9bbb7ad7474ef690efd40ef4ea166882f4c244f86a30791c24b6e81bceb1b"
+    },
+    {
+      "file": "lookupinfo-only-IsRunQSO.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "66475243717c7fe86e84e709def0a45f6a6d74eea2894938f2064c7c826ab7a4"
+    },
+    {
+      "file": "lookupinfo-only-NetBiosName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "80a191f08c43c4dd731547ba45cc398112166eadbe9e4f74ca18f7f07e07fdc3"
+    },
+    {
+      "file": "lookupinfo-only-NetworkedCompNr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "59b8ad85c961561059108d3627399b1b105633f0f5d8bae831e0199806d5e325"
+    },
+    {
+      "file": "lookupinfo-only-RadioInterfaced.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e716f63ef4d5405654eec84ab88a4053775665e5d010e99211cbc710bb661f42"
+    },
+    {
+      "file": "lookupinfo-only-RoverLocation.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f8bf2d3bf5f32a20f0aafd864a2030c6618d907589230c9e2605e9e0314d7232"
+    },
+    {
+      "file": "lookupinfo-only-Run1Run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "68a9531a5ba4f141e1bcccdb4d91b7dbd097242893ee770dce012974c2a37300"
+    },
+    {
+      "file": "lookupinfo-only-SentExchange.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1bf18e64aa92f29d2692b0c0e7d2c3332ba87d97afcdfe60f7ff448b9b1c3f11"
+    },
+    {
+      "file": "lookupinfo-only-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4a550bedd84963a72f5858c8c19b547cc2539279578ba37762d35208b1582d4c"
+    },
+    {
+      "file": "lookupinfo-only-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "26e247dcc9447dcf219284f861fce0122e3cf2db673e68342d19ca9d31ec93ff"
+    },
+    {
+      "file": "lookupinfo-only-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fdb1be20400f84d36757bd48e4fcc91f0fc010f0f286100ffd0f31adb738fa47"
+    },
+    {
+      "file": "lookupinfo-only-call.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "16f56fe8224e3bc195a5ab88a029a7de5b604274a6166899424048dc545b6f66"
+    },
+    {
+      "file": "lookupinfo-only-ck.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e5af2334c359a71a65a14bb0f76da820f5364d1200856c9b997e13044201acd6"
+    },
+    {
+      "file": "lookupinfo-only-comment.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "03b66d6aaab8a428db3b15600bfc92a9c3a7482e0c720ab64f9a182e2e9e1f0d"
+    },
+    {
+      "file": "lookupinfo-only-contestname.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0ba6a35cb3db642bf2762440133031c1ea26faf7da6b610d931b37a29b1c7baf"
+    },
+    {
+      "file": "lookupinfo-only-contestnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "eb77f7f724a490576e85b72d2067eac61df5b23ce76f72b7351d67246ccd3584"
+    },
+    {
+      "file": "lookupinfo-only-continent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fda38e4dfc9313fded1c03d1dc67a3122be4de7a687104306219f111247a1406"
+    },
+    {
+      "file": "lookupinfo-only-countryprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f3cab78cb99d0c37cf633f736f91e92a0bc456525d3d2a62a8cee1bd1fe4af8c"
+    },
+    {
+      "file": "lookupinfo-only-exchange1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ab77dbd6c04e102079317cf94971bdbb078e2e8422e721070d7faa900602f12d"
+    },
+    {
+      "file": "lookupinfo-only-exchangel.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1c7d963f167ad86803e76beea5c8737ff5591a33f9ce640013a7c14b2aaee895"
+    },
+    {
+      "file": "lookupinfo-only-gridsquare.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bc1254d7b2c93b12553cad3b5896613be40b5c93487be239d267097ebe284e89"
+    },
+    {
+      "file": "lookupinfo-only-ismultiplier1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "64d06ad9619ee61e14689ddeda99d377bc177057d2c6ab8d5b872e21d51989d4"
+    },
+    {
+      "file": "lookupinfo-only-ismultiplier2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "522a520071cb3d4d42c3440dbf6038d44f0e28c4034fb7173ea4ecc44db13483"
+    },
+    {
+      "file": "lookupinfo-only-ismultiplier3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ad59757b7c72379a9df71606ffb736c5d64c3d8e73693d357f38cd16ed019b79"
+    },
+    {
+      "file": "lookupinfo-only-ismultiplierl.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f005e31a5e1c92cc81df7469b5af5e534cd59c59623b2319b40387837038ab53"
+    },
+    {
+      "file": "lookupinfo-only-misctext.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c92a4d7d836eb858eabdd6f465f65045a09b74795883a41fcfc93c37216c6946"
+    },
+    {
+      "file": "lookupinfo-only-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c5f22f004b89064133ecf75c0aa8939bbb3b9d6fac36e6ff7c0436f5d0bf0fed"
+    },
+    {
+      "file": "lookupinfo-only-mycall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bb528e789c9df4abc0f83f52462c0e372297aa2ee449b86e260fab5b80d71d39"
+    },
+    {
+      "file": "lookupinfo-only-name.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5eab8b8f069c1a10dc0fe9a202e4def7bd141e5850bd9767e7c04adc21de5daf"
+    },
+    {
+      "file": "lookupinfo-only-oldcall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c8c171c769a1113bd55d685bc2dd1b3ea59334992114752b9f7d1eff3fbb0d48"
+    },
+    {
+      "file": "lookupinfo-only-oldtimestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a074379d450f851a919aae308ce6d95e284ec28e82474f38c03d6c0d53495b6f"
+    },
+    {
+      "file": "lookupinfo-only-operator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b9dc29f711be2e6e1e36aee4eb4f3a1b3bb3e21edc7140103d2d6706d632b1f3"
+    },
+    {
+      "file": "lookupinfo-only-points.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4652d2a0aead13645230e8ea4b90b380e4e7a8669623c2b37fd7d09000eaf820"
+    },
+    {
+      "file": "lookupinfo-only-power.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "68b0201bd414d323c6068199ab476ce04cc25c9626bdf1ee9d60e622ab50999c"
+    },
+    {
+      "file": "lookupinfo-only-prec.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "747201ec76b7212dd6f7b4295bfa2bc5d82be26d99124240863ff8ef56ba801a"
+    },
+    {
+      "file": "lookupinfo-only-qth.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "65a53a47c6bce73d8e7adfdc9b9e771246845b003a98b8ca72bb96419b0b6d98"
+    },
+    {
+      "file": "lookupinfo-only-radionr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e99f1e5a70231c1891de23e1fde5df9ffab125c6ca484cf01e60326235453acf"
+    },
+    {
+      "file": "lookupinfo-only-rcv.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3f4863e5c92a3fecbef79742bb1122992a422c303e4a2d9b5fee7465bc3beaff"
+    },
+    {
+      "file": "lookupinfo-only-rcvnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3e236361394ec3f6982e97218b901f844c5603bae59c810887610a0a491be1ae"
+    },
+    {
+      "file": "lookupinfo-only-run1run2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c01760e3f9f4affb4bedc4b5cf9b1e68bcb9a3fc65645f8e456f312128fc4d7d"
+    },
+    {
+      "file": "lookupinfo-only-rxfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2baed415c326c43e4123b491311189c357032ffabb593ae545f38cb8a9ecda90"
+    },
+    {
+      "file": "lookupinfo-only-section.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6dcdf66635a2cf61e65689efd538ffa544ccdb71588333ac7658350f6554c0c8"
+    },
+    {
+      "file": "lookupinfo-only-snt.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "70eb9a4f5e0fe9fd0845bb47ecd511aa2ca30f8058fa5379cc74404424d73c63"
+    },
+    {
+      "file": "lookupinfo-only-sntnr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3f4a33417a08048a017880da6129befff8353d04a576b02274fe95fd1cb7bf0d"
+    },
+    {
+      "file": "lookupinfo-only-stationprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "93c1c449516b4381af5e25b3f1c40a5da979a36488bb31e9a0bca1861ab22dd2"
+    },
+    {
+      "file": "lookupinfo-only-timestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2bf7566a77a2d1fa4a3b923377f3a991737dc1e584e042e9ac4450f926090b21"
+    },
+    {
+      "file": "lookupinfo-only-txfreq.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8502fdee37dc34e0af632931fca7812a5aef6f3671b20f52515d2348210a8aae"
+    },
+    {
+      "file": "lookupinfo-only-wpxprefix.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "834d0471107e91a176a11b94f10f147220cdf15f9e8ada678e36692262a68f80"
+    },
+    {
+      "file": "lookupinfo-only-zone.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4138fce934b0899f32cd4f2e3596b5b9b5159d004d6bbe04f54e750bb2aaa4b1"
+    },
+    {
+      "file": "name-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a9e4dbac50c7df645115c751a2e39ddf1ac3b9afbc46cabb83e0a32667a7c757"
+    },
+    {
+      "file": "number-RadioInfo-Freq-decimal.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a8b55157ffa7303e339e5edb5ffaedda78c195a40b70dffaf59117e561b41b6f"
+    },
+    {
+      "file": "number-RadioInfo-Freq-invalid.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "463d919ef43020b6d12b7f9ff29ff288da3598b36c1dcb2155e199985a36185c"
+    },
+    {
+      "file": "number-RadioInfo-Freq-maximum.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "96a8371267db98de97d3a521637a5a37bded90bbe78583c362b58ebd70eaa714"
+    },
+    {
+      "file": "number-RadioInfo-Freq-negative.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "df5e7dd8440ddebec58a1c24595d3e8892efc013db1a45f219e65b95b72a1015"
+    },
+    {
+      "file": "number-RadioInfo-Freq-overflow.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "051acbbd66d885c0d96b833ae15481ee4ff409fa828277ef156299d43e330b03"
+    },
+    {
+      "file": "number-RadioInfo-Freq-signed.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "151158abd59d95003c1c07e61e4f8420d285d93e83d5c0284565769ef9d784b4"
+    },
+    {
+      "file": "number-RadioInfo-Freq-zero.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d250aa8315390b0d34017e36f7e7fca19c53bacaa9e3ba96037dce3aac419cef"
+    },
+    {
+      "file": "number-contactinfo-rxfreq-decimal.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5dc809c206a6eb894d1d1052c94c4e0b0b28c4bf2bc62bad5616bfd1ad3552de"
+    },
+    {
+      "file": "number-contactinfo-rxfreq-invalid.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f7b7f0884b1f349aaf0482a22a7c80efb010749f03233fc871bdae3e885a3803"
+    },
+    {
+      "file": "number-contactinfo-rxfreq-maximum.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4784d30cf7efa816c808c8fe0c852ae4146878e4f02d6d69b385c0fadf4b399b"
+    },
+    {
+      "file": "number-contactinfo-rxfreq-negative.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cfbbe75416ebbb6d3c8839e7da1e3e59805ce1d4b815f575ce1b594b99828754"
+    },
+    {
+      "file": "number-contactinfo-rxfreq-overflow.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "55774426f8ea71a350754bd2e72b919b9946d7b03f2eaa86d439a10d50759ff4"
+    },
+    {
+      "file": "number-contactinfo-rxfreq-signed.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0d814a79dab245ef1d70434f15276e5122c10b030fbc7a9c5abd0f32fe5d12a2"
+    },
+    {
+      "file": "number-contactinfo-rxfreq-zero.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6a2ad487db2492da84c060b50a10e319e74f94ef19889cf793b1f84c9ed49a3f"
+    },
+    {
+      "file": "number-contactinfo-txfreq-decimal.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "167406b383ad64fb70b0c13665a9f21ecaf6849312b65606f5a9005e37b6dfc1"
+    },
+    {
+      "file": "number-contactinfo-txfreq-invalid.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "134cb1987d72f12da53a44e16d61f55adb9b8225351890bc425067b625e2ea7e"
+    },
+    {
+      "file": "number-contactinfo-txfreq-maximum.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7b883afd9ddf7ccf29e46a2bcb3a6a86a020993b535bc77e077f0fbec13c101b"
+    },
+    {
+      "file": "number-contactinfo-txfreq-negative.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "050adb10a552532147a8256a664292317fa3fb983f7e7ef0cbd15e317d09aa85"
+    },
+    {
+      "file": "number-contactinfo-txfreq-overflow.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e5ab8219549d64a76734029ff52f0ff2891a0b50c61aedd110f61116a810680f"
+    },
+    {
+      "file": "number-contactinfo-txfreq-signed.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "443e7b013c2eb5824e1fdf113e1bca4feca32c101c0dba39dd8e73b51c931209"
+    },
+    {
+      "file": "number-contactinfo-txfreq-zero.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6a554170ffa8c94f1197b4434640ca1abf8b8058215376b29f24b95fe12c3a66"
+    },
+    {
+      "file": "numeric-token-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c05f7b29d3ae8ea11706ea10411907ea0aae09db80b4fa52fbcb559adecf6e7b"
+    },
+    {
+      "file": "radio_setfrequency-absent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9a2dbf47c98dcfb3a5b104b1b2956f1fa99f5d95f687c3069405a4bcd3dbae1e"
+    },
+    {
+      "file": "radio_setfrequency-empty-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "601ad3d3f1fc7ce6ee3eda42ca1993959b021f0e463a45803868c05b20ca8e03"
+    },
+    {
+      "file": "radio_setfrequency-empty-frequency.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "69a2a1fad65719048a8041a93c3eb1fd218e5c10b5eba1ec868c58ee43c24fed"
+    },
+    {
+      "file": "radio_setfrequency-empty-mousebutton.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "01e1358ef2b05114cbc976cf45b4a21e82e98cf609b102d677d8bd2bd2bb61be"
+    },
+    {
+      "file": "radio_setfrequency-empty-radionr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "19583e67f61169714e5585f1e3ede70041853d905f97ce1b4a299d2da11f8d06"
+    },
+    {
+      "file": "radio_setfrequency-full.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bbb36207cd7bba1ba1e355b891dea83be6408747f2a40c155018514fba59d880"
+    },
+    {
+      "file": "radio_setfrequency-only-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ef594e798c06e84d8667f29bed16f51bfd94c0aef119921e3aac348618e850e2"
+    },
+    {
+      "file": "radio_setfrequency-only-frequency.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7cd3e2fda172eb71cf8909c9dc598753fd486c98f0c9044fe7fb3caa2e322531"
+    },
+    {
+      "file": "radio_setfrequency-only-mousebutton.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ea872ee6bc4f5ae7f3f823f4d36a0e51d97572bf9976b6597fdb58d9fdde7438"
+    },
+    {
+      "file": "radio_setfrequency-only-radionr.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b821209a22c539cba26afa1495e48d45b8d41d457ac839de7e1cce89539e95fb"
+    },
+    {
+      "file": "score-class-attribute-assisted.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c405d7685fa884ed64a7d27a0124a06586a5825bcb335b984a8be30e5ed13809"
+    },
+    {
+      "file": "score-class-attribute-bands.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2589989bede73c7558117281d6c6b3e191562e6b3469a547251489afb435c1e3"
+    },
+    {
+      "file": "score-class-attribute-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "66ed238f2b464ffa21cba71f8cbec559514159a4ff68c526cb7cc44c493dfca9"
+    },
+    {
+      "file": "score-class-attribute-ops.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "edef8bf983105632cf42972f2fdcec03a2430bfd83fd45662c3d34949c9fe214"
+    },
+    {
+      "file": "score-class-attribute-overlay.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "af53072615263b543b9b15fc69aa8cb7f0e9c7baeb1eec2bfacb0f69b0a7e207"
+    },
+    {
+      "file": "score-class-attribute-power.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dafcad91ffa01b84e3bb9b7729035262584460bc34281d434d54fcb12f2cc352"
+    },
+    {
+      "file": "score-class-attribute-transmitter.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "68acf4a6d6c9457425af4e7eefe49824bb505998ff7b15288f69ea50eb507bc6"
+    },
+    {
+      "file": "score-class-empty-attribute-assisted.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "df2c7025787014ba5dcd84beb3fe902e8d55d77d1c3961fa9f5e3c8720132e9e"
+    },
+    {
+      "file": "score-class-empty-attribute-bands.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4889f52fa419738c8967d1c6bf7ff4adb671a461ebf786bade2aa2b75d1ec5c5"
+    },
+    {
+      "file": "score-class-empty-attribute-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6d87c7340d964af345fa41b9095c3eef7db5364631797b2b89b2c7f42b6f49b3"
+    },
+    {
+      "file": "score-class-empty-attribute-ops.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f80f78375fa7031b82758a8d92e3a2df99d1b89996bf297a68676ad246d292fc"
+    },
+    {
+      "file": "score-class-empty-attribute-overlay.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c6435fc6b0938947c4c5e892ef4a8cde2d5c9082e5bc842c3e38db0d97eef245"
+    },
+    {
+      "file": "score-class-empty-attribute-power.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8d8697058e77c35230b901ceaf45e06cec0a110e2f7d4994ecfcb7b3b401e0a8"
+    },
+    {
+      "file": "score-class-empty-attribute-transmitter.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c9ddcef669c10ab9e3da04888fa7bc5b97d629c59152549383a57658b703aeca"
+    },
+    {
+      "file": "score-duplicate-breakdown.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "52d25620b5cbb85cb793801311849624e7cb4edc9a16f04f30aad22373144c0c"
+    },
+    {
+      "file": "score-duplicate-totals.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "eb2f51a068ce9460351a5c9a2fb83e8dc01566a13fc186633a350bf82e399ba4"
+    },
+    {
+      "file": "score-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "759a300afa2b1327f251e74cec054ce5da2d0d62f61fe67fe54f35613d897c73"
+    },
+    {
+      "file": "score-point-empty-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ae9376c68083a98fd0b0abdde809af5036e22f9552b3e44cab26b51dfc7e309f"
+    },
+    {
+      "file": "score-point-empty-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "906dfa606966ba2fc2368d702ed4ce6b1273e56b80038468e6d6c3b16c7714a8"
+    },
+    {
+      "file": "score-point-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a5d720f042818010f33595acb254addf1e4091bfc1f5e926ac91428eaac39c9d"
+    },
+    {
+      "file": "score-point-no-attributes.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e98643eb31e77ef4918f86370dcfd7535c7c3b00bda6c44e8d5899ba48f26578"
+    },
+    {
+      "file": "score-point-no-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "25747b6dbf92ddf867e68ab5d2cf9e905f95ff2c0ee11360eb0b320b140cf9ef"
+    },
+    {
+      "file": "score-point-no-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b7668b54cf231e06ea745fd28a5491d5926750acc0d754e4a89075fc29f973e9"
+    },
+    {
+      "file": "score-point-other-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a442347057e65124a3415416e64869b106eff135ccf6d5155d5bc14e4d2adb68"
+    },
+    {
+      "file": "score-point-total.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5aed54c0a90dd567743c842e741118d2ba3d60a232522360721785ce4c34e3d1"
+    },
+    {
+      "file": "score-point-unknown-attribute.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "757b4c810bdbe335187befca93705ad59a265e4e5c3ec2a08d7ec2f808075f76"
+    },
+    {
+      "file": "score-qso-empty-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5fa1b68bc8c36d9f2e6db3adc89b4b2de044f46d6f5db34f630e9f7dc24ee373"
+    },
+    {
+      "file": "score-qso-empty-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4507c39a0ee66b9067cdbc980b23ec183d0cae1b1acd75f2125b365b8fe58051"
+    },
+    {
+      "file": "score-qso-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7e6dfc4b7fb91aef90e65d96fa89083e525b9d453b2904a23a3ad2f4972118b6"
+    },
+    {
+      "file": "score-qso-no-attributes.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0f1a778416df12ab5d4190f48cf9be428dd4f6175945179635499fb567c96128"
+    },
+    {
+      "file": "score-qso-no-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1d98867409078be1c89f8dd0cd59c518304e81801465e65600022e7ec3ef0e7b"
+    },
+    {
+      "file": "score-qso-no-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9c68d08b61a7a5fb08bb8da75e31c181df3543043d1b8f647a3978bfae03ec54"
+    },
+    {
+      "file": "score-qso-other-band.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d7b5a0f4f80ff54684b62d06e9b6a715a7b3ebe8b64d21e571da96ec09440082"
+    },
+    {
+      "file": "score-qso-total.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "45d560bcbba0094379b3e85a5bf40b75fc1f178339b13e54068c354919c78c61"
+    },
+    {
+      "file": "score-qso-unknown-attribute.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b61ebdc17d8837a5f13ef27a2b1fd349733a54d6a0a27e9e71a08a4f8544ce7d"
+    },
+    {
+      "file": "score-qth-arrlsection-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c33e6af147d3dcb9cc2d8abb017f7f92ffecb1a61e231d6d705fb5e12a5240b7"
+    },
+    {
+      "file": "score-qth-arrlsection-present.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0398c3f028eecf2b1dbb5b0f9e7d78b378e09742c1076b8c11633e441f472e96"
+    },
+    {
+      "file": "score-qth-attribute-not-child.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "12ab8f433316cd6dbb38ed327195ac59f10d3a933731dc31a047a0762374b5ba"
+    },
+    {
+      "file": "score-qth-cqzone-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f5e784e96796f2e3bba22d6ea6e1b6aefc02c1fa0a8a8d4333ff95d812eb6ad5"
+    },
+    {
+      "file": "score-qth-cqzone-present.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fc52ae473ced8ed35846fab23c2a5a155f7da7989bf59af095e97d3f2dde82dc"
+    },
+    {
+      "file": "score-qth-dxcccountry-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0c14f63f84af6a96a92a838e4a253d135ef7350d07cf6b3b99d7acac41d23692"
+    },
+    {
+      "file": "score-qth-dxcccountry-present.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "aa21626217c3b233a5864d0b68815112b5120855bb10b37da3ce3b0c8791045d"
+    },
+    {
+      "file": "score-qth-grid6-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d144a2f95762192bbe7ed234e08ddcdd51de3b6eab039d6375a64203d245226b"
+    },
+    {
+      "file": "score-qth-grid6-present.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fb45d0fdd2959b53475435b81d85a8605ac304a860740a29593842d3e730a6da"
+    },
+    {
+      "file": "score-qth-iaruzone-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "92f2cd78547f58acea1e1020a402bbed2775a42f510fcb293229c9ffc5fed246"
+    },
+    {
+      "file": "score-qth-iaruzone-present.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a708c80b2e1bd244ebe50d5bc15e8faf221b0045b0b0612b1e8b50f3d2819a67"
+    },
+    {
+      "file": "score-qth-stprvoth-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "30d65c4296da570f9dafe2bc633e87b07ee3477e82f89584da40677d7a2cd351"
+    },
+    {
+      "file": "score-qth-stprvoth-present.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b6a10734de770ea3c6fd5cc96024cd8fe65cd905d3cf260cfce93554a7714ace"
+    },
+    {
+      "file": "skip-case.json",
+      "class": "skip",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "62f324db496cc80c08c8b2ce7fe88e53913492a049903966ab5fcf7ef434f158"
+    },
+    {
+      "file": "skip-default-namespace.json",
+      "class": "skip",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1671b0639e13c9bd0f685aab955e6cdb37c853dbfd1f0098b8b4343bebd912ec"
+    },
+    {
+      "file": "skip-future.json",
+      "class": "skip",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9c00fbd56b8f0bbbe34a4aff4d9d3409793016b5a89571e43af550fad280a0e6"
+    },
+    {
+      "file": "skip-namespace.json",
+      "class": "skip",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "23878ae1cb86b2297533957dd3675896cee3e3bb6ab4665c92fef0183d771e18"
+    },
+    {
+      "file": "so2r-0-3-4.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b749ed85791f21c9bbf615fa14962fe4566e6302546c04cf7c9707ad045dc111"
+    },
+    {
+      "file": "so2r-1-1-2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7c3be4b74fac1ee9ca451fbd668a015a389c37c10e19c1fe54538b079b88f543"
+    },
+    {
+      "file": "so2r-1-2-1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "84fb8d3a8ee380e9dba61158e769fdae6da0a09dd30795928479cf80e61281c4"
+    },
+    {
+      "file": "so2r-2-1-2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7afd5dd79644f0c204a05530f428c05960d7a15797c38eae942bea14c6faaed6"
+    },
+    {
+      "file": "so2r-2-2-1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "93dda3e03d5f4248b2b6c1204ddb8b6da3bd6ce68e8d9ca5b3d155f5f9e20fdd"
+    },
+    {
+      "file": "spot-absent.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "be62f71118c8e1fe1880e4b3497ac139c5b93e3cd1c8945b0ab434fd3c7b855d"
+    },
+    {
+      "file": "spot-delete.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e9ea7c6131d52711ffb1457090df725001bb6fd7b31ec06e1ef7e63c90a146a7"
+    },
+    {
+      "file": "spot-empty-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8c6a9e0210bbd51f38e15aebff948aa1306ecdf9e4e2e45915ee679fff45afca"
+    },
+    {
+      "file": "spot-empty-action.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "88e43613aadfd85c17f00e49821a555ae81d1b5692d137fcd0080d23c1d688dc"
+    },
+    {
+      "file": "spot-empty-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3ec8fb4146e99cfd67d97e62cadf3b61f9e2bc9004bf563c8e5d77ade29c63b8"
+    },
+    {
+      "file": "spot-empty-comment.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bf868e2ddabf407c7ddc813d5b7d6eb2a9a195cc2b410dd11f8ac11526b1fd5d"
+    },
+    {
+      "file": "spot-empty-dxcall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0dbf365531d244b2d6c326ac8762f27557fa4a0b4424d6767a602b0d0f7859ad"
+    },
+    {
+      "file": "spot-empty-frequency.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "40d17023ff7d0501031027946f2c09998b46997bdae859db1e2cc4c9fadb938f"
+    },
+    {
+      "file": "spot-empty-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "11e4520f794628700cd0264c9be13c4896d9a055450252559d7f97613b83a9b7"
+    },
+    {
+      "file": "spot-empty-spottercall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1bccb8e7c89a82bc4886f359025229d9fc8ec6e35a8dd426c80dd19945e91ee7"
+    },
+    {
+      "file": "spot-empty-status.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "37189187a571011e47903c94caccc4c08526750f769547b813282c86f9457860"
+    },
+    {
+      "file": "spot-empty-statuslist.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8da50e5f179ad7c19b95bb06d74fa5f02310cc82be570974431d26ca8cfca7c3"
+    },
+    {
+      "file": "spot-empty-timestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "45780c91ffd5d4776c18820fd6a31a416c41babd815aa75e40b22134f20b9a47"
+    },
+    {
+      "file": "spot-full.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fb5e900ba138f696a18f1d16221984cf37709ca003375c962f55c8c5c9263f51"
+    },
+    {
+      "file": "spot-only-StationName.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "78084b1a12c67fea8ed6a9cc89436fe408a74be2ed3d3f763e7a8871ef72cb76"
+    },
+    {
+      "file": "spot-only-action.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "807ad4f6e4c0df64804bfd9dab1905f6fe20c4707eb6080bab05f7426c31b189"
+    },
+    {
+      "file": "spot-only-app.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d1b2a67e9bb4471896e2a9583f5fdaf2c8ec028bab78fad8fcece00566d74e4a"
+    },
+    {
+      "file": "spot-only-comment.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6ca46770f0b11d633bd7d4d8a33835f48055c5649bd48f169c4aad76ed1c26d5"
+    },
+    {
+      "file": "spot-only-dxcall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d786eeca333ccad60b4c909e6ac98d72bc0a69bce7220146b2d899328690c5ff"
+    },
+    {
+      "file": "spot-only-frequency.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "460c43472fe7e2238b19e89456569e858a20e842f3bc26d2b2adaa8055851ee7"
+    },
+    {
+      "file": "spot-only-mode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e996f0be1d0774b5c1346a4a0e90ff16e9cee173acb818087f9b919e75584161"
+    },
+    {
+      "file": "spot-only-spottercall.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f46f9460fa1f4ca67d603b1159fbab3014543418afc37b51b412bb01acc5f7bd"
+    },
+    {
+      "file": "spot-only-status.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "aa85a8df951595fd51d70b410933d0920c2f75bae6c51b0efa19da9f592e633c"
+    },
+    {
+      "file": "spot-only-statuslist.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "81f8b2ee1fb6f25898e66bed6199567a8bc9d90bba11aca8270bab08eafdf383"
+    },
+    {
+      "file": "spot-only-timestamp.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dea96b50fa71f6b0b264ea90e58da035c0c78236a217f81cad19fb2230a330db"
+    },
+    {
+      "file": "unresolved-time.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ba0c62f91e899e8d7a7e77c9ad1718e844af32417bdfe9b2779ba9858fbcb754"
+    },
+    {
+      "file": "xml-attribute-normalization.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dfa65bfd7bcf3caff81d624a3b2f59de953e24dde06f4244d546546616cf47e4"
+    },
+    {
+      "file": "xml-attribute-not-leaf.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a5a68f59964591cdb9f8f9601c9068b4c7b6800c50423de2da4e7fba8730de87"
+    },
+    {
+      "file": "xml-cdata.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0dabafe84b596950721f1971e501d544eeb586bfe7515c718159fe8cf07370dd"
+    },
+    {
+      "file": "xml-comments-pi.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "854bb0427fe521d5fc94eae02d3b10dc44825aadb2f5d901556c3d3ba72e9837"
+    },
+    {
+      "file": "xml-duplicate-leaf.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f2e1532e64d2c31c63795053a2c1b562197849ce76d16f0a5dcd196b7552a0b3"
+    },
+    {
+      "file": "xml-entities.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "116a056e0bf5dfea6a6a9cc8dcc13d4e628e91538257902dc7e879df052ad1db"
+    },
+    {
+      "file": "xml-invalid-utf8.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "68f0c6fceac84ad4733d7c4b53fdde5b0d37da74864583ee925b007ba33fe8d2"
+    },
+    {
+      "file": "xml-line-endings.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3d49f8f7c6fb293693e47dc346485c3d4e0e2601b2539da8fafde6c3adbd355e"
+    },
+    {
+      "file": "xml-namespaced-child.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2c8f86dda8f78bb9f3b5bb5e6af4bd66e6cbba8ffd56472434b81350913b89b6"
+    },
+    {
+      "file": "xml-nested-leaf.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5252bd3bfa6a6adf41db8d74868e41a290efa76fe5bd006b7d37fbda5b509796"
+    },
+    {
+      "file": "xml-self-closing.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f3f99e99affdd349094712668a8be905d1eac34c2ac16cd61c3621347117b490"
+    },
+    {
+      "file": "xml-unknown.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "aac1b089ab2fb8f96fb12ab53e1f72bceb93688c117830f5c1dd7ad26f3c3ac8"
+    }
+  ]
+}

@@ -126,6 +126,6 @@ evidence, bounded caller-scoped template state and result events as specificatio
 implementation change is part of that pass. The third pass closes producer conformance through
 `qgi` event carriage (`QGI-VEC-0004`, Annex I), specifies all-family simulator service roles and the
 full 1.0 class gate, and records PSK Reporter submitter obligations. The generated C header and
-foreign-caller contracts (`QGI-RI-0015`, `0050`–`0054`) remain Target. Annexes C–E and G–I still
-have the profile work marked open in each annex; implementation alignment and real-peer proofs
+foreign-caller contracts (`QGI-RI-0015`, `0050`–`0054`) remain Target. Annexes C, E, G and H still
+have the profile work marked open in each annex; Annex D specifies N1MM with live-capture questions; implementation alignment and real-peer proofs
 remain Target. D5 and D6 remain as recorded above.

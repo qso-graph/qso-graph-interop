@@ -1,9 +1,9 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # QGI-SPEC-001: the QG Interop specification
 
-**Status: draft 0.1.0, 2026-11-12.** The core, WSJT-X mapping, schema and conformance
-vectors are specified. Annexes C–E, G and H remain placeholders; Annex D records provisional radio/SO2R
-assignments and Annex I defines event carriage and its vectors; all seven families are planned for the first
+**Status: draft 0.1.0, 2026-11-12.** The core, WSJT-X and N1MM mappings, schema and conformance
+vectors are specified. Annexes C, E, G and H remain placeholders; Annex D defines the dated N1MM
+profile and Annex I defines event carriage and its vectors; all seven families are planned for the first
 release. Reference implementation alignment and real-peer interoperability remain separate work.
 Nothing here is a promise of compatibility until the first numbered release of this specification.
 
@@ -81,6 +81,7 @@ cite it. The words MUST, MUST NOT, SHOULD and MAY are used as RFC 2119 defines t
 | `QGI-MOD-0013` | **Common integers.** Every integer common field MUST lie in −9,007,199,254,740,991 through 9,007,199,254,740,991; a native integer outside that range MUST leave the common member absent. Frequencies MUST use integer hertz. | Test |
 | `QGI-MOD-0014` | **Radio label.** The common `fields.radio` object for `decode`, `radio_state`, `qso_logged`, `qso_changed`, `qso_deleted` and `spot` MUST contain only the family-carried parts: `instance` (text) and/or `number` (common integer); omit the object if neither part is carried. Each family annex MUST define those parts. A radio labels equipment or a program instance, never sender identity, and MUST NOT fill `context.source_id` (`QGI-MAP-0004`). | Test |
 | `QGI-MOD-0015` | **Hop history.** Optional `via` MUST be an array of at most eight objects, each containing `family: "qgi"` and the receiving observer's `context`, and no other defined members. Only carriage appends hops (`QGI-QGI-0004`); the event's own context is unchanged. Unknown future members follow reader compatibility and producer strictness. | Test |
+| `QGI-MOD-0016` | **Control radio selection.** A `control` event's `fields.radio` MUST use the radio object shape in `QGI-MOD-0014`, with only the caller-supplied parts permitted by its family annex for commands and only native-carried parts for observations. | Test |
 
 ### 2.2 Observations and commands
 
@@ -217,7 +218,7 @@ adds event carriage using the existing datagram and stream classes. Annex letter
 | `QGI-WSJ-0001` | **WSJT-X** (`wsjtx`) MUST follow [Annex B](annex-b-wsjtx.md), mapping revision 1, for message types 0–16 and schemas 1–3 at released source `v3.0.2`. | Test |
 | `QGI-WSJ-0002` | **JTTY** (WSJT-X 3.2) is mapped against the 3.2 release's source once released, not its release candidate. | Test |
 | `QGI-JS8-0001` | **JS8Call** (`js8call`) is reserved for the JS8Call-improved newline-delimited JSON API over a TCP stream, pinned when Annex C is written; the mapping MUST compare the original v2.3.1 then. Messages in WSJT-X format use `wsjtx`. | Test |
-| `QGI-N1M-0001` | **N1MM Logger+** (`n1mm`): the XML messages of its External UDP Broadcasts appendix (application, radio, contact add, change and delete, lookup, spot, score) and the inbound `radio_setfrequency`, pinned to a dated copy of the appendix and its examples. Annex D. | Test |
+| `QGI-N1M-0001` | **N1MM Logger+** (`n1mm`) MUST follow Annex D, mapping revision 1, for the dated External UDP Broadcasts appendix and example layouts, including inbound `radio_setfrequency` and `Spectrum`. | Test |
 | `QGI-FLD-0001` | **fldigi** (`fldigi`) MUST follow Annex E when completed; a codec MUST NOT assume a method exists without the caller-supplied build capability list. | Test |
 
 | ID | Requirement | Verify |
@@ -232,7 +233,8 @@ adds event carriage using the existing datagram and stream classes. Annex letter
 |---|---|
 | `wsjtx` | 65,507 bytes; the full common and structured upper bound is 973,268 bytes (B.7). |
 | `qgi` | UDP: 65,507 bytes. TCP: frame limit 1,048,576 bytes, subject to exact output admission; guaranteed compact-event budget 1,044,444 bytes with a maximal receiving context (Annex I). |
-| `n1mm`, `fldigi`, `js8call`, `pskreporter-mqtt`, `pskreporter-ipfix` | Not yet established: their annexes are unpinned/incomplete. Their native limits and largest-observation proofs remain conformance gates under `QGI-MAP-0003`. For IPFIX this includes record, template, message and all supporting-record evidence, rather than message length alone. |
+| `n1mm` | 65,507 bytes; the full common and structured upper bound is 972,500 bytes (D.7). |
+| `fldigi`, `js8call`, `pskreporter-mqtt`, `pskreporter-ipfix` | Not yet established: their annexes are unpinned/incomplete. Their native limits and largest-observation proofs remain conformance gates under `QGI-MAP-0003`. For IPFIX this includes record, template, message and all supporting-record evidence, rather than message length alone. |
 
 ## 6. Families and fields defined by others
 
@@ -292,7 +294,7 @@ the completed WSJT-X profile or authorize guessing:
 ## Annexes
 
 **`QGI-GEN-0008` — Incorporated annexes.** The requirements in Annexes A, B, D, H and I are normative; their tables are incorporated by reference.
-D and H remain placeholders for the profile work they explicitly leave open; I defines carriage now.
+D defines the N1MM profile and its capture questions; H retains its explicitly open profile work. I defines carriage.
 Annex F is the machine-readable event shape; parsing and mapping rules also apply. Its open string
 registries accept additions from newer MINOR versions. A schema check alone cannot establish that
 a family name is registered, a native version or mapping is supported, a JSON string contains only
@@ -303,7 +305,7 @@ recognized official families; a third-party family publishes its profile constra
 - **A.** [Common fields](annex-a-fields.md).
 - **B.** [WSJT-X mapping, revision 1](annex-b-wsjtx.md).
 - **C.** [JS8Call-improved placeholder](annex-c-js8call.md).
-- **D.** [N1MM Logger+ placeholder](annex-d-n1mm.md).
+- **D.** [N1MM Logger+ mapping, revision 1](annex-d-n1mm.md).
 - **E.** [fldigi placeholder](annex-e-fldigi.md).
 - **F.** [JSON Schema 2020-12](schema/qgi-event-0.1.0.schema.json).
 
@@ -312,7 +314,6 @@ recognized official families; a third-party family publishes its profile constra
 - **I.** [QG Interop event carriage](annex-i-qgi.md).
 - **Z.** [Informative extension design check](annex-z-design-check.md).
 
-The [vector format and coverage](vectors/README.md) describe the versioned suite. Annexes C–E and G
-reserve scope (D additionally records provisional radio assignments) and make no claim that those family codecs conform yet.
-Annex H additionally records submitter obligations; Annex I defines carriage and vectors now,
-without claiming reference-implementation or live-peer conformance.
+The [vector format and coverage](vectors/README.md) describe the versioned suite. Annexes C, E and G
+reserve scope; Annex H additionally records submitter obligations. Annexes B, D and I define
+profiles and vectors without claiming reference-implementation or live-peer conformance.
