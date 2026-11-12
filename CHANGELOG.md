@@ -3,6 +3,12 @@
 
 ## [Unreleased]
 
+### Added
+
+- Draft specification `spec/QGI-SPEC-001.md` (QG Interop, language-neutral, as ADIF is) and
+  `spec/QGI-RI-001.md` (this library as its reference implementation, and the CLI, simulator and
+  QSO Graph Desktop as its proofs). Not yet implementable: review items are in #5.
+
 ### Changed
 
 - Renamed to QG Interop before its first release: the library is `qso-graph-interop`, the CLI
