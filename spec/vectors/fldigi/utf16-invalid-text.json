@@ -1,0 +1,163 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "fldigi",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "//48AG0AZQB0AGgAbwBkAFIAZQBzAHAAbwBuAHMAZQA+ADwAcABhAHIAYQBtAHMAPgA8AHAAYQByAGEAbQA+ADwAdgBhAGwAdQBlAD4APABzAHQAcgBpAG4AZwA+AFEAMQBBAEEAQQAA2DwALwBzAHQAcgBpAG4AZwA+ADwALwB2AGEAbAB1AGUAPgA8AC8AcABhAHIAYQBtAD4APAAvAHAAYQByAGEAbQBzAD4APAAvAG0AZQB0AGgAbwBkAFIAZQBzAHAAbwBuAHMAZQA+AA==",
+    "context": {
+      "direction": "from_application",
+      "exchange": "response",
+      "correlation_id": "synthetic-17"
+    },
+    "request": {
+      "method": "log.get_name"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "kind": "result",
+      "context": {
+        "direction": "from_application",
+        "exchange": "response",
+        "correlation_id": "synthetic-17"
+      },
+      "fields": {
+        "status": "ok",
+        "operation": "fldigi.log_get_name",
+        "text": {
+          "utf16_units": [
+            81,
+            49,
+            65,
+            65,
+            65,
+            55296
+          ]
+        }
+      },
+      "native": {
+        "format": "fldigi_xmlrpc",
+        "data": "//48AG0AZQB0AGgAbwBkAFIAZQBzAHAAbwBuAHMAZQA+ADwAcABhAHIAYQBtAHMAPgA8AHAAYQByAGEAbQA+ADwAdgBhAGwAdQBlAD4APABzAHQAcgBpAG4AZwA+AFEAMQBBAEEAQQAA2DwALwBzAHQAcgBpAG4AZwA+ADwALwB2AGEAbAB1AGUAPgA8AC8AcABhAHIAYQBtAD4APAAvAHAAYQByAGEAbQBzAD4APAAvAG0AZQB0AGgAbwBkAFIAZQBzAHAAbwBuAHMAZQA+AA=="
+      }
+    }
+  },
+  "expected_message": {
+    "root": "methodResponse",
+    "method": "log.get_name",
+    "xml": {
+      "utf16_units": [
+        60,
+        109,
+        101,
+        116,
+        104,
+        111,
+        100,
+        82,
+        101,
+        115,
+        112,
+        111,
+        110,
+        115,
+        101,
+        62,
+        60,
+        112,
+        97,
+        114,
+        97,
+        109,
+        115,
+        62,
+        60,
+        112,
+        97,
+        114,
+        97,
+        109,
+        62,
+        60,
+        118,
+        97,
+        108,
+        117,
+        101,
+        62,
+        60,
+        115,
+        116,
+        114,
+        105,
+        110,
+        103,
+        62,
+        81,
+        49,
+        65,
+        65,
+        65,
+        55296,
+        60,
+        47,
+        115,
+        116,
+        114,
+        105,
+        110,
+        103,
+        62,
+        60,
+        47,
+        118,
+        97,
+        108,
+        117,
+        101,
+        62,
+        60,
+        47,
+        112,
+        97,
+        114,
+        97,
+        109,
+        62,
+        60,
+        47,
+        112,
+        97,
+        114,
+        97,
+        109,
+        115,
+        62,
+        60,
+        47,
+        109,
+        101,
+        116,
+        104,
+        111,
+        100,
+        82,
+        101,
+        115,
+        112,
+        111,
+        110,
+        115,
+        101,
+        62
+      ]
+    }
+  },
+  "reencode": {
+    "data": "//48AG0AZQB0AGgAbwBkAFIAZQBzAHAAbwBuAHMAZQA+ADwAcABhAHIAYQBtAHMAPgA8AHAAYQByAGEAbQA+ADwAdgBhAGwAdQBlAD4APABzAHQAcgBpAG4AZwA+AFEAMQBBAEEAQQAA2DwALwBzAHQAcgBpAG4AZwA+ADwALwB2AGEAbAB1AGUAPgA8AC8AcABhAHIAYQBtAD4APAAvAHAAYQByAGEAbQBzAD4APAAvAG0AZQB0AGgAbwBkAFIAZQBzAHAAbwBuAHMAZQA+AA=="
+  }
+}

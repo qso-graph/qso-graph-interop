@@ -389,9 +389,25 @@
           }
         },
         "else": {
-          "properties": {
-            "fields": {
-              "$ref": "#/$defs/control"
+          "if": {
+            "properties": {
+              "family": {
+                "const": "fldigi"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "fields": {
+                "$ref": "#/$defs/fldigi_control"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "fields": {
+                "$ref": "#/$defs/control"
+              }
             }
           }
         }
@@ -583,9 +599,25 @@
           }
         },
         "else": {
-          "properties": {
-            "fields": {
-              "$ref": "#/$defs/control"
+          "if": {
+            "properties": {
+              "family": {
+                "const": "fldigi"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "fields": {
+                "$ref": "#/$defs/fldigi_control"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "fields": {
+                "$ref": "#/$defs/control"
+              }
             }
           }
         }
@@ -1835,6 +1867,119 @@
           "$ref": "#/$defs/instant"
         }
       }
+    },
+    "fldigi_control": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "$ref": "#/$defs/operation"
+        },
+        "window": {
+          "$ref": "#/$defs/integer"
+        },
+        "time_of_day": {
+          "$ref": "#/$defs/time_of_day"
+        },
+        "snr_db": {
+          "$ref": "#/$defs/integer"
+        },
+        "dt_seconds": {
+          "$ref": "#/$defs/binary64"
+        },
+        "audio_offset_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "rx_offset_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "frequency_tolerance_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "frequency_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "mode": {
+          "$ref": "#/$defs/text"
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        },
+        "sub_mode": {
+          "$ref": "#/$defs/text"
+        },
+        "dx_call": {
+          "$ref": "#/$defs/text"
+        },
+        "dx_grid": {
+          "$ref": "#/$defs/text"
+        },
+        "location": {
+          "$ref": "#/$defs/text"
+        },
+        "call": {
+          "$ref": "#/$defs/text"
+        },
+        "configuration_name": {
+          "$ref": "#/$defs/text"
+        },
+        "low_confidence": {
+          "type": "boolean"
+        },
+        "auto_tx_only": {
+          "type": "boolean"
+        },
+        "highlight_last": {
+          "type": "boolean"
+        },
+        "fast_mode": {
+          "type": "boolean"
+        },
+        "generate_messages": {
+          "type": "boolean"
+        },
+        "sort_order_provided": {
+          "type": "boolean"
+        },
+        "modifiers": {
+          "$ref": "#/$defs/integer"
+        },
+        "sort_order": {
+          "$ref": "#/$defs/integer"
+        },
+        "tr_period_seconds": {
+          "$ref": "#/$defs/integer"
+        },
+        "transmit": {
+          "type": "boolean"
+        },
+        "max_schema": {
+          "$ref": "#/$defs/integer"
+        },
+        "version": {
+          "$ref": "#/$defs/text"
+        },
+        "revision": {
+          "$ref": "#/$defs/text"
+        },
+        "background_color": {
+          "$ref": "#/$defs/qcolor"
+        },
+        "foreground_color": {
+          "$ref": "#/$defs/qcolor"
+        },
+        "radio": {
+          "$ref": "#/$defs/radio"
+        },
+        "rx_start": {
+          "$ref": "#/$defs/integer"
+        },
+        "rx_length": {
+          "$ref": "#/$defs/integer"
+        }
+      },
+      "required": [
+        "operation"
+      ]
     }
   }
 }

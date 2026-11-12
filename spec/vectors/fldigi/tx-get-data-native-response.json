@@ -1,0 +1,44 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "fldigi",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PG1ldGhvZFJlc3BvbnNlPjxwYXJhbXM+PHBhcmFtPjx2YWx1ZT48YmFzZTY0PlVURkI8L2Jhc2U2ND48L3ZhbHVlPjwvcGFyYW0+PC9wYXJhbXM+PC9tZXRob2RSZXNwb25zZT4=",
+    "context": {
+      "direction": "from_application",
+      "exchange": "response",
+      "correlation_id": "synthetic-17"
+    },
+    "request": {
+      "method": "tx.get_data"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "kind": "native",
+      "context": {
+        "direction": "from_application",
+        "exchange": "response",
+        "correlation_id": "synthetic-17"
+      },
+      "fields": {},
+      "native": {
+        "format": "fldigi_xmlrpc",
+        "data": "PG1ldGhvZFJlc3BvbnNlPjxwYXJhbXM+PHBhcmFtPjx2YWx1ZT48YmFzZTY0PlVURkI8L2Jhc2U2ND48L3ZhbHVlPjwvcGFyYW0+PC9wYXJhbXM+PC9tZXRob2RSZXNwb25zZT4="
+      }
+    }
+  },
+  "expected_message": {
+    "root": "methodResponse",
+    "method": "tx.get_data",
+    "xml": "<methodResponse><params><param><value><base64>UTFB</base64></value></param></params></methodResponse>"
+  },
+  "reencode": {
+    "data": "PG1ldGhvZFJlc3BvbnNlPjxwYXJhbXM+PHBhcmFtPjx2YWx1ZT48YmFzZTY0PlVURkI8L2Jhc2U2ND48L3ZhbHVlPjwvcGFyYW0+PC9wYXJhbXM+PC9tZXRob2RSZXNwb25zZT4="
+  }
+}

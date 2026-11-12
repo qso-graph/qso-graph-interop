@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Generate QGI 0.1.0 vectors from Annexes B, D and I and the pinned released header.
+"""Generate QGI 0.1.0 vectors from Annexes B, D, E and I and the pinned released header.
 
 No implementation imports, subprocesses, third-party generation dependencies or network access.
 The byte packers transcribe wire primitives; expected common fields are explicit test oracles.
@@ -14,6 +14,8 @@ import json
 from pathlib import Path
 import struct
 import sys
+
+import gen_fldigi_vectors as fldigi
 
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / 'spec/vectors/wsjtx'
@@ -1056,9 +1058,13 @@ def producer_validator(schema, jsonschema):
     strict['$defs']['wsjtx_message'] = message
     strict['$defs']['n1mm_message'] = {'type': 'object', 'required': ['root', 'xml'],
         'properties': {'root': {'type': 'string'}, 'xml': {'$ref': '#/$defs/text'}}}
-    strict['allOf'].append({'if': {'properties': {'family': {'const': 'n1mm'}}},
-        'then': {'properties': {'native': {'properties': {'message': {'$ref': '#/$defs/n1mm_message'}}}}},
-        'else': {'properties': {'native': {'properties': {'message': {'$ref': '#/$defs/wsjtx_message'}}}}}})
+    strict['$defs']['fldigi_message'] = {'type': 'object', 'required': ['root', 'xml'],
+        'properties': {'root': {'type': 'string'}, 'method': {'type': 'string'},
+                       'xml': {'$ref': '#/$defs/text'}}}
+    for family, profile in [('n1mm', 'n1mm_message'), ('fldigi', 'fldigi_message'),
+                            ('wsjtx', 'wsjtx_message')]:
+        strict['allOf'].append({'if': {'properties': {'family': {'const': family}}},
+            'then': {'properties': {'native': {'properties': {'message': {'$ref': '#/$defs/' + profile}}}}}})
     # Full definitions are closed; conditional fragments and the discriminator's
     # body placeholder remain open so their referenced type can define members.
     pending = list(strict['$defs'].values())
@@ -1843,7 +1849,7 @@ def n1mm_compatibility(s):
         'expected': {'error': {'category': 'invalid_value'}}})
 
 
-def check_n1mm_xml(raw):
+def check_n1mm_xml(raw, *, body_limit=65507, numeric_catalog=True):
     """Independent Annex D XML acceptance oracle; no codec imports or resolution.
 
     Expat validates XML grammar/namespaces. Invalid units travel in separate
@@ -1852,7 +1858,7 @@ def check_n1mm_xml(raw):
     """
     import re
     from xml.parsers import expat
-    if len(raw) > 65507:
+    if len(raw) > body_limit:
         raise ValueError('oversized')
     if not raw:
         raise ValueError('truncated')
@@ -1935,7 +1941,7 @@ def check_n1mm_xml(raw):
         nonlocal expanded
         for c in value:
             expanded += (2 if enc.startswith('utf-16') else 1) if 0xd800 <= ord(c) <= 0xdfff else len(c.encode('utf-8'))
-            if expanded > 65507:
+            if expanded > body_limit:
                 raise ValueError('oversized')
 
     def start(name, attributes):
@@ -2043,11 +2049,11 @@ def check_n1mm_xml(raw):
              'spot': ('frequency',), 'radio_setfrequency': ('radionr', 'frequency'),
              'Spectrum': ('LowScopeFrequency', 'HighScopeFrequency'), 'dynamicresults': ('score',)}
     numeric = []
-    for name in paths.get(root['name'], ()):
+    for name in paths.get(root['name'], ()) if numeric_catalog else ():
         nodes = children(root, name)
         if eligible(nodes):
             numeric.append(nodes[0]['text'])
-    if root['name'] == 'dynamicresults':
+    if numeric_catalog and root['name'] == 'dynamicresults':
         containers = children(root, 'breakdown')
         if len(containers) == 1:
             for name in ('qso', 'point'):
@@ -2471,6 +2477,9 @@ def main():
     validation = validate(suite, qgi, args.producer_strict)
     n1mm = n1mm_vectors()
     n1mm_validation = validate_n1mm(n1mm, args.producer_strict)
+    fldigi_suite = fldigi.vectors(Suite, b64)
+    fldigi_validation = fldigi.validate(fldigi_suite, check_n1mm_xml, ROOT,
+                                       args.producer_strict, producer_validator)
     outputs = {name + '.json': dump(vector) for name, vector in suite.vectors.items()}
     manifest = {'$comment': 'SPDX-License-Identifier: GPL-3.0-or-later', 'spec': SPEC, 'family': 'wsjtx', 'mapping': 1, 'source_sha256': PIN,
                 'hash_scope': 'SHA-256 of each complete vector file, including its final newline',
@@ -2503,6 +2512,7 @@ def main():
                      'family': 'n1mm', 'mapping': 1, 'sha256': hashlib.sha256(data).hexdigest()}
                     for name, data in sorted(n1mm_outputs.items())]})
     outputs.update({'n1mm/' + name: data for name, data in n1mm_outputs.items()})
+    outputs.update(fldigi.manifest(fldigi_suite, dump, ROOT))
     vector_root = DEST.parent
     if args.check:
         missing_or_different = [name for name, data in outputs.items()
@@ -2524,6 +2534,9 @@ def main():
                             for kind in ('positive', 'negative')))
     print('N1MM: ' + ', '.join(f"{sum(v['class'] == kind for v in n1mm.vectors.values())} {kind}"
         for kind in ('positive', 'command', 'command_negative', 'negative', 'skip', 'compatibility')))
+    print('fldigi: ' + ', '.join(f"{sum(v['class'] == kind for v in fldigi_suite.vectors.values())} {kind}"
+        for kind in ('positive', 'command', 'command_negative', 'negative', 'compatibility')))
+    print(fldigi_validation)
     print(n1mm_validation)
     print(validation)
     return 0

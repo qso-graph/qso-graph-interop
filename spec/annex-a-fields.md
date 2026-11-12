@@ -12,9 +12,9 @@ ASCII lowercase identifier (`[a-z][a-z0-9_]*`); an operation additionally permit
 are defined by `QGI-MOD-0006`; no time field accepts null. No optional field has an implied default.
 Standard common member names use `snake_case`; extension names follow `QGI-EXT-0003`.
 
-**Catalog scope (informative).** The expected-family column is a core design check, not an unwritten protocol mapping. The completed `wsjtx` and `n1mm` annexes assign only their explicit mappings; unassigned
+**Catalog scope (informative).** The expected-family column is a core design check, not an unwritten protocol mapping. The completed `wsjtx`, `n1mm` and `fldigi` annexes assign only their explicit mappings; unassigned
 expected-family entries remain capacity, not support claims. Other entries identify intended uses
-to verify when Annexes C, E, G and H are pinned. They do not authorize guessing a value or its units. In particular, an
+to verify when Annexes C, G and H are pinned. They do not authorize guessing a value or its units. In particular, an
 XML-RPC result can use common fields only when the caller supplies the associated method; a response
 body alone does not name that method. Extra contest exchange components remain in `native` unless
 a later annex assigns a named common field. Serial numbers are text to preserve leading zeros.
@@ -46,7 +46,7 @@ current `start`; it is not a QSO end time. Each timestamp maps independently.
 | `audio_offset_hz` | integer | Hz | wsjtx, js8call |
 | `frequency_hz` | integer | Hz | wsjtx, js8call |
 | `mode` | text | — | wsjtx, js8call |
-| `text` | text | — | wsjtx, js8call |
+| `text` | text | — | wsjtx, fldigi (RX chunks, Annex E), js8call |
 | `call` | text | — | wsjtx, js8call |
 | `grid` | text | — | wsjtx, js8call |
 | `power_dbm` | integer | dBm | wsjtx |
@@ -210,14 +210,14 @@ onto a sender reception event. These choices specify model capacity, not a compl
 | `QGI-MOD-0022` | An operation MUST retain the action and argument meanings in the registry below; a family annex MUST define supported argument combinations and reject unsupported combinations as `invalid_value`. Each shared operation's possible side effects are **family-defined; see the family annex** (WSJT-X: B.3). `send_text.text` is the native text argument; it does not guarantee the transmitted content. The operation registry below defines no cross-family guarantee about buffering, timing or RF state. | Test |
 
 This is a capability catalog, not permission to transmit or a claim that the placeholder codecs
-exist. The N1MM entry is defined in Annex D; other non-WSJT-X entries are **to be confirmed in the family's annex**. A dash means no
+exist. N1MM and fldigi entries are defined in Annexes D and E; JS8Call entries remain provisional. A dash means no
 support established here, not a claim that the program can never offer the action.
 
-| Shared operation | Shared arguments and meaning | WSJT-X | Other published capability (Annex D or provisional) | Possible side effects |
+| Shared operation | Shared arguments and meaning | WSJT-X | Other capability (Annex D/E or provisional) | Possible side effects |
 |---|---|---|---|---|
-| `halt_tx` | Stop transmission; optional `auto_tx_only` restricts automatic TX | HaltTx, requires `auto_tx_only` | fldigi `main.abort`; JS8Call-improved `RIG.TX_HALT` — to be confirmed in the family's annex | family-defined; see the family annex |
-| `set_frequency` | `frequency_hz`: absolute radio dial frequency; `radio`: family-defined selection; optional `rx_offset_hz`: audio offset | — (see Configure effects in B.3) | N1MM `radio_setfrequency` (Annex D encodes Hz as decimal kHz); fldigi `rig.set_frequency`; JS8Call `RIG.SET_FREQ` — to be confirmed in the family's annex | family-defined; see the family annex |
-| `send_text` | `text`: native text argument; `transmit`: request transmission; staging and empty-text behavior are family-defined | FreeText | fldigi `text.add_tx` with `main.tx`; JS8Call `TX.SET_TEXT` / `TX.SEND_MESSAGE` — to be confirmed in the family's annex | family-defined; see the family annex |
+| `halt_tx` | Stop transmission; optional `auto_tx_only` restricts automatic TX | HaltTx, requires `auto_tx_only` | fldigi `main.abort` (Annex E); JS8Call-improved `RIG.TX_HALT` — to be confirmed in the family's annex | family-defined; see the family annex |
+| `set_frequency` | `frequency_hz`: absolute radio dial frequency; `radio`: family-defined selection; optional `rx_offset_hz`: audio offset | — (see Configure effects in B.3) | N1MM `radio_setfrequency` (Annex D encodes Hz as decimal kHz); fldigi `rig.set_frequency`, optionally followed by `modem.set_carrier` (Annex E); JS8Call `RIG.SET_FREQ` — to be confirmed in the family's annex | family-defined; see the family annex |
+| `send_text` | `text`: native text argument; `transmit`: request transmission; staging and empty-text behavior are family-defined | FreeText | fldigi `text.add_tx`, followed by `main.tx` only for transmit true (Annex E); JS8Call `TX.SET_TEXT` / `TX.SEND_MESSAGE` — to be confirmed in the family's annex | family-defined; see the family annex |
 | `reply` | Select a decode to reply to; `time_of_day`, `snr_db`, `dt_seconds`, `audio_offset_hz`, `mode`, `text`; optional `low_confidence`, `modifiers` | Reply | — | family-defined; see the family annex |
 | `clear` | Clear activity display; optional `window` | Clear | — | family-defined; see the family annex |
 | `close` | Request application close; family annex defines shutdown arguments | Close | — | family-defined; see the family annex |
@@ -228,17 +228,19 @@ family's mapping. A family-specific action uses a prefixed token: WSJT-X registe
 `wsjtx.heartbeat`, `wsjtx.location`, `wsjtx.highlight_callsign`, `wsjtx.switch_configuration`,
 `wsjtx.configure` and `wsjtx.annotation_info`. Heartbeat is a protocol maintenance command;
 its observed form remains `lifecycle`. Annex B defines every required and optional argument
-for those operations. Annex D additionally defines `n1mm.spectrum` and its family arguments.
+for those operations. Annex D additionally defines `n1mm.spectrum` and its family arguments. Annex E defines
+fldigi method operation tokens and its family-only `rx_start`/`rx_length` control arguments.
 
-Published references consulted 2026-11-12; N1MM is pinned in Annex D, and C/E pins remain pending:
+Published references consulted 2026-11-12; N1MM and fldigi pins are in Annexes D and E; C remains pending:
 [N1MM External UDP Messages](https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/),
 [fldigi 4.2.00 XML-RPC methods](https://www.w1hkj.org/FldigiHelp/xmlrpc_control_page.html), and
 [JS8Call-improved API v3.0.0](https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html).
-fldigi distinguishes RF carrier (`main.set_frequency`) from rig (`rig.set_frequency`); Annex E
-needs to establish units and the dial-frequency mapping without conflating them. Its text buffer and
-TX methods are separate requests: a single-message codec cannot claim atomic text-plus-transmit.
-Annex E needs to specify an application-orchestrated sequence or reject that combination. JS8Call
-likewise needs a pinned staging/sending distinction and original v2.3.1 comparison.
+Annex E establishes RF dial frequency separately from the modem audio offset, using released
+handlers in preference to help wording. Its `send_text` and optional-offset `set_frequency`
+return ordered request bodies for caller orchestration, without atomicity. Polled log fields
+map to method-associated results or contact state; they do not assert a newly logged QSO.
+Station call/locator and independent transmit offset are not exposed by this pinned mapping.
+JS8Call still needs a pinned staging/sending distinction and original v2.3.1 comparison.
 
 ## result
 
@@ -248,7 +250,7 @@ likewise needs a pinned staging/sending distinction and original v2.3.1 comparis
 | `operation` | operation token | — | request/response families, only with associated request |
 | `native_code` | text | native status code, exact spelling | request/response families |
 | `text` | text | native error or result description | request/response families |
-| `frequency_hz` | integer | Hz | request/response frequency getter, if established |
+| `frequency_hz` | integer | Hz | fldigi frequency setter's returned old value (Annex E); other request/response mappings when established |
 
 **`QGI-MOD-0028` — Result meaning.** `result` separates a well-formed program rejection from a codec failure. It does not translate
 native error codes into a universal enum. Unmapped result data remains in native evidence.

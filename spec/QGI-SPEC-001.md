@@ -1,8 +1,8 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # QGI-SPEC-001: the QG Interop specification
 
-**Status: draft 0.1.0, 2026-11-12.** The core, WSJT-X and N1MM mappings, schema and conformance
-vectors are specified. Annexes C, E, G and H remain placeholders; Annex D defines the dated N1MM
+**Status: draft 0.1.0, 2026-11-12.** The core, WSJT-X, N1MM and fldigi mappings, schema and conformance
+vectors are specified. Annexes C, G and H remain placeholders; Annex D defines the dated N1MM
 profile and Annex I defines event carriage and its vectors; all seven families are planned for the first
 release. Reference implementation alignment and real-peer interoperability remain separate work.
 Nothing here is a promise of compatibility until the first numbered release of this specification.
@@ -219,7 +219,7 @@ adds event carriage using the existing datagram and stream classes. Annex letter
 | `QGI-WSJ-0002` | **JTTY** (WSJT-X 3.2) is mapped against the 3.2 release's source once released, not its release candidate. | Test |
 | `QGI-JS8-0001` | **JS8Call** (`js8call`) is reserved for the JS8Call-improved newline-delimited JSON API over a TCP stream, pinned when Annex C is written; the mapping MUST compare the original v2.3.1 then. Messages in WSJT-X format use `wsjtx`. | Test |
 | `QGI-N1M-0001` | **N1MM Logger+** (`n1mm`) MUST follow Annex D, mapping revision 1, for the dated External UDP Broadcasts appendix and example layouts, including inbound `radio_setfrequency` and `Spectrum`. | Test |
-| `QGI-FLD-0001` | **fldigi** (`fldigi`) MUST follow Annex E when completed; a codec MUST NOT assume a method exists without the caller-supplied build capability list. | Test |
+| `QGI-FLD-0001` | **fldigi** (`fldigi`) MUST follow Annex E, mapping revision 1, pinned to released `4.2.13`; actual method availability is caller-supplied, never inferred from a version label. | Test |
 
 | ID | Requirement | Verify |
 |---|---|---|
@@ -234,7 +234,8 @@ adds event carriage using the existing datagram and stream classes. Annex letter
 | `wsjtx` | 65,507 bytes; the full common and structured upper bound is 973,268 bytes (B.7). |
 | `qgi` | UDP: 65,507 bytes. TCP: frame limit 1,048,576 bytes, subject to exact output admission; guaranteed compact-event budget 1,044,444 bytes with a maximal receiving context (Annex I). |
 | `n1mm` | 65,507 bytes; the full common and structured upper bound is 972,500 bytes (D.7). |
-| `fldigi`, `js8call`, `pskreporter-mqtt`, `pskreporter-ipfix` | Not yet established: their annexes are unpinned/incomplete. Their native limits and largest-observation proofs remain conformance gates under `QGI-MAP-0003`. For IPFIX this includes record, template, message and all supporting-record evidence, rather than message length alone. |
+| `fldigi` | 71,155-byte HTTP body; 128-byte method name; E.3 XML/value limits; largest observation proof in E.7 reaches the conservative 1 MiB bound. |
+| `js8call`, `pskreporter-mqtt`, `pskreporter-ipfix` | Not yet established: their annexes are unpinned/incomplete. Their native limits and largest-observation proofs remain conformance gates under `QGI-MAP-0003`. For IPFIX this includes record, template, message and all supporting-record evidence, rather than message length alone. |
 
 ## 6. Families and fields defined by others
 
@@ -280,8 +281,8 @@ adds event carriage using the existing datagram and stream classes. Annex letter
 These are narrow readings to resolve when the placeholder annexes are pinned; they do not block
 the completed WSJT-X profile or authorize guessing:
 
-1. How should fldigi `send_text` with `transmit: true` be represented when text insertion and
-   transmission require separate XML-RPC requests: caller orchestration or a rejected combination?
+1. Resolved in Annex E (`QGI-FLD-0051`, `0054`, `0055`): fldigi text insertion and
+   transmission use separate ordered bodies with caller orchestration and no atomicity claim.
 2. Should MQTT receiver software remain a separate metadata event, or should a later class revision
    allow a bounded join carrying both PUBLISH envelopes as evidence? The documented spot example
    does not supply a software member, and receiver metadata is a separate retained publication.
@@ -293,7 +294,7 @@ the completed WSJT-X profile or authorize guessing:
 
 ## Annexes
 
-**`QGI-GEN-0008` — Incorporated annexes.** The requirements in Annexes A, B, D, H and I are normative; their tables are incorporated by reference.
+**`QGI-GEN-0008` — Incorporated annexes.** The requirements in Annexes A, B, D, E, H and I are normative; their tables are incorporated by reference.
 D defines the N1MM profile and its capture questions; H retains its explicitly open profile work. I defines carriage.
 Annex F is the machine-readable event shape; parsing and mapping rules also apply. Its open string
 registries accept additions from newer MINOR versions. A schema check alone cannot establish that
@@ -306,7 +307,7 @@ recognized official families; a third-party family publishes its profile constra
 - **B.** [WSJT-X mapping, revision 1](annex-b-wsjtx.md).
 - **C.** [JS8Call-improved placeholder](annex-c-js8call.md).
 - **D.** [N1MM Logger+ mapping, revision 1](annex-d-n1mm.md).
-- **E.** [fldigi placeholder](annex-e-fldigi.md).
+- **E.** [fldigi](annex-e-fldigi.md).
 - **F.** [JSON Schema 2020-12](schema/qgi-event-0.1.0.schema.json).
 
 - **G.** [PSK Reporter MQTT placeholder](annex-g-pskreporter-mqtt.md).

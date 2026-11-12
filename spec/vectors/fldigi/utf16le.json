@@ -1,0 +1,48 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "fldigi",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "//48AD8AeABtAGwAIAB2AGUAcgBzAGkAbwBuAD0AIgAxAC4AMAAiACAAZQBuAGMAbwBkAGkAbgBnAD0AIgB1AHQAZgAtADEANgAiAD8APgA8AG0AZQB0AGgAbwBkAFIAZQBzAHAAbwBuAHMAZQA+ADwAcABhAHIAYQBtAHMAPgA8AHAAYQByAGEAbQA+ADwAdgBhAGwAdQBlAD4APABzAHQAcgBpAG4AZwA+AFEAMQBBAEEAQQA8AC8AcwB0AHIAaQBuAGcAPgA8AC8AdgBhAGwAdQBlAD4APAAvAHAAYQByAGEAbQA+ADwALwBwAGEAcgBhAG0AcwA+ADwALwBtAGUAdABoAG8AZABSAGUAcwBwAG8AbgBzAGUAPgA=",
+    "context": {
+      "direction": "from_application",
+      "exchange": "response",
+      "correlation_id": "synthetic-17"
+    },
+    "request": {
+      "method": "log.get_name"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "kind": "result",
+      "context": {
+        "direction": "from_application",
+        "exchange": "response",
+        "correlation_id": "synthetic-17"
+      },
+      "fields": {
+        "status": "ok",
+        "operation": "fldigi.log_get_name",
+        "text": "Q1AAA"
+      },
+      "native": {
+        "format": "fldigi_xmlrpc",
+        "data": "//48AD8AeABtAGwAIAB2AGUAcgBzAGkAbwBuAD0AIgAxAC4AMAAiACAAZQBuAGMAbwBkAGkAbgBnAD0AIgB1AHQAZgAtADEANgAiAD8APgA8AG0AZQB0AGgAbwBkAFIAZQBzAHAAbwBuAHMAZQA+ADwAcABhAHIAYQBtAHMAPgA8AHAAYQByAGEAbQA+ADwAdgBhAGwAdQBlAD4APABzAHQAcgBpAG4AZwA+AFEAMQBBAEEAQQA8AC8AcwB0AHIAaQBuAGcAPgA8AC8AdgBhAGwAdQBlAD4APAAvAHAAYQByAGEAbQA+ADwALwBwAGEAcgBhAG0AcwA+ADwALwBtAGUAdABoAG8AZABSAGUAcwBwAG8AbgBzAGUAPgA="
+      }
+    }
+  },
+  "expected_message": {
+    "root": "methodResponse",
+    "method": "log.get_name",
+    "xml": "<?xml version=\"1.0\" encoding=\"utf-16\"?><methodResponse><params><param><value><string>Q1AAA</string></value></param></params></methodResponse>"
+  },
+  "reencode": {
+    "data": "//48AD8AeABtAGwAIAB2AGUAcgBzAGkAbwBuAD0AIgAxAC4AMAAiACAAZQBuAGMAbwBkAGkAbgBnAD0AIgB1AHQAZgAtADEANgAiAD8APgA8AG0AZQB0AGgAbwBkAFIAZQBzAHAAbwBuAHMAZQA+ADwAcABhAHIAYQBtAHMAPgA8AHAAYQByAGEAbQA+ADwAdgBhAGwAdQBlAD4APABzAHQAcgBpAG4AZwA+AFEAMQBBAEEAQQA8AC8AcwB0AHIAaQBuAGcAPgA8AC8AdgBhAGwAdQBlAD4APAAvAHAAYQByAGEAbQA+ADwALwBwAGEAcgBhAG0AcwA+ADwALwBtAGUAdABoAG8AZABSAGUAcwBwAG8AbgBzAGUAPgA="
+  }
+}

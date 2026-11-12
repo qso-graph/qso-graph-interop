@@ -1,0 +1,41 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "fldigi",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48bWV0aG9kQ2FsbD48bWV0aG9kTmFtZT5zcG90LnBza3JlcC5nZXRfY291bnQ8L21ldGhvZE5hbWU+PHBhcmFtcz48L3BhcmFtcz48L21ldGhvZENhbGw+",
+    "context": {
+      "direction": "to_application",
+      "exchange": "request",
+      "correlation_id": "synthetic-17"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "kind": "native",
+      "context": {
+        "direction": "to_application",
+        "exchange": "request",
+        "correlation_id": "synthetic-17"
+      },
+      "fields": {},
+      "native": {
+        "format": "fldigi_xmlrpc",
+        "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48bWV0aG9kQ2FsbD48bWV0aG9kTmFtZT5zcG90LnBza3JlcC5nZXRfY291bnQ8L21ldGhvZE5hbWU+PHBhcmFtcz48L3BhcmFtcz48L21ldGhvZENhbGw+"
+      }
+    }
+  },
+  "expected_message": {
+    "root": "methodCall",
+    "method": "spot.pskrep.get_count",
+    "xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?><methodCall><methodName>spot.pskrep.get_count</methodName><params></params></methodCall>"
+  },
+  "reencode": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48bWV0aG9kQ2FsbD48bWV0aG9kTmFtZT5zcG90LnBza3JlcC5nZXRfY291bnQ8L21ldGhvZE5hbWU+PHBhcmFtcz48L3BhcmFtcz48L21ldGhvZENhbGw+"
+  }
+}

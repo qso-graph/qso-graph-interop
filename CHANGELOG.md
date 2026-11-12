@@ -5,6 +5,13 @@
 
 ### Added
 
+- Complete draft Annex E fldigi request/response profile pinned to released 4.2.13:
+  all 174 method names, 50 common mappings, bounded XML-RPC values and faults,
+  caller-supplied correlation, canonical ordered command bodies, and independent
+  conformance vectors with strict schema and planted policy failures. Re-pins the
+  source tarball and member hashes, audits every method change from 4.1.23 and
+  manual/type discrepancies, and corrects sequence acknowledgment types.
+
 - `qg-interop sim --n1mm` contest traffic with seeded synthetic contacts, UTC timing,
   periodic radio reports, SO2R handoffs, edits and deletions, spots, and matching scores.
   Adds target-filtered QSY reactions without acknowledgments, rate/speed/count/loop controls,

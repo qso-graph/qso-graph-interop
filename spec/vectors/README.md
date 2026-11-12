@@ -7,15 +7,15 @@ itself is not self-hashed. Its `source_sha256` identifies the pinned header in A
 
 Each vector is a JSON object with `spec`, `family`, `mapping`, `class`, `input` and `expected`.
 These wrapper objects are test instructions, not events; Annex F validates their positive event members.
-For the exactly-one-event WSJT-X, N1MM and `qgi` families, `expected.event` abbreviates the outcome `events: [event]` with
+For the exactly-one-event WSJT-X, N1MM, fldigi and `qgi` families, `expected.event` abbreviates the outcome `events: [event]` with
 no skips; `expected.skip` abbreviates an empty event list and one skip notice. An error returns no
 events or state updates. These singleton shorthands do not restrict the core collection outcome.
 
 | Class or input | Meaning |
 |---|---|
-| `positive` | `input.data` is base64 of one datagram; `input.context` is supplied unchanged to the codec. `expected.event` is the exact expected parsed event, with the optional structured view omitted. |
+| `positive` | `input.data` is base64 of one native message (datagram, or HTTP body for fldigi); `input.context` is supplied unchanged to the codec. `expected.event` is the exact expected parsed event, with the optional structured view omitted. |
 | `expected_message` | Optional structured-view oracle. If the implementation offers that view, test it separately against this object and validate the event with that view against Annex F. The baseline comparison omits the informative view under `QGI-VEC-0007`. |
-| `command` | Encode `input.event`, which has no `native` or `native_version`, using `input.options` (WSJT-X defaults to schema 3; N1MM takes integer Hz arguments, emits kHz, and accepts no encoding options); compare exact bytes with base64 `expected.data`. |
+| `command` | Encode `input.event`, which has no `native` or `native_version`, using `input.options` (WSJT-X defaults to schema 3; N1MM takes integer Hz arguments, emits kHz, and accepts no encoding options); compare exact bytes with base64 `expected.data` (fldigi uses ordered `expected.requests`). |
 | `command_negative` | Attempt command encoding and compare `expected.error.category`. These test mapping checks, including missing arguments, optional-tail holes and native wire ranges; not every failure is expressible in the base event schema. |
 | `reencode` | Separate observed-event operation: decode and check `expected.event.native.data`, re-encode, and compare with `reencode.data`. WSJT-X boolean canonicalization can differ from original bytes; N1MM re-encoding preserves native bytes exactly after consistency checking. Original-byte retrieval always equals `input.data`. |
 | `negative` with `input.data` | Decode the datagram and compare `expected.error.category`; never return a partial event. |
@@ -153,7 +153,7 @@ contents whose specification version or mapping revision is newer than the reade
 profile while the new hop uses the producer profile on its own. Both compatibility paths plant an
 unknown member in the appended hop's context and require its rejection. The strict profile
 deliberately requires an explicit extension profile for extension fields; this
-runner's authored events use only revision 1 core, WSJT-X and N1MM members. Nested color/header/
+runner's authored events use only revision 1 core, WSJT-X, N1MM and fldigi members. Nested color/header/
 dependency/radio/structured-view additions are tested for reader acceptance and producer rejection.
 For this pass, dependency installation and execution use `--offline` and a writable copy of the
 cached packages; no package index or remote schema is accessed. Without `jsonschema`, plain
@@ -172,3 +172,71 @@ The [core manifest](core/manifest.json) hashes their complete file including its
 final newline. These are structural checks only: their empty byte strings are explicit placeholders,
 not valid PSK Reporter captures or complete MQTT/IPFIX decode fixtures. No mapping conformance for
 Annexes G or H is claimed by passing a shape check.
+
+The [fldigi manifest](fldigi/manifest.json) pins release **4.2.13**, retrieval
+**2026-11-12**, the author's source tarball URL/SHA-256, the SourceForge listing's
+**2026-08-03 14:16:04 UTC** source date, and all 16 evidence hashes listed in
+[Annex E](../annex-e-fldigi.md). Archive hashes use distinct member paths so files
+sharing one tarball URL retain separate hashes. No git tag/commit is inferred
+from a release tarball. Its profile hash also
+identifies the complete Annex E text. The generator entry point remains
+`scripts/gen_vectors.py`; `scripts/gen_fldigi_vectors.py` contains the independent
+standard-library fixture builders and XML-RPC policy oracles. No upstream source
+or implementation is imported and no network access occurs during generation.
+
+The fldigi suite has **436 positive**, **56 command**, **21 command_negative**,
+**77 negative**, and **7 compatibility** vectors (**597 total**), with **436
+embedded byte-preserving re-encoding checks**. Every one of the 50 mapped methods
+has a request and response case; all 124 remaining pinned names have native
+request and response cases. The suite covers all XML-RPC value types, nil,
+untyped/empty values, ordered arrays, duplicate struct names, unknown types and
+methods, faults, UTF-8/UTF-16 text and raw wrappers, split RX characters, byte
+ranges, HTTP metadata independence, caller correlation and unavailable or wrong
+request association. A compatible wrong association cannot be detected from a
+response with no method name; that case intentionally maps by the supplied method.
+
+The re-pin adds **26 vectors**: four request/response cases for two new methods,
+21 positive cases for changed mode labels/submodes, body-derived type alternatives,
+the unchanged queue misspelling and acknowledgment type distinctions, and one
+malformed empty-param response derived from the bundled serializer. Existing
+native timing requests now use body-required base64 and nine native response
+cases use actual returned types rather than the advertised signatures. Nil
+fixtures remain synthetic acceptance cases; the bundled backend's default-invalid
+value is not silently treated as nil. No live-peer captures are claimed.
+
+For fldigi, `input.data` is exactly one HTTP body, excluding headers. Optional
+`input.request` supplies `method` and, for a range-read response, `arguments` in
+native positional order. HTTP status and content type inputs are transport
+metadata and do not change the expected event. A method name in the optional
+`expected_message` view comes from the call or caller association; an unassociated
+response does not invent one. The baseline event omits the informative view under
+`QGI-VEC-0007`; the view oracle includes original whole-document text separately.
+Only a successful associated nonempty valid version result puts the version in
+`native_version`; it does not duplicate that text in fields.
+
+fldigi commands use **`expected.requests`**, an ordered array of base64 bodies,
+including for single-request operations. `send_text` with transmit true is an
+append followed by a separate transmit request; false emits only the append.
+An offset-bearing frequency command similarly has two bodies. Annex E defines
+caller sequencing after a successful response of the first method's type (double
+for the frequency setter, nil for text append), stopping on failure without
+atomicity or rollback. The codec never sends requests. Command negatives plant
+missing/disallowed fields, invalid XML text, numeric bounds, unsupported mappings,
+metadata/options and body overflow. Canonical-byte mutations plant reversed or
+missing requests, self-closing empty strings, formatting newlines, leading zeros,
+changed integer tags and lost CR escaping.
+
+The independent checker applies the bounded XML isolation oracle used by Annex D
+with Annex E's 71,155-byte body/text bound, then separately checks XML-RPC grammar,
+value limits, scalar acceptance, method/association rules and mapped fields. XML
+attacks include external/parameter entities without resolving them, DOCTYPE,
+unknown entities, forbidden characters, invalid markup and resource overflow.
+Simultaneous failures establish declaration, isolation, resource, grammar, numeric
+and fault-shape precedence. Boundary cases include the largest body with its view,
+UTF-16 expansion, depth/elements/attributes/names, params/arrays/members and numeric
+tokens. The generator independently checks Annex E's output-budget arithmetic,
+method/signature catalog and numbered requirements, with planted prose omissions,
+RF/audio/state swaps, raw-text replacement, entity/line-ending errors and strict
+producer unknown-member failures. Compatibility recognized views and native
+verification are checked separately from preserved content. Passing these vectors
+does not claim a Rust fldigi codec or live-peer interoperability.

@@ -1,0 +1,30 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "fldigi",
+  "mapping": 1,
+  "class": "command",
+  "input": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "kind": "control",
+      "context": {
+        "direction": "to_application",
+        "exchange": "request",
+        "correlation_id": "synthetic-17"
+      },
+      "fields": {
+        "operation": "fldigi.rig_set_mode",
+        "mode": "BPSK31"
+      }
+    },
+    "options": {}
+  },
+  "expected": {
+    "requests": [
+      "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48bWV0aG9kQ2FsbD48bWV0aG9kTmFtZT5yaWcuc2V0X21vZGU8L21ldGhvZE5hbWU+PHBhcmFtcz48cGFyYW0+PHZhbHVlPjxzdHJpbmc+QlBTSzMxPC9zdHJpbmc+PC92YWx1ZT48L3BhcmFtPjwvcGFyYW1zPjwvbWV0aG9kQ2FsbD4="
+    ]
+  }
+}
