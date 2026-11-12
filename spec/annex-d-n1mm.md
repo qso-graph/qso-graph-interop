@@ -48,8 +48,11 @@ S1 **Contact notes** explicitly states 10 Hz units for contact and radio
 frequencies. The spot and command examples occupy the same bands at one
 thousandth of the corresponding Hz values. This derivation is to be confirmed by
 the live captures required by `QGI-RI-0063` when they exist; no such confirmation
-is claimed here. Values below 1,000 kHz use the same unit, including 475.0 kHz
-on 630 m and 137.5 kHz on 2200 m; magnitude MUST NOT select MHz instead.
+is claimed here.
+
+**`QGI-N1M-0051` — Fixed frequency units.** Values below 1,000 kHz MUST use
+the same kHz unit, including 475.0 kHz on 630 m and 137.5 kHz on 2200 m;
+magnitude MUST NOT select MHz or any other unit instead.
 
 ## D.2 Message boundary, version and outcomes
 
@@ -90,11 +93,11 @@ and ordinary elements; they do not define the limits or error handling below.
 |---|---|---|
 | `QGI-N1M-0016` | A codec MUST reject a payload exceeding **65,507 bytes** before decoding or allocating XML structures. | Test |
 | `QGI-N1M-0017` | A reader MUST reject any actual DOCTYPE or entity declaration as `malformed` before entity expansion, including internal, external and parameter entities; it MUST perform no external resolution. Literal declaration-like text inside comments or CDATA is text, not a declaration. | Test |
-| `QGI-N1M-0018` | A reader MUST limit element depth to **16** (root depth 1), total elements to **1,024** (including root and unknown descendants), attributes to **16 per element** and **256 per document**, and each XML name to **128 encoded bytes**, reporting `oversized` before exceeding any bound. Namespace declarations count as attributes. | Test |
-| `QGI-N1M-0019` | A reader MUST limit each numeric token it interprets to **128 characters** after removing XML whitespace at its ends, and total decoded text plus attribute-value UTF-8 length (or original invalid code-unit byte length) to **65,507 bytes**, reporting `oversized` before conversion/allocation exceeds these bounds. Unknown text is not a numeric token. | Test |
+| `QGI-N1M-0018` | A reader MUST limit element depth to **16** (root depth 1), total elements to **1,024** (including root and unknown descendants), attributes to **16 per element** and **256 per document**, and each lexical XML name to **128 bytes in the detected encoding**, reporting `oversized` before exceeding any bound. Qualified names include the prefix and colon; namespace declaration names include `xmlns` and any colon/prefix. Namespace declarations count as attributes. Expanded namespace URIs are attribute values, never names for this bound. | Test |
+| `QGI-N1M-0019` | A reader MUST limit each numeric token it interprets to **128 characters** after removing XML whitespace at its ends, and total decoded text plus attribute-value length to **65,507 bytes**, reporting `oversized` before conversion/allocation exceeds these bounds. Count valid characters by their UTF-8 length and each invalid code unit by its original byte length, after entity and line-ending processing; never count replacement characters. Numeric limits apply only to eligible mapped integer/decimal catalog paths after `QGI-N1M-0026` and `QGI-N1M-0033`, not native-only or unknown text, booleans, timestamps, or observed text `ScalingFactor`/`SpectrumData`. | Test |
 | `QGI-N1M-0020` | A reader MUST detect UTF-8 (default, optional BOM) or UTF-16LE/BE (BOM or initial `3c 00 3f 00` / `00 3c 00 3f` signature); a declaration, when present, MUST agree with that detection, with `UTF-16` allowed only for detected UTF-16; encoding labels are case-insensitive. A disagreement MUST be `malformed`. | Test |
 | `QGI-N1M-0021` | A reader MUST accept XML 1.0 with or without a declaration; it MUST reject a structurally invalid declaration or forbidden XML character as `malformed`, without repairing sample typos. | Test |
-| `QGI-N1M-0022` | For text content invalid in the detected encoding, a reader MUST preserve the whole affected leaf's decoded content as `utf8_bytes` or `utf16_units` under `QGI-SER-0002`, while still validating markup; malformed code units in markup, names, declarations or attributes MUST be `malformed`. | Test |
+| `QGI-N1M-0022` | A reader MUST accept invalid code units in character data and CDATA anywhere inside the root, including mixed content before, between or after children. For a mapped text leaf it MUST preserve the whole affected leaf's processed content as `utf8_bytes` or `utf16_units` under `QGI-SER-0002`; mixed content in a parent with children remains native-only. Invalid code units in markup, names, declarations, attributes, comments, processing instructions or outside the root MUST be `malformed`. Markup MUST still be validated. | Test |
 | `QGI-N1M-0023` | A reader MUST concatenate a leaf's text and CDATA content, expand only the five predefined XML entities and numeric character references to legal XML characters, and apply XML 1.0 line-ending normalization (CRLF and CR to LF); no trimming or Unicode normalization of text common fields is permitted. | Test |
 | `QGI-N1M-0024` | A reader MUST treat a missing leaf as absent and either empty-element spelling as empty text; it MUST NOT infer null, defaults, UTC, radio numbers or boolean false from emptiness or absence. | Test |
 | `QGI-N1M-0025` | A reader MUST preserve attributes, comments, processing instructions, unknown children, order, lexical spelling and whitespace in native bytes, without making them common fields except D.4's score selectors; attributes MUST NOT stand in for child elements. Attribute values use XML 1.0 normalization (literal tab/CR/LF become spaces, references are decoded); native bytes keep their lexical spelling. | Test |
@@ -104,7 +107,8 @@ and ordinary elements; they do not define the limits or error handling below.
 | `QGI-N1M-0029` | A reader MUST map each cataloged timestamp to its D.4 common UTC instant when its decoded leaf text matches exactly `YYYY-MM-DD HH:MM:SS` with ASCII digits, year 0001–9999, a valid Gregorian date, hour 00–23, minute 00–59 and second 00–59. It MUST replace the space with `T` and append `Z`, without trimming or accepting fractions, zone suffixes or offsets. A nonmatching, invalid-calendar, empty, absent, invalid-text, duplicate or nested leaf MUST leave only its corresponding common member absent, without rejecting an otherwise valid message; native text and bytes MUST remain preserved. For example, `2020-01-17 16:43:38` maps to `2020-01-17T16:43:38Z` (S4–S6; exact grammar is reader policy). | Test |
 | `QGI-N1M-0037` | A reader MUST accept every valid timestamp as sent, including an operator's wrong clock. It MUST NOT compare any timestamp with the receiver's clock, apply a plausibility window, correct it, or issue a timestamp warning. Receipt time, the receiver's local time zone and DST settings MUST NOT alter the instant or fill an absent common timestamp. | Test |
 
-XML whitespace here means space, tab, CR and LF. For invalid leaf encoding, parse
+**`QGI-N1M-0052` — XML text and errors.** XML whitespace here means space, tab,
+CR and LF. For invalid text encoding, a reader MUST parse
 markup independently of character decoding: XML delimiters still delimit content;
 retain the original offending code units and the valid decoded segments encoded in
 the same encoding after D.3's entity/line-ending processing. A UTF-16 byte count not
@@ -114,12 +118,39 @@ XML character (for example NUL) is an XML error, not invalid UTF-8. Unknown enti
 unbound prefixes, duplicate attributes, mismatched tags and text outside the root
 other than XML whitespace are `malformed`. Comments and processing instructions do
 not contribute elements; their encoded bytes still count toward the datagram bound.
-The text-expansion bound counts all text nodes including interelement whitespace.
-Size precedes encoding detection, declaration/isolation, XML structure/resource
-checks, root dispatch, then scalar mapping. A reader checks the whole bounded XML
-document even for an unknown root. EOF within a tag, attribute, entity reference,
+The text-expansion bound MUST count all text nodes including mixed content and
+interelement whitespace, and all attribute values including namespace URIs.
+A reader MUST check the whole bounded XML document even for an unknown root.
+EOF within a tag, attribute, entity reference,
 comment, CDATA, or unclosed element is `truncated`; a conflicting closing tag is
 `malformed`. A malformed complete scalar is preserved, not a message error.
+
+**`QGI-N1M-0053` — Error precedence.** A reader MUST apply these stages in order,
+and return only the first failing stage's category:
+
+1. Datagram size (`0016`), then encoding detection and incomplete UTF-16 code
+   units (`0020`, `0052`).
+2. Declaration syntax (`0021`, `malformed`), then XML version support
+   (a syntactically valid version other than 1.0 is `unsupported_version`),
+   encoding-label support (`unsupported_version`), then agreement with detected
+   encoding (`0020`, `malformed`). Declaration pseudo-attributes follow XML 1.0
+   order and grammar, including optional XML whitespace around `=`. Thus version
+   1.1 wins over a conflicting encoding label and over a later DOCTYPE.
+3. Actual DOCTYPE/entity isolation (`0017`, `malformed`), even if a structure or
+   resource fault occurs earlier in document order.
+4. XML structure and nonnumeric resources (`0018`, `0019`, `0021`, `0022`, `0052`)
+   in document order. Validate each complete lexical construct before checking
+   its resources; an invalid construct is `malformed`, an incomplete construct
+   at EOF is `truncated`. At a valid start tag, check depth, element count,
+   per-element attributes, document attributes, lexical names, then decoded
+   attribute values. Check text budgets as character data is consumed. An
+   earlier resource overflow wins over a later malformed or unfinished tag.
+5. Root dispatch, then mapping eligibility: disqualify repeated or nested leaves
+   and ambiguous score containers/selectors before numeric-token limits. An
+   invalid-encoding numeric leaf is also ineligible. Apply numeric-token limits
+   only to the remaining mapped paths, then scalar conversion. Thus a repeated
+   or nested 129-character `RadioInfo/Freq` is omitted, not `oversized`; a unique
+   scalar at that path is `oversized`. No partial event is returned on error.
 
 ## D.4 Complete message catalog
 
@@ -431,15 +462,18 @@ not establish all acceptance ranges.
 | `QGI-N1M-0040` | A command writer MUST support `set_frequency` and `n1mm.spectrum` from the fields below without native evidence; it MUST reject other operations or missing/disallowed arguments as `invalid_value`. | Test |
 | `QGI-N1M-0041` | For `set_frequency`, a writer MUST require `frequency_hz` (integer 0–9,007,199,254,740,991), `radio: {"number": 1 or 2}` and `app` (valid XML text string). There is no `frequency_unit` encoding option; all encoding options are disallowed (`QGI-N1M-0046`). | Test |
 | `QGI-N1M-0042` | A frequency writer MUST divide supplied integer Hz exactly by 1,000 and write kHz as a plain nonnegative decimal with no leading zeros (except zero itself or the zero before a fractional point), no exponent and no trailing fractional zeros or bare decimal point: 14,053,284 Hz becomes `14053.284`, 7,000,000 Hz becomes `7000`, and 1 Hz becomes `0.001`. A `set_frequency` writer MUST select `mousebutton` Left for radio 1 or Right for radio 2 (S1 selection rule). | Test |
-| `QGI-N1M-0043` | For `n1mm.spectrum`, a writer MUST require valid XML text strings `app` and `spectrum_name`, integer Hz arguments `low_scope_frequency` and `high_scope_frequency` in 0–9,007,199,254,740,991 with high greater than low, positive decimal string `scaling_factor`, and `spectrum_data` containing 1–4,096 integers in 0–65,535; it MUST encode both scope frequencies as kHz under `QGI-N1M-0042` and derive DataCount from the array length. | Test |
-| `QGI-N1M-0044` | A writer MUST emit UTF-8 with the exact declaration `<?xml version="1.0" encoding="utf-8"?>`, then the root and children in the order below, with no BOM, whitespace between tags, newline, or delimiter. | Test |
+| `QGI-N1M-0043` | For `n1mm.spectrum`, a writer MUST require valid XML text strings `app` and `spectrum_name`, integer Hz arguments `low_scope_frequency` and `high_scope_frequency` in 0–9,007,199,254,740,991 with high greater than low, positive decimal string `scaling_factor` under `QGI-N1M-0054`, and `spectrum_data` containing 1–4,096 integers in 0–65,535; it MUST encode both scope frequencies as kHz under `QGI-N1M-0042` and derive DataCount from the array length. It MUST encode radionr, DataCount and each spectrum level as unsigned ASCII decimal without leading zeros except zero itself; levels MUST occur in array order, separated by exactly one comma, with no whitespace or trailing separator. | Test |
+| `QGI-N1M-0044` | A writer MUST emit UTF-8 with the exact declaration `<?xml version="1.0" encoding="utf-8"?>`, then the root and children in the order below, with no BOM, whitespace between tags, formatting newlines, or delimiter. Every element MUST use paired start/end tags, including empty strings (`<Name></Name>`, never `<Name/>`). LF supplied within text remains literal under `0045`; the formatting prohibition does not forbid that LF. | Test |
 | `QGI-N1M-0045` | A writer MUST escape text ampersands, less-than and greater-than signs as `&amp;`, `&lt;`, `&gt;`, and CR as `&#13;`, in one pass; it MUST reject null, raw wrappers, surrogates and forbidden XML characters in command strings. Quotes, tabs and LF remain literal in element text. | Test |
 | `QGI-N1M-0046` | A writer MUST reject unsupported family mapping revisions as `unsupported_version`, any `native_version` or `wire_id`, any encoding option or argument outside the operation's catalog, and any radio selector containing `instance` or members other than `number` as `invalid_value`. | Test |
 | `QGI-N1M-0047` | A writer MUST apply D.3's datagram/text/token bounds to its result before returning bytes, failing atomically as `oversized`. | Test |
 
-The spectrum `scaling_factor` decimal grammar is `[0-9]+` optionally followed by
+**`QGI-N1M-0054` — Scaling-factor construction.** The spectrum `scaling_factor`
+decimal grammar MUST be `[0-9]+` optionally followed by
 `.` and one or more digits, at most 128 characters; signs, exponent notation and whitespace are not
-accepted for construction. Its supplied lexical spelling is kept. Scope frequency
+accepted for construction. Its numeric value MUST be greater than zero, and its
+supplied lexical spelling MUST be kept, including leading and trailing zeros.
+Scope frequency
 arguments are Hz integers, with the same canonical kHz encoding as `set_frequency`.
 `spectrum_data` construction is a family argument, not a common measured
 spectrum field. No inferred DataCount or levels are added to observed events.

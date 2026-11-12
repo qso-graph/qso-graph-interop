@@ -137,7 +137,7 @@ pub fn steps(fuzz_seconds: u64) -> Vec<Step> {
                 "run",
                 "--no-project",
                 "--with",
-                "jsonschema==4.26.0",
+                "jsonschema[format-nongpl]==4.26.0",
                 "python",
                 "scripts/gen_vectors.py",
                 "--check",
@@ -435,7 +435,8 @@ pub fn ci_commands(workflow: &str) -> std::collections::BTreeSet<String> {
                 normal.push(if word.starts_with("-max_total_time=") {
                     "-max_total_time=N".to_owned()
                 } else {
-                    word.to_owned()
+                    // Shell quoting is not part of the argument.
+                    word.trim_matches(['\'', '"']).to_owned()
                 });
             }
             found.insert(normal.join(" "));

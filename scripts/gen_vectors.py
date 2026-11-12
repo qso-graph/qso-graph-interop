@@ -1149,6 +1149,33 @@ def check_revision_outcomes(suite):
     assert vector['expected']['error']['category'] == 'unsupported_version'
 
 
+def require_date_time(checker):
+    """A FormatChecker silently accepts all timestamps without its optional extra."""
+    if 'date-time' not in checker.checkers:
+        raise SystemExit("date-time format checker unavailable; run uv run --no-project "
+                         "--with 'jsonschema[format-nongpl]==4.26.0' python "
+                         "scripts/gen_vectors.py --check --producer-strict")
+
+
+def schema_preflight(producer_strict):
+    try:
+        import jsonschema
+    except ImportError:
+        if producer_strict:
+            raise SystemExit("--producer-strict requires jsonschema; use uv run --no-project "
+                             "--with 'jsonschema[format-nongpl]==4.26.0' python "
+                             "scripts/gen_vectors.py --check --producer-strict")
+        return
+    # Plant the missing optional dependency before doing any vector/schema work.
+    try:
+        require_date_time(jsonschema.FormatChecker(formats=[]))
+    except SystemExit as error:
+        assert 'date-time' in str(error) and 'jsonschema[format-nongpl]==4.26.0' in str(error)
+    else:
+        raise AssertionError('missing date-time checker was silently accepted')
+    require_date_time(jsonschema.FormatChecker())
+
+
 def validate(suite, qgi, producer_strict=False):
     """Use a local schema only; importing jsonschema is optional, never install it."""
     check_status_sentinels(suite)
@@ -1158,7 +1185,7 @@ def validate(suite, qgi, producer_strict=False):
         import jsonschema
     except ImportError:
         if producer_strict:
-            raise SystemExit('--producer-strict requires jsonschema; use uv run --with jsonschema')
+            raise SystemExit("--producer-strict requires jsonschema[format-nongpl]==4.26.0")
         return 'jsonschema unavailable; schema validation skipped'
     schema = json.loads((ROOT / 'spec/schema/qgi-event-0.1.0.schema.json').read_text())
     jsonschema.Draft202012Validator.check_schema(schema)
@@ -1608,9 +1635,69 @@ def n1mm_vectors():
         'xml': {'utf8_bytes': list(b'<RadioInfo><StationName>A\xffB</StationName></RadioInfo>')}}
     positive('xml-attribute-normalization', b'<dynamicresults><breakdown><qso band="total" mode="A&#76;L">17</qso></breakdown></dynamicresults>', 'score', {'qso_count': 17})
     s.negative('error-future-xml-declaration', b'<?xml version="1.9"?><RadioInfo/>', 'unsupported_version')
+    n1mm_review_vectors(s, positive)
     n1mm_commands(s)
     n1mm_compatibility(s)
     return s
+
+
+def n1mm_review_vectors(s, positive):
+    """Independently authored review reproductions, not another catalog matrix."""
+    positive('review-unknown-numeric-path', b'<AppInfo><Freq>' + b'9' * 129 + b'</Freq></AppInfo>', 'native', {})
+    positive('review-long-namespace-uri', ('<RadioInfo xmlns:n="urn:' + 'u' * 200 + '"><n:x/></RadioInfo>').encode(), 'radio_state', {})
+    positive('review-invalid-utf8-budget', b'<RadioInfo><StationName>' + b'\xff' * 22000 + b'</StationName></RadioInfo>',
+             'radio_state', {'radio': {'instance': {'utf8_bytes': [255] * 22000}}})
+    positive('review-invalid-utf8-cdata', b'<RadioInfo><StationName><![CDATA[A\xffB]]></StationName></RadioInfo>',
+             'radio_state', {'radio': {'instance': {'utf8_bytes': [65, 255, 66]}}})
+    positive('review-invalid-text-interactions',
+             b'<RadioInfo><StationName>A&amp;\xff<![CDATA[<\xfe\r\n]]>Z\r&#13;</StationName></RadioInfo>',
+             'radio_state', {'radio': {'instance': {'utf8_bytes': [65, 38, 255, 60, 254, 10, 90, 10, 13]}}})
+    positive('review-invalid-utf16-interactions',
+             ('<RadioInfo><StationName>A&amp;\ud800<![CDATA[<\udc00\r\n]]>Z\r&#13;</StationName></RadioInfo>').encode('utf-16', 'surrogatepass'),
+             'radio_state', {'radio': {'instance': {'utf16_units': [65, 38, 55296, 60, 56320, 10, 90, 10, 13]}}})
+    positive('review-invalid-mixed-content', b'<RadioInfo>\xff<Mode>CW</Mode>\xfe<x/>\xfd</RadioInfo>', 'radio_state', {'mode': 'CW'})
+    positive('review-invalid-nested-text', b'<RadioInfo><StationName>\xff<x/>\xfe</StationName></RadioInfo>', 'radio_state', {})
+    positive('review-default-namespace-child', b'<RadioInfo><Mode xmlns="urn:synthetic">CW</Mode><StationName>SYNTHETIC</StationName></RadioInfo>',
+             'radio_state', {'radio': {'instance': 'SYNTHETIC'}})
+    positive('review-default-namespace-reset', b'<RadioInfo><x xmlns="urn:synthetic"><Mode xmlns="">CW</Mode></x><Mode>USB</Mode></RadioInfo>',
+             'radio_state', {'mode': 'USB'})
+    positive('review-declaration-whitespace', b'<?xml version = \'1.0\' encoding\t=\n"UTF-8" standalone = "yes"?><RadioInfo/>', 'radio_state', {})
+    # U+0800 expands from two UTF-16 bytes to three UTF-8 bytes. Payloads stay
+    # below the datagram bound while processed text reaches 65,507/65,508.
+    positive('review-utf16-decoded-text-boundary',
+             ('<RadioInfo><StationName>' + '\u0800' * 21835 + 'ab</StationName></RadioInfo>').encode('utf-16'),
+             'radio_state', {'radio': {'instance': '\u0800' * 21835 + 'ab'}})
+    positive('review-utf16-name-boundary', ('<RadioInfo><' + 'n' * 64 + '/></RadioInfo>').encode('utf-16'), 'radio_state', {})
+    positive('review-native-only-numeric', b'<Spectrum><DataCount>' + b'9' * 129 + b'</DataCount><ScalingFactor>' + b'1' * 129 + b'</ScalingFactor></Spectrum>',
+             'control', {'operation': 'n1mm.spectrum', 'scaling_factor': '1' * 129})
+    positive('review-duplicate-numeric-before-limit', b'<RadioInfo><Freq>' + b'9' * 129 + b'</Freq><Freq>1</Freq></RadioInfo>', 'radio_state', {})
+    positive('review-nested-numeric-before-limit', b'<RadioInfo><Freq>' + b'9' * 129 + b'<x/></Freq></RadioInfo>', 'radio_state', {})
+    positive('review-invalid-numeric-before-limit', b'<RadioInfo><Freq>' + b'9' * 129 + b'\xff</Freq></RadioInfo>', 'radio_state', {})
+    positive('review-score-nonselected-numeric', b'<dynamicresults><breakdown><qso band="20" mode="CW">' + b'9' * 129 + b'</qso></breakdown></dynamicresults>', 'score', {})
+    positive('review-score-duplicate-before-limit', b'<dynamicresults><breakdown><qso band="total" mode="ALL">' + b'9' * 129 + b'</qso><qso band="total" mode="ALL">1</qso></breakdown></dynamicresults>', 'score', {})
+    positive('review-score-container-before-limit', b'<dynamicresults><breakdown><point band="total" mode="ALL">' + b'9' * 129 + b'</point></breakdown><breakdown/></dynamicresults>', 'score', {})
+    for name, raw, category in [
+        ('declaration-eq-encoding', b'<?xml version="1.0" encoding = "UTF-16"?><RadioInfo/>', 'malformed'),
+        ('declaration-eq-version', b'<?xml version = "1.1"?><RadioInfo/>', 'unsupported_version'),
+        ('namespace-lexical-name', ('<RadioInfo xmlns:' + 'n' * 129 + '="urn:synthetic"/>').encode(), 'oversized'),
+        ('utf16-decoded-text-overflow', ('<RadioInfo><StationName>' + '\u0800' * 21835 + 'abc</StationName></RadioInfo>').encode('utf-16'), 'oversized'),
+        ('utf16-name-overflow', ('<RadioInfo><' + 'n' * 65 + '/></RadioInfo>').encode('utf-16'), 'oversized'),
+        ('invalid-comment', b'<RadioInfo><!--\xff--><Mode>CW</Mode></RadioInfo>', 'malformed'),
+        ('invalid-pi', b'<RadioInfo><?synthetic \xff?></RadioInfo>', 'malformed'),
+        ('invalid-outside-root', b'<RadioInfo/>\xff', 'malformed'),
+        ('declaration-syntax-before-version', b'<?xml version="1.1" standalone="maybe"?><!DOCTYPE RadioInfo><RadioInfo/>', 'malformed'),
+        ('version-before-isolation', b'<?xml version = "1.1"?><!DOCTYPE RadioInfo><RadioInfo/>', 'unsupported_version'),
+        ('version-before-encoding', b'<?xml version="1.1" encoding="UTF-16"?><!DOCTYPE RadioInfo><RadioInfo/>', 'unsupported_version'),
+        ('encoding-support-before-isolation', b'<?xml version="1.0" encoding = "latin1"?><!DOCTYPE RadioInfo><RadioInfo/>', 'unsupported_version'),
+        ('encoding-conflict-before-isolation', b'<?xml version="1.0" encoding = "UTF-16"?><!DOCTYPE RadioInfo><RadioInfo/>', 'malformed'),
+        ('isolation-before-resource', b'<RadioInfo>' + b'<x/>' * 1024 + b'</RadioInfo><!DOCTYPE x>', 'malformed'),
+        ('resource-before-later-malformed', b'<RadioInfo>' + b'<x/>' * 1024 + b'</wrong>', 'oversized'),
+        ('resource-before-later-truncated', b'<RadioInfo>' + b'<x/>' * 1024 + b'<', 'oversized'),
+        ('construct-before-resource', ('<RadioInfo ' + ' '.join(f'a{i}=""' for i in range(17)) + ' a0=""/>').encode(), 'malformed'),
+        ('structure-before-numeric', b'<RadioInfo><Freq>' + b'9' * 129 + b'</Freq></wrong>', 'malformed'),
+        ('score-selected-numeric', b'<dynamicresults><breakdown><qso band="total" mode="ALL">' + b'9' * 129 + b'</qso></breakdown></dynamicresults>', 'oversized'),
+    ]:
+        s.negative('review-error-' + name, raw, category)
 
 
 def n1mm_commands(s):
@@ -1627,7 +1714,8 @@ def n1mm_commands(s):
         (2, 9007199254740991, '9007199254740.991'), (1, 475000, '475'), (2, 137500, '137.5'),
         (1, 7061200, '7061.2'), (2, 7061020, '7061.02')]:
         command = event(dict(qsy, radio={'number': nr}, frequency_hz=hz))
-        raw = (XML_DECL + f'<radio_setfrequency><app>synthetic-client</app><radionr>{nr}</radionr><frequency>{native}</frequency><mousebutton>{"Left" if nr == 1 else "Right"}</mousebutton></radio_setfrequency>').encode()
+        nr_text = '1' if nr == 1 else '2'
+        raw = (XML_DECL + f'<radio_setfrequency><app>synthetic-client</app><radionr>{nr_text}</radionr><frequency>{native}</frequency><mousebutton>{"Left" if nr == 1 else "Right"}</mousebutton></radio_setfrequency>').encode()
         s.add(f'command-qsy-{nr}-{hz}', {'class': 'command', 'input': {'event': command},
               'expected': {'data': b64(raw)}})
     for label, name, escaped in [('normal', 'synthetic-spectrum', 'synthetic-spectrum'),
@@ -1643,6 +1731,19 @@ def n1mm_commands(s):
         command = event(dict(spectrum, low_scope_frequency=low, high_scope_frequency=high))
         raw = (XML_DECL + f'<Spectrum><app>synthetic-client</app><Name>synthetic-spectrum</Name><LowScopeFrequency>{low_text}</LowScopeFrequency><HighScopeFrequency>{high_text}</HighScopeFrequency><ScalingFactor>0.3125</ScalingFactor><DataCount>4</DataCount><SpectrumData>0,1,160,65535</SpectrumData></Spectrum>').encode()
         s.add('command-spectrum-' + label, {'class': 'command', 'input': {'event': command}, 'expected': {'data': b64(raw)}})
+
+    for label, levels, count_text, data_text, scale in [
+        ('one', [0], '1', '0', '0.3125'),
+        ('4096', [0, 65535, 160, 1] * 1024, '4096', '0,65535,160,1,' * 1023 + '0,65535,160,1', '0.3125'),
+        ('scale-lexical', [0, 1, 160, 65535], '4', '0,1,160,65535', '000.5000'),
+    ]:
+        command = event(dict(spectrum, spectrum_data=levels, scaling_factor=scale))
+        raw = (XML_DECL + '<Spectrum><app>synthetic-client</app><Name>synthetic-spectrum</Name>'
+               '<LowScopeFrequency>14000</LowScopeFrequency><HighScopeFrequency>14055</HighScopeFrequency>'
+               '<ScalingFactor>' + scale + '</ScalingFactor><DataCount>' + count_text + '</DataCount>'
+               '<SpectrumData>' + data_text + '</SpectrumData></Spectrum>').encode()
+        s.add('command-spectrum-' + label, {'class': 'command', 'input': {'event': command},
+              'expected': {'data': b64(raw)}})
 
     def negative(label, fields, options=None, category='invalid_value', mutate=None):
         cmd = event(copy.deepcopy(fields))
@@ -1666,13 +1767,14 @@ def n1mm_commands(s):
         ('null-app', {'app': None}), ('raw-app', {'app': {'utf8_bytes': [255]}}), ('nul-app', {'app': '\x00'}),
         ('surrogate-app', {'app': '\ud800'}), ('unknown-operation', {'operation': 'n1mm.unknown'})]:
         negative(label, dict(qsy, **changes))
-    for label, opts in [('schema-option', {'schema': 1})]:
+    for label, opts in [('schema-option', {'schema': 1}), ('frequency-unit-option', {'frequency_unit': 'khz'})]:
         negative(label, qsy, opts)
     for label, changes in [('empty-levels', {'spectrum_data': []}), ('negative-level', {'spectrum_data': [-1]}),
         ('level-overflow', {'spectrum_data': [65536]}), ('level-bool', {'spectrum_data': [True]}),
         ('too-many-levels', {'spectrum_data': [1] * 4097}), ('zero-scale', {'scaling_factor': '0'}),
         ('reversed-endpoints', {'high_scope_frequency': 1}), ('negative-endpoint', {'low_scope_frequency': -1}),
-        ('exponent', {'scaling_factor': '1e3'}), ('decimal-whitespace', {'scaling_factor': ' 1'}),
+        ('scale-sign', {'scaling_factor': '+1'}), ('scale-bare-point', {'scaling_factor': '1.'}),
+        ('scale-unicode-digit', {'scaling_factor': '\u0661'}), ('exponent', {'scaling_factor': '1e3'}), ('decimal-whitespace', {'scaling_factor': ' 1'}),
         ('endpoint-text', {'low_scope_frequency': '14000'})]:
         negative(label, dict(spectrum, **changes))
     for key in ('low_scope_frequency', 'high_scope_frequency'):
@@ -1722,11 +1824,11 @@ def n1mm_compatibility(s):
 
 
 def check_n1mm_xml(raw):
-    """Test-only isolation/bounds checker, not an event codec or upstream parser.
+    """Independent Annex D XML acceptance oracle; no codec imports or resolution.
 
-    Oracles are authored independently above. No I/O or entity resolution occurs.
-    Invalid leaf code units are masked only to check XML structure; the suite keeps
-    and separately checks their raw-wrapper oracles.
+    Expat validates XML grammar/namespaces. Reversible private-use sentinels let
+    it validate structure around invalid text without changing byte accounting.
+    The returned small tree is solely for independent text/mapping checks.
     """
     import re
     from xml.parsers import expat
@@ -1734,8 +1836,7 @@ def check_n1mm_xml(raw):
         raise ValueError('oversized')
     if not raw:
         raise ValueError('truncated')
-    enc = 'utf-8'
-    bom = 0
+    enc, bom = 'utf-8', 0
     if raw.startswith(b'\xff\xfe'):
         enc, bom = 'utf-16-le', 2
     elif raw.startswith(b'\xfe\xff'):
@@ -1749,85 +1850,133 @@ def check_n1mm_xml(raw):
     if enc.startswith('utf-16') and (len(raw) - bom) % 2:
         raise ValueError('truncated')
     content = raw[bom:].decode(enc, 'surrogatepass' if enc.startswith('utf-16') else 'surrogateescape')
-    declared = re.match(r'<\?xml\s+version=[\'"]([^\'"]+)[\'"](?:\s+encoding=[\'"]([^\'"]+)[\'"])?', content)
-    if declared:
-        version, label = declared.groups()
-        if version != '1.0' and re.fullmatch(r'[0-9]+\.[0-9]+', version):
-            raise ValueError('unsupported_version')
-        if version != '1.0':
+    # Parse the *whole* declaration with an XML parser before interpreting it.
+    # This handles XML Eq/S/quote grammar and pseudo-attribute order, unlike a
+    # prefix regex. A probe root avoids accepting a declaration truncated at EOF.
+    masked = content
+    if content.startswith('<?xml') and (len(content) == 5 or content[5] in ' \t\r\n?'):
+        boundary = content.find('?>')
+        if boundary < 0:
             raise ValueError('malformed')
+        declaration = content[:boundary + 2]
+        decl_parser = expat.ParserCreate()
+        declared = []
+        decl_parser.XmlDeclHandler = lambda version, label, standalone: declared.append((version, label))
+        try:
+            decl_parser.Parse(declaration + '<probe/>', True)
+        except (expat.ExpatError, UnicodeError, LookupError) as error:
+            raise ValueError('malformed') from error
+        if not declared:
+            raise ValueError('malformed')
+        version, label = declared[0]
+        if version != '1.0':
+            raise ValueError('unsupported_version')
         if label:
             label = label.lower()
             if label not in ('utf-8', 'utf-16', 'utf-16le', 'utf-16be'):
                 raise ValueError('unsupported_version')
-            compatible = {'utf-8': ['utf-8'], 'utf-16-le': ['utf-16', 'utf-16le'], 'utf-16-be': ['utf-16', 'utf-16be']}
+            compatible = {'utf-8': ('utf-8',), 'utf-16-le': ('utf-16', 'utf-16le'),
+                          'utf-16-be': ('utf-16', 'utf-16be')}
             if label not in compatible[enc]:
                 raise ValueError('malformed')
-    # Ignore comment/CDATA contents only for declaration detection.
-    isolation = re.sub(r'<!--.*?-->|<!\[CDATA\[.*?\]\]>', '', content, flags=re.S)
-    if re.search(r'<!\s*(?:DOCTYPE|ENTITY)\b', isolation):
-        raise ValueError('malformed')
-    parts = re.split(r'(<[^>]*>)', content)
-    for i, part in enumerate(parts):
-        if any(0xd800 <= ord(c) <= 0xdfff for c in part):
-            if i % 2:
-                raise ValueError('malformed')
-            parts[i] = ''.join('\ue000' if 0xd800 <= ord(c) <= 0xdfff else c for c in part)
-    masked = ''.join(parts)
-    # Expat receives Unicode, so its declaration must describe that Unicode input.
-    masked = re.sub(r'(<\?xml[^?]*encoding=[\'"])[^\'"]+', r'\1utf-8', masked, count=1)
+        # The structure parser receives Unicode, independently of source encoding.
+        masked = XML_DECL + content[boundary + 2:]
+    # Comments, CDATA and PI contents cannot introduce declarations. Tokenizing
+    # those constructs also prevents a quote or '>' in them from confusing this
+    # isolation scan. It performs no expansion and never invokes a resolver.
+    isolation_tokens = re.finditer(r'<!--[\s\S]*?(?:-->|\Z)|<!\[CDATA\[[\s\S]*?(?:\]\]>|\Z)|'
+                                  r'<\?[\s\S]*?(?:\?>|\Z)|<![^>]*(?:>|\Z)', masked)
+    for token in isolation_tokens:
+        if re.match(r'<!\s*(?:DOCTYPE|ENTITY)\b', token[0]):
+            raise ValueError('malformed')
+    # Pick collision-free sentinels, even for actual private-use text in input.
+    restore = {}
+    for c in set(masked):
+        if 0xd800 <= ord(c) <= 0xdfff:
+            marker = 0xf0000 + len(restore)
+            while chr(marker) in masked or chr(marker) in restore:
+                marker += 1
+            restore[chr(marker)] = c
+    substitutions = {ord(c): marker for marker, c in restore.items()}
+    masked = masked.translate(substitutions)
+
+    def original(value):
+        return ''.join(restore.get(c, c) for c in value)
+
+    def valid(value):
+        if any(c in restore for c in value):
+            raise ValueError('malformed')
+
+    def lexical(name):
+        parts = name.split('|')
+        return parts[2] + ':' + parts[1] if len(parts) == 3 else parts[-1]
+
+    def name_length(name):
+        return len(name.encode(enc))
+
     parser = expat.ParserCreate(namespace_separator='|')
+    parser.namespace_prefixes = True
     parser.ordered_attributes = True
-    depth, count, attrs, expanded = 0, 0, 0, 0
-    stack = []
-    pending_namespaces = 0
-    interpreted = {'Freq', 'RadioNr', 'FocusRadioNr', 'ActiveRadioNr', 'rxfreq', 'txfreq', 'radionr', 'score', 'qso', 'point',
-                   'frequency', 'LowScopeFrequency', 'HighScopeFrequency'}
+    depth = count = attrs = expanded = 0
+    stack, pending_namespaces = [], []
+    root = None
 
     def add_text(value):
         nonlocal expanded
-        expanded += len(value.encode('utf-8'))
-        if expanded > 65507:
-            raise ValueError('oversized')
+        for c in value:
+            expanded += (2 if enc.startswith('utf-16') else 1) if c in restore else len(c.encode('utf-8'))
+            if expanded > 65507:
+                raise ValueError('oversized')
 
     def start(name, attributes):
-        nonlocal depth, count, attrs, pending_namespaces
+        nonlocal depth, count, attrs, root
+        valid(name)
+        for item in attributes:
+            valid(item)
+        for prefix, uri in pending_namespaces:
+            valid(prefix)
+            valid(uri)
         depth += 1
         count += 1
-        attrs += len(attributes) // 2
-        if depth > 16 or count > 1024 or len(attributes) // 2 + pending_namespaces > 16 or attrs > 256:
+        per_element = len(attributes) // 2 + len(pending_namespaces)
+        attrs += per_element
+        if depth > 16 or count > 1024 or per_element > 16 or attrs > 256:
             raise ValueError('oversized')
-        if len(name.encode('utf-8')) > 128 or any(len(a.encode('utf-8')) > 128 for a in attributes[::2]):
+        names = [lexical(name)] + [lexical(a) for a in attributes[::2]]
+        names += ['xmlns' + (':' + prefix if prefix else '') for prefix, _ in pending_namespaces]
+        if any(name_length(n) > 128 for n in names):
             raise ValueError('oversized')
-        for val in attributes[1::2]:
-            add_text(val)
-        pending_namespaces = 0
-        stack.append([name, ''])
+        for value in attributes[1::2] + [uri for _, uri in pending_namespaces]:
+            add_text(value)
+        pending_namespaces.clear()
+        node = {'name': name, 'text': '', 'children': [], 'attributes': dict(zip(attributes[::2], attributes[1::2]))}
+        if stack:
+            stack[-1]['children'].append(node)
+        else:
+            root = node
+        stack.append(node)
 
     def end(name):
         nonlocal depth
-        tag, val = stack.pop()
-        if tag in interpreted and len(val.strip(' \t\r\n')) > 128:
-            raise ValueError('oversized')
+        stack.pop()
         depth -= 1
 
     def chars(value):
+        if not stack:
+            valid(value)
         add_text(value)
         if stack:
-            stack[-1][1] += value
+            stack[-1]['text'] += original(value)
 
     def namespace(prefix, uri):
-        nonlocal attrs, pending_namespaces
-        attrs += 1
-        pending_namespaces += 1
-        if attrs > 256:
-            raise ValueError('oversized')
-        add_text(uri or '')
+        pending_namespaces.append((prefix or '', uri or ''))
 
     parser.StartElementHandler = start
     parser.EndElementHandler = end
     parser.CharacterDataHandler = chars
     parser.StartNamespaceDeclHandler = namespace
+    parser.CommentHandler = valid
+    parser.ProcessingInstructionHandler = lambda target, data: (valid(target), valid(data))
     try:
         parser.Parse(masked, True)
     except expat.ExpatError as error:
@@ -1838,11 +1987,60 @@ def check_n1mm_xml(raw):
             raise ValueError('truncated') from error
         raise ValueError('malformed') from error
 
+    def children(node, name):
+        return [c for c in node['children'] if c['name'] == name]
+
+    def eligible(nodes):
+        return len(nodes) == 1 and not nodes[0]['children'] and not any(
+            0xd800 <= ord(c) <= 0xdfff for c in nodes[0]['text'])
+
+    # This literal mapping-path catalog is independent of fixture construction.
+    paths = {'RadioInfo': ('Freq', 'RadioNr', 'FocusRadioNr', 'ActiveRadioNr'),
+             'contactinfo': ('rxfreq', 'txfreq', 'radionr'),
+             'contactreplace': ('rxfreq', 'txfreq', 'radionr'),
+             'spot': ('frequency',), 'radio_setfrequency': ('radionr', 'frequency'),
+             'Spectrum': ('LowScopeFrequency', 'HighScopeFrequency'), 'dynamicresults': ('score',)}
+    numeric = []
+    for name in paths.get(root['name'], ()):
+        nodes = children(root, name)
+        if eligible(nodes):
+            numeric.append(nodes[0]['text'])
+    if root['name'] == 'dynamicresults':
+        containers = children(root, 'breakdown')
+        if len(containers) == 1:
+            for name in ('qso', 'point'):
+                selected = [c for c in children(containers[0], name)
+                            if c['attributes'].get('band') == 'total' and c['attributes'].get('mode') == 'ALL']
+                if eligible(selected):
+                    numeric.append(selected[0]['text'])
+    if any(len(value.strip(' \t\r\n')) > 128 for value in numeric):
+        raise ValueError('oversized')
+    return root, enc
+
 
 def check_n1mm_commands(suite):
     """A small independent writer checker exercises command oracles and errors."""
     import re
     from decimal import Decimal
+
+    def unsigned(value):
+        # QGI-N1M-0043: construct ASCII digits explicitly, without Python's
+        # integer string/format conventions determining the wire spelling.
+        if value == 0:
+            return '0'
+        digits = ''
+        while value:
+            value, digit = divmod(value, 10)
+            digits = '0123456789'[digit] + digits
+        return digits
+
+    def levels_text(levels):
+        result = ''
+        for index, value in enumerate(levels):
+            if index:
+                result += ','
+            result += unsigned(value)
+        return result
 
     def encode(inp):
         event, options = inp['event'], inp.get('options', {})
@@ -1871,7 +2069,10 @@ def check_n1mm_commands(suite):
             if type(hz) is not int or not 0 <= hz <= 9007199254740991:
                 raise ValueError('invalid_value')
             q, r = divmod(hz, 1000)
-            return str(q) + ('.' + f'{r:03}'.rstrip('0') if r else '')
+            fraction = unsigned(r)
+            while len(fraction) < 3:
+                fraction = '0' + fraction
+            return unsigned(q) + ('.' + fraction.rstrip('0') if r else '')
 
         try:
             if f['operation'] == 'set_frequency':
@@ -1884,7 +2085,7 @@ def check_n1mm_commands(suite):
                 native = khz('frequency_hz')
                 nr = radio['number']
                 root = 'radio_setfrequency'
-                children = [('app', string('app')), ('radionr', str(nr)), ('frequency', native),
+                children = [('app', string('app')), ('radionr', unsigned(nr)), ('frequency', native),
                             ('mousebutton', 'Left' if nr == 1 else 'Right')]
             elif f['operation'] == 'n1mm.spectrum':
                 if set(f) != {'operation', 'app', 'spectrum_name', 'low_scope_frequency', 'high_scope_frequency', 'scaling_factor', 'spectrum_data'} or options:
@@ -1898,13 +2099,20 @@ def check_n1mm_commands(suite):
                 root = 'Spectrum'
                 children = [('app', string('app')), ('Name', string('spectrum_name')),
                     ('LowScopeFrequency', low), ('HighScopeFrequency', high),
-                    ('ScalingFactor', f['scaling_factor']), ('DataCount', str(len(levels))),
-                    ('SpectrumData', ','.join(map(str, levels)))]
+                    ('ScalingFactor', f['scaling_factor']), ('DataCount', unsigned(len(levels))),
+                    ('SpectrumData', levels_text(levels))]
             else:
                 raise ValueError('invalid_value')
         except (KeyError, TypeError) as error:
             raise ValueError('invalid_value') from error
-        raw = (XML_DECL + '<' + root + '>' + ''.join('<' + k + '>' + v + '</' + k + '>' for k, v in children) + '</' + root + '>').encode()
+        raw = bytearray(XML_DECL.encode('ascii'))
+        raw.extend(('<' + root + '>').encode('ascii'))
+        for key, value in children:
+            raw.extend(('<' + key + '>').encode('ascii'))
+            raw.extend(value.encode('utf-8'))
+            raw.extend(('</' + key + '>').encode('ascii'))
+        raw.extend(('</' + root + '>').encode('ascii'))
+        raw = bytes(raw)
         check_n1mm_xml(raw)
         return raw
 
@@ -1920,8 +2128,113 @@ def check_n1mm_commands(suite):
             assert vector['class'] == 'command', name + ' planted command failure accepted'
             assert b64(actual) == vector['expected']['data'], name
 
+    # Canonical byte faults: these XML documents are semantically equivalent
+    # (or acceptable observations), but each must fail command byte comparison.
+    for name, old, new in [
+        ('command-spectrum-empty', b'<Name></Name>', b'<Name/>'),
+        ('command-qsy-2-14053284', b'<radionr>2', b'<radionr>02'),
+        ('command-spectrum-normal', b'<DataCount>4', b'<DataCount>04'),
+        ('command-spectrum-normal', b'>0,1,160,65535<', b'>00,1,160,65535<'),
+        ('command-spectrum-normal', b'>0,1,160,65535<', b'>1,0,160,65535<'),
+        ('command-spectrum-normal', b'>0,1,160,65535<', b'>0, 1,160,65535<'),
+        ('command-spectrum-normal', b'>0,1,160,65535<', b'>0,1,160,65535,<'),
+        ('command-spectrum-normal', b'</app><Name>', b'</app>\n<Name>'),
+        ('command-spectrum-xml-text', b'"\t\n</Name>', b'"\t</Name>'),
+        ('command-spectrum-scale-lexical', b'>000.5000<', b'>0.5<'),
+    ]:
+        vector = suite.vectors[name]
+        expected = base64.b64decode(vector['expected']['data'])
+        changed = expected.replace(old, new, 1)
+        assert changed != expected, name + ' mutation did not change bytes'
+        assert encode(vector['input']) != changed, name + ' canonical byte fault accepted'
+
+
+def n1mm_text_matches(raw, fields):
+    """Check processed text independently, including reversible invalid units.
+
+    This intentionally small mapping oracle exercises namespace/path eligibility,
+    mixed content, CDATA, entities and line endings, not a full event decoder.
+    """
+    node, enc = check_n1mm_xml(raw)
+    text_paths = {'RadioInfo': {'Mode': ('mode',), 'StationName': ('radio', 'instance')},
+                  'Spectrum': {'app': ('app',), 'Name': ('spectrum_name',), 'ScalingFactor': ('scaling_factor',)}}
+    for tag, path in text_paths.get(node['name'], {}).items():
+        leaves = [c for c in node['children'] if c['name'] == tag]
+        expected = None
+        if len(leaves) == 1 and not leaves[0]['children']:
+            value = leaves[0]['text']
+            if any(0xd800 <= ord(c) <= 0xdfff for c in value):
+                if enc == 'utf-8':
+                    expected = {'utf8_bytes': list(value.encode(enc, 'surrogateescape'))}
+                else:
+                    data = value.encode(enc, 'surrogatepass')
+                    order = 'little' if enc == 'utf-16-le' else 'big'
+                    expected = {'utf16_units': [int.from_bytes(data[i:i + 2], order) for i in range(0, len(data), 2)]}
+            else:
+                expected = value
+        actual = fields
+        for key in path:
+            actual = actual.get(key) if isinstance(actual, dict) else None
+        if actual != expected:
+            return False
+    return True
+
+
+def check_n1mm_requirement_ids(document):
+    """Keep the review's formerly unnumbered normative rules addressable."""
+    import re
+    definitions = re.findall(r'^\*\*`(QGI-N1M-005[1-4])` — ', document, re.M)
+    assert set(definitions) == {'QGI-N1M-0051', 'QGI-N1M-0052', 'QGI-N1M-0053', 'QGI-N1M-0054'}, 'missing Annex D review requirement ID'
+    assert len(definitions) == 4, 'duplicate Annex D review requirement ID'
+
+
+def check_n1mm_command_contract(document, readme):
+    """Check that exact-byte oracles have governing prose, and no contrary guide.
+
+    These few lexical anchors intentionally guard the review's prose omissions;
+    the byte writer and hand-authored byte oracles are checked independently.
+    """
+    rows = {line.split('|')[1].strip(): line for line in document.splitlines()
+            if line.startswith('| `QGI-N1M-')}
+    integers = rows['`QGI-N1M-0043`']
+    elements = rows['`QGI-N1M-0044`']
+    assert all(rule in integers for rule in ('unsigned ASCII decimal', 'without leading zeros',
+        'array order', 'exactly one comma', 'no whitespace or trailing separator')), 'incomplete canonical integer/level rules'
+    assert all(rule in elements for rule in ('paired start/end tags', '<Name></Name>', '<Name/>',
+        'formatting newlines', 'LF supplied within text')), 'incomplete canonical element/LF rules'
+    assert 'N1MM QSY requires an explicit frequency unit' not in readme, 'contradictory N1MM unit option instruction'
+    assert 'N1MM takes integer Hz arguments, emits kHz, and accepts no encoding options' in readme, 'missing N1MM command unit/option instruction'
+
 
 def validate_n1mm(suite, producer_strict):
+    document = (ROOT / 'spec/annex-d-n1mm.md').read_text()
+    readme = (ROOT / 'spec/vectors/README.md').read_text()
+    check_n1mm_requirement_ids(document)
+    check_n1mm_command_contract(document, readme)
+    for before, after in [('unsigned ASCII decimal', 'decimal'),
+                          ('paired start/end tags', 'tags'),
+                          ('LF supplied within text', 'Text')]:
+        try:
+            check_n1mm_command_contract(document.replace(before, after), readme)
+        except AssertionError:
+            pass
+        else:
+            raise AssertionError('planted canonical prose omission accepted: ' + before)
+    try:
+        check_n1mm_command_contract(document, readme.replace(
+            'N1MM takes integer Hz arguments, emits kHz, and accepts no encoding options',
+            'N1MM QSY requires an explicit frequency unit'))
+    except AssertionError:
+        pass
+    else:
+        raise AssertionError('planted contradictory unit option instruction accepted')
+    for identity in ('QGI-N1M-0051', 'QGI-N1M-0052', 'QGI-N1M-0053', 'QGI-N1M-0054'):
+        try:
+            check_n1mm_requirement_ids(document.replace('**`' + identity + '` — ', '**Unnumbered — '))
+        except AssertionError:
+            pass
+        else:
+            raise AssertionError(identity + ' planted unnumbered rule accepted')
     check_n1mm_commands(suite)
     for name, vector in suite.vectors.items():
         if vector['class'] not in ('positive', 'negative', 'skip') or 'data' not in vector['input']:
@@ -1936,6 +2249,20 @@ def validate_n1mm(suite, producer_strict):
             assert vector['class'] != 'negative', name + ' planted XML failure accepted'
         if vector['class'] == 'positive':
             assert vector['expected']['event']['native']['data'] == vector['input']['data'] == vector['reencode']['data'], name
+            assert n1mm_text_matches(raw, vector['expected']['event']['fields']), name + ' processed text disagreement'
+    # Plant precisely the losses that a replacement decoder or DOM-only reader
+    # can hide: replacement bytes, retained entities/CRLF, CDATA delimiters,
+    # ignored invalid mixed content and a default-namespaced common leaf.
+    for name, changed in [
+        ('review-invalid-utf8-budget', {'radio': {'instance': '\ufffd' * 22000}}),
+        ('review-invalid-utf8-cdata', {'radio': {'instance': {'utf8_bytes': list(b'<![CDATA[A\xffB]]>')}}}),
+        ('review-invalid-text-interactions', {'radio': {'instance': {'utf8_bytes': list(b'A&amp;\xff<\xfe\r\nZ\r\r')}}}),
+        ('review-invalid-utf16-interactions', {'radio': {'instance': {'utf16_units': [65, 38, 65533, 60, 65533, 10, 90, 10, 13]}}}),
+        ('review-invalid-mixed-content', {}),
+        ('review-default-namespace-child', {'mode': 'CW', 'radio': {'instance': 'SYNTHETIC'}}),
+    ]:
+        raw = base64.b64decode(suite.vectors[name]['input']['data'])
+        assert not n1mm_text_matches(raw, changed), name + ' planted text failure accepted'
     # Exact rational arithmetic checks the separately authored frequency oracles.
     import re
     from fractions import Fraction
@@ -2086,7 +2413,7 @@ def validate_n1mm(suite, producer_strict):
         event = copy.deepcopy(suite.vectors['dynamicresults-full']['expected']['event'])
         event['fields']['time'] = '2023-02-29T12:00:00Z'
         assert not reader.is_valid(event), 'score accepted an invalid common calendar date'
-    return 'N1MM XML isolation/bounds, exact kHz/Hz and UTC/calendar timestamp oracles with planted failures, command bytes/errors, radio swap sentinels, positive/command schemas and same-MAJOR compatibility shapes checked'
+    return 'N1MM requirement IDs, XML isolation/precedence/lexical bounds and processed-text wrappers, exact kHz/Hz and UTC/calendar timestamp oracles with planted failures, canonical command bytes/errors, radio swap sentinels, positive/command schemas and same-MAJOR compatibility shapes checked'
 
 
 def main():
@@ -2095,6 +2422,7 @@ def main():
     parser.add_argument('--producer-strict', action='store_true',
                         help='validate authored outputs with QGI-SER-0009 producer profile')
     args = parser.parse_args()
+    schema_preflight(args.producer_strict)
     suite = build()
     qgi = qgi_vectors(suite)
     validation = validate(suite, qgi, args.producer_strict)

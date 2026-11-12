@@ -15,7 +15,7 @@ events or state updates. These singleton shorthands do not restrict the core col
 |---|---|
 | `positive` | `input.data` is base64 of one datagram; `input.context` is supplied unchanged to the codec. `expected.event` is the exact expected parsed event, with the optional structured view omitted. |
 | `expected_message` | Optional structured-view oracle. If the implementation offers that view, test it separately against this object and validate the event with that view against Annex F. The baseline comparison omits the informative view under `QGI-VEC-0007`. |
-| `command` | Encode `input.event`, which has no `native` or `native_version`, using `input.options` (WSJT-X defaults to schema 3; N1MM QSY requires an explicit frequency unit); compare exact bytes with base64 `expected.data`. |
+| `command` | Encode `input.event`, which has no `native` or `native_version`, using `input.options` (WSJT-X defaults to schema 3; N1MM takes integer Hz arguments, emits kHz, and accepts no encoding options); compare exact bytes with base64 `expected.data`. |
 | `command_negative` | Attempt command encoding and compare `expected.error.category`. These test mapping checks, including missing arguments, optional-tail holes and native wire ranges; not every failure is expressible in the base event schema. |
 | `reencode` | Separate observed-event operation: decode and check `expected.event.native.data`, re-encode, and compare with `reencode.data`. WSJT-X boolean canonicalization can differ from original bytes; N1MM re-encoding preserves native bytes exactly after consistency checking. Original-byte retrieval always equals `input.data`. |
 | `negative` with `input.data` | Decode the datagram and compare `expected.error.category`; never return a partial event. |
@@ -51,9 +51,9 @@ documentation pages pinned in Annex D. Retrieval is 2026-11-12; the example
 download page identifies its update as 2019-09-30.
 No upstream documentation is bundled. XML data in these vectors is synthetic.
 
-The N1MM suite has **1,080 positive**, **18 command**, **52 command_negative**,
-**42 negative**, **4 skip**, and **9 compatibility** vectors (1,205 total), plus
-**1,080 embedded re-encoding checks**. It covers all 11 documented root spellings, including historical
+The N1MM suite has **1,100 positive**, **21 command**, **56 command_negative**,
+**61 negative**, **4 skip**, and **9 compatibility** vectors (1,251 total), plus
+**1,100 embedded re-encoding checks**. It covers all 11 documented root spellings, including historical
 `lookup`, inbound `radio_setfrequency` and inbound `Spectrum`. Every catalog leaf
 has an individual present and empty case; a minimal case for every root checks
 all leaves absent. Nested score leaves and category/selector attributes have
@@ -64,6 +64,15 @@ spots, Unicode and invalid UTF-8/UTF-16 leaf wrappers, declarations/BOMs, duplic
 and nested leaves, namespaces, unknown children/roots, XML isolation attacks,
 limits and limit-plus-one failures. Byte-preserving re-encoding is embedded in
 every positive observation. Optional whole-document views are checked separately.
+The 39 `review-*` XML cases close the independent Annex D review: declaration
+grammar and simultaneous faults, lexical namespace names versus URI values,
+original invalid-unit byte budgets, mixed content and CDATA, entity/line-ending
+processing, default namespaces on children, mapping eligibility before numeric
+limits, and UTF-16 expansion to exactly 65,507/65,508 decoded UTF-8 bytes.
+Spectrum commands include arrays of length 1 and 4,096. Canonical-byte mutations
+plant self-closing empties, leading zeros, changed level order, separator spaces,
+trailing commas, formatting newlines, lost supplied LF and rewritten scale text.
+An explicit `frequency_unit` option is rejected as `invalid_value`.
 
 Spot, QSY and Spectrum scope frequencies use kHz derived from the pinned examples
 in Annex D. Exact decimal observations map to integer Hz only when representable;
@@ -90,7 +99,10 @@ that N1MM has accepted a live command.
 
 Generation uses the standard library only. The independent XML isolation/bounds
 checker never resolves external resources; the command checker compares bytes to
-separately authored expected strings and plants failures. SO2R pair swaps are
+separately authored expected strings and plants failures. It constructs decimal
+digits, separators and paired tags explicitly from Annex D's rules. The XML
+checker independently checks processed text wrappers and plants replacement,
+entity, CDATA, line-ending and namespace mapping faults. SO2R pair swaps are
 checked against independently parsed native leaves. Timestamp oracles have an
 independent calendar/grammar check with planted omission, correction, repair,
 field-swap and inferred-end failures. This is not a complete N1MM
@@ -132,7 +144,7 @@ and checks the `qgi` parsing/bounds oracles. It does not implement a complete WS
 claim that schema validation proves native consistency.
 
 Check authored producer output and unknown-member rejections with
-`uv run --with jsonschema --no-project python scripts/gen_vectors.py --check --producer-strict`.
+`uv run --no-project --with 'jsonschema[format-nongpl]==4.26.0' python scripts/gen_vectors.py --check --producer-strict`.
 The `producer_strict=true` flag in `QGI-SER-0009` uses the same schema with the declared object
 member sets closed, known kinds/context tokens and the selected mapping revision. The runner
 constructs the strict WSJT-X structured-view profile from B.4's wire-type/member catalog and B.2's
@@ -146,7 +158,10 @@ dependency/radio/structured-view additions are tested for reader acceptance and 
 For this pass, dependency installation and execution use `--offline` and a writable copy of the
 cached packages; no package index or remote schema is accessed. Without `jsonschema`, plain
 `--check` reports skipped schema validation. `--producer-strict` requires the module and fails if
-it is unavailable.
+it is unavailable. When schema validation is available, a preflight also requires
+the optional `date-time` checker before building vectors. A planted checker with
+no formats verifies the actionable dependency diagnostic, preventing silent
+acceptance of invalid calendar dates.
 
 The [core shape cases](core/shape-cases.json) contain planted valid/invalid event-schema examples
 for observed versus command forms, application results, class-specific envelopes, retained/empty

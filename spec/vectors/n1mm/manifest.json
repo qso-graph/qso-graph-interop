@@ -960,6 +960,14 @@
       "sha256": "5d5dc4158b291f545bbb5cb8f1e783183ba4ceae666afdff2c89f121cd4080c9"
     },
     {
+      "file": "command-error-frequency-unit-option.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "82c6caa202cea56d8b78a0e24c05f5ef6ac35057a4693f9e6dc162436b5ccc47"
+    },
+    {
       "file": "command-error-high_scope_frequency-boolean.json",
       "class": "command_negative",
       "spec": "0.1.0",
@@ -1200,6 +1208,30 @@
       "sha256": "ff7d6f9760be3ad3d29d92462579d2c595f7f7878c653b8b65fad61c5bec3c7d"
     },
     {
+      "file": "command-error-scale-bare-point.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5cd84436a0e7a3720a4f8e6b077d110d319a4ddffc9dc38c837c807c99576c5e"
+    },
+    {
+      "file": "command-error-scale-sign.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "32d18bc887df2086ce56afd58526ce4999b9cbd814876067e7b6a3fbaf7be99f"
+    },
+    {
+      "file": "command-error-scale-unicode-digit.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4013e674ebc60d02e70cf91c47a3bf9df92022952361d6722158dbe69964a79f"
+    },
+    {
       "file": "command-error-schema-option.json",
       "class": "command_negative",
       "spec": "0.1.0",
@@ -1392,6 +1424,14 @@
       "sha256": "b4e1078a69a07137ba3fd5a9ba55e5d7f6a5dc43daf147fd19e426b8bcfb1433"
     },
     {
+      "file": "command-spectrum-4096.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ec65c0189de24ab1453892a66062a7da4ab3c548deb5f3d7a11a6e516606c7bf"
+    },
+    {
       "file": "command-spectrum-630m.json",
       "class": "command",
       "spec": "0.1.0",
@@ -1438,6 +1478,22 @@
       "family": "n1mm",
       "mapping": 1,
       "sha256": "c69d1f607819b41f02a30b33d215caddddc2d0dac3abebb2597f07ce83181060"
+    },
+    {
+      "file": "command-spectrum-one.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "16a862463bab9b54555073ae2828d0297437c62751c79af609d997a8601f01f3"
+    },
+    {
+      "file": "command-spectrum-scale-lexical.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5758fc89b31af65bbcc28fe524d68b411928e23ada8fb6e02cda9dace8a1b78e"
     },
     {
       "file": "command-spectrum-xml-text.json",
@@ -6590,6 +6646,318 @@
       "family": "n1mm",
       "mapping": 1,
       "sha256": "b821209a22c539cba26afa1495e48d45b8d41d457ac839de7e1cce89539e95fb"
+    },
+    {
+      "file": "review-declaration-whitespace.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c03e1e488917536501f08f194404d934766e3ffca0e2e2930baa254e4491477d"
+    },
+    {
+      "file": "review-default-namespace-child.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5ae6396af63c4a7a31579573f976806e7af352563bbe5f6cb32f776d022d8b8e"
+    },
+    {
+      "file": "review-default-namespace-reset.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "607711b501dea27bf69bafe38926d2632060fe7deae6fd1937016f489c302e49"
+    },
+    {
+      "file": "review-duplicate-numeric-before-limit.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cdbe66094481a7874cba377b5852447cf1fd2031e3ed26a754049a5650364fb0"
+    },
+    {
+      "file": "review-error-construct-before-resource.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d32b36c8b5072d4417667e170c8fd8e208a3a3a6670c9672cd69a634db4a6f27"
+    },
+    {
+      "file": "review-error-declaration-eq-encoding.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "04948f0e5b042095cb2974406731e061d7b5be0208608049a2d41a6a8458c7dd"
+    },
+    {
+      "file": "review-error-declaration-eq-version.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1dd4fa40365006c46b64a25994d66dffe866020a5ac9c9b0a419830a5b3d5bd2"
+    },
+    {
+      "file": "review-error-declaration-syntax-before-version.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "51cec2149175f291f8882e139126fb6316919de95ff633d9c22f4c82109a3baa"
+    },
+    {
+      "file": "review-error-encoding-conflict-before-isolation.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8818fd787043c3e7a391f950e61f69e0e6f7b52a7e641841dd4669907fdf7c2b"
+    },
+    {
+      "file": "review-error-encoding-support-before-isolation.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7115f5a17ce4a8566ee9fd928aca3f01164fb8a5081067395fcf150950f79f04"
+    },
+    {
+      "file": "review-error-invalid-comment.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c010ee1d7cecdb3d2ebaa4f00fe5bd355da7f44ea7096178826f2e5c8d6c9642"
+    },
+    {
+      "file": "review-error-invalid-outside-root.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ea3ccdf9639f83a0beb83928f0ba5e6814a1be65010802155762ca558a2f5b1d"
+    },
+    {
+      "file": "review-error-invalid-pi.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fc3b569e1dfa92951cff09e70f9fa9f6a4ea03730106d6c1ead1d337bbe2bcc4"
+    },
+    {
+      "file": "review-error-isolation-before-resource.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "04836d9b52c6713634bfa4eedc6b31d8190db39361fcc37088a5ec0a59867e75"
+    },
+    {
+      "file": "review-error-namespace-lexical-name.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "929df15895b49dfac08f9b69c5ac5a2ec1995147619f2f44c43a18c9b6a7e1d8"
+    },
+    {
+      "file": "review-error-resource-before-later-malformed.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6d004bc84b4539e48c7d91d703ab7020fbf031eefa31fe326cfa8207d8c34146"
+    },
+    {
+      "file": "review-error-resource-before-later-truncated.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4dc2fbdbdbad0eaa9612d88c8a1580193c9c0bb7c580c176a1ebf9039de543cc"
+    },
+    {
+      "file": "review-error-score-selected-numeric.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "92b2d6166caefed53ccd2becb82f8436acaf6c1f51f683d70c5d37b0f14a4a85"
+    },
+    {
+      "file": "review-error-structure-before-numeric.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0f74778853c0fde4faac329bc9a7aa96f0492c0ad150fe040bdc096917f346c5"
+    },
+    {
+      "file": "review-error-utf16-decoded-text-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "88c935709851605b9a82b14afb0fdcbbac8f3148029c96797b319d8e6a91720b"
+    },
+    {
+      "file": "review-error-utf16-name-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "777a6c79e1c5e63a1c09816691299ffb354ff497ac8e2a71597dcddc463fbc26"
+    },
+    {
+      "file": "review-error-version-before-encoding.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5dcd66ecd2f3ac9cfa119d9f47f8957ceade1d59d20b0d914114a91f5254ea4c"
+    },
+    {
+      "file": "review-error-version-before-isolation.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7ffe95b91e1441e36908c27fadee2527c4cbc363081166eb9d54447bb76de78a"
+    },
+    {
+      "file": "review-invalid-mixed-content.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bae9348b9a655198868f5cea06ae970b3bd847f13f4db129b66f7e6879ac070d"
+    },
+    {
+      "file": "review-invalid-nested-text.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a189adb8400e0e20c871266e6b3d0e1cd94ea970921aea26a7fa94d3417fee40"
+    },
+    {
+      "file": "review-invalid-numeric-before-limit.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6e01d34afe2ad42d66abb533b2f32f3a3687ec89c9c3b55b57a253ee423c4ade"
+    },
+    {
+      "file": "review-invalid-text-interactions.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7822e22606b25481a746552d7830cb993217a6dcb2b8a6e539c48e80c0c47e0c"
+    },
+    {
+      "file": "review-invalid-utf16-interactions.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "65d9aab0c93126bf92a83106473e6830b30e5de2c364d325d8bbcc4a019f1815"
+    },
+    {
+      "file": "review-invalid-utf8-budget.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f1ff975e3c26f7a57d85dc8fc69302ba0107a305ce6c635e89c5ba0db29f76d9"
+    },
+    {
+      "file": "review-invalid-utf8-cdata.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7345e42e910256f1cfb41b08a9398c8e4b7bab975aff0a4a064db465819d79cf"
+    },
+    {
+      "file": "review-long-namespace-uri.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9235c7ea4cbd7a86ee97658570039a56cc72647b3a3aeaad431af1173096ea38"
+    },
+    {
+      "file": "review-native-only-numeric.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c0ea911d71362ca15d76f9531d74e5297b32f4a3a2e7ce470214ccb287862d79"
+    },
+    {
+      "file": "review-nested-numeric-before-limit.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "485f3ea35d396f1fc36010a852c5c287597881e9e2ab3fbd09d1ce480432470c"
+    },
+    {
+      "file": "review-score-container-before-limit.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "18d7b37f806008fb40436b1479ca17e159029760dcb83e7a65c053cc7dc226df"
+    },
+    {
+      "file": "review-score-duplicate-before-limit.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ae842f7d12c779d50a92a1ee4658f0c63c758033276ffdcd66ee66d90a5333d7"
+    },
+    {
+      "file": "review-score-nonselected-numeric.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a4899f20ee11f5dc468ade01e9af71c7ac2108b3f8d3a176d3bd6db0ef3f0f48"
+    },
+    {
+      "file": "review-unknown-numeric-path.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "36e22ba53ad644a470e97a5b07146b16fa480f6c9da3b07de82a26c46ffe5a52"
+    },
+    {
+      "file": "review-utf16-decoded-text-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "744e1350114b46cff456c7028351ba0e6bfe48a8d531403efcb4163016886a7c"
+    },
+    {
+      "file": "review-utf16-name-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "147e627a4c5efab18269d97acb8db896491fe8d233273a1b2046e894b9125d4d"
     },
     {
       "file": "score-class-attribute-assisted.json",
