@@ -7,7 +7,7 @@ assignments and Annex I defines event carriage and its vectors; all seven famili
 release. Reference implementation alignment and real-peer interoperability remain separate work.
 Nothing here is a promise of compatibility until the first numbered release of this specification.
 
-From KI7MT's direction of 2026-11-11: QG Interop **defines a specification, as ADIF does, and others
+QG Interop **defines a specification, as ADIF does, and others
 implement it**. QSO Graph proves it with a reference implementation for WSJT-X, N1MM Logger+, fldigi
 and JS8Call-improved, plus PSK Reporter MQTT and IPFIX and QG Interop's own `qgi` event carriage.
 It delivers the implementation in a CLI,

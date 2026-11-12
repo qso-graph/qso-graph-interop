@@ -9,7 +9,7 @@ first. Evidence is this repository at `de34f6b` (0.1.0, unpublished).
 **QG Interop is its own product, released on its own schedule.** Applications that use it depend on
 its releases; no application's release is a condition of an Interop release.
 
-**Delivery order (KI7MT, 2026-11-12):** WSJT-X, then N1MM Logger+, then fldigi, then JS8Call-improved,
+**Delivery order:** WSJT-X, then N1MM Logger+, then fldigi, then JS8Call-improved,
 followed by PSK Reporter MQTT and IPFIX, and `qgi` event carriage: seven official families. The first
 release needs the first three (`QGI-RI-0049`); the others join it as they are ready, and all of them
 gate 1.0 (`QGI-RI-0048`). “Peer” has the meaning defined in `QGI-GEN-0002`.
@@ -107,10 +107,10 @@ against the peers' real wire protocols, without linking the Rust library.
 
 | # | Decision | State |
 |---|---|---|
-| D1 | **Names.** Product and specification **QG Interop**; repository and crate `qso-graph-interop`, with `-cli` (command `qg-interop`) and later `-ffi`; family names `wsjtx`, `js8call`, `n1mm`, `fldigi`, `pskreporter-mqtt`, `pskreporter-ipfix`, `qgi`. No `-core` crate. | Decided, KI7MT, 2026-11-11; qgi added 2026-11-12 |
-| D2 | **JS8Call-improved, fourth; compare it with the original v2.3.1 when the family is mapped** (`QGI-JS8-0001`). | Decided, KI7MT, 2026-11-12 |
-| D3 | **Licence:** GPL-3.0-or-later for the library, the specification, its schema and its vectors, like everything in QSO Graph. A closed-source program can implement the specification; it cannot link the library. | Decided, KI7MT, 2026-11-11 |
-| D4 | **Round trip:** never lossy; the native message is kept and common-field canonicalizations are listed (`QGI-SPEC-001` `QGI-MOD-0007`). | Decided, KI7MT, 2026-11-12 |
+| D1 | **Names.** Product and specification **QG Interop**; repository and crate `qso-graph-interop`, with `-cli` (command `qg-interop`) and later `-ffi`; family names `wsjtx`, `js8call`, `n1mm`, `fldigi`, `pskreporter-mqtt`, `pskreporter-ipfix`, `qgi`. No `-core` crate. | Decided 2026-11-11; qgi added 2026-11-12 |
+| D2 | **JS8Call-improved, fourth; compare it with the original v2.3.1 when the family is mapped** (`QGI-JS8-0001`). | Decided 2026-11-12 |
+| D3 | **Licence:** GPL-3.0-or-later for the library, the specification, its schema and its vectors, like everything in QSO Graph. A closed-source program can implement the specification; it cannot link the library. | Decided 2026-11-11 |
+| D4 | **Round trip:** never lossy; the native message is kept and common-field canonicalizations are listed (`QGI-SPEC-001` `QGI-MOD-0007`). | Decided 2026-11-12 |
 | D5 | **Default features:** what a plain `cargo add` brings. | Open |
 | D6 | **Where the specification lives:** here, in `spec/`, beside its reference implementation. It can move to its own repository if its release pace ever differs from the code's. | Proposed |
 
