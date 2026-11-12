@@ -1,0 +1,53 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "compatibility",
+  "writer_spec": "0.2.0",
+  "reader_spec": "0.1.0",
+  "input": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "futurefamily",
+      "mapping": 1,
+      "kind": "control",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "send_text",
+        "text": "test message",
+        "transmit": false
+      }
+    }
+  },
+  "expected": {
+    "read": {
+      "kind": "native",
+      "fields": {},
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      }
+    },
+    "preserved_command": {
+      "spec": "0.2.0",
+      "family": "futurefamily",
+      "mapping": 1,
+      "kind": "control",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "send_text",
+        "text": "test message",
+        "transmit": false
+      }
+    }
+  }
+}

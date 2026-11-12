@@ -1,0 +1,36 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "command_negative",
+  "input": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "kind": "control",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "wsjtx.configure",
+        "mode": "FT8",
+        "frequency_tolerance_hz": 100,
+        "sub_mode": "sub-test",
+        "fast_mode": false,
+        "tr_period_seconds": 15,
+        "dx_call": "W1AAA",
+        "dx_grid": "FN42",
+        "generate_messages": true
+      }
+    }
+  },
+  "expected": {
+    "error": {
+      "category": "invalid_value"
+    }
+  }
+}

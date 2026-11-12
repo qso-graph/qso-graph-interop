@@ -1,0 +1,46 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "rbzL2gAAAAMAAAAFAAAADXRlc3QtaW5zdGFuY2UAAAAAACU9jAA27vsCAAAOEAAAAAVXMUFBQQAAAARGTjQyAAAAAADWxmwAAAADRlQ4AAAAAy0xMQAAAAMtMTIAAAADNSBXAAAACXN5bnRoZXRpYwAAAARUZXN0AAAAAAAlPYwAAAB7AQAAAAVLMUJCQg==",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "native_version": "3",
+      "kind": "qso_logged",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "end": "1970-01-01T00:00:00.123Z",
+        "call": "W1AAA",
+        "grid": "FN42",
+        "tx_frequency_hz": 14075500,
+        "mode": "FT8",
+        "report_sent": "-11",
+        "report_received": "-12",
+        "tx_power": "5 W",
+        "comments": "synthetic",
+        "name": "Test",
+        "start": "1970-01-01T00:00:00.123Z",
+        "operator_call": "K1BBB"
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAAFAAAADXRlc3QtaW5zdGFuY2UAAAAAACU9jAA27vsCAAAOEAAAAAVXMUFBQQAAAARGTjQyAAAAAADWxmwAAAADRlQ4AAAAAy0xMQAAAAMtMTIAAAADNSBXAAAACXN5bnRoZXRpYwAAAARUZXN0AAAAAAAlPYwAAAB7AQAAAAVLMUJCQg=="
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "negative",
+  "input": {
+    "event_json": "{\"fields\":{\"text\":\"a\",\"text\":\"b\"}}"
+  },
+  "expected": {
+    "error": {
+      "category": "malformed"
+    }
+  }
+}

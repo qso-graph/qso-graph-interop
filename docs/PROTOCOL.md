@@ -104,7 +104,7 @@ See [identity and direction](NORMALIZATION.md) for neutral IDs, caller context, 
 mappings. Clear's missing window does not distinguish an erase notification from a legacy clear
 command in WSJT-X; its Close also has both directions. Reply and Configure identify their target, not source.
 
-Status wire order is Rx DF then Tx DF, per the pinned header lines 150–151. Independent fixtures
+Status wire order is Rx DF then Tx DF, per the pinned header lines 151–152. Independent fixtures
 use 1201 and 2302 Hz, distinct strings and other same-type scalars, and multiple boolean patterns
 whose per-position signatures differ. Normalized-field assertions supplement binary comparisons.
 Run `uv run --no-project python scripts/check-field-order-mutation.py` to plant the review's paired
@@ -115,3 +115,26 @@ sending the script. This follows the released
 [mainwindow logging call](https://github.com/WSJTX/wsjtx/blob/v3.0.2/widgets/mainwindow.cpp#L10594),
 which adds the transmit spin-box offset to nominal dial frequency. The default USB FT8 script
 therefore logs 14,075,500 Hz from a 14,074,000 Hz dial and 1,500 Hz TX offset.
+
+
+## Second-pass specification evidence
+
+[QGI-SPEC-001](../spec/QGI-SPEC-001.md) now distinguishes field-built commands from observed
+native re-encoding. [Annex B](../spec/annex-b-wsjtx.md) still uses the released WSJT-X pin above;
+the new reverse vectors start without native bytes. This specification change does not establish
+that the current Rust API implements command events or the new collection/session rules.
+
+Sources read on 2026-11-12 for the five incomplete family annexes:
+
+| Scope | Source | Pin status |
+|---|---|---|
+| JS8Call operations | [JS8Call-improved API v3.0.0](https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html) | Live master documentation; released-source pin and original v2.3.1 comparison pending in C. |
+| N1MM frequency command | [External UDP Messages](https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/) | Dated/hash profile pin pending in D. |
+| fldigi methods | [XML-RPC reference, manual 4.2.00](https://www.w1hkj.org/FldigiHelp/xmlrpc_control_page.html) | Dated/hash profile and build capability pin pending in E. |
+| MQTT feed envelope | [Feed documentation](https://www.mqtt.pskreporter.info/) and [timing/receiver metadata](https://www.mqtt.pskreporter.info/timing.html) | Dated/hash profile pin pending in G. Spot software association is unresolved. |
+| PSK Reporter export | [Developer/IPFIX page](https://pskreporter.info/pskdev.html) | Dated/hash profile pin and older-example reconciliation pending in H. |
+| Template rules | [RFC 7011](https://www.rfc-editor.org/rfc/rfc7011.txt), September 2013, §§8–8.4, 9.3 | Stable standards text; complements rather than replaces a PSK Reporter profile pin. |
+
+Only documents were read. No MQTT connection, subscription, report submission or external protocol
+probe was performed. [Annex Z](../spec/annex-z-design-check.md) checks model capacity for future
+families; it does not claim protocol pins or live interoperability for them.

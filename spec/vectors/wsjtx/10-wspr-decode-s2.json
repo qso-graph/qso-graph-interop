@@ -1,0 +1,62 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "rbzL2gAAAAIAAAAKAAAADXRlc3QtaW5zdGFuY2UAArMp+////+W/4AAAAAAAAAAAAAAA1xTw/////gAAAAVXMUFBQQAAAARGTjQyAAAAJQE=",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "native_version": "2",
+      "kind": "decode",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "is_new": false,
+        "time_of_day": "12:34:56.123",
+        "snr_db": -27,
+        "dt_seconds": -0.5,
+        "frequency_hz": 14095600,
+        "drift_hz": -2,
+        "call": "W1AAA",
+        "grid": "FN42",
+        "power_dbm": 37,
+        "off_air": true
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAIAAAAKAAAADXRlc3QtaW5zdGFuY2UAArMp+////+W/4AAAAAAAAAAAAAAA1xTw/////gAAAAVXMUFBQQAAAARGTjQyAAAAJQE="
+      }
+    }
+  },
+  "expected_message": {
+    "schema": 2,
+    "type": 10,
+    "id": "test-instance",
+    "body": {
+      "new": false,
+      "time": 45296123,
+      "snr_db": -27,
+      "delta_time_seconds": -0.5,
+      "frequency_hz": "14095600",
+      "drift_hz": -2,
+      "callsign": "W1AAA",
+      "grid": "FN42",
+      "power_dbm": 37,
+      "off_air": true
+    },
+    "extensions": ""
+  }
+}

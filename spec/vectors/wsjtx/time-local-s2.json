@@ -1,0 +1,65 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "rbzL2gAAAAIAAAAFAAAADXRlc3QtaW5zdGFuY2UAAAAAACU9jAA27vsAAAAABVcxQUFBAAAABEZONDIAAAAAANbGbAAAAANGVDgAAAADLTExAAAAAy0xMgAAAAM1IFcAAAAJc3ludGhldGljAAAABFRlc3Q=",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "native_version": "2",
+      "kind": "qso_logged",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "call": "W1AAA",
+        "grid": "FN42",
+        "tx_frequency_hz": 14075500,
+        "mode": "FT8",
+        "report_sent": "-11",
+        "report_received": "-12",
+        "tx_power": "5 W",
+        "comments": "synthetic",
+        "name": "Test"
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAIAAAAFAAAADXRlc3QtaW5zdGFuY2UAAAAAACU9jAA27vsAAAAABVcxQUFBAAAABEZONDIAAAAAANbGbAAAAANGVDgAAAADLTExAAAAAy0xMgAAAAM1IFcAAAAJc3ludGhldGljAAAABFRlc3Q="
+      }
+    }
+  },
+  "expected_message": {
+    "schema": 2,
+    "type": 5,
+    "id": "test-instance",
+    "body": {
+      "time_off": {
+        "julian_day": "2440588",
+        "milliseconds": 3600123,
+        "time_spec": 0
+      },
+      "dx_call": "W1AAA",
+      "dx_grid": "FN42",
+      "frequency_hz": "14075500",
+      "mode": "FT8",
+      "report_sent": "-11",
+      "report_received": "-12",
+      "tx_power": "5 W",
+      "comments": "synthetic",
+      "name": "Test"
+    },
+    "extensions": ""
+  }
+}

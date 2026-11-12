@@ -1,0 +1,90 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "rbzL2gAAAAMAAAANAAAADXRlc3QtaW5zdGFuY2UAAAAFVzFBQUEB//8RESIiMzNERAAAAQACAAMABAAFAQ==",
+    "context": {
+      "direction": "to_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "native_version": "3",
+      "kind": "control",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "wsjtx.highlight_callsign",
+        "call": "W1AAA",
+        "highlight_last": true,
+        "background_color": {
+          "spec": 1,
+          "channels": [
+            65535,
+            4369,
+            8738,
+            13107,
+            17476
+          ]
+        },
+        "foreground_color": {
+          "spec": 0,
+          "channels": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAANAAAADXRlc3QtaW5zdGFuY2UAAAAFVzFBQUEB//8RESIiMzNERAAAAQACAAMABAAFAQ=="
+      }
+    }
+  },
+  "expected_message": {
+    "schema": 3,
+    "type": 13,
+    "id": "test-instance",
+    "body": {
+      "callsign": "W1AAA",
+      "background": {
+        "spec": 1,
+        "channels": [
+          65535,
+          4369,
+          8738,
+          13107,
+          17476
+        ]
+      },
+      "foreground": {
+        "spec": 0,
+        "channels": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "highlight_last": true
+    },
+    "extensions": ""
+  },
+  "reencode": {
+    "data": "rbzL2gAAAAMAAAANAAAADXRlc3QtaW5zdGFuY2UAAAAFVzFBQUEB//8RESIiMzNERAAAAQACAAMABAAFAQ=="
+  }
+}

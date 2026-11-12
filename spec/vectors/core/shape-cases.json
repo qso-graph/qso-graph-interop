@@ -1,0 +1,1003 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later. Schema shapes only; empty byte strings are structural placeholders, not valid MQTT/IPFIX decode fixtures.",
+  "spec": "0.1.0",
+  "class": "schema_shape",
+  "cases": [
+    {
+      "name": "observed-native",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "extension-command",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "control",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "operation": "x-org.example.shape.send_packet"
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "no-native-decode",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "decode",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "operation": "x-org.example.shape.send_packet",
+          "status": "ok",
+          "state": "heartbeat"
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "no-native-notification",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "notification",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "operation": "x-org.example.shape.send_packet",
+          "status": "ok",
+          "state": "heartbeat"
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "no-native-result",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "result",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "operation": "x-org.example.shape.send_packet",
+          "status": "ok",
+          "state": "heartbeat"
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "no-native-native",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "operation": "x-org.example.shape.send_packet",
+          "status": "ok",
+          "state": "heartbeat"
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "no-native-ambiguous",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "ambiguous",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "operation": "x-org.example.shape.send_packet",
+          "status": "ok",
+          "state": "heartbeat"
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "no-native-lifecycle",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "lifecycle",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "operation": "x-org.example.shape.send_packet",
+          "status": "ok",
+          "state": "heartbeat"
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "command-missing-operation",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "control",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {}
+      },
+      "valid": false
+    },
+    {
+      "name": "command-declares-native-version",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "control",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "operation": "x-org.example.shape.send_packet"
+        },
+        "native_version": "3"
+      },
+      "valid": false
+    },
+    {
+      "name": "observed-control",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "control",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "operation": "halt_tx",
+          "auto_tx_only": true
+        },
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "observed-control-missing-operation",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "control",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "forbidden-native-member",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "example_datagram",
+          "data": "",
+          "family_extra": 1
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "future-minor-native-member",
+      "event": {
+        "spec": "0.2.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "example_datagram",
+          "data": "",
+          "family_extra": 1
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "result-ok",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "result",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "status": "ok",
+          "native_code": "0"
+        },
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "result-error",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "result",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "status": "error",
+          "native_code": "-1"
+        },
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "invalid-result-status",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "result",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "status": "maybe",
+          "native_code": "-1"
+        },
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "missing-result-status",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "result",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "publish-shape",
+      "event": {
+        "spec": "0.1.0",
+        "family": "pskreporter-mqtt",
+        "mapping": 1,
+        "kind": "spot",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "receiver_call": "K1AAA",
+          "receiver_locator": "FN31",
+          "sender_call": "W1AAA",
+          "sender_locator": "FN42",
+          "frequency_hz": 14074000,
+          "mode": "FT8",
+          "snr_db": -17,
+          "time": "2026-11-12T12:00:00Z",
+          "reporting_software": "synthetic decoder"
+        },
+        "native": {
+          "format": "mqtt_publish",
+          "data": "",
+          "topic": "example/spot",
+          "retained": false
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "retained-publish-shape",
+      "event": {
+        "spec": "0.1.0",
+        "family": "pskreporter-mqtt",
+        "mapping": 1,
+        "kind": "spot",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "receiver_call": "K1AAA",
+          "receiver_locator": "FN31",
+          "sender_call": "W1AAA",
+          "sender_locator": "FN42",
+          "frequency_hz": 14074000,
+          "mode": "FT8",
+          "snr_db": -17,
+          "time": "2026-11-12T12:00:00Z",
+          "reporting_software": "synthetic decoder"
+        },
+        "native": {
+          "format": "mqtt_publish",
+          "data": "",
+          "topic": "example/spot",
+          "retained": true
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "empty-payload-shape",
+      "event": {
+        "spec": "0.1.0",
+        "family": "pskreporter-mqtt",
+        "mapping": 1,
+        "kind": "spot",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "receiver_call": "K1AAA",
+          "receiver_locator": "FN31",
+          "sender_call": "W1AAA",
+          "sender_locator": "FN42",
+          "frequency_hz": 14074000,
+          "mode": "FT8",
+          "snr_db": -17,
+          "time": "2026-11-12T12:00:00Z",
+          "reporting_software": "synthetic decoder"
+        },
+        "native": {
+          "format": "mqtt_publish",
+          "data": "",
+          "topic": "example/spot",
+          "retained": true
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "publish-missing-topic",
+      "event": {
+        "spec": "0.1.0",
+        "family": "pskreporter-mqtt",
+        "mapping": 1,
+        "kind": "spot",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "receiver_call": "K1AAA",
+          "receiver_locator": "FN31",
+          "sender_call": "W1AAA",
+          "sender_locator": "FN42",
+          "frequency_hz": 14074000,
+          "mode": "FT8",
+          "snr_db": -17,
+          "time": "2026-11-12T12:00:00Z",
+          "reporting_software": "synthetic decoder"
+        },
+        "native": {
+          "format": "mqtt_publish",
+          "data": "",
+          "retained": false
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "publish-missing-retained",
+      "event": {
+        "spec": "0.1.0",
+        "family": "pskreporter-mqtt",
+        "mapping": 1,
+        "kind": "spot",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "receiver_call": "K1AAA",
+          "receiver_locator": "FN31",
+          "sender_call": "W1AAA",
+          "sender_locator": "FN42",
+          "frequency_hz": 14074000,
+          "mode": "FT8",
+          "snr_db": -17,
+          "time": "2026-11-12T12:00:00Z",
+          "reporting_software": "synthetic decoder"
+        },
+        "native": {
+          "format": "mqtt_publish",
+          "data": "",
+          "topic": "example/spot"
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "publish-retained-not-boolean",
+      "event": {
+        "spec": "0.1.0",
+        "family": "pskreporter-mqtt",
+        "mapping": 1,
+        "kind": "spot",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "receiver_call": "K1AAA",
+          "receiver_locator": "FN31",
+          "sender_call": "W1AAA",
+          "sender_locator": "FN42",
+          "frequency_hz": 14074000,
+          "mode": "FT8",
+          "snr_db": -17,
+          "time": "2026-11-12T12:00:00Z",
+          "reporting_software": "synthetic decoder"
+        },
+        "native": {
+          "format": "mqtt_publish",
+          "data": "",
+          "topic": "example/spot",
+          "retained": "true"
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "publish-topic-not-text",
+      "event": {
+        "spec": "0.1.0",
+        "family": "pskreporter-mqtt",
+        "mapping": 1,
+        "kind": "spot",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "receiver_call": "K1AAA",
+          "receiver_locator": "FN31",
+          "sender_call": "W1AAA",
+          "sender_locator": "FN42",
+          "frequency_hz": 14074000,
+          "mode": "FT8",
+          "snr_db": -17,
+          "time": "2026-11-12T12:00:00Z",
+          "reporting_software": "synthetic decoder"
+        },
+        "native": {
+          "format": "mqtt_publish",
+          "data": "",
+          "topic": 3,
+          "retained": false
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "publish-with-template",
+      "event": {
+        "spec": "0.1.0",
+        "family": "pskreporter-mqtt",
+        "mapping": 1,
+        "kind": "spot",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "receiver_call": "K1AAA",
+          "receiver_locator": "FN31",
+          "sender_call": "W1AAA",
+          "sender_locator": "FN42",
+          "frequency_hz": 14074000,
+          "mode": "FT8",
+          "snr_db": -17,
+          "time": "2026-11-12T12:00:00Z",
+          "reporting_software": "synthetic decoder"
+        },
+        "native": {
+          "format": "mqtt_publish",
+          "data": "",
+          "topic": "example/spot",
+          "retained": false,
+          "template": ""
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "datagram-with-retained",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "example_datagram",
+          "data": "",
+          "retained": false
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "templated-record-shape",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "ipfix_record",
+          "data": "",
+          "template": "",
+          "message_data": "",
+          "set_id": 256,
+          "set_index": 0,
+          "record_index": 0,
+          "header": {
+            "version": 10,
+            "length": 16,
+            "export_time": 0,
+            "sequence_number": 0,
+            "observation_domain_id": 7
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "templated-dependency-shape",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "ipfix_record",
+          "data": "",
+          "template": "",
+          "message_data": "",
+          "set_id": 256,
+          "set_index": 0,
+          "record_index": 0,
+          "header": {
+            "version": 10,
+            "length": 16,
+            "export_time": 0,
+            "sequence_number": 0,
+            "observation_domain_id": 7
+          },
+          "dependencies": [
+            {
+              "data": "",
+              "template": "",
+              "header": {
+                "version": 10,
+                "length": 16,
+                "export_time": 0,
+                "sequence_number": 0,
+                "observation_domain_id": 7
+              },
+              "set_id": 256
+            }
+          ]
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "record-missing-template",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "ipfix_record",
+          "data": "",
+          "message_data": "",
+          "set_id": 256,
+          "set_index": 0,
+          "record_index": 0,
+          "header": {
+            "version": 10,
+            "length": 16,
+            "export_time": 0,
+            "sequence_number": 0,
+            "observation_domain_id": 7
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "record-missing-message_data",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "ipfix_record",
+          "data": "",
+          "template": "",
+          "set_id": 256,
+          "set_index": 0,
+          "record_index": 0,
+          "header": {
+            "version": 10,
+            "length": 16,
+            "export_time": 0,
+            "sequence_number": 0,
+            "observation_domain_id": 7
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "record-missing-header",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "ipfix_record",
+          "data": "",
+          "template": "",
+          "message_data": "",
+          "set_id": 256,
+          "set_index": 0,
+          "record_index": 0
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "record-missing-set_id",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "ipfix_record",
+          "data": "",
+          "template": "",
+          "message_data": "",
+          "set_index": 0,
+          "record_index": 0,
+          "header": {
+            "version": 10,
+            "length": 16,
+            "export_time": 0,
+            "sequence_number": 0,
+            "observation_domain_id": 7
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "record-missing-set_index",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "ipfix_record",
+          "data": "",
+          "template": "",
+          "message_data": "",
+          "set_id": 256,
+          "record_index": 0,
+          "header": {
+            "version": 10,
+            "length": 16,
+            "export_time": 0,
+            "sequence_number": 0,
+            "observation_domain_id": 7
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "record-missing-record_index",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "ipfix_record",
+          "data": "",
+          "template": "",
+          "message_data": "",
+          "set_id": 256,
+          "set_index": 0,
+          "header": {
+            "version": 10,
+            "length": 16,
+            "export_time": 0,
+            "sequence_number": 0,
+            "observation_domain_id": 7
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "record-header-overflow",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "ipfix_record",
+          "data": "",
+          "template": "",
+          "message_data": "",
+          "set_id": 256,
+          "set_index": 0,
+          "record_index": 0,
+          "header": {
+            "version": 10,
+            "length": 16,
+            "export_time": 0,
+            "sequence_number": 4294967296,
+            "observation_domain_id": 7
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "negative-set-index",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "ipfix_record",
+          "data": "",
+          "template": "",
+          "message_data": "",
+          "set_id": 256,
+          "set_index": -1,
+          "record_index": 0,
+          "header": {
+            "version": 10,
+            "length": 16,
+            "export_time": 0,
+            "sequence_number": 0,
+            "observation_domain_id": 7
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "dependency-missing-template",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "ipfix_record",
+          "data": "",
+          "template": "",
+          "message_data": "",
+          "set_id": 256,
+          "set_index": 0,
+          "record_index": 0,
+          "header": {
+            "version": 10,
+            "length": 16,
+            "export_time": 0,
+            "sequence_number": 0,
+            "observation_domain_id": 7
+          },
+          "dependencies": [
+            {
+              "data": ""
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "record-with-topic",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "ipfix_record",
+          "data": "",
+          "template": "",
+          "message_data": "",
+          "set_id": 256,
+          "set_index": 0,
+          "record_index": 0,
+          "header": {
+            "version": 10,
+            "length": 16,
+            "export_time": 0,
+            "sequence_number": 0,
+            "observation_domain_id": 7
+          },
+          "topic": "wrong/class"
+        }
+      },
+      "valid": false
+    }
+  ]
+}

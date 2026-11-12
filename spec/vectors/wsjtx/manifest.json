@@ -1,0 +1,3074 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "source_sha256": "fd73b7f92fc0f66ea8f12a147b59a6072408c24656735d59df772dc55a5eeb62",
+  "hash_scope": "SHA-256 of each complete vector file, including its final newline",
+  "vectors": [
+    {
+      "file": "00-heartbeat-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5e49eecb73bec2c3a95c2ef1ac8ae0a4a34ac01962c65d1e0f66aaa1909df2d2"
+    },
+    {
+      "file": "00-heartbeat-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "45981f40a44703ea80ab141fc3d34863a9a3dc8b420694e14eb06aa3c8f870f1"
+    },
+    {
+      "file": "00-heartbeat-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d3e1a7113ae2ce0ea431e9f971752f6ca9ff50efe41fc105d1b8cc3f22dcaaf5"
+    },
+    {
+      "file": "01-status-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "15c0bae39ac683d4e5f2a3a1fcc83b5573d47dce10d7d190a435f3980c4c5713"
+    },
+    {
+      "file": "01-status-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "dab8df11358c0633dada6b4eb193b297f7ff966abbb24873a8141f19bf8a2196"
+    },
+    {
+      "file": "01-status-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ad103cf406f57197820ec57b9b7df255ae770b776d953ae54a5d36217eab7ea5"
+    },
+    {
+      "file": "02-decode-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "85e53b7f684b67f94f6f20a182cc4b537ea617d421c23dcad18d39c881a16679"
+    },
+    {
+      "file": "02-decode-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "123110c55f82bf684562571018181e2204b8c1937eef5caa0d2851fc0220c4ce"
+    },
+    {
+      "file": "02-decode-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f2ef6bf03665af7d9f73b86e33b3f60861ab0c88eb9c6581bca51713f0beadb5"
+    },
+    {
+      "file": "03-clear-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d9a87cff56a915cd9c3290d22dfbc1cbbb91e0bfd6dba725eae37d66f3d3eec0"
+    },
+    {
+      "file": "03-clear-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "7b38e4159c1951456ba5fbc7dd62fe918d62d2fbdc4d2b03776aed31d2c81129"
+    },
+    {
+      "file": "03-clear-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e83e84ad4398003fa02a854f53757a7a4545190f191a6177273d5c9170d934e2"
+    },
+    {
+      "file": "04-reply-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f90af8209c7fcf69f7c61533fc0717949acd12da33663d6d4602594b114f3233"
+    },
+    {
+      "file": "04-reply-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "469d57e17f410f71f5c4e6995a57c6097bf37c1d8a83803779b046c4967be289"
+    },
+    {
+      "file": "04-reply-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "6159681824d8b0d725eeeb02fb19fcf88af59fcb4c4da9c8c53920816e07bd2e"
+    },
+    {
+      "file": "05-qso-logged-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "eb5f6f79761affa5110cba47a82f8eeba354fbcf55e0d6b3ab1a4b29fd02a5d6"
+    },
+    {
+      "file": "05-qso-logged-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "bc5e2b889d9ee4012118da1d967e785766884fb8eaa0b288bf4f0ccfe41323f1"
+    },
+    {
+      "file": "05-qso-logged-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "c2982f3b4e43e7e88e0931298005d46efc1ce51c0a9eb8ec9929bf7de7334085"
+    },
+    {
+      "file": "06-close-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "75d018d1a29134a8ac5482c74507289494dafc367de8fb3f3eb2b65ea7527784"
+    },
+    {
+      "file": "06-close-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "bf2d7c737773b88d92d74ce814d37bbe04a68a425bfd4ed2a2c087bd4229c150"
+    },
+    {
+      "file": "06-close-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "9923dd08446ab0fc7fd5afb19c664b582d27116315ee8a84cd4bf2109588c356"
+    },
+    {
+      "file": "07-replay-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "a6e8d855db13a8a690520e984abaee44f5ba1457cf73b183c660e91aefd74549"
+    },
+    {
+      "file": "07-replay-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "bef3f4e1eef9c9d6f894824d34f95533ec6767cd4795d3502f22acf121bccb64"
+    },
+    {
+      "file": "07-replay-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e53387758b5827f6e0640bba57ec5b8a16f5f11d20ebe97d14c48085d3c96cea"
+    },
+    {
+      "file": "08-halt-tx-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5ef5108f4f7d2c886f1ad90f4ffd116e3d8ce779965f48a1a3af8a065f5a25ad"
+    },
+    {
+      "file": "08-halt-tx-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e37215e11596e2aa1858c9dfe0639caa9e83c99cbb6701ea95b33ca9480651bd"
+    },
+    {
+      "file": "08-halt-tx-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "81d5694d09a47b329e03bcf1198bb029278946326c5ffd77a20ec6cce3aea578"
+    },
+    {
+      "file": "09-free-text-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "19de38c5e1aa47e3220b452931daeb6a24a925977ee40dd8c4571da151e56947"
+    },
+    {
+      "file": "09-free-text-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "339d22eb0d71c532a1bd2d4de5f663a85eeb513b65dc0d1be84b7b352a6276f3"
+    },
+    {
+      "file": "09-free-text-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "06e78e85ff5d51489a3c11a56b0c65e0aed28d033a184ac12580074fb7c49e15"
+    },
+    {
+      "file": "10-wspr-decode-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "4735205e7e169da15d81643c1d5192d8a84e27553f3f74e681f17ca404f080a7"
+    },
+    {
+      "file": "10-wspr-decode-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "be745ea069e9935c1540baa62bcbcb190b9551a7e467b8846128297ed4f81572"
+    },
+    {
+      "file": "10-wspr-decode-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e0f23ae4bde7ffb14b89a93270ca7f49228db55e938cc5aa09221ce7b82da44c"
+    },
+    {
+      "file": "11-location-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "32c293e559ad5b6e99124048597a59915e9a7ffeb74b6f8c4fd0f28ebd513f95"
+    },
+    {
+      "file": "11-location-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b743e0c735f225db13e519c2b04061de5566fa4f9101c6607c2cccab9929b82a"
+    },
+    {
+      "file": "11-location-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "8cc4375eb3b3513f6bc085b0a6a9c9cecaec66305a78fa79a04d0fab75591d88"
+    },
+    {
+      "file": "12-logged-adif-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "7f7a4121f40dd8580deb316d33e9cacb1f81bccd6536010897bb013a6838bc2a"
+    },
+    {
+      "file": "12-logged-adif-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "7df7e4d3ce335a84ab7381e7488fe715c0cc81fbf53ebbbd763267b286bad8c6"
+    },
+    {
+      "file": "12-logged-adif-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "09299e6dde502a29fde40fb4ad3da5ec5191b37fd0a27eaf8ed27ed1eb294372"
+    },
+    {
+      "file": "13-highlight-callsign-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b8b1af907cc23ce2a1920c904b04471f1f693fd7dc88b85ff6581639aee441e7"
+    },
+    {
+      "file": "13-highlight-callsign-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "dc7c5407d82bb9b86710d9eef4bcb1292286d0320377d718217349e0bc4807f1"
+    },
+    {
+      "file": "13-highlight-callsign-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "c931b46b872777610748d6999559cad67135f95fcfbf750c676f48ed8e5ff0bf"
+    },
+    {
+      "file": "14-switch-configuration-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "62a5b649ff44f386830c8175fb3b359b4ac34bae503a77cc0a75b8ba7c5aafd2"
+    },
+    {
+      "file": "14-switch-configuration-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "4473515ec9489ff008f4336be6d5a98ef263f51763de4bb2bc5f9427ab3ad58c"
+    },
+    {
+      "file": "14-switch-configuration-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "64338cfa5c5b88a129172af83427c8838e0a009ea936b235da058232c3c9988d"
+    },
+    {
+      "file": "15-configure-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "2c1b778ea6a7db1b3cb3cc4c5d223a89aaca30881358ba47d4473b94c64e2b49"
+    },
+    {
+      "file": "15-configure-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "43cfddc4e4e51c35561f47cc92d19f6d2679ba5ba760de5caa0e7b91064acd27"
+    },
+    {
+      "file": "15-configure-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "81075d06279771e7f35c2d9df14bab3749e2335290828c477e6f7aff00e4c0be"
+    },
+    {
+      "file": "16-annotation-info-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "3f47d0fa0a13f4edb7b292e14868c7e37398504affb2f117742a10c370fe1352"
+    },
+    {
+      "file": "16-annotation-info-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "9a219a7d3aeb32406c52e4a787a0b8ae5c07a55be2f52bc956f4f40e24f915c4"
+    },
+    {
+      "file": "16-annotation-info-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ab2806b02b4b42f90d4ab35842e2f926af17719f7de71f54f12f453308c2c45b"
+    },
+    {
+      "file": "boolean-noncanonical-127.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "fe93608b306784fd462a45bd4bea2d812b549b2fae8dcc0af594c523c7154c78"
+    },
+    {
+      "file": "boolean-noncanonical-2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "55f3742ddfd10f2ca75ad4dec68be0740602a98c02e57692f3b5fb04bfef96c6"
+    },
+    {
+      "file": "boolean-noncanonical-255.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "3174ec2d7eafade17a276cafa6ec45279a68d5ca58516a9d2f137bd013014b3e"
+    },
+    {
+      "file": "command-00-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "c512017cd5a37c75c9ce70af2da6a731ecd4ee1dd7c7908d2e8a91a576278c4d"
+    },
+    {
+      "file": "command-00-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "17e6d0e20028c219ee63ade85db49b83eb387a6f442bfe156bb3ae9dcff22911"
+    },
+    {
+      "file": "command-00-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "8c32db7ab30891ae9f972b32548f2d6aff561762694c427b7709e9e4835d2931"
+    },
+    {
+      "file": "command-03-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "a2fddcd10d7f74946c22450d57cf8e0739b58e1c25dcbf187ad7889bf920361f"
+    },
+    {
+      "file": "command-03-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "7e500898137b64a0c28b02ec4be6185c07a3591c879ea414d71be111ed421c00"
+    },
+    {
+      "file": "command-03-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "1f012bf60aabf8b3bbd45185fbc52aa69e22ca55db5430c8bdfb27a18f07943a"
+    },
+    {
+      "file": "command-04-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f3db1c3a85028185188b4ae6f0b58ac956c6ee88a8b8fad792701dc229fe784f"
+    },
+    {
+      "file": "command-04-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "899bb5a555736b2d6e72bcf141431441f200a457a04e9642df2bd87f8a30d0ec"
+    },
+    {
+      "file": "command-04-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "07cc98320e77da4ff27b71a90dc1771e2ed6436fff8ffe2eac90b45395c4ad52"
+    },
+    {
+      "file": "command-06-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "be08525b2b16830dfd2932521fe39bf134f82b6feed221234dcd1ecfa4a1585a"
+    },
+    {
+      "file": "command-06-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "12fd711b3168cc13d5f1cd53fd02d0443118569a3f3df46ee806a95349064972"
+    },
+    {
+      "file": "command-06-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "2b6064aeb2af3e1c2d1af7a9bab950186f10b13458e9f30c031669b45532c87b"
+    },
+    {
+      "file": "command-07-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "644e200cbd5d19294eece9945d7f58682a8db405c60ef0ea2a644205c69b06bc"
+    },
+    {
+      "file": "command-07-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "cee304e5f80774e2f217a382f06b6779deb70ce10a126f8d569f9f065eb146ae"
+    },
+    {
+      "file": "command-07-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "dfabe13221af500168254b69ca7fbacfbf8158a3c53045102a4d789c70b69746"
+    },
+    {
+      "file": "command-08-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "0e6f64fe1e17a9daaafead40ca7a813340bf950df63c5dd0d3fa4c54b78f5549"
+    },
+    {
+      "file": "command-08-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "9817bf8ba0e58b9cfd062de16452d761938319984b8b2581af126ad8da93f157"
+    },
+    {
+      "file": "command-08-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "445cbb6b5063f6d5c7d80e1ad9290e4b75fadeb337f56e5467f8ef576a9a0a7b"
+    },
+    {
+      "file": "command-09-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "9f5748620ed37f11608d4624bdcc5b998f1f264a8796a6fb77e4c297a0687c72"
+    },
+    {
+      "file": "command-09-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b1a5145b2b8fbc63d537ae52c683c698c3cc18e7c3c2172b077870e8741d3c57"
+    },
+    {
+      "file": "command-09-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "0e2086313d1653db9855c832e322b068e0ab0ef6aece65f3de3c1c80f8a43ef3"
+    },
+    {
+      "file": "command-11-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "21cbd3346b3b9d880c24a2fd67d900b6288c9473bd26cab208fa8026b9ba49ba"
+    },
+    {
+      "file": "command-11-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "4e71a53bd213738397deb665f49beaaea15ac301190407cb8f0a135c18682f89"
+    },
+    {
+      "file": "command-11-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "237bfdf341cc93792b393451a7a66073a5feffe41ff96502fea3140ff5450b0f"
+    },
+    {
+      "file": "command-13-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "6e811dca90101c4b130f04f815645d05cebf2358c047399a381336dab677a727"
+    },
+    {
+      "file": "command-13-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "1aeb2d2596e4d413cca0c73d1312f23a48cf78f508ec8e66776c56e628262a71"
+    },
+    {
+      "file": "command-13-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "39a9d9e4de3e71c6bb03cb052116140f20de0ef774d5704c157dbe7eb6dc4047"
+    },
+    {
+      "file": "command-14-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f1eaaa93f31ee78ff5b08fa585e181e21c22453b2998942501c98b061d885eec"
+    },
+    {
+      "file": "command-14-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "3a48299750548d27681ffed415303744c29c188dec27d1393a5098e6ff6f8c67"
+    },
+    {
+      "file": "command-14-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "53b9880900750ccbb7185554984dab0da3b954807f26f7e2bdae8f2db6cffd00"
+    },
+    {
+      "file": "command-15-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "380e63f43ba344e3c0ce4e6456366c75d4597852e8a5b2611af408f85bbe1f6a"
+    },
+    {
+      "file": "command-15-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "fbf7b2588cbbf7259d3c2b7ff1124be8984809310df73d2fed40e99048d255b6"
+    },
+    {
+      "file": "command-15-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d2fef657d9f042c5df5fdc1190673303511c8685142950c743a9477ed6b9903a"
+    },
+    {
+      "file": "command-16-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f8e17d63c9ae240397ca8f19528c2f74a080abd2cfb518f4311e65e3760ab4dc"
+    },
+    {
+      "file": "command-16-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5aadc58f017d75fd745f4cbf04b76e7eb13522b9fe666058f0ce1453c434293e"
+    },
+    {
+      "file": "command-16-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "754ffbcd735f75d1f94253ed8e96feea8a6a1c69040f63819c8714e7e28a5ef9"
+    },
+    {
+      "file": "command-boolean-noncanonical-127.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "445cbb6b5063f6d5c7d80e1ad9290e4b75fadeb337f56e5467f8ef576a9a0a7b"
+    },
+    {
+      "file": "command-boolean-noncanonical-2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "445cbb6b5063f6d5c7d80e1ad9290e4b75fadeb337f56e5467f8ef576a9a0a7b"
+    },
+    {
+      "file": "command-boolean-noncanonical-255.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "445cbb6b5063f6d5c7d80e1ad9290e4b75fadeb337f56e5467f8ef576a9a0a7b"
+    },
+    {
+      "file": "command-configure-no-change.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5333624e2fe56c03aa0b2a0a45b835379a5c0118d2431f4c7f3c0f6ff85fa332"
+    },
+    {
+      "file": "command-default-schema.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "41156fa9f480b080b41745df6412040fb5daa2447c739e71b9b8d44b04a2fcc2"
+    },
+    {
+      "file": "command-direction-clear-to_application-window-0.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "92214a0f9c408a4bb481f91548958894b25b0a765150ae6c1dc52bcfc4889201"
+    },
+    {
+      "file": "command-direction-clear-to_application-window-1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d14057452aa8282884f036ca69ead573c52e36dc1e1e2fd0ed8fe7dcb0176511"
+    },
+    {
+      "file": "command-error-clear-missing-wire-id.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "2c71007b27e1b19a15cafe5fe2c47f44c901a157a00805e98c881724f59013f7"
+    },
+    {
+      "file": "command-error-clear-window-3.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "50e18e67ce30b7951f38211074481f7f7a1fa1b98bfe0b0109f9e186df0fe50b"
+    },
+    {
+      "file": "command-error-clear-window-4.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d8499c12462c68d9ae14c689a753402a6b9081d590e34779a1821a383195e9fe"
+    },
+    {
+      "file": "command-error-clear-window-5.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "05af81d335288cde4402fe1593de1917a2c98d30c7f8057ca9419986b6157efc"
+    },
+    {
+      "file": "command-error-close-missing-wire-id.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "94b383dab4e2cd64cf383535a0336c89f2f58590c1cbe7edbdca3a48be2e9d8d"
+    },
+    {
+      "file": "command-error-halt_tx-auto_tx_only-14.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "1739fc60dfd676707dfc7763b21fc2540fee69feefeb483c32baa8b4d3454163"
+    },
+    {
+      "file": "command-error-halt_tx-missing-auto_tx_only.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "6e7913bb3193b289f0954cd2657efed1009f2bd3e91d39a14f30dc26f8e9b708"
+    },
+    {
+      "file": "command-error-halt_tx-missing-wire-id.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "92a401e3bd860dd2c780f8a0b1dbe0634d00841ac963e9ff5d84fd56e6aabfb3"
+    },
+    {
+      "file": "command-error-missing-operation.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f8cd19b7091ec8a536794a6a9fa81738f5a037cfbaecc233d4990f54988fec42"
+    },
+    {
+      "file": "command-error-replay-missing-wire-id.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "aa9ceb3eb3859ff6eeec70ddf5ab762b779b172075e4a2098e6ff298674ce3b8"
+    },
+    {
+      "file": "command-error-reply-audio_offset_hz-8.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e600db8839e415e0187893221fc111f1dcba77dc92890205a40bb5c7793c5c56"
+    },
+    {
+      "file": "command-error-reply-audio_offset_hz-9.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "07ef59e9c469e8454372bb4210001d16d815ed57c56c9bf7864691d77cd39311"
+    },
+    {
+      "file": "command-error-reply-missing-audio_offset_hz.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "13e189faeca4fe82cedb6fd20ef081b7337a1e1c30fca0101f988866d1b8007c"
+    },
+    {
+      "file": "command-error-reply-missing-dt_seconds.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ec97035a10b6ceb26d9bc2f0aa87620b7dc96ae7ecbe8342dcc4abc003d6744c"
+    },
+    {
+      "file": "command-error-reply-missing-mode.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "19ca84ff74b4d5e9039b7934754fa3752e9cc44d3035a7b2a5505ef32dcf238f"
+    },
+    {
+      "file": "command-error-reply-missing-snr_db.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "7087ea4bdfc8d430b10db1792ffcc4ce72972d299fe6d000fedb4893993bcdfb"
+    },
+    {
+      "file": "command-error-reply-missing-text.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f485437ac4f28f4115cde197fc48dd1ad0b29c8d4e1e9c7a71c7c7a119189864"
+    },
+    {
+      "file": "command-error-reply-missing-time_of_day.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d4d533bc4ee092ef8aec578f13f0b22d0364e7a26919d95cbe0f94cece050fd1"
+    },
+    {
+      "file": "command-error-reply-missing-wire-id.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b242200aa2673636ea1b6628769618a487b2a27bd70c474afb29156859b1d4b8"
+    },
+    {
+      "file": "command-error-reply-modifiers-10.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ca094752a4b70c1be2d486cb4095efe91931f80a0589d3d96da3dcad5833acb8"
+    },
+    {
+      "file": "command-error-reply-modifiers-11.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e27dd9112fa308027c4aea2699017d065b9e4f6c1bc7ac72ee53b8b9b8b8963d"
+    },
+    {
+      "file": "command-error-reply-snr_db-6.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "fc32196ecb5f8737ffd9973be975a9b9bf408f2f3df1abfebe2b39a8f56d6334"
+    },
+    {
+      "file": "command-error-reply-snr_db-7.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d5954fc7572aecb258dd943f5e38e1e4e9e08d7ba3f2bdf66e8f7d8819af8e1f"
+    },
+    {
+      "file": "command-error-reply-tail-hole.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "faa36fdb5a4ec01ccf2b39035dcc6fd150fd7934f2f3737f2c90ea0130f316b3"
+    },
+    {
+      "file": "command-error-reply-time_of_day-12.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "88305fab771942ca9b691bf7decdb3cdee25cc86d1eea1539f2832813ac8ab5b"
+    },
+    {
+      "file": "command-error-reply-time_of_day-13.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "63841ff9b78700a6a05dd849893f24fb8a0affc337514eb55d9ff1ce0bbc0e51"
+    },
+    {
+      "file": "command-error-schema-0.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "dd6a620e5bdd4516219273c1c4455579ac92bdb31b5fc57a3efec8df444c82d7"
+    },
+    {
+      "file": "command-error-schema-3.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "cd981f935c7e646d8ad645bb021a423add8784f0caefa8d55e78b2495cc47936"
+    },
+    {
+      "file": "command-error-schema-4.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "96dcd968166b0ee2bbabee151282c61b1f3e56da30c2856707ffeb69b2b7b7e9"
+    },
+    {
+      "file": "command-error-schema-True.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d02ed9e0d77511fc8d330936bc2d058d081fa38c29489b2882055abf7bf6a8c8"
+    },
+    {
+      "file": "command-error-send_text-missing-text.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "476e9222a8bae4f8fa82c4af03c98467e7b02b8962592ff35435801b4e5530e1"
+    },
+    {
+      "file": "command-error-send_text-missing-transmit.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f0aa68feecde6e2adc42625e5fae5c69694af1e253d55fd0edca93d2c78afb66"
+    },
+    {
+      "file": "command-error-send_text-missing-wire-id.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f6af677a545c2241ee8b2fab29c315437f4b622f9900a4626c426b78f8f403e0"
+    },
+    {
+      "file": "command-error-send_text-transmit-15.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d6e9a33636d50972a352e176923fe45ece715f9ac870a3d6b6fa13ade670f8c6"
+    },
+    {
+      "file": "command-error-unknown-operation.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d8a281f543edfa4e9d299d45fc036b16cdde36e1ffcd84992913bb597c40a7d9"
+    },
+    {
+      "file": "command-error-wsjtx-annotation_info-missing-dx_call.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "95dccf8ee4b55175d9a3cd0844cb9fb0862a2dd79e7f76b8e860162aa5f64301"
+    },
+    {
+      "file": "command-error-wsjtx-annotation_info-missing-sort_order.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "a25bd138e94f080d943e23e00a83753e31c85c03fdaa1e776c2c3f6fb2fbfc58"
+    },
+    {
+      "file": "command-error-wsjtx-annotation_info-missing-sort_order_provided.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "0b0983596fc69ad7ad4f534ac8efce8d02976841359462a93b4a9e14f780b24c"
+    },
+    {
+      "file": "command-error-wsjtx-annotation_info-missing-wire-id.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "58b1b5533ee54f9bd772616c34c546e7edc81d05111a9320b061314713c41272"
+    },
+    {
+      "file": "command-error-wsjtx-annotation_info-sort_order-19.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "18407004cd8a2939cd6d62b01102fc56d883c7fe712438d43d8040380efdb1fe"
+    },
+    {
+      "file": "command-error-wsjtx-configure-frequency_tolerance_hz-16.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "19d942303263c520cc785a805038e1cfeefd2495c1cf1bd4ae4c99085dac56c5"
+    },
+    {
+      "file": "command-error-wsjtx-configure-missing-dx_call.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ba82a69cb046e6921713ee8e15e4e2caf96b638636085dd49f0575eb5204e7a3"
+    },
+    {
+      "file": "command-error-wsjtx-configure-missing-dx_grid.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "1649d4400bc660866ae05bd152e0cba8b24510e5d44491d0b21ad093be232dd1"
+    },
+    {
+      "file": "command-error-wsjtx-configure-missing-fast_mode.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "822f85d1c42442a05986e06f2722798cc3f7854f3914acf1366a78edaca701e1"
+    },
+    {
+      "file": "command-error-wsjtx-configure-missing-frequency_tolerance_hz.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "2cd51d92c42972ce73e391b45a93d71aa1e96e0ff96feece4f48f50cce1428a1"
+    },
+    {
+      "file": "command-error-wsjtx-configure-missing-mode.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "a3e241962b5c6a790fd0cd729007ec345e09b3d47ab3cda00a8f756310c6fe30"
+    },
+    {
+      "file": "command-error-wsjtx-configure-missing-rx_offset_hz.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5c051da9aa6354c0a4ecf51e02eabcab76e93291a792c001d9d4df3487a51a01"
+    },
+    {
+      "file": "command-error-wsjtx-configure-missing-sub_mode.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e84cfe63c275ff070261b2145e98a55014cc4a71ef3011b30e351a60d3efc4f7"
+    },
+    {
+      "file": "command-error-wsjtx-configure-missing-tr_period_seconds.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "607adf0f589a6c2cbabb87bd5c8d5c77a877837c9c2f5f6b4ffa28cdca9b9aed"
+    },
+    {
+      "file": "command-error-wsjtx-configure-missing-wire-id.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e91ac8cbffc1e5de6199c8d362554d9f06a69e86f5a5702c530ec574186f52cb"
+    },
+    {
+      "file": "command-error-wsjtx-configure-rx_offset_hz-17.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "0d94a559afaa1e9e67f5b8277fd5eb6f4647592768a7934033da3922cf618e3c"
+    },
+    {
+      "file": "command-error-wsjtx-configure-tr_period_seconds-18.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "55950a477f6b1ede351fed4e5dd32b9c80bea31f4a7d076957a23761c7b731ff"
+    },
+    {
+      "file": "command-error-wsjtx-heartbeat-max_schema-1.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "0cb3a589ccc5a63d39994d4863bf15027daab556897b6bdaf6ba9826df515661"
+    },
+    {
+      "file": "command-error-wsjtx-heartbeat-max_schema-2.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "739987aac3fac75fc8ec83f9b4aaf5b24586497cc1185c8485b52afd5b50fa29"
+    },
+    {
+      "file": "command-error-wsjtx-heartbeat-missing-wire-id.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "3b40e228674c2a869cdffabbdacccaeea6b75edbc4e26c230108a055587e5ef5"
+    },
+    {
+      "file": "command-error-wsjtx-heartbeat-tail-hole.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5d312e59fe920b515cba20307ec7d306193b50270ea9c79da7ef61079bd2c25d"
+    },
+    {
+      "file": "command-error-wsjtx-highlight_callsign-background_color-20.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "08c47e2cb52d34b6fed8a29340b636b0ae290bfd4779cddbd1cbb86767e3ae1e"
+    },
+    {
+      "file": "command-error-wsjtx-highlight_callsign-foreground_color-21.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "9952e6c8a3a8af055592034d4f9c74c6297dae6a6f6d23f7246c34cc58de51c2"
+    },
+    {
+      "file": "command-error-wsjtx-highlight_callsign-missing-background_color.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "4d80279ef255b0409cdf920833cf4d468a32ae1baee2c83c363a2390dd34638f"
+    },
+    {
+      "file": "command-error-wsjtx-highlight_callsign-missing-call.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "437b44014feae3017d919d894ceb813068f8cc58800a0859924889acec2e9895"
+    },
+    {
+      "file": "command-error-wsjtx-highlight_callsign-missing-foreground_color.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b022715ccc02683f29f8b33534dc2a546f8599874e0a14c1eb96a8b6045cf2d6"
+    },
+    {
+      "file": "command-error-wsjtx-highlight_callsign-missing-wire-id.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "4ed30596e09717635aa6083d31b349972fcc660cfe909727c4b1d54e2f8e291b"
+    },
+    {
+      "file": "command-error-wsjtx-location-missing-location.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "3a01d64fdf911722c3664e8a77900f6efc6ecfd72f130063dfac5d6f186544b1"
+    },
+    {
+      "file": "command-error-wsjtx-location-missing-wire-id.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "28b13b000a5e0ce929874a09cd9b3078565b497b6fc1568c376c325a597b9c55"
+    },
+    {
+      "file": "command-error-wsjtx-switch_configuration-missing-configuration_name.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "bfd58aba4a78606162a5784927f013de1481fdb826e08e740c04f6c8a80eb399"
+    },
+    {
+      "file": "command-error-wsjtx-switch_configuration-missing-wire-id.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "000cf1acf030e7169763bda19264f9578728aeb3dd7e66630bf1d6ed371b5ff4"
+    },
+    {
+      "file": "command-id-empty.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ca1390b1598ff8df859c1cc70dbd3aad1c9fe7bacc0225592a79a23534dc9d77"
+    },
+    {
+      "file": "command-id-invalid-utf8.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "003c6957e70528e8689bd6c9112d48e1309f7e01bb44953fd814ddc0dbd74dfc"
+    },
+    {
+      "file": "command-id-maximum.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e936672343c1fbe1e027cb3e6e7d6a3e53f9eed0d2267e035a62ba0e0dc49d93"
+    },
+    {
+      "file": "command-id-null.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "bfc71d03714b8842defed496a82ef595714088c5208aba02757b01bb9ea564c4"
+    },
+    {
+      "file": "command-id-unicode.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "96e99019fe45c7de60d6eb5c1f4100d3aea709c31877b52c0e77cccfb4b1329d"
+    },
+    {
+      "file": "command-reply-nan.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "785f99c92f1f9d908aa7ed8d77502e4cfc1fa6cc06515905f15a785be9c6d58f"
+    },
+    {
+      "file": "command-reply-negative-zero.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "0206f3eef9bd8eb38a3ca0a2a94cbbc40d5ff28caff7c59481384379b6aa1f7b"
+    },
+    {
+      "file": "command-tail-configure-minimal-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "503d9c38ec5eb2d3fc9fd87f2b6e7c91e7e5015e2c553496981f2e0fbc9b5b6e"
+    },
+    {
+      "file": "command-tail-configure-minimal-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "9f2502e929e56490be61ae1ec3fade812ead5cdc2745794cac65fcde744ca693"
+    },
+    {
+      "file": "command-tail-configure-minimal-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ac91b9c5fb2c92f8cb8cd071b5dff650d40b4b32331f4f8bf9f04e263ce13287"
+    },
+    {
+      "file": "command-tail-heartbeat-empty-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "8a7f2e208648deb43a83ba12f5c292085aa1c7446f0a35109ea1e3685f0a723f"
+    },
+    {
+      "file": "command-tail-heartbeat-empty-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "79a4c7d143a5d0c5a5677a2b94bb6454ca0d4cd184c79fd6a35ba49bfb8ea5dd"
+    },
+    {
+      "file": "command-tail-heartbeat-empty-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "c3e469b41b6ee7d4b0e959e981b788a0c0f58c7f50ab4bb7243a68ee22244fb7"
+    },
+    {
+      "file": "command-tail-highlight-minimal-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f467144bd7f982bdfdb80344bf1d87e4cce1a9e84fb50a8864cba88af6136d3c"
+    },
+    {
+      "file": "command-tail-highlight-minimal-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "af3089290939458245e721d39d132d6c4c61e0231fc1b3c4767ae30009283c7c"
+    },
+    {
+      "file": "command-tail-highlight-minimal-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "2d4ea77ba918fb7bf477739de78633b2cd920b5c74bc2b36b25e4900e0bd9b7f"
+    },
+    {
+      "file": "command-tail-reply-minimal-s1.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "1b7f7330351d5dc5aa9e1f2412f683276bd00bf3f24293b4f2ed39c353b1a7cc"
+    },
+    {
+      "file": "command-tail-reply-minimal-s2.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "2641350c094f0c309c1631fe25d7ee2d2942024d12ee225c34146123993f6494"
+    },
+    {
+      "file": "command-tail-reply-minimal-s3.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "302976d6e9c81ba5ae9d7efbedd61d0dcc298374dfd5b5d5a9d84704317d35b3"
+    },
+    {
+      "file": "command-text-empty.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ea6b42746d54351c3c1e24a03b09ed07f6509492efa83f56b10a2b01cccd7936"
+    },
+    {
+      "file": "command-text-invalid-utf8.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "a87eb55c19a94b6f1853a8d4cefdc6ccb7ccd116d4597b43b4deb6ef9bd5a806"
+    },
+    {
+      "file": "command-text-null.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "bb1111301b25a914923018ae47e13ae902635e09638d58481b58791d572afc00"
+    },
+    {
+      "file": "command-text-unicode.json",
+      "class": "command",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d7f924d750fc747cb5be5b5cfd91c4fef95a65d20d38b0628056102955b8c3df"
+    },
+    {
+      "file": "compat-different-major.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "1bd98e763c1d5d96a0196617648ae72c12ab0802e6e59363d84b8fa43d8b11a9"
+    },
+    {
+      "file": "compat-new-reader-old-command.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b1672cc5f8cf15a5549c6c4afc2708b6c03682720d74dc68012c76a735cfad37"
+    },
+    {
+      "file": "compat-new-reader-old-writer.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ec058640fa3286147764f491cd07e49167008305d7a9de58890846e460e9285e"
+    },
+    {
+      "file": "compat-old-reader-new-command-family.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d062115c74b1fac9ef9e5cf872f0af30c2a30aa8fa5d80c2c6fb6c9010ede85c"
+    },
+    {
+      "file": "compat-old-reader-new-command-operation.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "25fc8bde10b707479cdf2794c4ab26aa5502107c4a3f36ef061fd6df42e6647d"
+    },
+    {
+      "file": "compat-old-reader-new-context.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "a33ddefd866acefe676162e58c10808e68f6930dad94e41d7ec0bfb71c4450bb"
+    },
+    {
+      "file": "compat-old-reader-new-family.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "831f9474f67f3f2ab54c413ae205d9f6f6cec358b8ab0550ee17b3859438de80"
+    },
+    {
+      "file": "compat-old-reader-new-kind.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f4965cc8d7cc0e6af32969f6c4981c712545787743d8d03eefcecb577ecefebf"
+    },
+    {
+      "file": "compat-old-reader-new-members.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "6315d7abeebb9285cd064cc6d3152f27355281a1005a0d9ba88a12bfa3fa24eb"
+    },
+    {
+      "file": "compat-old-reader-new-operation.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b69a3eff64bdf3cf14f231964bc5b28ec92acae74de903f717feb769b7323304"
+    },
+    {
+      "file": "configure-no-change.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "bb6f958f23d6c15a1f70b1d89a65eaad28aaef69d687ce6222bd66184d3d8ebb"
+    },
+    {
+      "file": "context-target-type-15.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "6bbae6425ee310b601c2c29786f9b2fe2136991b9c0d97248b32c6866e3ef500"
+    },
+    {
+      "file": "context-target-type-4.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "a7c5f0ae3c3203ce34c9046c75df02598ada9c7b5f7fda707fe5245bccc2cec9"
+    },
+    {
+      "file": "datagram-maximum.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e9fca6101e3017f3c5702c721a8da8344d5e807ec83ea197925a295e556f320c"
+    },
+    {
+      "file": "direction-clear-from_application-window-0.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ce28ef6d1984d9deb28a2dba076c92d3868a32cc790a8a25acffd7d2885e03cb"
+    },
+    {
+      "file": "direction-clear-from_application-window-1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "9911441b81d058e7cb49ae77c5e129411f794f7ade3faddced93c14b973b7547"
+    },
+    {
+      "file": "direction-clear-to_application-window-0.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "80c46044f22d07a3e621edf09fcd6ab9f18082dfa1f5d4db905eb3c77ffeb290"
+    },
+    {
+      "file": "direction-clear-to_application-window-1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "edf0a13c04c712e0108b2a29e8bb8fa386c7bfe2507512180350e170b498ffad"
+    },
+    {
+      "file": "direction-clear-unknown-window-0.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "9861e834f2d104d36097f7b9ea08411f4ab4871dd2eb914df2e03d9cd3d1d130"
+    },
+    {
+      "file": "direction-clear-unknown-window-1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5ef9ce2ce2bada58a190f857ea0fd4e568488743f2641d2e66f348b6ac1d0e51"
+    },
+    {
+      "file": "direction-close-from_application.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "24b929cc4e57e790c64a8aa99eecec241c080b0040d5115a6dd774b2fbce3a28"
+    },
+    {
+      "file": "direction-close-to_application.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f7e529dd6c6a191fcf42be997855cbc2044fee6680b43888f9349452b6fb459b"
+    },
+    {
+      "file": "direction-close-unknown.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e39444b08f1668aba2aac6499daed7e3ffa4183be01c8454408973f635c72bd7"
+    },
+    {
+      "file": "direction-heartbeat-from_application.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "a5b473efe0d81de32397cd00a5dfc0553e9543387d55fde37f66d494b6bb6491"
+    },
+    {
+      "file": "direction-heartbeat-to_application.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "714aa3d0ee12a73f2efe74193b3afb6264041c1c18c74a7e294707ab982a5ca9"
+    },
+    {
+      "file": "direction-heartbeat-unknown.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "4a417785bc88087d138e4ad01d09c29010813c3ce8a72e95d77a8a52ecf2cbf0"
+    },
+    {
+      "file": "error-empty.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e1e2dd91c9e6b535ec0a82fc02e6d180789e66f4f22349dbb37d34f374d73d9d"
+    },
+    {
+      "file": "error-id-bound-before-remaining.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "7b9f0f9d70a46cecbb47e94a7ea1432996cae58a40a8413d5be6a63d48e2a8aa"
+    },
+    {
+      "file": "error-invalid-time-spec.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "a6e4b3e9834a3cef1265e5622728061c98b0dca7ad738d1bc206979c5b579f7c"
+    },
+    {
+      "file": "error-magic.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "17a8e426f0aed1d9ae8bb10638704242b9967a4fa654ef0cd315c80f07a8c1a4"
+    },
+    {
+      "file": "error-odd-utf16.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "72e03f461b45f78d6ddcdd2c38fe0c3de5cc3cf831cbb350b93e727feed294d9"
+    },
+    {
+      "file": "error-partial-tail.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "4fedd072f1f867af15b7e25ac5f1ce58c8c5f12f1e2f773226eca875796dc44a"
+    },
+    {
+      "file": "error-schema-zero.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "81824a3b348439db26cef551a2104727c21aeddef910ff301a98a46a2be29c56"
+    },
+    {
+      "file": "error-short-schema.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "9dec09728eeedff19b00db0b013db3b7ab9e3ec2bd492cb39f2397886077e251"
+    },
+    {
+      "file": "error-short-utf16.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "9d6ca2c73721b120d89891ddb9224cf69462f82c34679ef6bdb7d3a95ce01547"
+    },
+    {
+      "file": "error-size-before-future.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "13cd3e79a148acd14798dd25f756dc8379bdc6ff25c18fd9d84e42ab6afe9537"
+    },
+    {
+      "file": "error-size-before-magic.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "8ed754a3b1079b8d7e181f3607c426ba10bd1dac58c1f6bd8eaf91df9293916a"
+    },
+    {
+      "file": "error-text-bound.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "7b5963c3b8f77ef4794af9acdd8fdd4613e2888b92f34ab865db6972b592b6e1"
+    },
+    {
+      "file": "event-base64-newline.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ecaff266acedcf99ff715b6cd47d58f6388f881c536903aa74a3dcf92433ee59"
+    },
+    {
+      "file": "event-base64-noncanonical.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "2f16343cc6c7f09a650b020ca3b1b74c866bf7e51def28389f3e67426e5da905"
+    },
+    {
+      "file": "event-integer-too-large.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "902b9dbe4daeda6739692b95bcf7c2e01f4c921a2e78d5f8ad8b60581b36c223"
+    },
+    {
+      "file": "event-missing-mapping.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "c80cc7662f0001307a42b3bdbc4afab0d0f3af3e7c67c5939bf5079e196c9039"
+    },
+    {
+      "file": "event-missing-native-data.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e89dc0265a154218e3821d1975448e50cce9732feb4fb9d91a5329ca5c27def4"
+    },
+    {
+      "file": "event-missing-state.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "816443d3877bdd2a6f178f88273c2db50686a64a97a15c32d0b6b3ba72241cd9"
+    },
+    {
+      "file": "event-native-data-not-string.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "64f6ee23873dbf8f12a843eff08e3ff5f449df7daf57bbcb597fafe929dff15d"
+    },
+    {
+      "file": "event-native-disagreement.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "dcbbc862180fe47d81c42f90faf911c34b7d8ec0bc7c57f7102825bac235b96a"
+    },
+    {
+      "file": "event-native-format-not-string.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "0b606e1b8f70bfa104510f1a22cbf2b12abedeb6c4a7d2abd7c53e3d8aefc770"
+    },
+    {
+      "file": "event-native-message-not-object.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d2bfa05b25135c059affaff117149e4e545ad9c05fee1895817ecafee2f7f36f"
+    },
+    {
+      "file": "event-nonfinite-token-finite.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "0df1d32d6b2ff9b78752a5944285d2731fbd0d983bba2001699f5d8c8c0d7962"
+    },
+    {
+      "file": "event-null-time.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b35181ab6d39925b69b409f9540af1b92b6ad98675d9d2f778d73cd851b2e893"
+    },
+    {
+      "file": "event-text-wrapper-bounds.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "fea2a54ee8ce06f7a2472838365a60d2d63fe23e0779a307971f52a6579f692c"
+    },
+    {
+      "file": "event-time-newline.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "51545256c5d0317b6e882de16f143e7b7d23b0af0e5ce17a01952fa120c24760"
+    },
+    {
+      "file": "extensions.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "74dca04838a6d471212f5c9d31a2215772043c05ccf3c5aa29795aab137788b3"
+    },
+    {
+      "file": "float-nan-payload.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "8413fab7bc5674d236268f2ebdcf40340d1eedd817700683c9aa220bd4381994"
+    },
+    {
+      "file": "float-negative-infinity.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "074591b3769661defffedc55b408fa200e985c6a53d7ef53481aeaf11c11b72c"
+    },
+    {
+      "file": "float-negative-zero.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "379f6f69b458b83f28b1cd12ec0f3645d74c433a4466b8791fbfc07e77001c93"
+    },
+    {
+      "file": "float-positive-infinity.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5c88c7dc3947eb12e2565bb1ecb5101a8a0b33fce07bd87dc8aa91e5bd66564c"
+    },
+    {
+      "file": "float-rounding.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e279d5309f7edd6d49a39bf805fd167d5d86bbb154087591a37da641930d3bbd"
+    },
+    {
+      "file": "id-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "36ca65614b75cc1f9f75e73997b29d36f9bd93ea1caad0f84ba6aa1bbe2cfb2a"
+    },
+    {
+      "file": "id-invalid-utf8.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "04ea5fb022899e142bc9e5b9e3d952adeda9f9a4ac511098340a988d81a2ae2d"
+    },
+    {
+      "file": "id-maximum.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "0972b3f324ed098d811dedb941b19fa9a19bf137cc336321530c7c490c25387e"
+    },
+    {
+      "file": "id-null.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "16155781a5763cfeb805dfa3140721658ba51c33708a2d8fba11589bcc690c97"
+    },
+    {
+      "file": "id-unicode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "1b46fb6e1bfdcc1ed6be049efd4c5af07ee90b26719cf0e0f8cfc50338e8d74b"
+    },
+    {
+      "file": "integer-18446744073709551615.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "abd44f1a105eeadaebae320fb63300eb802eb29443b765f84880ee991157ef57"
+    },
+    {
+      "file": "integer-9007199254740991.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "97c6d76928eec92b4ddf23ad56c926e943869d5bdcc4bab1211b5349bf881e4b"
+    },
+    {
+      "file": "integer-9007199254740992.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "022cebc5fd4ffe3295b3ee2a42fc6927159dc1ded3b0fa5c0fe1b65c6cec8522"
+    },
+    {
+      "file": "json-duplicate-envelope.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5408a264525b31d4eb6c32226a490adddb0f844f80777726f3958e997aeb60eb"
+    },
+    {
+      "file": "json-duplicate-nested.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b335167c27c2605ad66bc621c5a7fa2b98fb3f4f3c3b0025f3c1c4de00edda06"
+    },
+    {
+      "file": "json-record-oversized.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "3ffee716b1271a5a4b89e1c4ae4314bd5eb7e050d021e02a746dd05816a3fddb"
+    },
+    {
+      "file": "skip-future-garbage.json",
+      "class": "skip",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5391e641dda1318cc4bffd5360fb900e074bb90b8591e4c89143498d1e26c6df"
+    },
+    {
+      "file": "skip-future-prefix.json",
+      "class": "skip",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "8fa52d234f023d7c44bd926f6749aaa4534380e53dc9a455189bcb4b5e53bbcc"
+    },
+    {
+      "file": "skip-unknown-type-s1.json",
+      "class": "skip",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "09e8e62892df4030c581825cae72d0558ea4bdccc4d6f65017531d56292edf55"
+    },
+    {
+      "file": "skip-unknown-type-s2.json",
+      "class": "skip",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b779e686963a72b1f5032332c2a1b9e339255722d9fd9fd589b33c015de81072"
+    },
+    {
+      "file": "skip-unknown-type-s3.json",
+      "class": "skip",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "913948c7e74bf193d4eab35cf36e0012476cffc781ac2a7be4e5403f6b3566b4"
+    },
+    {
+      "file": "status-not-applicable.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "00fbf318290f82a1a71aa46a4cd53a0d4abb429374b3b14584e1337b1f5516f1"
+    },
+    {
+      "file": "tail-configure-minimal-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "cf8111263beba62883a6f85bc33293e4cc4c5ef6ddc3e193eb80d206c30103b1"
+    },
+    {
+      "file": "tail-configure-minimal-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "6107f925e992736c3540e11c6dd622bdc6ae490395058a537ab16e99980c0f1f"
+    },
+    {
+      "file": "tail-configure-minimal-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "a3271b2b9d9ca4822cac8dbd85d7af6215f5091a05249eb9cea4048118618b1f"
+    },
+    {
+      "file": "tail-decode-minimal-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e310a3492aaac521575e6a4588c61caef18c478600699ddb6b5b0cd441c67b3a"
+    },
+    {
+      "file": "tail-decode-minimal-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "08dd6becbcfa0d212bff91b934d7f9b6bf1c2f26736b4622dc01965a74bdc952"
+    },
+    {
+      "file": "tail-decode-minimal-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b85b5bb6e7bde56516142192b10ea5ab58e46a83d85c1517cd0cb0d85ad5d179"
+    },
+    {
+      "file": "tail-decode-prefix-1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "100ff145f7ed764cc7bfc6478399def5133a69b99e516289f0dd7168c2b434ff"
+    },
+    {
+      "file": "tail-heartbeat-empty-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "be06e0c65ecafbc1e543fd73041f31c9145d7a9812556c09cd498045abdd436a"
+    },
+    {
+      "file": "tail-heartbeat-empty-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "10a81745d58c2d907a9e0e7aaffdf7a88f659df02c24c7e72c2299f96dac6607"
+    },
+    {
+      "file": "tail-heartbeat-empty-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b3d967f1efb2ced839a4aba62f128cecb56fa26ad809a1f256bfa236aac40ac7"
+    },
+    {
+      "file": "tail-heartbeat-prefix-1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "74a88731a21508569b92a9751649a9a7f6c39ba13f49041a1fadf3262fd0b214"
+    },
+    {
+      "file": "tail-heartbeat-prefix-2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d6315253bf15809fe86fc06c5b24d0525a57ec23c5f5ee8cfa3ad249a347fd62"
+    },
+    {
+      "file": "tail-highlight-minimal-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "3587d974a7b72b5b2fb11e2efe348dd4e8c00e38c14fe1ae0e3c40d2842394e7"
+    },
+    {
+      "file": "tail-highlight-minimal-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "52b3cead4912899f14da253ca86e1c93977173bc0970d7346233b7bcce6345f3"
+    },
+    {
+      "file": "tail-highlight-minimal-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "df81dc436b3a7a942e18632f1476df7649c3852eabd28ddb447d091b0892e806"
+    },
+    {
+      "file": "tail-qso-minimal-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5950759c0773131aae978eda0d68e057f74390fbff53705607bb1571fde29580"
+    },
+    {
+      "file": "tail-qso-minimal-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b209830fe005eef53037443f94d767cbc76c0a5a7bcafd758d08f6d7aaf0341e"
+    },
+    {
+      "file": "tail-qso-minimal-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f1f75f33f30c9bdc1bd4cc71256941252f3b38f8d6f8f7e972544070b21ce412"
+    },
+    {
+      "file": "tail-qso-prefix-1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5a8e5984ad4ed7e0e0f1e316fc3a91b0ef852f0a0f8274d4f0a13e89037afe37"
+    },
+    {
+      "file": "tail-qso-prefix-2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "1fabc0248bd147e62257754ffc0ee346ca2b49546afa56d55f9495340c2822f0"
+    },
+    {
+      "file": "tail-qso-prefix-3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "300f3fb62ef032a5fda348225771788f41d8049f6c6492c164b7213efb17a933"
+    },
+    {
+      "file": "tail-qso-prefix-4.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "29e93eb252f9992798884db412d3dfc60c476eb26bdec6ac26684e33378e6c6f"
+    },
+    {
+      "file": "tail-qso-prefix-5.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "397f52c9f1986dc76f53e235ad92edfed2a94938e5b891aab7b759d33ab978f4"
+    },
+    {
+      "file": "tail-qso-prefix-6.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "87446d659efa1470bd27453ad6df846d8af875cc1173686dbbf13e8ca6b9f1e9"
+    },
+    {
+      "file": "tail-reply-minimal-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "46a8154b397cb7ef5a24888617b5953622d036359ce064288218dc3f516f9ae9"
+    },
+    {
+      "file": "tail-reply-minimal-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "25c36072c43911e35edb28ee970152845aac3e26f0f2828378c0f8d6849bed37"
+    },
+    {
+      "file": "tail-reply-minimal-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "9b1034ce6f05bd00c07422231b22e0199baaa59c0f4d1dc3547d32b6eedccd3f"
+    },
+    {
+      "file": "tail-reply-prefix-1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "7fb6a0d6236a756dbef520118cd5b9d34eaac645487bca8be0a0faa70ee83d84"
+    },
+    {
+      "file": "tail-status-minimal-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "1cfdb82480785cd5ae3a3c6a79921f8f1e7d1dbd810da8cc80f564dd88eb11d0"
+    },
+    {
+      "file": "tail-status-minimal-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "9305c2df764e8fdac0b17b2d3ff3816b969183514fd75f0e8911a8516e705fe8"
+    },
+    {
+      "file": "tail-status-minimal-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "7114684e8b68a578f81fd99e90c3bca9fbff3cebaa95468d75279fdb0d5eff15"
+    },
+    {
+      "file": "tail-status-prefix-1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "2b0d5e5aa54f402b0e6e71255ac6d934eb3d108243e40654206ac9a765c859b6"
+    },
+    {
+      "file": "tail-status-prefix-10.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "4b729f3da0b94c63402f5adcb41f323018996856c5b81eee05a9e1ea270e044a"
+    },
+    {
+      "file": "tail-status-prefix-2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "fad7da9ed98a63e26d4fa91b909718d8fdf3f231c3d590022d30ec8a4c7866ed"
+    },
+    {
+      "file": "tail-status-prefix-3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d727cd5cc9e80aec7c3caa62b3b28a12025f37a46e524e91e14e24c2b33eaf98"
+    },
+    {
+      "file": "tail-status-prefix-4.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "a224a93fac9e8a3d6f267dd964f511f38dcbe9dc8cb811f2e4a9025dc9a26d49"
+    },
+    {
+      "file": "tail-status-prefix-5.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "2e5619333adba331919e1efa3470a592ce7d3799de4c7f4b25a27fac486f8ce1"
+    },
+    {
+      "file": "tail-status-prefix-6.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "a6259a6bc94283977ad6bd59732c98012c627149caeb338f4787ca67850f990c"
+    },
+    {
+      "file": "tail-status-prefix-7.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "418c4c8b1437e00a788d6d376d256acadfce82e0c7f5aa0e6755f75a9e767e25"
+    },
+    {
+      "file": "tail-status-prefix-8.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f8cf32674460f5950d6d90aefcaa72ac4b53a8ee7a3f12b4704d85c2f69d4e59"
+    },
+    {
+      "file": "tail-status-prefix-9.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f55c6ecc3b2fde6b9f467d4cf68244f90f15aa4339065f9d960751e735f8b0b4"
+    },
+    {
+      "file": "tail-wspr-minimal-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "999e1028fce841bc4eae799143efe72f748b9006ceb26ae73624798b89e4b1ad"
+    },
+    {
+      "file": "tail-wspr-minimal-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ad9d31f3831dddaa10c62ed09333f6bfb7c4ac151ec44a5c233f419d4951ada8"
+    },
+    {
+      "file": "tail-wspr-minimal-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "30435847c3061f0b389ad8a5eab7015add3db90e920cfff452a61145990bf582"
+    },
+    {
+      "file": "text-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "4c998d48a34b6fae07ce997dbef7a741560284d5f13e32aefdfc07c8c68b0061"
+    },
+    {
+      "file": "text-invalid-utf8.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b8ad80427a864833e4d1ba63126cd4566231eef97763a2dabdbc368fb4cf755a"
+    },
+    {
+      "file": "text-null.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "a419093589a9c453a9e89696da9370df790dee94abe0eb2b1fc36f3b350dd99c"
+    },
+    {
+      "file": "text-unicode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ee70f35c7a86f5b3d54addb3eb9eed4c2573f09d08ad9e61c87ed9cff8d05657"
+    },
+    {
+      "file": "time-bad-calendar-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "99634a6ab4b1eb2292535705d07c14f455e433e34cf3c2cefad640758f985096"
+    },
+    {
+      "file": "time-bad-calendar-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "fbba2052ebbcb03a253cb8d8400f997845bf8d6ef7c4378da034d0ccccf4ae2d"
+    },
+    {
+      "file": "time-bad-calendar-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ec9fcb27350d0ce29da412c0560b2b6434ea58b75f3636a3bea41f75178f6090"
+    },
+    {
+      "file": "time-bad-clock-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "90c5f48e4a7665f8f4d956c66432279d3602784ec8b0d7e8fab1059749ed4054"
+    },
+    {
+      "file": "time-bad-clock-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "87c984212616283f26243da26abf7e32f23199bdf474700504a6d1c3cea8b16a"
+    },
+    {
+      "file": "time-bad-clock-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5f3ca84b16d367316c6f90ea0f99211aab5a4c8126c681e85e7ebe37d851e3b4"
+    },
+    {
+      "file": "time-custom-zone-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5e4007b4475fe8aa229683cf5db6237e2ccbc3b00c7f199aaa4fb6eb53c87f22"
+    },
+    {
+      "file": "time-custom-zone-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "dfcaf1ad3822174f39346de22ee4e1ef7f5cd3947a74f688591f6671632b3df3"
+    },
+    {
+      "file": "time-custom-zone-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "0c9852fc5d94f6d1b2649f2f824e1fe0ae918e7ba9b5f53e769000b1680f221f"
+    },
+    {
+      "file": "time-invalid-utf16-zone-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5e4007b4475fe8aa229683cf5db6237e2ccbc3b00c7f199aaa4fb6eb53c87f22"
+    },
+    {
+      "file": "time-invalid-utf16-zone-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f1e90fc1fc9e59954d81af3dd1d42bc9eae262c00c31a111716b6726e8f1cba0"
+    },
+    {
+      "file": "time-invalid-utf16-zone-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "3dc1f6d7dbca977d64941d1db6fdf20cb7cc416609f451a0e70f82aeccea0ee5"
+    },
+    {
+      "file": "time-local-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "73bf3dedb58ae86a130975da58e178f4b27e51ddd4077145ae2a949a60c60633"
+    },
+    {
+      "file": "time-local-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e906212b9ce01d7a042cbec33db3d256fb65ad4db0845b4c64f50a3291d53a01"
+    },
+    {
+      "file": "time-local-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "7e2f1c9a9bc3eb67b68d6c5c79fed8f53beaab89b8b68791a46e950049bba383"
+    },
+    {
+      "file": "time-named-zone-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5e4007b4475fe8aa229683cf5db6237e2ccbc3b00c7f199aaa4fb6eb53c87f22"
+    },
+    {
+      "file": "time-named-zone-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "1f3617855e7af1bc95adc37f82c21145d6b2796964f563767aa5e41963833a7b"
+    },
+    {
+      "file": "time-named-zone-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5f895ecf73ff20ec2726629a8b180375f7052341bd670310b558b374ca480a04"
+    },
+    {
+      "file": "time-null-s1.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f00dc715a6de78904c752b96e9e98a5a6a111b16f17b74108c8db56956b4b940"
+    },
+    {
+      "file": "time-null-s2.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "aff0e9fe32fc0b362024973ed8910d32a9a28f1fd5933ddae9d9f83883f0108b"
+    },
+    {
+      "file": "time-null-s3.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d7daf59d48adaa017c14d8013215e9102ee20f1d57e7785a3ba404ad79d57e58"
+    },
+    {
+      "file": "truncated-type-00-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "97b9a8064f9edc711b4d5378c251dc87ed93fb58cf112b0599924bb8194209cb"
+    },
+    {
+      "file": "truncated-type-00-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "60e23d67888f6084c80ede7b2ddb6449939d43c3f4a62a2a073c6f69ca7456bb"
+    },
+    {
+      "file": "truncated-type-00-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "2612dd3f3f864db0e5956bb51fa841d42d8f38be8422f7f04c87f7b5f11ff001"
+    },
+    {
+      "file": "truncated-type-01-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ae871c86d775995fc66139f22ccbdb9001b1241a9c838c7e174aedf1eb26468b"
+    },
+    {
+      "file": "truncated-type-01-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e9b4d8ddd86aa2e80753457c728e48a376424ff13182a54c3e826fa5bcabcf36"
+    },
+    {
+      "file": "truncated-type-01-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5a22591f2709993e5770f62054dfb29a96f06296c4d332db6a5849346fbc3ca2"
+    },
+    {
+      "file": "truncated-type-02-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5e7640fcafd9a60920ebdc282fc57c2ca45728cf867144914f146d89f0b49b6c"
+    },
+    {
+      "file": "truncated-type-02-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "19454382f4a07d3775b4808e1f0715c7725a3785f212e28d0207136828922a5c"
+    },
+    {
+      "file": "truncated-type-02-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5b4238a5431144b346c8f43114b8243835197c88d28593ac7a45a44727927e9a"
+    },
+    {
+      "file": "truncated-type-03-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d57588517897bbab52066a922ac8b5695dd0503a049aa299e26114470b8234b1"
+    },
+    {
+      "file": "truncated-type-03-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "3fbc589e9b0bf7917bbc5a18e25becc2c0b42185db629082759b5d57f02b65f7"
+    },
+    {
+      "file": "truncated-type-03-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "3e708668b5aa461f07653f26fa0055f2284dba89b110ec8af9a9f5be77db8361"
+    },
+    {
+      "file": "truncated-type-04-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "4269b7064d6e7fbed6a1dadb11d1616cba8328e628595a1455673185dca8f5c5"
+    },
+    {
+      "file": "truncated-type-04-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "cc509a4151c8c3c3434e82434e1c3bdc5248d7996060f2efc58063062f9ea849"
+    },
+    {
+      "file": "truncated-type-04-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "c38afb3da5070b94cbb2b4bc5fbfb76f7ff912fcb65def5e18a039d52a494791"
+    },
+    {
+      "file": "truncated-type-05-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f43d98e245b81f5813e6bc252e0d4883542c4eab857bbc612d316976b232a487"
+    },
+    {
+      "file": "truncated-type-05-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "3a3a4c604ce5e0e9733223b9048d5af2dee03a9039b39b60c53b0966329f47aa"
+    },
+    {
+      "file": "truncated-type-05-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "c28cd038fedc2cbc7a0c4ced173c1c0453198c4e1c3128e6436cd7f26cc5d392"
+    },
+    {
+      "file": "truncated-type-06-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b28a7a1d5a2a6b200470a2ddf2b64a9a255656d712eea25e36a2bd5c883e7a83"
+    },
+    {
+      "file": "truncated-type-06-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "dad3d0cfce5b7130488e2eea49d4ab964dc1be30ccb1ee63949b2b4f7e8a9d5a"
+    },
+    {
+      "file": "truncated-type-06-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "3a53bc158204a24ffbbb0182bd331b53b1832fda05afde96275c58a061a9e987"
+    },
+    {
+      "file": "truncated-type-07-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "c3df1391990bb57296c0774d69b5d68c2a3104f1c19573e2c3d0bd9423f4dbc9"
+    },
+    {
+      "file": "truncated-type-07-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "8f0b728c36c3331a5154c322fe80b816cacf991b2c1d8801b46f6ee6d0658b9f"
+    },
+    {
+      "file": "truncated-type-07-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "bb5214b4aa5463d1332138a5302292cc654242d2dad93d297573aa38ed664332"
+    },
+    {
+      "file": "truncated-type-08-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "18b34f29abb871bd0c03e0ec963aea5c94347f50e6f6090f46e5b03cf23de12b"
+    },
+    {
+      "file": "truncated-type-08-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d96b077a665170dcb5931237e04f343e098c34dec6170af45e61468e4a8c5789"
+    },
+    {
+      "file": "truncated-type-08-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "182bf60969b57a145ab1a0e9391ebb9fd08f09d7c8698d2e425c7a9ccf607679"
+    },
+    {
+      "file": "truncated-type-09-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "2934761211e594295e4f24871debd694503bf3fed0cd318c975c8862610c2d6d"
+    },
+    {
+      "file": "truncated-type-09-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "da8ff2c4c9e2274d90caa7766186ab1d9f4e282bc48682439a955fdfbeb915e9"
+    },
+    {
+      "file": "truncated-type-09-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "38fac81704c03e705fa01c866435252b7f3bd880437993f213f117429c192e5c"
+    },
+    {
+      "file": "truncated-type-10-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "335c131f0535add38d878bb0bce69eb6f67600e3211080c4985bea0a0bf9b0b4"
+    },
+    {
+      "file": "truncated-type-10-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "5437028fc751b4cb704378f14a6168b795903162a5a23edc85519d0bd223a34a"
+    },
+    {
+      "file": "truncated-type-10-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "d8f7fa96a95b557363fd71472129552eb212fc926b57d8b9236be1ace5513adc"
+    },
+    {
+      "file": "truncated-type-11-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b246f4ac35e3c66b3f144714c889dc6520358f0567db99db8f6574e14959f36a"
+    },
+    {
+      "file": "truncated-type-11-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "4c5753ea53f9c1a5cdd269f3b6a2439b751d812bf3e2d9de45a9985d712a6919"
+    },
+    {
+      "file": "truncated-type-11-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "9bab0d89ac280326e516c2c5b30069f3c71e8b8a52c6f3eade19dc5411981c4b"
+    },
+    {
+      "file": "truncated-type-12-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "ae9d84e4572ac1911b81cb5f15ebafcc8ddcae4a30412438bc683ff6593209b4"
+    },
+    {
+      "file": "truncated-type-12-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "0cd72d9e74bb9c4605b43a3aa85cba780a9beb7e7c0b6556db4079b3597d3714"
+    },
+    {
+      "file": "truncated-type-12-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "16e0a4774560ff75b936d79036c544ca1360e8d8689b1e4433f500a38950552d"
+    },
+    {
+      "file": "truncated-type-13-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "a89134b67667ffdd876e96bfc50f4691d33b4c7ec8875c06faefc2ed06d1d2b3"
+    },
+    {
+      "file": "truncated-type-13-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "e3b9804e41c9b5416ae05a5b43bb49836c52bac7eba812ade7e7a67e20ab664e"
+    },
+    {
+      "file": "truncated-type-13-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "f952838009baa31963dafdceaad5ba285a9cf0405f78d0f36bf119d99693c64b"
+    },
+    {
+      "file": "truncated-type-14-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "018f5c0f77b38ed50c187dbc8a53323f4a237a3e05d78e84eca81819356d82dd"
+    },
+    {
+      "file": "truncated-type-14-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "2dd36cc11ed77fcbe76bef774d3ce8c3a4278288072ac6a32751a95430f983fa"
+    },
+    {
+      "file": "truncated-type-14-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "b8f673dc17870c4f4ef2c1f8e9974e7bbd50374fe1a1c8a8e8f083006e9da4e5"
+    },
+    {
+      "file": "truncated-type-15-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "4789efadf8b104353c41f1cf0f35410f190fa48c4bb13d72aca11e05241cadf5"
+    },
+    {
+      "file": "truncated-type-15-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "9ed566b89803db72d3d452edbe5cbf09a31d62fec16106e3750cb6a82c097699"
+    },
+    {
+      "file": "truncated-type-15-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "78412efd14eac56031eb6a710200583f245d7d8e2d9c13edb632d812be3299d1"
+    },
+    {
+      "file": "truncated-type-16-s1.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "8f114efc1846c9e410e3add40f4b360fbd726b02574db414f95acbbb543e726b"
+    },
+    {
+      "file": "truncated-type-16-s2.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "695c14ab8b5705c0db5319856b5560e27b782f4a75b7eaa6324ba8aa02c081ae"
+    },
+    {
+      "file": "truncated-type-16-s3.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "7147a1c08a97ce37d359e24bf7be9250010ced97565de6951e2d78e4d035e613"
+    },
+    {
+      "file": "zone-empty.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "bc0b6b4e86d25d94b693e8026ac1097f1ae1532d9823c5a55ccf97c739fe814c"
+    },
+    {
+      "file": "zone-null.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "sha256": "c3a6d87321671fb47310a80f055e5479c884942cbf010a04b97b2fa00c2241d9"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "command",
+  "input": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "kind": "control",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "wsjtx.configure",
+        "mode": "",
+        "frequency_tolerance_hz": 4294967295,
+        "sub_mode": "",
+        "fast_mode": false,
+        "tr_period_seconds": 4294967295,
+        "rx_offset_hz": 4294967295,
+        "dx_call": "",
+        "dx_grid": ""
+      }
+    },
+    "options": {
+      "schema": 3
+    }
+  },
+  "expected": {
+    "data": "rbzL2gAAAAMAAAAPAAAADXRlc3QtaW5zdGFuY2UAAAAA/////wAAAAAA//////////8AAAAAAAAAAA=="
+  }
+}

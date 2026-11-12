@@ -5,11 +5,20 @@
 
 ### Added
 
+- Implementable draft core and WSJT-X profile for QGI-SPEC-001: Annexes A, B and F,
+  independent conformance vectors and their deterministic generator; record issue #5 specification
+  decisions and the first-release delivery order.
+
 - Draft specification `spec/QGI-SPEC-001.md` (QG Interop, language-neutral, as ADIF is) and
   `spec/QGI-RI-001.md` (this library as its reference implementation, and the CLI, simulator and
-  QSO Graph Desktop as its proofs). Not yet implementable: review items are in #5.
+  QSO Graph Desktop as its proofs). Initial review items are tracked in #5.
 
 ### Changed
+
+- Revise QGI-SPEC-001 for commands built from fields, shared operations, MQTT publish envelopes,
+  zero-or-more events and bounded template sessions; add five family placeholders and the
+  informative Annex Z design check, result events, and command/schema regression vectors.
+  The first release now covers six protocol families; implementation alignment remains separate.
 
 - Renamed to QG Interop before its first release: the library is `qso-graph-interop`, the CLI
   package `qso-graph-interop-cli` and the command `qg-interop`. Nothing was published under the

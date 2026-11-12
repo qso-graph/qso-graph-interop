@@ -1,0 +1,46 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "rbzL2gAAAAMAAAAPAAAADXRlc3QtaW5zdGFuY2UAAAAA/////wAAAAAA//////////8AAAAAAAAAAA==",
+    "context": {
+      "direction": "to_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "native_version": "3",
+      "kind": "control",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "wsjtx.configure",
+        "mode": "",
+        "frequency_tolerance_hz": 4294967295,
+        "sub_mode": "",
+        "fast_mode": false,
+        "tr_period_seconds": 4294967295,
+        "rx_offset_hz": 4294967295,
+        "dx_call": "",
+        "dx_grid": ""
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAAPAAAADXRlc3QtaW5zdGFuY2UAAAAA/////wAAAAAA//////////8AAAAAAAAAAA=="
+      }
+    }
+  },
+  "reencode": {
+    "data": "rbzL2gAAAAMAAAAPAAAADXRlc3QtaW5zdGFuY2UAAAAA/////wAAAAAA//////////8AAAAAAAAAAA=="
+  }
+}
