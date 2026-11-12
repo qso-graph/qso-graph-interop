@@ -1676,7 +1676,27 @@ def n1mm_review_vectors(s, positive):
     positive('review-score-nonselected-numeric', b'<dynamicresults><breakdown><qso band="20" mode="CW">' + b'9' * 129 + b'</qso></breakdown></dynamicresults>', 'score', {})
     positive('review-score-duplicate-before-limit', b'<dynamicresults><breakdown><qso band="total" mode="ALL">' + b'9' * 129 + b'</qso><qso band="total" mode="ALL">1</qso></breakdown></dynamicresults>', 'score', {})
     positive('review-score-container-before-limit', b'<dynamicresults><breakdown><point band="total" mode="ALL">' + b'9' * 129 + b'</point></breakdown><breakdown/></dynamicresults>', 'score', {})
+    # Numeric references must never acquire invalid-unit provenance. These three
+    # collision cases independently exercise leaf preservation, attributes and
+    # the decoded-text budget (one invalid UTF-16 unit counts as two bytes).
+    positive('review-invalid-unit-reference-leaf', b'<RadioInfo><Mode>\xff&#xF0000;</Mode></RadioInfo>',
+             'radio_state', {'mode': {'utf8_bytes': [255, 243, 176, 128, 128]}})
+    positive('review-invalid-unit-reference-attribute', b'<RadioInfo a="&#xF0000;"><Mode>\xff</Mode></RadioInfo>',
+             'radio_state', {'mode': {'utf8_bytes': [255]}})
+    positive('review-invalid-unit-reference-budget-boundary',
+             ('<RadioInfo><Mode>\ud800' + '\u0800' * 21833 + 'ab&#xF0000;</Mode></RadioInfo>').encode('utf-16', 'surrogatepass'),
+             'radio_state', {'mode': {'utf16_units': [55296] + [2048] * 21833 + [97, 98, 56192, 56320]}})
+    # Expat can hold trailing ']' across input chunks, including inside CDATA.
+    # Both a literal and a referenced U+FFFD remain valid beside an invalid unit.
+    positive('review-invalid-unit-chunk-boundary', b'<RadioInfo><Mode>]\xff<![CDATA[]]\xfe]]>\xef\xbf\xbd&#xFFFD;</Mode></RadioInfo>',
+             'radio_state', {'mode': {'utf8_bytes': [93, 255, 93, 93, 254, 239, 191, 189, 239, 191, 189]}})
+    positive('review-pi-target-boundary', ('<RadioInfo><?' + 'n' * 128 + '?></RadioInfo>').encode(),
+             'radio_state', {})
     for name, raw, category in [
+        ('invalid-unit-reference-budget-overflow', ('<RadioInfo><Mode>\ud800' + '\u0800' * 21834 + '&#xF0000;</Mode></RadioInfo>').encode('utf-16', 'surrogatepass'), 'oversized'),
+        ('invalid-unit-unfinished-attribute', b'<RadioInfo a="\xff', 'truncated'),
+        ('nul-before-eof', b'<RadioInfo>\x00', 'malformed'),
+        ('pi-target-overflow', ('<RadioInfo><?' + 'n' * 129 + '?></RadioInfo>').encode(), 'oversized'),
         ('declaration-eq-encoding', b'<?xml version="1.0" encoding = "UTF-16"?><RadioInfo/>', 'malformed'),
         ('declaration-eq-version', b'<?xml version = "1.1"?><RadioInfo/>', 'unsupported_version'),
         ('namespace-lexical-name', ('<RadioInfo xmlns:' + 'n' * 129 + '="urn:synthetic"/>').encode(), 'oversized'),
@@ -1826,8 +1846,8 @@ def n1mm_compatibility(s):
 def check_n1mm_xml(raw):
     """Independent Annex D XML acceptance oracle; no codec imports or resolution.
 
-    Expat validates XML grammar/namespaces. Reversible private-use sentinels let
-    it validate structure around invalid text without changing byte accounting.
+    Expat validates XML grammar/namespaces. Invalid units travel in separate
+    input chunks with byte-position provenance, never in a character lookup.
     The returned small tree is solely for independent text/mapping checks.
     """
     import re
@@ -1889,22 +1909,8 @@ def check_n1mm_xml(raw):
     for token in isolation_tokens:
         if re.match(r'<!\s*(?:DOCTYPE|ENTITY)\b', token[0]):
             raise ValueError('malformed')
-    # Pick collision-free sentinels, even for actual private-use text in input.
-    restore = {}
-    for c in set(masked):
-        if 0xd800 <= ord(c) <= 0xdfff:
-            marker = 0xf0000 + len(restore)
-            while chr(marker) in masked or chr(marker) in restore:
-                marker += 1
-            restore[chr(marker)] = c
-    substitutions = {ord(c): marker for marker, c in restore.items()}
-    masked = masked.translate(substitutions)
-
-    def original(value):
-        return ''.join(restore.get(c, c) for c in value)
-
     def valid(value):
-        if any(c in restore for c in value):
+        if invalid_markup or any(0xd800 <= ord(c) <= 0xdfff for c in value):
             raise ValueError('malformed')
 
     def lexical(name):
@@ -1915,16 +1921,20 @@ def check_n1mm_xml(raw):
         return len(name.encode(enc))
 
     parser = expat.ParserCreate(namespace_separator='|')
+    parser.buffer_text = False
     parser.namespace_prefixes = True
     parser.ordered_attributes = True
     depth = count = attrs = expanded = 0
     stack, pending_namespaces = [], []
     root = None
+    invalid = None
+    invalid_seen = False
+    invalid_markup = False
 
     def add_text(value):
         nonlocal expanded
         for c in value:
-            expanded += (2 if enc.startswith('utf-16') else 1) if c in restore else len(c.encode('utf-8'))
+            expanded += (2 if enc.startswith('utf-16') else 1) if 0xd800 <= ord(c) <= 0xdfff else len(c.encode('utf-8'))
             if expanded > 65507:
                 raise ValueError('oversized')
 
@@ -1958,32 +1968,64 @@ def check_n1mm_xml(raw):
 
     def end(name):
         nonlocal depth
+        valid(name)
         stack.pop()
         depth -= 1
 
     def chars(value):
+        nonlocal invalid_seen
+        if invalid is not None:
+            position, unit = invalid
+            offset = position - parser.CurrentByteIndex
+            data = value.encode('utf-8')
+            if 0 <= offset < len(data):
+                # A callback may include ']' held from the preceding chunk.
+                # Only this source position belongs to the invalid unit; actual
+                # U+FFFD text and entity expansions have different positions.
+                assert data[offset:] == b'\xef\xbf\xbd'
+                value = data[:offset].decode('utf-8') + unit
+                invalid_seen = True
         if not stack:
             valid(value)
         add_text(value)
         if stack:
-            stack[-1]['text'] += original(value)
+            stack[-1]['text'] += value
 
     def namespace(prefix, uri):
         pending_namespaces.append((prefix or '', uri or ''))
+
+    def instruction(target, data):
+        valid(target)
+        valid(data)
+        if name_length(target) > 128:
+            raise ValueError('oversized')
 
     parser.StartElementHandler = start
     parser.EndElementHandler = end
     parser.CharacterDataHandler = chars
     parser.StartNamespaceDeclHandler = namespace
     parser.CommentHandler = valid
-    parser.ProcessingInstructionHandler = lambda target, data: (valid(target), valid(data))
+    parser.ProcessingInstructionHandler = instruction
     try:
-        parser.Parse(masked, True)
+        position = 0
+        for index, part in enumerate(re.split(r'([\ud800-\udfff])', masked)):
+            invalid = (position, part) if index % 2 else None
+            invalid_seen = False
+            data = ('\ufffd' if invalid is not None else part).encode('utf-8')
+            parser.Parse(data, False)
+            # Only character data may consume an invalid unit. In markup the
+            # parser buffers it instead. Reject the completed construct in its
+            # handler, leaving unfinished markup at EOF classified as truncated.
+            if invalid is not None and not invalid_seen:
+                invalid_markup = True
+            position += len(data)
+        invalid = None
+        parser.Parse(b'', True)
     except expat.ExpatError as error:
         unfinished = {expat.errors.codes[k] for k in (expat.errors.XML_ERROR_NO_ELEMENTS,
             expat.errors.XML_ERROR_UNCLOSED_TOKEN, expat.errors.XML_ERROR_PARTIAL_CHAR,
             expat.errors.XML_ERROR_UNCLOSED_CDATA_SECTION)}
-        if error.code in unfinished or error.code == expat.errors.codes[expat.errors.XML_ERROR_INVALID_TOKEN] and depth and not content.rstrip().endswith('>'):
+        if error.code in unfinished:
             raise ValueError('truncated') from error
         raise ValueError('malformed') from error
 
@@ -2254,6 +2296,7 @@ def validate_n1mm(suite, producer_strict):
     # can hide: replacement bytes, retained entities/CRLF, CDATA delimiters,
     # ignored invalid mixed content and a default-namespaced common leaf.
     for name, changed in [
+        ('review-invalid-unit-reference-leaf', {'mode': {'utf8_bytes': [255, 255]}}),
         ('review-invalid-utf8-budget', {'radio': {'instance': '\ufffd' * 22000}}),
         ('review-invalid-utf8-cdata', {'radio': {'instance': {'utf8_bytes': list(b'<![CDATA[A\xffB]]>')}}}),
         ('review-invalid-text-interactions', {'radio': {'instance': {'utf8_bytes': list(b'A&amp;\xff<\xfe\r\nZ\r\r')}}}),

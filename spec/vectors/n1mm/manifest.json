@@ -6752,6 +6752,22 @@
       "sha256": "fc3b569e1dfa92951cff09e70f9fa9f6a4ea03730106d6c1ead1d337bbe2bcc4"
     },
     {
+      "file": "review-error-invalid-unit-reference-budget-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7e2ec70facf99a5417589ac4ebbf31a51f44762816982a4dfd6d46e530fa389c"
+    },
+    {
+      "file": "review-error-invalid-unit-unfinished-attribute.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "44c290ccd5d27c8f1fcea8dba3de04a017cc2d546c0ab24ff4651587304c0df4"
+    },
+    {
       "file": "review-error-isolation-before-resource.json",
       "class": "negative",
       "spec": "0.1.0",
@@ -6766,6 +6782,22 @@
       "family": "n1mm",
       "mapping": 1,
       "sha256": "929df15895b49dfac08f9b69c5ac5a2ec1995147619f2f44c43a18c9b6a7e1d8"
+    },
+    {
+      "file": "review-error-nul-before-eof.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "123ac23a400fcf7d8ddcae4cdcf290f54c4b82a693c636ec3b9d707de72f3bb6"
+    },
+    {
+      "file": "review-error-pi-target-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8623c2be47b00921e6a51293f6009d85de11653eca690936120c03992d5ad06c"
     },
     {
       "file": "review-error-resource-before-later-malformed.json",
@@ -6864,6 +6896,38 @@
       "sha256": "7822e22606b25481a746552d7830cb993217a6dcb2b8a6e539c48e80c0c47e0c"
     },
     {
+      "file": "review-invalid-unit-chunk-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c72ecfc74dbdf0dade4447524488a1c93610a8d12ad6bc1686768342b3b445b1"
+    },
+    {
+      "file": "review-invalid-unit-reference-attribute.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5e5eb075133d16babfc01072e6a22c3d7fd48368d88f47b3b7b61a3b98626987"
+    },
+    {
+      "file": "review-invalid-unit-reference-budget-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "33161a622a1b9f4dd5ce07c3b38bdbe3254a23759381299ed2bf35a575cd9378"
+    },
+    {
+      "file": "review-invalid-unit-reference-leaf.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ac3e781b1781973830d52b81531baf69c0955d4adc0786185eab98ef3093c002"
+    },
+    {
       "file": "review-invalid-utf16-interactions.json",
       "class": "positive",
       "spec": "0.1.0",
@@ -6910,6 +6974,14 @@
       "family": "n1mm",
       "mapping": 1,
       "sha256": "485f3ea35d396f1fc36010a852c5c287597881e9e2ab3fbd09d1ce480432470c"
+    },
+    {
+      "file": "review-pi-target-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9d10b72d8cac32024a321af7877a70c7421344b3efbafc10dc86e4145fbbc821"
     },
     {
       "file": "review-score-container-before-limit.json",
