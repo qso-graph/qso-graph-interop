@@ -17,7 +17,7 @@
       },
       "fields": {
         "operation": "send_text",
-        "text": "Q1AAA &<>\r\n\t\"",
+        "text": "Q1AAA &<>\n\t\" &amp; &#13;",
         "transmit": false
       }
     },
@@ -25,7 +25,7 @@
   },
   "expected": {
     "requests": [
-      "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48bWV0aG9kQ2FsbD48bWV0aG9kTmFtZT50ZXh0LmFkZF90eDwvbWV0aG9kTmFtZT48cGFyYW1zPjxwYXJhbT48dmFsdWU+PHN0cmluZz5RMUFBQSAmYW1wOyZsdDsmZ3Q7JiMxMzsKCSI8L3N0cmluZz48L3ZhbHVlPjwvcGFyYW0+PC9wYXJhbXM+PC9tZXRob2RDYWxsPg=="
+      "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48bWV0aG9kQ2FsbD48bWV0aG9kTmFtZT50ZXh0LmFkZF90eDwvbWV0aG9kTmFtZT48cGFyYW1zPjxwYXJhbT48dmFsdWU+PHN0cmluZz5RMUFBQSAmYW1wOyZsdDsmZ3Q7CgkiICZhbXA7YW1wOyAmYW1wOyMxMzs8L3N0cmluZz48L3ZhbHVlPjwvcGFyYW0+PC9wYXJhbXM+PC9tZXRob2RDYWxsPg=="
     ]
   }
 }

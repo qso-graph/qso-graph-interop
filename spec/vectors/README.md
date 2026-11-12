@@ -175,18 +175,21 @@ Annexes G or H is claimed by passing a shape check.
 
 The [fldigi manifest](fldigi/manifest.json) pins release **4.2.13**, retrieval
 **2026-11-12**, the author's source tarball URL/SHA-256, the SourceForge listing's
-**2026-08-03 14:16:04 UTC** source date, and all 16 evidence hashes listed in
+**2026-08-03 14:16:04 UTC** source date, and all 18 evidence hashes listed in
 [Annex E](../annex-e-fldigi.md). Archive hashes use distinct member paths so files
 sharing one tarball URL retain separate hashes. No git tag/commit is inferred
 from a release tarball. Its profile hash also
 identifies the complete Annex E text. The generator entry point remains
-`scripts/gen_vectors.py`; `scripts/gen_fldigi_vectors.py` contains the independent
-standard-library fixture builders and XML-RPC policy oracles. No upstream source
+`scripts/gen_vectors.py`, which contains the authoritative independent Annex E
+policy, mapping, verification and command checks. `scripts/gen_fldigi_vectors.py`
+supplies the standard-library fixture builders; its older policy helpers are not
+used by the entry point. No upstream source
 or implementation is imported and no network access occurs during generation.
 
-The fldigi suite has **436 positive**, **56 command**, **21 command_negative**,
-**77 negative**, and **7 compatibility** vectors (**597 total**), with **436
-embedded byte-preserving re-encoding checks**. Every one of the 50 mapped methods
+The fldigi suite has **453 positive**, **56 command**, **23 command_negative**,
+**99 negative**, and **13 compatibility** vectors (**644 total**), with **453
+embedded original-byte retrieval checks** and separate observed-consistency checks
+that return bytes only when verification is available. Every one of the 50 mapped methods
 has a request and response case; all 124 remaining pinned names have native
 request and response cases. The suite covers all XML-RPC value types, nil,
 untyped/empty values, ordered arrays, duplicate struct names, unknown types and
@@ -224,10 +227,12 @@ atomicity or rollback. The codec never sends requests. Command negatives plant
 missing/disallowed fields, invalid XML text, numeric bounds, unsupported mappings,
 metadata/options and body overflow. Canonical-byte mutations plant reversed or
 missing requests, self-closing empty strings, formatting newlines, leading zeros,
-changed integer tags and lost CR escaping.
+changed integer tags and a numeric reference substituted for literal reference text.
+Portable string commands reject CR; the source-derived bundled argument decoder
+checks every emitted string independently of a conforming XML parser.
 
 The independent checker applies the bounded XML isolation oracle used by Annex D
-with Annex E's 71,155-byte body/text bound, then separately checks XML-RPC grammar,
+with Annex E's 262,144-byte body/text and 8,192-element bounds, then separately checks XML-RPC grammar,
 value limits, scalar acceptance, method/association rules and mapped fields. XML
 attacks include external/parameter entities without resolving them, DOCTYPE,
 unknown entities, forbidden characters, invalid markup and resource overflow.
@@ -240,3 +245,37 @@ RF/audio/state swaps, raw-text replacement, entity/line-ending errors and strict
 producer unknown-member failures. Compatibility recognized views and native
 verification are checked separately from preserved content. Passing these vectors
 does not claim a Rust fldigi codec or live-peer interoperability.
+
+
+The independent Annex E review adds **35 vectors** without changing mapping
+revision 1. Existing requirement IDs are retained. Each row has a regression
+that fails against the reviewed text/checks and passes after correction; the
+missing-list-coverage and footer cases also plant prose omissions.
+
+| Finding | Requirement IDs | Change and representative planted case |
+|---|---|---|
+| 1 | QGI-FLD-0060, 0061, 0068 | Pin S17; reject CR in all string commands. `command-bad-cr` previously encoded a reference delivered literally by the bundled decoder; now returns `invalid_value`. `command-escaping` also preserves literal entity-looking text in one pass. |
+| 2 | QGI-FLD-0005, 0021, 0027, 0028, 0046 | Fault shape precedes extension dispatch. `fault-optional-future-missing-code` changes from accepted native to `malformed`; `fault-optional-future` changes from native to error result. Known bad optional/required scalars still fail. |
+| 3 | QGI-MAP-0002, 0015; QGI-FLD-0013, 0021 | Core explicitly permits the family's isolated opaque fallback. `value-future-type` remains native; `compatibility-opaque-type` and `compatibility-opaque-root` require verification `unavailable`. Removing the core exception fails the prose contract. |
+| 4 | QGI-SER-0010; QGI-FLD-0027, 0066 | Context validation has its own ordered stage. ASCII, Unicode and escaped contexts pass at 4,096 compact bytes and fail at 4,097; `context-hop-overflow` checks a hop. Competing XML, scalar and association errors precede context overflow. |
+| 5 | QGI-FLD-0011, 0039, 0065 | Compare recognized envelope presence/values, kind and fields before verified re-encoding. `reencode-bad-native-version`, `reencode-bad-wire-id`, `reencode-bad-kind` and `reencode-bad-mapped-value` require `invalid_value`. Adding native_version to `compatibility-new-mapping` is rejected. Range and fault cases distinguish available and unavailable association-dependent checks. |
+| 6 | QGI-FLD-0029–0032 | Literal operation/field expectations are separate from builders and checked against every mapping-table column. In-memory builder operation, request-field, response-field and kind mutations are regenerated and rejected. The reported `modem.get_name` → `fldigi.broken` mutation previously passed regeneration and validation. |
+| 7 | QGI-FLD-0014, 0016, 0017, 0066 | Accept the complete list: 176 registrations including duplicates, 1,942 elements and three members per row. `fldigi-list-full-source-shape` uses the released order/envelope and 99 synthetic help bytes per row, at the longest released help length: 53,325 body bytes, expected native success with exact re-encoding and XML view. The fixed-source audit sets fourfold headroom at 8,192 elements, 1,024 array values and 262,144 body/text bytes; params remain 32 and members remain 256. Each ceiling has an exact-limit and limit-plus-one case. |
+| 8 | QGI-FLD-0007 | Supplied null differs from absence. `association-null` changes from accepted to `invalid_value`. |
+| 9 | Core annex footer | List B, D, E and I as defined normative profiles; reserve C and G. Record D’s implemented N1MM reader/writer separately from E’s pending implementation. Reintroducing E as reserved, dropping D from defined profiles or losing D’s implementation status fails the prose contract. |
+
+The response-size audit also adds full 169-value modem and 101-value IO name
+lists, the 177-value bundled system.listMethods, a native multicall with success
+and fault rows, the three-member released version struct, and full 4,096-byte RX/TX/RXTX/
+flmsg buffers with the bundled serializer's 72-column base64 line breaks.
+Processed UTF-16 text has exact 262,144/262,145-byte cases. Actual compact output
+has exact 1,048,576/1,048,577-byte cases whose input bodies satisfy every XML
+resource bound. The old sufficient universal proof remains valid through 71,155
+input bytes; at the new ceiling it gives 3,595,096 bytes, so actual output size is
+checked atomically. The real 42,903-byte list has a conservative bound of 671,880
+bytes. Caller-populated rig lists, multicall batches, growing RX widget reads and whole logbooks have
+no finite application maximum; the annex records that source limitation explicitly.
+
+These are synthetic contract tests, not captures. The bundled backend's empty-param
+acknowledgments retain their specified malformed outcome; the review does not claim
+live fldigi interoperability.

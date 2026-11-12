@@ -1,0 +1,44 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "fldigi",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIj8+DQo8bWV0aG9kUmVzcG9uc2U+PHBhcmFtcz48cGFyYW0+DQoJPHZhbHVlPjxhcnJheT48ZGF0YT48dmFsdWU+PGFycmF5PjxkYXRhPjx2YWx1ZT5mbGRpZ2k8L3ZhbHVlPjwvZGF0YT48L2FycmF5PjwvdmFsdWU+PHZhbHVlPjxzdHJ1Y3Q+PG1lbWJlcj48bmFtZT5mYXVsdENvZGU8L25hbWU+PHZhbHVlPjxpND4tMTwvaTQ+PC92YWx1ZT48L21lbWJlcj48bWVtYmVyPjxuYW1lPmZhdWx0U3RyaW5nPC9uYW1lPjx2YWx1ZT5mdXR1cmUubWV0aG9kOiB1bmtub3duIG1ldGhvZCBuYW1lPC92YWx1ZT48L21lbWJlcj48L3N0cnVjdD48L3ZhbHVlPjwvZGF0YT48L2FycmF5PjwvdmFsdWU+DQo8L3BhcmFtPjwvcGFyYW1zPjwvbWV0aG9kUmVzcG9uc2U+DQo=",
+    "context": {
+      "direction": "from_application",
+      "exchange": "response",
+      "correlation_id": "synthetic-17"
+    },
+    "request": {
+      "method": "system.multicall"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "kind": "native",
+      "context": {
+        "direction": "from_application",
+        "exchange": "response",
+        "correlation_id": "synthetic-17"
+      },
+      "fields": {},
+      "native": {
+        "format": "fldigi_xmlrpc",
+        "data": "PD94bWwgdmVyc2lvbj0iMS4wIj8+DQo8bWV0aG9kUmVzcG9uc2U+PHBhcmFtcz48cGFyYW0+DQoJPHZhbHVlPjxhcnJheT48ZGF0YT48dmFsdWU+PGFycmF5PjxkYXRhPjx2YWx1ZT5mbGRpZ2k8L3ZhbHVlPjwvZGF0YT48L2FycmF5PjwvdmFsdWU+PHZhbHVlPjxzdHJ1Y3Q+PG1lbWJlcj48bmFtZT5mYXVsdENvZGU8L25hbWU+PHZhbHVlPjxpND4tMTwvaTQ+PC92YWx1ZT48L21lbWJlcj48bWVtYmVyPjxuYW1lPmZhdWx0U3RyaW5nPC9uYW1lPjx2YWx1ZT5mdXR1cmUubWV0aG9kOiB1bmtub3duIG1ldGhvZCBuYW1lPC92YWx1ZT48L21lbWJlcj48L3N0cnVjdD48L3ZhbHVlPjwvZGF0YT48L2FycmF5PjwvdmFsdWU+DQo8L3BhcmFtPjwvcGFyYW1zPjwvbWV0aG9kUmVzcG9uc2U+DQo="
+      }
+    }
+  },
+  "expected_message": {
+    "root": "methodResponse",
+    "xml": "<?xml version=\"1.0\"?>\r\n<methodResponse><params><param>\r\n\t<value><array><data><value><array><data><value>fldigi</value></data></array></value><value><struct><member><name>faultCode</name><value><i4>-1</i4></value></member><member><name>faultString</name><value>future.method: unknown method name</value></member></struct></value></data></array></value>\r\n</param></params></methodResponse>\r\n",
+    "method": "system.multicall"
+  },
+  "reencode": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIj8+DQo8bWV0aG9kUmVzcG9uc2U+PHBhcmFtcz48cGFyYW0+DQoJPHZhbHVlPjxhcnJheT48ZGF0YT48dmFsdWU+PGFycmF5PjxkYXRhPjx2YWx1ZT5mbGRpZ2k8L3ZhbHVlPjwvZGF0YT48L2FycmF5PjwvdmFsdWU+PHZhbHVlPjxzdHJ1Y3Q+PG1lbWJlcj48bmFtZT5mYXVsdENvZGU8L25hbWU+PHZhbHVlPjxpND4tMTwvaTQ+PC92YWx1ZT48L21lbWJlcj48bWVtYmVyPjxuYW1lPmZhdWx0U3RyaW5nPC9uYW1lPjx2YWx1ZT5mdXR1cmUubWV0aG9kOiB1bmtub3duIG1ldGhvZCBuYW1lPC92YWx1ZT48L21lbWJlcj48L3N0cnVjdD48L3ZhbHVlPjwvZGF0YT48L2FycmF5PjwvdmFsdWU+DQo8L3BhcmFtPjwvcGFyYW1zPjwvbWV0aG9kUmVzcG9uc2U+DQo="
+  }
+}

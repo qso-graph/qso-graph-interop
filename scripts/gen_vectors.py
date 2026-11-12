@@ -11,6 +11,8 @@ import base64
 import copy
 import hashlib
 import json
+import math
+import re
 from pathlib import Path
 import struct
 import sys
@@ -1849,7 +1851,7 @@ def n1mm_compatibility(s):
         'expected': {'error': {'category': 'invalid_value'}}})
 
 
-def check_n1mm_xml(raw, *, body_limit=65507, numeric_catalog=True):
+def check_n1mm_xml(raw, *, body_limit=65507, element_limit=1024, numeric_catalog=True):
     """Independent Annex D XML acceptance oracle; no codec imports or resolution.
 
     Expat validates XML grammar/namespaces. Invalid units travel in separate
@@ -1956,7 +1958,7 @@ def check_n1mm_xml(raw, *, body_limit=65507, numeric_catalog=True):
         count += 1
         per_element = len(attributes) // 2 + len(pending_namespaces)
         attrs += per_element
-        if depth > 16 or count > 1024 or per_element > 16 or attrs > 256:
+        if depth > 16 or count > element_limit or per_element > 16 or attrs > 256:
             raise ValueError('oversized')
         names = [lexical(name)] + [lexical(a) for a in attributes[::2]]
         names += ['xmlns' + (':' + prefix if prefix else '') for prefix, _ in pending_namespaces]
@@ -2465,6 +2467,992 @@ def validate_n1mm(suite, producer_strict):
     return 'N1MM requirement IDs, XML isolation/precedence/lexical bounds and processed-text wrappers, exact kHz/Hz and UTC/calendar timestamp oracles with planted failures, canonical command bytes/errors, radio swap sentinels, positive/command schemas and same-MAJOR compatibility shapes checked'
 
 
+
+# Annex E review oracle. Fixture builders remain in gen_fldigi_vectors; these
+# literal expectations and policy checks never consult its MAPPED or operation().
+# Columns: method | literal operation | request keys | response kind | response key
+FLDIGI_ORACLE = """fldigi.version|fldigi.version||result|text
+rig.get_frequency|fldigi.rig_get_frequency||radio_state|dial_frequency_hz
+main.get_frequency|fldigi.main_get_frequency||radio_state|dial_frequency_hz
+rig.set_frequency|set_frequency|frequency_hz|result|frequency_hz
+main.set_frequency|set_frequency|frequency_hz|result|frequency_hz
+modem.get_carrier|fldigi.modem_get_carrier||radio_state|rx_offset_hz
+modem.set_carrier|fldigi.modem_set_carrier|audio_offset_hz|result|
+modem.get_name|fldigi.modem_get_name||radio_state|mode
+modem.get_mode|fldigi.modem_get_mode||result|text
+modem.get_submode|fldigi.modem_get_submode||radio_state|sub_mode
+modem.set_by_name|fldigi.modem_set_by_name|mode|result|text
+rig.get_mode|fldigi.rig_get_mode||result|text
+rig.set_mode|fldigi.rig_set_mode|mode|result|
+main.get_trx_state|fldigi.main_get_trx_state||radio_state|state
+main.get_trx_status|fldigi.main_get_trx_status||radio_state|state
+main.tx|fldigi.main_tx||result|
+main.rx|fldigi.main_rx||result|
+main.abort|halt_tx||result|
+main.tune|fldigi.main_tune||result|
+rx.get_data|fldigi.rx_get_data||decode|bytes
+text.get_rx|fldigi.text_get_rx|rx_start rx_length|decode|bytes
+text.get_rx_length|fldigi.text_get_rx_length||result|
+text.add_tx|send_text|text|result|
+text.clear_rx|fldigi.text_clear_rx||result|
+text.clear_tx|fldigi.text_clear_tx||result|
+log.get_frequency|fldigi.log_get_frequency||result|text
+log.get_time_on|fldigi.log_get_time_on||result|text
+log.get_time_off|fldigi.log_get_time_off||result|text
+log.get_date_on|fldigi.log_get_date_on||result|text
+log.get_date_off|fldigi.log_get_date_off||result|text
+log.get_call|fldigi.log_get_call||radio_state|dx_call
+log.get_name|fldigi.log_get_name||result|text
+log.get_rst_in|fldigi.log_get_rst_in||result|text
+log.get_rst_out|fldigi.log_get_rst_out||result|text
+log.get_serial_number|fldigi.log_get_serial_number||result|text
+log.get_serial_number_sent|fldigi.log_get_serial_number_sent||result|text
+log.get_exchange|fldigi.log_get_exchange||result|text
+log.get_state|fldigi.log_get_state||result|text
+log.get_province|fldigi.log_get_province||result|text
+log.get_country|fldigi.log_get_country||result|text
+log.get_qth|fldigi.log_get_qth||result|text
+log.get_band|fldigi.log_get_band||result|text
+log.get_sideband|fldigi.log_get_sideband||result|text
+log.get_notes|fldigi.log_get_notes||result|text
+log.get_locator|fldigi.log_get_locator||radio_state|dx_grid
+log.get_az|fldigi.log_get_az||result|text
+log.set_call|fldigi.log_set_call|dx_call|result|
+log.set_locator|fldigi.log_set_locator|dx_grid|result|
+logbook.last_record|fldigi.logbook_last_record||result|text
+logbook.all_records|fldigi.logbook_all_records||result|text
+"""
+FLDIGI_EXPECTATIONS = {p[0]: tuple(p[1:]) for p in
+                       (line.split('|') for line in FLDIGI_ORACLE.splitlines())}
+
+
+def fldigi_operation(method):
+    if method in FLDIGI_EXPECTATIONS:
+        return FLDIGI_EXPECTATIONS[method][0]
+    # Unknown-method faults still use the published token rule, without builders.
+    return 'fldigi.' + (method.removeprefix('fldigi.') if method.startswith('fldigi.')
+                        else method.replace('.', '_'))
+
+
+def fldigi_context_budget(inp):
+    contexts = [inp['context']] + [hop['context'] for hop in inp.get('via', [])]
+    for ctx in contexts:
+        if len(json.dumps(ctx, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode()) > 4096:
+            raise ValueError('oversized')
+    if len(inp.get('via', [])) > 8:
+        raise ValueError('oversized')
+
+
+def fldigi_xmlrpc(raw, substrate):
+    """Independent grammar/type oracle; retains a small tree, not an implementation import."""
+    root, enc = substrate(raw, body_limit=fldigi.LIMIT, element_limit=fldigi.ELEMENT_LIMIT, numeric_catalog=False)
+    values, containers = [], []
+    extended = False
+
+    def shape(node, names=None, leaf=False):
+        if node['attributes'] or '|' in node['name']:
+            raise ValueError('malformed')
+        if leaf:
+            if node['children']:
+                raise ValueError('malformed')
+        elif node['text'].strip(' \t\r\n'):
+            raise ValueError('malformed')
+        if names is not None and [c['name'] for c in node['children']] != names:
+            raise ValueError('malformed')
+
+    def container(node, name, children, maximum):
+        shape(node)
+        if node['name'] != name or any(c['name'] != children for c in node['children']):
+            raise ValueError('malformed')
+        containers.append((node, maximum))
+
+    def value(node):
+        nonlocal extended
+        if node['name'] != 'value':
+            raise ValueError('malformed')
+        shape(node, leaf=not node['children'])
+        if not node['children']:
+            values.append(('string', node))
+            return
+        if len(node['children']) != 1:
+            raise ValueError('malformed')
+        child = node['children'][0]
+        name = child['name']
+        if '|' in name and name.split('|')[1] in ('string', 'int', 'boolean', 'double', 'nil', 'array', 'struct', 'base64', 'i4', 'dateTime.iso8601'):
+            raise ValueError('malformed')
+        if name not in ('int', 'i4', 'boolean', 'string', 'double', 'dateTime.iso8601',
+                         'base64', 'nil', 'struct', 'array'):
+            extended = True
+            return
+        shape(child, leaf=name not in ('struct', 'array'))
+        if name == 'array':
+            shape(child, ['data'])
+            data = child['children'][0]
+            container(data, 'data', 'value', 1024)
+            for item in data['children']:
+                value(item)
+        elif name == 'struct':
+            container(child, 'struct', 'member', 256)
+            for member in child['children']:
+                shape(member, ['name', 'value'])
+                shape(member['children'][0], leaf=True)
+                value(member['children'][1])
+        values.append((name, child))
+
+    name = root['name']
+    if name not in ('methodCall', 'methodResponse'):
+        return root, enc, True, None, None
+    shape(root)
+    if name == 'methodCall':
+        names = [c['name'] for c in root['children']]
+        if names not in (['methodName'], ['methodName', 'params']):
+            raise ValueError('malformed')
+        shape(root['children'][0], leaf=True)
+        params = root['children'][1] if len(names) == 2 else None
+    else:
+        if len(root['children']) != 1 or root['children'][0]['name'] not in ('params', 'fault'):
+            raise ValueError('malformed')
+        params = root['children'][0]
+    if params:
+        if params['name'] == 'fault':
+            shape(params, ['value'])
+            value(params['children'][0])
+        else:
+            container(params, 'params', 'param', 32)
+            if name == 'methodResponse' and len(params['children']) != 1:
+                raise ValueError('malformed')
+            for param in params['children']:
+                shape(param, ['value'])
+                value(param['children'][0])
+    if params and params['name'] == 'fault':
+        fault_value = params['children'][0]
+        if not fault_value['children'] or fault_value['children'][0]['name'] != 'struct':
+            raise ValueError('malformed')
+        members = fault_value['children'][0]['children']
+        for required_name, types in [('faultCode', ('int', 'i4')), ('faultString', ('string',))]:
+            selected = [m['children'][1] for m in members if m['children'][0]['text'] == required_name]
+            if len(selected) != 1:
+                raise ValueError('malformed')
+            node = selected[0]
+            actual_type = node['children'][0]['name'] if node['children'] else 'string'
+            if actual_type not in types:
+                raise ValueError('malformed')
+    if any(len(n['children']) > maximum for n, maximum in containers):
+        raise ValueError('oversized')
+    if any(len(n['text'].strip(' \t\r\n')) > 128 for t, n in values
+           if t in ('int', 'i4', 'boolean', 'double')):
+        raise ValueError('oversized')
+    # Grammar/resource passes finish before any scalar is converted.
+    for typ, node in values:
+        s = node['text'].strip(' \t\r\n')
+        if typ in ('int', 'i4'):
+            if not re.fullmatch(r'[+-]?[0-9]+', s) or not -2**31 <= int(s) < 2**31:
+                raise ValueError('invalid_value')
+            result = int(s)
+        elif typ == 'boolean':
+            if s not in ('0', '1'):
+                raise ValueError('invalid_value')
+            result = s == '1'
+        elif typ == 'double':
+            if not re.fullmatch(r'[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?', s):
+                raise ValueError('invalid_value')
+            result = float(s)
+            if not math.isfinite(result):
+                raise ValueError('invalid_value')
+        elif typ == 'dateTime.iso8601':
+            from datetime import datetime
+            if not re.fullmatch(r'[0-9]{8}T[0-9]{2}:[0-9]{2}:[0-9]{2}', s):
+                raise ValueError('invalid_value')
+            try:
+                datetime(int(s[:4]), int(s[4:6]), int(s[6:8]), int(s[9:11]), int(s[12:14]), int(s[15:17]))
+            except ValueError as error:
+                raise ValueError('invalid_value') from error
+            result = s
+        elif typ == 'base64':
+            token = re.sub(r'[ \t\r\n]', '', s)
+            try:
+                result = base64.b64decode(token, validate=True)
+            except (ValueError, UnicodeError) as error:
+                raise ValueError('invalid_value') from error
+            if base64.b64encode(result).decode() != token:
+                raise ValueError('invalid_value')
+        elif typ == 'nil':
+            if s:
+                raise ValueError('invalid_value')
+            result = None
+        elif typ == 'struct':
+            result = [(fldigi.text_value(m['children'][0]['text'], enc), fldigi.semantic(m['children'][1]))
+                      for m in node['children']]
+        elif typ == 'array':
+            result = [fldigi.semantic(v) for v in node['children'][0]['children']]
+        else:
+            result = fldigi.text_value(node['text'], enc)
+        node['semantic'] = ('int' if typ == 'i4' else typ, result, node['text'])
+    fault = None
+    if params and params['name'] == 'fault':
+        members = params['children'][0]['children'][0]['children']
+        code = next(m['children'][1] for m in members if m['children'][0]['text'] == 'faultCode')
+        text = next(m['children'][1] for m in members if m['children'][0]['text'] == 'faultString')
+        fault = fldigi.semantic(code)[2], fldigi.semantic(text)[1]
+    return root, enc, extended, params, fault
+
+
+def fldigi_observe(inp, substrate):
+    raw = base64.b64decode(inp['data'])
+    root, enc, extension, params, fault = fldigi_xmlrpc(raw, substrate)
+    method = root['children'][0]['text'] if root['name'] == 'methodCall' else None
+    if method is not None:
+        fldigi.name_check(method)
+    assoc = inp.get('request')
+    if 'request' in inp:
+        if not isinstance(assoc, dict) or set(assoc) - {'method', 'arguments'} or 'method' not in assoc:
+            raise ValueError('invalid_value')
+        fldigi.name_check(assoc['method'])
+        if 'arguments' in assoc and (not isinstance(assoc['arguments'], list) or len(assoc['arguments']) > 32):
+            raise ValueError('invalid_value')
+        if method is not None and method != assoc['method']:
+            raise ValueError('invalid_value')
+        if root['name'] != 'methodCall':
+            method = assoc['method']
+    fldigi_context_budget(inp)
+    kind, fields = 'native', {}
+    version = None
+    if fault is not None:
+        kind, fields = 'result', {'status': 'error', 'native_code': fault[0], 'text': fault[1]}
+        if method and re.fullmatch(r'(?:[a-z][a-z0-9.-]*\.)?[a-z][a-z0-9_]*', fldigi_operation(method)):
+            fields['operation'] = fldigi_operation(method)
+    elif not extension and method in FLDIGI_EXPECTATIONS:
+        _, reqkeys, response_kind, key = FLDIGI_EXPECTATIONS[method]
+        signature = fldigi.CATALOG[method]
+        arguments = [] if params is None else [fldigi.semantic(p['children'][0]) for p in params['children']]
+        request = root['name'] == 'methodCall'
+        required = signature.split(':')[1] if request else signature[0]
+        symbols = {'int': 'i', 'boolean': 'b', 'double': 'd', 'string': 's', 'nil': 'n', 'base64': '6',
+                   'array': 'A', 'struct': 'S', 'dateTime.iso8601': 't'}
+        actual = ''.join(symbols.get(v[0], '?') if v else '?' for v in arguments)
+        if request and required == 'n':
+            required = ''
+        matched = actual == required
+        if not request and method == 'text.get_rx':
+            args = assoc.get('arguments') if assoc else None
+            matched = matched and isinstance(args, list) and len(args) == 2 and all(
+                type(v) is int and -2**31 <= v < 2**31 for v in args) and args[0] >= 0 and args[1] >= -1
+        if matched:
+            if request:
+                kind, fields = 'control', {'operation': fldigi_operation(method)}
+                for name, (_, val, _) in zip(reqkeys.split(), arguments):
+                    if name == 'frequency_hz':
+                        if val.is_integer() and abs(val) <= 9007199254740991:
+                            fields[name] = int(val)
+                    else:
+                        fields[name] = val
+            else:
+                kind = response_kind
+                typ, val, _ = arguments[0]
+                fields = {'status': 'ok', 'operation': fldigi_operation(method)} if kind == 'result' else {}
+                if key == 'bytes':
+                    try:
+                        fields['text'] = val.decode('utf-8')
+                    except UnicodeDecodeError:
+                        fields['text'] = {'utf8_bytes': list(val)}
+                elif key == 'state':
+                    states = {'TX': True, 'RX': False} if method.endswith('_state') else {'tx': True, 'tune': True, 'rx': False}
+                    if isinstance(val, str) and val in states:
+                        fields['transmitting'] = states[val]
+                elif key:
+                    if key in ('frequency_hz', 'dial_frequency_hz'):
+                        if val.is_integer() and abs(val) <= 9007199254740991:
+                            fields[key] = int(val)
+                    else:
+                        fields[key] = val
+                if method == 'fldigi.version' and isinstance(val, str) and val:
+                    version = val
+                    fields.pop('text', None)
+    parts = root['name'].split('|')
+    literal = parts[2] + ':' + parts[1] if len(parts) == 3 else parts[-1]
+    view = {'root': literal}
+    if method is not None:
+        view['method'] = method
+    event = {'spec': SPEC, 'family': 'fldigi', 'mapping': 1, 'kind': kind,
+             'context': copy.deepcopy(inp['context']), 'fields': fields,
+             'native': {'format': 'fldigi_xmlrpc', 'data': inp['data']}}
+    if 'via' in inp:
+        event['via'] = copy.deepcopy(inp['via'])
+    if version is not None:
+        event['native_version'] = version
+    view = {**view, 'xml': fldigi.text_value(raw.decode(enc, 'surrogatepass' if enc.startswith('utf-16') else 'surrogateescape').lstrip('\ufeff'), enc)}
+    with_view = copy.deepcopy(event)
+    with_view['native']['message'] = view
+    if len(json.dumps(with_view, ensure_ascii=False, separators=(',', ':')).encode()) > 1048576:
+        raise ValueError('oversized')
+    return event, view
+
+
+def fldigi_write_command(event, options, substrate):
+    """Independent construction checker; fixtures below supply their own XML strings."""
+    if event['mapping'] != 1:
+        raise ValueError('unsupported_version')
+    if any(k in event for k in ('native', 'native_version', 'wire_id')) or options or event['kind'] != 'control':
+        raise ValueError('invalid_value')
+    fields = event['fields']
+    op = fields.get('operation')
+    by_operation = {row[0]: method for method, row in FLDIGI_EXPECTATIONS.items()}
+    by_operation.update(set_frequency='rig.set_frequency', send_text='text.add_tx', halt_tx='main.abort')
+    if op not in by_operation:
+        raise ValueError('invalid_value')
+    method = by_operation[op]
+    keys = FLDIGI_EXPECTATIONS[method][1].split()
+    allowed = {'operation', *keys}
+    if op == 'set_frequency':
+        allowed.add('rx_offset_hz')
+    if op == 'send_text':
+        allowed.add('transmit')
+        keys.append('transmit')
+    if set(fields) - allowed or any(k not in fields for k in keys):
+        raise ValueError('invalid_value')
+    values = []
+    for key in keys:
+        val = fields[key]
+        if key == 'transmit':
+            if type(val) is not bool:
+                raise ValueError('invalid_value')
+        elif key in ('frequency_hz', 'audio_offset_hz', 'rx_start', 'rx_length'):
+            if type(val) is not int or not (0 if key.startswith('rx_') else 1) <= val <= 2147483647:
+                raise ValueError('invalid_value')
+            values.append(('double' if key == 'frequency_hz' else 'int', str(val) + ('.0' if key == 'frequency_hz' else '')))
+        else:
+            if not isinstance(val, str) or any(not (ord(c) in (9, 10) or 32 <= ord(c) <= 0xd7ff or
+                   0xe000 <= ord(c) <= 0xfffd or 0x10000 <= ord(c) <= 0x10ffff) for c in val):
+                raise ValueError('invalid_value')
+            escaped = ''.join({'&': '&amp;', '<': '&lt;', '>': '&gt;'}.get(c, c) for c in val)
+            values.append(('string', escaped))
+    calls = [(method, values)]
+    if op == 'send_text' and fields['transmit']:
+        calls.append(('main.tx', []))
+    if op == 'set_frequency' and 'rx_offset_hz' in fields:
+        offset = fields['rx_offset_hz']
+        if type(offset) is not int or not 1 <= offset <= 2147483647:
+            raise ValueError('invalid_value')
+        calls.append(('modem.set_carrier', [('int', str(offset))]))
+    result = []
+    for name, params in calls:
+        pieces = [fldigi.DECL, '<methodCall><methodName>', name, '</methodName><params>']
+        for typ, content in params:
+            pieces += ['<param><value><', typ, '>', content, '</', typ, '></value></param>']
+        pieces.append('</params></methodCall>')
+        body = ''.join(pieces).encode()
+        fldigi_xmlrpc(body, substrate)
+        result.append(body)
+    return result
+
+
+
+def fldigi_bundled_string(content):
+    """S17 xmlDecode: one left-to-right pass; never recurse or decode numbers."""
+    named = {'&lt;': '<', '&gt;': '>', '&amp;': '&', '&apos;': "'", '&quot;': '"'}
+    return re.sub(r'&(?:lt|gt|amp|apos|quot);', lambda m: named[m[0]], content)
+
+
+def fldigi_verify(inp, substrate):
+    """Observed consistency/re-encoding, separate from original byte retrieval."""
+    event = inp['event']
+    if event['kind'] not in ('native', 'control', 'radio_state', 'result', 'decode'):
+        return 'unavailable', None
+    if 'native' not in event:
+        return 'unavailable', None
+    decoded_input = {'data': event['native']['data'], 'context': event['context']}
+    for key in ('request', 'via'):
+        if key in inp:
+            decoded_input[key] = inp[key]
+        elif key == 'via' and key in event:
+            decoded_input[key] = event[key]
+    actual, _ = fldigi_observe(decoded_input, substrate)
+    root, _, extension, _, fault = fldigi_xmlrpc(base64.b64decode(event['native']['data']), substrate)
+    # Compare all known evidence-derived envelope members even if mapping needs
+    # association. spec/mapping may be newer; context/via are caller-owned.
+    for key in ('family', 'native_version', 'wire_id'):
+        if (key in event) != (key in actual) or (key in event and event[key] != actual[key]):
+            # native_version on a response cannot be verified without a method.
+            if key == 'native_version' and root['name'] == 'methodResponse' and 'request' not in inp:
+                continue
+            raise ValueError('invalid_value')
+    if event['native']['format'] != 'fldigi_xmlrpc':
+        raise ValueError('invalid_value')
+    if extension and fault is None:
+        return 'unavailable', None
+    if root['name'] == 'methodResponse' and fault is None:
+        if 'request' not in inp:
+            return 'unavailable', None
+        if inp['request']['method'] == 'text.get_rx' and actual['kind'] == 'native':
+            return 'unavailable', None
+    # Known common members remain recognized even when absent from the expected
+    # event. Unknown additive fields alone can be ignored on newer revisions.
+    schema = json.loads((ROOT / 'spec/schema/qgi-event-0.1.0.schema.json').read_text())
+    known_fields = set().union(*(set(v.get('properties', {})) for k, v in schema['$defs'].items()
+                                if k in ('lifecycle', 'radio_state', 'result', 'control', 'decode', 'qso', 'log', 'spectrum', 'n1mm_control', 'fldigi_control')))
+    fields = {k: v for k, v in event['fields'].items() if k in known_fields}
+    if event['kind'] != actual['kind'] or fields != actual['fields']:
+        raise ValueError('invalid_value')
+    if 'message' in event['native']:
+        _, view = fldigi_observe(decoded_input, substrate)
+        recognized_view = {k: v for k, v in event['native']['message'].items() if k in ('root', 'method', 'xml')}
+        if recognized_view != view:
+            raise ValueError('invalid_value')
+    return 'verified', actual['native']['data']
+
+
+def fldigi_output_bound(n):
+    return 4 * ((n + 2) // 3) + 12 * n + 1536 + 32768 + 65536
+
+
+def fldigi_source_response(value):
+    return ('<?xml version="1.0"?>\r\n<methodResponse><params><param>\r\n\t' +
+            value + '\r\n</param></params></methodResponse>\r\n').encode()
+
+
+def fldigi_limit_vectors(suite):
+    def positive(name, raw, method, kind='native', fields=None, context=None):
+        ctx = context if context is not None else fldigi.context()
+        evt = {'spec': SPEC, 'family': 'fldigi', 'mapping': 1, 'kind': kind,
+               'context': ctx, 'fields': fields or {},
+               'native': {'format': 'fldigi_xmlrpc', 'data': b64(raw)}}
+        vector = {'class': 'positive', 'input': {'data': b64(raw), 'context': ctx},
+                  'expected': {'event': evt},
+                  'expected_message': {'root': 'methodResponse', 'xml': fldigi.text_value(raw.decode('utf-8', 'surrogateescape'), 'utf-8')},
+                  'reencode': {'data': b64(raw)}}
+        if method is not None:
+            vector['input']['request'] = {'method': method}
+            vector['expected_message']['method'] = method
+        suite.add(name, vector)
+        return suite.vectors[name]
+    for method, names, count, body_bytes in [
+            ('modem.get_names', fldigi.SOURCE_MODE_NAMES, 169, 4013),
+            ('modem.get_io_names', [fldigi.SOURCE_MODE_NAMES[i] for i in fldigi.SOURCE_IO_INDICES], 101, 2509)]:
+        assert len(names) == count
+        raw = fldigi_source_response('<value><array><data>' + ''.join(
+            '<value>' + name + '</value>' for name in names) + '</data></array></value>')
+        assert len(raw) == body_bytes
+        positive(method.replace('.', '-').replace('_', '-') + '-full-source', raw, method)
+    raw = fldigi_source_response('<value><struct><member><name>major</name><value><i4>4</i4></value></member>'
+        '<member><name>minor</name><value><i4>2</i4></value></member>'
+        '<member><name>patch</name><value>13</value></member></struct></value>')
+    assert len(raw) == 299
+    positive('fldigi-version-struct-full-source', raw, 'fldigi.version_struct')
+    # S2 enables S12 introspection; its method map deduplicates setters.
+    names = sorted(set(fldigi.SOURCE_REGISTRATIONS) | {'system.listMethods', 'system.methodHelp'}) + ['system.multicall']
+    raw = fldigi_source_response('<value><array><data>' + ''.join(
+        '<value>' + name + '</value>' for name in names) + '</data></array></value>')
+    assert len(names) == 177 and len(raw) == 5664
+    positive('system-list-methods-full-source', raw, 'system.listMethods')
+    # A real multicall wraps each successful result in a one-value array.
+    raw = fldigi_source_response('<value><array><data><value><array><data>'
+        '<value>fldigi</value></data></array></value>'
+        '<value><struct><member><name>faultCode</name><value><i4>-1</i4></value></member>'
+        '<member><name>faultString</name><value>future.method: unknown method name</value></member>'
+        '</struct></value></data></array></value>')
+    positive('system-multicall-source-shape', raw, 'system.multicall')
+    # Fixed 4,096-byte raw buffers: S6 RAW_BUFF_LEN, S18 LF every 72 characters.
+    encoded = b64(b'x' * 4096)
+    wrapped = '\n'.join(encoded[i:i + 72] for i in range(0, len(encoded), 72))
+    raw = ('<?xml version="1.0"?>\r\n<methodResponse><params><param>\r\n\t'
+           '<value><base64>' + wrapped + '</base64></value>\r\n</param></params></methodResponse>\r\n').encode()
+    assert len(raw) == 5666
+    for method in ('rx.get_data', 'tx.get_data', 'rxtx.get_data', 'flmsg.get_data'):
+        positive(method.replace('.', '-') + '-full-buffer', raw, method,
+                 'decode' if method == 'rx.get_data' else 'native',
+                 {'text': 'x' * 4096} if method == 'rx.get_data' else {})
+    # Exact processed-text boundary (markup leaves source body below its limit).
+    for suffix, size in [('boundary', 262144), ('overflow', 262145)]:
+        raw = b'\xff\xfe' + ('<x>' + '\u0800' * (size // 3) + 'x' * (size % 3) + '</x>').encode('utf-16-le')
+        if suffix == 'boundary':
+            v = positive('decoded-text-' + suffix, raw, None)
+            v['expected_message'] = {'root': 'x', 'xml': raw[2:].decode('utf-16-le')}
+        else:
+            suite.vectors['decoded-text-overflow']['input']['data'] = b64(raw)
+    # Invalid UTF-8 requires byte wrappers in both the common text and XML view.
+    # Tune legal ASCII padding to land exactly on the actual compact JSON limit.
+    size = 112000
+    raw = (
+        b'<methodResponse><params><param><value><string>' + b'\xff' * size +
+        b'</string></value></param></params></methodResponse>')
+    fields = {'status': 'ok', 'operation': 'fldigi.log_get_name', 'text': {'utf8_bytes': [255] * size}}
+    v = positive('output-boundary', raw, 'log.get_name', 'result', fields)
+    def output_size(vector):
+        event = copy.deepcopy(vector['expected']['event'])
+        event['native']['message'] = vector['expected_message']
+        return len(json.dumps(event, ensure_ascii=False, separators=(',', ':')).encode())
+    gap = 1048576 - output_size(v) - len(',"source_id":""')
+    assert 0 <= gap <= 3000
+    v['input']['context']['source_id'] = 'x' * gap
+    assert output_size(v) == 1048576
+    too_big = copy.deepcopy(v['input'])
+    too_big['context']['source_id'] += 'x'
+    suite.add('output-overflow', {'class': 'negative', 'input': too_big,
+              'expected': {'error': {'category': 'oversized'}}})
+
+
+def fldigi_review_vectors():
+    suite = fldigi.vectors(Suite, b64)
+    # CR is portable-command invalid; preserve observation acceptance separately.
+    v = suite.vectors['command-escaping']
+    v['input']['event']['fields']['text'] = 'Q1AAA &<>\n\t" &amp; &#13;'
+    v['expected']['requests'] = [b64(fldigi.call('text.add_tx',
+        '<string>Q1AAA &amp;&lt;&gt;\n\t" &amp;amp; &amp;#13;</string>'))]
+    for name, fields in [('cr', {'operation': 'send_text', 'text': 'Q1AAA &<>\r\n\t"', 'transmit': False}),
+                         ('family-cr', {'operation': 'fldigi.rig_set_mode', 'mode': 'Q1\rAAA'})]:
+        event = copy.deepcopy(v['input']['event'])
+        event['fields'] = fields
+        suite.add('command-bad-' + name, {'class': 'command_negative', 'input': {'event': event, 'options': {}},
+                                        'expected': {'error': {'category': 'invalid_value'}}})
+    def negative(name, raw, error, **extra):
+        suite.add(name, {'class': 'negative', 'input': {'data': b64(raw), 'context': fldigi.context(), **extra},
+                         'expected': {'error': {'category': error}}})
+    fault = base64.b64decode(suite.vectors['fault-associated']['input']['data'])
+    extra = b'<member><name>extra</name><value><future><int>opaque</int></future></value></member>'
+    valid = fault.replace(b'</struct>', extra + b'</struct>')
+    v = copy.deepcopy(suite.vectors['fault-associated'])
+    v['input']['data'] = v['expected']['event']['native']['data'] = v['reencode']['data'] = b64(valid)
+    v['expected_message']['xml'] = valid.decode()
+    suite.add('fault-optional-future', v)
+    negative('fault-optional-future-missing-code', valid.replace(b'faultCode', b'otherCode'), 'malformed')
+    negative('fault-optional-future-required-type', valid.replace(b'<int> +005 </int>', b'<future/>'), 'malformed')
+    negative('fault-optional-future-bad-scalar', valid.replace(b'<int> +005 </int>', b'<int>x</int>'), 'invalid_value')
+    negative('fault-optional-future-shape-before-scalar', valid.replace(b'faultString', b'otherString').replace(b' +005 ', b'x'), 'malformed')
+    ordinary = fldigi.response('<string>BPSK31</string>')
+    negative('association-null', ordinary, 'invalid_value', request=None)
+    # Exact compact byte boundaries include multibyte characters and escaping.
+    for suffix, text in [('ascii', 'x'), ('unicode', 'é'), ('escaped', '"')]:
+        ctx = fldigi.context()
+        ctx['source_id'] = ''
+        spare = 4096 - len(json.dumps(ctx, ensure_ascii=False, separators=(',', ':')).encode())
+        cost = len(json.dumps(text, ensure_ascii=False).encode()) - 2
+        ctx['source_id'] = text * (spare // cost) + 'x' * (spare % cost)
+        v = copy.deepcopy(suite.vectors['modem-get-name-response'])
+        v['input']['context'] = v['expected']['event']['context'] = ctx
+        suite.add('context-boundary-' + suffix, v)
+        too_big = {**ctx, 'source_id': ctx['source_id'] + 'x'}
+        negative('context-overflow-' + suffix, ordinary, 'oversized', request={'method': 'modem.get_name'}, context=too_big)
+    too_big = {**fldigi.context(), 'source_id': 'x' * 5000}
+    for name, raw, error, request in [
+            ('xml-before-context', b'<x></wrong>', 'malformed', {'method': 'modem.get_name'}),
+            ('scalar-before-context', fldigi.response('<int>x</int>'), 'invalid_value', {'method': 'modem.get_name'}),
+            ('association-before-context', ordinary, 'invalid_value', None),
+            ('context-before-dispatch', ordinary, 'oversized', {'method': 'modem.get_name'})]:
+        negative('precedence-' + name, raw, error, request=request, context=too_big)
+    v = copy.deepcopy(suite.vectors['modem-get-name-response'])
+    v['input']['via'] = v['expected']['event']['via'] = [{'family': 'qgi', 'context': fldigi.context()} for _ in range(8)]
+    suite.add('context-eight-hops', v)
+    hops = copy.deepcopy(v['input']['via'])
+    hops[-1]['context'] = too_big
+    negative('context-hop-overflow', ordinary, 'oversized', via=hops)
+    negative('context-ninth-hop', ordinary, 'oversized', via=v['input']['via'] + [v['input']['via'][0]])
+    # S2 Fldigi_list shape, all 176 registrations (two duplicates).
+    # Synthetic help uses the largest released help length (99 bytes) in every row.
+    entries = []
+    registrations = [(name, fldigi.CATALOG[name]) for name in fldigi.SOURCE_REGISTRATIONS]
+    for method, signature in registrations:
+        entries.append('<value><struct>' + ''.join(
+            '<member><name>' + name + '</name><value>' + text + '</value></member>'
+            for name, text in sorted([('name', method), ('signature', signature), ('help', 'Synthetic method help. ' + 'x' * 76)])) + '</struct></value>')
+    listing = fldigi_source_response('<value><array><data>' + ''.join(entries) + '</data></array></value>')
+    positive = copy.deepcopy(suite.vectors['fldigi-list-native-response'])
+    positive['input']['data'] = positive['expected']['event']['native']['data'] = positive['reencode']['data'] = b64(listing)
+    positive['expected_message']['xml'] = listing.decode()
+    suite.add('fldigi-list-full-source-shape', positive)
+    fldigi_limit_vectors(suite)
+    maximum = base64.b64decode(suite.vectors['maximum-body-with-view']['input']['data'])
+    suite.vectors['body-overflow']['input']['data'] = b64(maximum + b' ')
+    # Mutated observed events exercise actual rejection, not stored byte equality.
+    base = suite.vectors['modem-get-name-response']['expected']['event']
+    for name, mutation in [('native-version', {'native_version': '4.2.13'}),
+                           ('wire-id', {'wire_id': 'Q1AAA'}), ('kind', {'kind': 'decode'}),
+                           ('mapped-value', {'fields': {'mode': 'BROKEN'}}),
+                           ('mapped-extra', {'fields': {'mode': 'BPSK31', 'station_call': 'Q1AAA'}})]:
+        event = {**copy.deepcopy(base), **mutation}
+        suite.add('reencode-bad-' + name, {'class': 'negative',
+            'input': {'event': event, 'request': {'method': 'modem.get_name'}},
+            'expected': {'error': {'category': 'invalid_value'}}})
+    # Version query requires the member, so omission or alteration is inconsistent.
+    for name, version in [('missing', None), ('altered', '99.0.0')]:
+        event = copy.deepcopy(suite.vectors['fldigi-version-response']['expected']['event'])
+        if version is None:
+            event.pop('native_version')
+        else:
+            event['native_version'] = version
+        suite.add('reencode-bad-version-' + name, {'class': 'negative',
+            'input': {'event': event, 'request': {'method': 'fldigi.version'}},
+            'expected': {'error': {'category': 'invalid_value'}}})
+    for name, source, request, status in [
+            ('opaque-type', 'value-future-type', {'method': 'future.method'}, 'unavailable'),
+            ('opaque-root', 'unknown-root', None, 'unavailable'),
+            ('fault-optional-future', 'fault-optional-future', {'method': 'main.abort'}, 'verified'),
+            ('range-no-arguments', 'text-get-rx-response', {'method': 'text.get_rx'}, 'unavailable'),
+            ('range-associated', 'text-get-rx-response', {'method': 'text.get_rx', 'arguments': [7, 4]}, 'verified'),
+            ('fault-no-request', 'fault-unassociated', None, 'verified')]:
+        event = copy.deepcopy(suite.vectors[source]['expected']['event'])
+        inp = {'event': event, 'reader_spec': SPEC, 'writer_spec': SPEC}
+        if request is not None:
+            inp['request'] = request
+        suite.add('compatibility-' + name, {'class': 'compatibility', 'input': inp,
+            'expected': {'read': {k: event[k] for k in ('kind', 'fields', 'context', 'native')},
+                         'verification': {'status': status}}})
+    return suite
+
+
+
+def validate_fldigi(suite, substrate, root, producer_strict, producer_factory):
+    document = (root / 'spec/annex-e-fldigi.md').read_text()
+    # Every defined ID is unique, and all normative paragraphs are addressable.
+    ids = re.findall(r'^\*\*`(QGI-FLD-[0-9]{4})` — ', document, re.M)
+    assert len(ids) == len(set(ids)) == 69
+    assert set(ids) == {f'QGI-FLD-{i:04d}' for i in range(2, 71)}
+    rows = re.findall(r'^\| `([a-z][a-z0-9_.]+)` \| `([^`]+)` \|', document, re.M)
+    assert dict(rows) == fldigi.CATALOG, 'catalog prose and pinned vector signatures disagree'
+    anchors = ['paired `<params></params>`', 'followed by exactly `.0`', 'quotes, tabs and LF remain literal',
+               '262,144 bytes', '32, 1,024 and 256', 'first failure', 'aggregate result',
+               'double for rig.set_frequency, nil for', 'without synthesizing nil',
+               'without translating renamed', '8,192 elements', '42,903', '3,595,096',
+               '671,880', 'no finite source', '1,048,577']
+    def contract(text):
+        return all(a in text for a in anchors)
+    assert contract(document)
+    for anchor in anchors:
+        assert not contract(document.replace(anchor, 'removed')), 'planted prose omission escaped'
+    assert len(fldigi.CATALOG) == 174 and len(FLDIGI_EXPECTATIONS) == 50
+    fldigi_review_contract(suite, document)
+    assert 'pinned to released `4.2.13`' in (root / 'spec/QGI-SPEC-001.md').read_text()
+    # Check the maximum integer admitted by the published bound, independently.
+    bound = lambda n: 4 * ((n + 2) // 3) + 12*n + 1536 + 32768 + 65536
+    assert bound(71155) == 1048576 and bound(71156) > 1048576
+    assert bound(fldigi.LIMIT) == 3595096
+    assert fldigi.LIMIT == 262144 and fldigi.ELEMENT_LIMIT == 8192
+    assert fldigi.ARRAY_LIMIT == 1024 and fldigi.MEMBER_LIMIT == 256 and fldigi.PARAM_LIMIT == 32
+    for observed, inherited, limit in [(1942, 1024, fldigi.ELEMENT_LIMIT),
+                                      (177, 256, fldigi.ARRAY_LIMIT),
+                                      (3, 256, fldigi.MEMBER_LIMIT),
+                                      (2, 32, fldigi.PARAM_LIMIT),
+                                      (42903, 71155, fldigi.LIMIT)]:
+        assert limit == 1 << (max(4 * observed, inherited) - 1).bit_length()
+    positives = commands = 0
+    for name, vector in suite.vectors.items():
+        cls, inp, expected = vector['class'], vector['input'], vector['expected']
+        try:
+            if cls == 'negative' and 'event' in inp:
+                fldigi_verify(inp, substrate)
+                raise AssertionError(name + ': inconsistent event accepted')
+            elif cls in ('positive', 'negative'):
+                event, view = fldigi_observe(inp, substrate)
+                assert cls == 'positive', name + ': negative accepted'
+                assert event == expected['event'], (name, event, expected['event'])
+                assert view == vector['expected_message'], (name, view, vector['expected_message'])
+                assert inp['data'] == vector['reencode']['data'] == event['native']['data']
+                verify_input = {'event': event}
+                if 'request' in inp:
+                    verify_input['request'] = inp['request']
+                status, data = fldigi_verify(verify_input, substrate)
+                if status == 'verified':
+                    assert data == vector['reencode']['data']
+                with_view = copy.deepcopy(event)
+                with_view['native']['message'] = view
+                assert len(json.dumps(with_view, ensure_ascii=False, separators=(',', ':')).encode()) <= 1048576
+                positives += 1
+            elif cls == 'compatibility':
+                event = inp['event']
+                if event['spec'].split('.')[0] != SPEC.split('.')[0]:
+                    assert expected['error']['category'] == 'unsupported_version'
+                    continue
+                known = event['kind'] in ('native', 'radio_state', 'control', 'result', 'decode')
+                recognized = {'kind': event['kind'] if known else 'native',
+                              'fields': {k: val for k, val in event['fields'].items() if k != 'future'} if known else {},
+                              'context': event['context']}
+                if 'native' in event:
+                    recognized['native'] = event['native']
+                assert recognized == expected['read'], name
+                if 'preserved_command' in expected:
+                    assert event == expected['preserved_command']
+                status, _ = fldigi_verify(inp, substrate)
+                assert status == expected['verification']['status'], (name, status)
+            elif cls in ('command', 'command_negative'):
+                bodies = fldigi_write_command(inp['event'], inp['options'], substrate)
+                assert cls == 'command', name + ': negative command accepted'
+                assert [base64.b64encode(b).decode() for b in bodies] == expected['requests'], name
+                strings = [value for key, value in inp['event']['fields'].items()
+                           if key in ('text', 'mode', 'dx_call', 'dx_grid')]
+                returned = [fldigi_bundled_string(content) for body in bodies
+                            for content in re.findall(r'<string>(.*?)</string>', body.decode(), re.S)]
+                assert returned == strings, name + ': bundled handler argument changed'
+                commands += 1
+        except ValueError as error:
+            assert cls in ('negative', 'command_negative'), (name, str(error))
+            assert str(error) == expected['error']['category'], (name, str(error), expected)
+    # Planted mapping failures distinguish RF/audio, state polarity and scalar/raw handling.
+    for name, field, wrong in [('rig-get-frequency-response', 'dial_frequency_hz', 14071001),
+            ('modem-get-carrier-response', 'rx_offset_hz', 1503),
+            ('main-get-trx-state-response', 'transmitting', False),
+            ('text-invalid-utf8', 'text', 'Q1AAA\ufffd'),
+            ('modem-name-domexm', 'mode', 'DOMEX Micro'),
+            ('modem-submode-slowhell', 'sub_mode', ''),
+            ('text-entities', 'text', '<Q1AAA>&\n\nx'), ('rx-split-first', 'text', 'Q1\ufffd')]:
+        vector = suite.vectors[name]
+        actual, _ = fldigi_observe(vector['input'], substrate)
+        mutant = copy.deepcopy(vector['expected']['event'])
+        mutant['fields'][field] = wrong
+        assert actual != mutant, name + ': planted mapping failure accepted'
+    def command_matches(vector):
+        actual = fldigi_write_command(vector['input']['event'], vector['input']['options'], substrate)
+        return actual == [base64.b64decode(b) for b in vector['expected']['requests']]
+    sequence = suite.vectors['command-text-and-transmit']
+    mutant = copy.deepcopy(sequence)
+    mutant['expected']['requests'].reverse()
+    assert not command_matches(mutant), 'reversed request sequence accepted'
+    mutant['expected']['requests'] = mutant['expected']['requests'][:1]
+    assert not command_matches(mutant), 'missing request accepted'
+    canonical = base64.b64decode(suite.vectors['command-empty-text-and-transmit']['expected']['requests'][0])
+    for mutation in [canonical.replace(b'<string></string>', b'<string/>'), canonical + b'\n',
+                     canonical.replace(b'<params>', b'<params>\n')]:
+        mutant = copy.deepcopy(suite.vectors['command-empty-text-and-transmit'])
+        mutant['expected']['requests'][0] = base64.b64encode(mutation).decode()
+        assert not command_matches(mutant), 'canonical-byte mutant escaped'
+    for name, before, after in [('command-frequency-min', b'1.0', b'01.0'),
+            ('command-escaping', b'&amp;#13;', b'&#13;'),
+            ('command-range-zero', b'<int>0</int>', b'<i4>0</i4>')]:
+        mutant = copy.deepcopy(suite.vectors[name])
+        raw = base64.b64decode(mutant['expected']['requests'][0])
+        assert before in raw
+        mutant['expected']['requests'][0] = base64.b64encode(raw.replace(before, after)).decode()
+        assert not command_matches(mutant), 'numeric/text/type canonical mutant escaped'
+    fldigi_review_plants(suite, substrate)
+    # A sequence's first acknowledgment must satisfy its actual mapped type.
+    # Malformed bundled replies, faults, lost association and type swaps stop it.
+    def can_advance(method, inp):
+        if inp.get('request', {}).get('method') != method:
+            return False
+        try:
+            event, _ = fldigi_observe(inp, substrate)
+        except ValueError:
+            return False
+        return (event['kind'] == 'result' and event['fields'].get('status') == 'ok'
+                and event['fields'].get('operation') == fldigi_operation(method))
+    for method, accepted, stopped in [
+            ('rig.set_frequency', 'rig-set-frequency-response', 'frequency-setter-nil-response'),
+            ('text.add_tx', 'text-add-tx-response', 'append-double-response')]:
+        assert can_advance(method, suite.vectors[accepted]['input'])
+        assert not can_advance(method, suite.vectors[stopped]['input'])
+        lost = copy.deepcopy(suite.vectors[accepted]['input'])
+        lost.pop('request')
+        assert not can_advance(method, lost)
+    assert not can_advance('text.add_tx', suite.vectors['bundled-invalid-result-empty-param']['input'])
+    fault = copy.deepcopy(suite.vectors['fault-associated']['input'])
+    fault['request']['method'] = 'text.add_tx'
+    assert not can_advance('text.add_tx', fault)
+    try:
+        import jsonschema
+    except ImportError:
+        if producer_strict:
+            raise SystemExit('--producer-strict requires jsonschema')
+        return f'fldigi checked {positives} body/mapping/view oracles and {commands} command sequences; schema unavailable'
+    schema = json.loads((root / 'spec/schema/qgi-event-0.1.0.schema.json').read_text())
+    reader = jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
+    producer = producer_factory(schema, jsonschema)
+    for vector in suite.vectors.values():
+        cls = vector['class']
+        if cls == 'positive':
+            event = vector['expected']['event']
+            (producer if producer_strict else reader).validate(event)
+            event = copy.deepcopy(event)
+            event['native']['message'] = vector['expected_message']
+            (producer if producer_strict else reader).validate(event)
+        elif cls == 'command':
+            (producer if producer_strict else reader).validate(vector['input']['event'])
+        elif cls == 'compatibility' and vector['input']['writer_spec'].startswith('0.'):
+            reader.validate(vector['input']['event'])
+    # Unknown members remain reader-compatible and are recursively closed for authors.
+    event = copy.deepcopy(suite.vectors['text-get-rx-request']['expected']['event'])
+    event['native']['message'] = suite.vectors['text-get-rx-request']['expected_message']
+    for path in [('fields',), ('native', 'message'), ('context',)]:
+        mutant = copy.deepcopy(event)
+        part = mutant
+        for key in path:
+            part = part[key]
+        part['future'] = 1
+        reader.validate(mutant)
+        assert not producer.is_valid(mutant), 'unknown fldigi member accepted by strict producer'
+    # fldigi-only arguments cannot leak to another family's strict control catalog.
+    mutant = copy.deepcopy(event)
+    mutant['family'] = 'wsjtx'
+    mutant['native'].pop('message')
+    assert not producer.is_valid(mutant)
+    return f'fldigi: {positives} independent XML/type/mapping/view/reencode checks, {commands} exact command sequences; strict schema and nine review regressions/planted failures passed'
+
+def fldigi_manifest(suite, dump, root):
+    files = {name + '.json': dump(value) for name, value in suite.vectors.items()}
+    # All evidence hashes are transcribed from E.1; no network at generation time.
+    document = (root / 'spec/annex-e-fldigi.md').read_text()
+    sources = re.findall(r'^\| S([0-9]+) \| \[([^\]]+)\]\(([^)]+)\) \| `([0-9a-f]{64})` \|', document, re.M)
+    assert len(sources) == 18
+    source_hashes = {f'fldigi-{fldigi.RELEASE}/{member}' if url == fldigi.ARCHIVE_URL else url: digest
+                     for _, member, url, digest in sources}
+    assert len(source_hashes) == 18, 'archive member hashes must not collapse onto one URL'
+    assert f'SHA-256: `{fldigi.ARCHIVE_SHA256}`' in document and fldigi.ARCHIVE_URL in document
+    files['manifest.json'] = dump({'$comment': 'SPDX-License-Identifier: GPL-3.0-or-later',
+        'spec': SPEC, 'family': 'fldigi', 'mapping': 1, 'retrieved': fldigi.RETRIEVED,
+        'release': fldigi.RELEASE,
+        'source_archive': {'url': fldigi.ARCHIVE_URL, 'sha256': fldigi.ARCHIVE_SHA256, 'root': f'fldigi-{fldigi.RELEASE}/'},
+        'release_listing': {'url': 'https://sourceforge.net/projects/fldigi/files/fldigi/',
+                            'source_modified_utc': '2026-08-03 14:16:04'},
+        'source_sha256': source_hashes, 'profile_sha256': hashlib.sha256(document.encode()).hexdigest(),
+        'hash_scope': 'SHA-256 of each complete vector file, including its final newline',
+        'vectors': [{'file': name, 'class': suite.vectors[name[:-5]]['class'], 'spec': SPEC,
+                     'family': 'fldigi', 'mapping': 1, 'sha256': hashlib.sha256(data).hexdigest()}
+                    for name, data in sorted(files.items())]})
+    return {'fldigi/' + name: data for name, data in files.items()}
+
+def fldigi_review_contract(suite, document):
+    core = (ROOT / 'spec/QGI-SPEC-001.md').read_text()
+    # Each repaired prose requirement has a planted omission, including the two
+    # core clarifications. Wrapping changes do not alter these tests.
+    flat = ' '.join(document.split())
+    core_flat = ' '.join(core.split())
+    clauses = [
+        (flat, 'CR and XML-forbidden characters'),
+        (flat, 'MUST NOT suppress required fault validation'),
+        (core_flat, 'unless the family explicitly defines an opaque `native` fallback'),
+        (flat, '4,096-byte compact UTF-8 JSON bound'),
+        (flat, 'presence and value of every recognized evidence-derived envelope member'),
+        (flat, 'its name with dots replaced by underscores'),
+        (flat, 'MUST accept the complete released `fldigi.list` response'),
+        (flat, 'supplied null is `invalid_value`, distinct from an absent association'),
+        (core_flat, 'Annexes B, D, E and I define normative profiles and vectors'),
+    ]
+    for text, clause in clauses:
+        assert clause in text, clause
+        assert clause not in text.replace(clause, 'planted omission')
+    implementation = 'Annex D has an implemented N1MM reader and command writer'
+    assert implementation in core_flat
+    assert implementation not in core_flat.replace(implementation, 'planted omission')
+    assert 'Annexes C and G reserve scope' in core_flat
+    assert 'Annexes C, E and G' not in core_flat
+    # Check every mapping column, not only method/signature, against independent
+    # literals. They do not use the builder's MAPPED table or operation function.
+    rows = re.findall(r'^\| `([^`]+)` \| `([^`]+)` \| ([^|]+) \| ([^|]+) \| ([^|]+) \|$', document, re.M)
+    mapped_rows = {m: (req.strip(), ret.strip()) for m, sig, req, ret, handler in rows}
+    assert set(mapped_rows) == set(FLDIGI_EXPECTATIONS)
+    for method, (op, keys, kind, key) in FLDIGI_EXPECTATIONS.items():
+        request = keys or 'none'
+        if op in ('set_frequency', 'send_text', 'halt_tx'):
+            request += '; `' + op + '`'
+        response_key = {'': 'no extra common member', 'state': 'transmitting under 0038',
+                        'bytes': 'text under 0040'}.get(key, key)
+        if method == 'fldigi.version':
+            response_key = 'native_version under 0011'
+        assert mapped_rows[method] == (request, '`' + kind + '` / ' + response_key), method
+    assert 'src/xmlrpcpp/XmlRpcUtil.cpp' in document
+    assert '14310e98508a7c767a0277c403264fe2db46b8440f8d55acd242afd57118f5de' in document
+    listing = suite.vectors['fldigi-list-full-source-shape']
+    raw = base64.b64decode(listing['input']['data'])
+    assert len(raw) < fldigi.LIMIT
+    # Source shape: methodResponse/params/param/value/array/data = six elements,
+    # then value/struct plus three member/name/value groups = 11 per row.
+    # S3 stringToXml uses untyped strings: 176 * 11 + 6 = 1942.
+    import xml.etree.ElementTree as ET
+    tree = ET.fromstring(raw)
+    assert len(list(tree.iter())) == 1942
+    assert len(tree.findall('.//array/data/value')) == 176
+    registered = [member.find('value').text for member in tree.findall('.//member')
+                  if member.find('name').text == 'name']
+    assert hashlib.sha256('\n'.join(registered).encode()).hexdigest() == 'ce540263aa21fb50cc9e69e6688dc027680c9b5752bd3dc16182b4d21cf2484a'
+    assert listing['class'] == 'positive' and listing['expected']['event']['kind'] == 'native'
+    assert len(raw) == 53325
+    assert all(len(m.find('value').text) == 99 for m in tree.findall('.//member')
+               if m.find('name').text == 'help')
+    assert 4 * ((len(raw) + 2) // 3) + 12 * len(raw) + 99840 <= 1048576
+    assert fldigi_output_bound(42903) == 671880
+    # Literal resource witnesses do not use the builder limit constants.
+    for name, count in [('elements-boundary', 8192), ('elements-overflow', 8193)]:
+        assert len(list(ET.fromstring(base64.b64decode(suite.vectors[name]['input']['data'])).iter())) == count
+    for name, count in [('array-boundary', 1024), ('array-overflow', 1025)]:
+        assert len(ET.fromstring(base64.b64decode(suite.vectors[name]['input']['data'])).findall('.//data/value')) == count
+    for name, count in [('members-boundary', 256), ('members-overflow', 257)]:
+        assert len(ET.fromstring(base64.b64decode(suite.vectors[name]['input']['data'])).findall('.//struct/member')) == count
+    for name, count in [('params-boundary', 32), ('params-overflow', 33)]:
+        assert len(ET.fromstring(base64.b64decode(suite.vectors[name]['input']['data'])).findall('.//params/param')) == count
+    assert len(base64.b64decode(suite.vectors['maximum-body-with-view']['input']['data'])) == 262144
+    assert len(base64.b64decode(suite.vectors['body-overflow']['input']['data'])) == 262145
+
+
+def fldigi_builder_oracle(suite, substrate):
+    for method in FLDIGI_EXPECTATIONS:
+        stem = method.replace('.', '-').replace('_', '-')
+        for suffix in ('request', 'response'):
+            vector = suite.vectors[stem + '-' + suffix]
+            actual, _ = fldigi_observe(vector['input'], substrate)
+            assert actual == vector['expected']['event'], (method, suffix, 'builder mapping disagrees')
+
+
+def fldigi_review_plants(suite, substrate):
+    # Alter the builder itself, regenerate, then check with a separate oracle.
+    # A generated expected-output mutation alone would miss this class of bug.
+    fldigi_builder_oracle(suite, substrate)
+    original_operation = fldigi.operation
+    try:
+        fldigi.operation = lambda method: 'fldigi.broken' if method == 'modem.get_name' else original_operation(method)
+        mutant = fldigi.vectors(Suite, b64)
+        try:
+            fldigi_builder_oracle(mutant, substrate)
+        except AssertionError:
+            pass
+        else:
+            raise AssertionError('regenerated operation mutation accepted')
+    finally:
+        fldigi.operation = original_operation
+    for method, broken in [
+            ('modem.get_name', ('', 'radio_state', 'sub_mode')),
+            ('log.set_call', ('dx_grid', 'result', '')),
+            ('modem.get_name', ('', 'result', 'mode'))]:
+        original = fldigi.MAPPED[method]
+        try:
+            fldigi.MAPPED[method] = broken
+            mutant = fldigi.vectors(Suite, b64)
+            try:
+                fldigi_builder_oracle(mutant, substrate)
+            except AssertionError:
+                pass
+            else:
+                raise AssertionError('regenerated field/kind mutation accepted')
+        finally:
+            fldigi.MAPPED[method] = original
+    # Decoder source behavior is a different oracle from XML conformance.
+    assert fldigi_bundled_string('&lt;&gt;&amp;&apos;&quot;') == '<>&\'"'
+    assert fldigi_bundled_string('&amp;lt; &#13; &#xD;') == '&lt; &#13; &#xD;'
+    escaping = suite.vectors['command-escaping']
+    body = base64.b64decode(escaping['expected']['requests'][0]).decode()
+    content = re.search(r'<string>(.*?)</string>', body, re.S)[1]
+    assert fldigi_bundled_string(content) == escaping['input']['event']['fields']['text']
+    # The previous canonical CR reference demonstrably changes the handler argument.
+    cr = suite.vectors['command-bad-cr']['input']['event']['fields']['text']
+    previous = 'Q1AAA &amp;&lt;&gt;&#13;\n\t"'
+    assert fldigi_bundled_string(previous) != cr
+    # Recognized evidence envelope cannot be smuggled through newer mappings.
+    mutant = copy.deepcopy(suite.vectors['compatibility-new-mapping']['input'])
+    mutant['event']['native_version'] = '4.2.13'
+    try:
+        fldigi_verify(mutant, substrate)
+    except ValueError as error:
+        assert str(error) == 'invalid_value'
+    else:
+        raise AssertionError('inconsistent newer-revision envelope verified')
+    # Removing a real association loses method-dependent verification; it does
+    # not cause an error or let a response invent a method from the event.
+    associated = copy.deepcopy(suite.vectors['compatibility-range-associated']['input'])
+    assert fldigi_verify(associated, substrate)[0] == 'verified'
+    associated.pop('request')
+    assert fldigi_verify(associated, substrate)[0] == 'unavailable'
+    # An isolated opaque fallback keeps exact bytes and never verifies its type.
+    for name in ('compatibility-opaque-type', 'compatibility-opaque-root'):
+        assert fldigi_verify(suite.vectors[name]['input'], substrate) == ('unavailable', None)
+
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true', help='check exact generated files without writing')
@@ -2477,8 +3465,8 @@ def main():
     validation = validate(suite, qgi, args.producer_strict)
     n1mm = n1mm_vectors()
     n1mm_validation = validate_n1mm(n1mm, args.producer_strict)
-    fldigi_suite = fldigi.vectors(Suite, b64)
-    fldigi_validation = fldigi.validate(fldigi_suite, check_n1mm_xml, ROOT,
+    fldigi_suite = fldigi_review_vectors()
+    fldigi_validation = validate_fldigi(fldigi_suite, check_n1mm_xml, ROOT,
                                        args.producer_strict, producer_validator)
     outputs = {name + '.json': dump(vector) for name, vector in suite.vectors.items()}
     manifest = {'$comment': 'SPDX-License-Identifier: GPL-3.0-or-later', 'spec': SPEC, 'family': 'wsjtx', 'mapping': 1, 'source_sha256': PIN,
@@ -2512,7 +3500,7 @@ def main():
                      'family': 'n1mm', 'mapping': 1, 'sha256': hashlib.sha256(data).hexdigest()}
                     for name, data in sorted(n1mm_outputs.items())]})
     outputs.update({'n1mm/' + name: data for name, data in n1mm_outputs.items()})
-    outputs.update(fldigi.manifest(fldigi_suite, dump, ROOT))
+    outputs.update(fldigi_manifest(fldigi_suite, dump, ROOT))
     vector_root = DEST.parent
     if args.check:
         missing_or_different = [name for name, data in outputs.items()

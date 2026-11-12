@@ -30,9 +30,11 @@
     "fldigi-4.2.13/src/globals/globals.cxx": "e4f4663432419ab757058d45d75dbf19fc4eb09afa4b3cb8c87390e3992462f8",
     "fldigi-4.2.13/src/include/globals.h": "65fa9d98cb6477edc9f52c89b8a1f987a0922ab05391c16225d2a83ddbe25ec5",
     "fldigi-4.2.13/src/Makefile.am": "10c6ff4ab161497c5fe01ec59086f200177f304549ecc26624c26fc5c6dee9a7",
-    "fldigi-4.2.13/configure.ac": "d2fb2013db9915736d4a656746c833797734715f369fe536ff3694048c848994"
+    "fldigi-4.2.13/configure.ac": "d2fb2013db9915736d4a656746c833797734715f369fe536ff3694048c848994",
+    "fldigi-4.2.13/src/xmlrpcpp/XmlRpcUtil.cpp": "14310e98508a7c767a0277c403264fe2db46b8440f8d55acd242afd57118f5de",
+    "fldigi-4.2.13/src/xmlrpcpp/XmlRpcBase64.h": "2d245271c5aaa47966f12a9002adb6200900eec715a28b8781fa6277df99a1b4"
   },
-  "profile_sha256": "703097f0aae27d8f5ad2b4b96945367e509430ddc9c29d08192b69aec13725a4",
+  "profile_sha256": "cafa822f14a3253ff1ef45627e55aa4eeb7ad369b6305100ad6e172d289f1cee",
   "hash_scope": "SHA-256 of each complete vector file, including its final newline",
   "vectors": [
     {
@@ -49,7 +51,7 @@
       "spec": "0.1.0",
       "family": "fldigi",
       "mapping": 1,
-      "sha256": "3c16bc116fa56ed233eebeffa3599f9420431d7aeed85951a1c38d330eda798f"
+      "sha256": "a1f741a5f9897df3ff9565956efb56c157ab8bd949730369bc07d119d4727e46"
     },
     {
       "file": "array-overflow.json",
@@ -57,7 +59,7 @@
       "spec": "0.1.0",
       "family": "fldigi",
       "mapping": 1,
-      "sha256": "3231c5f91214b8607979626ee08194062c330e9bb62f8fce44d731dc7dcad4bb"
+      "sha256": "760e8cf1870d73f13dcdd3938c10053ef00164ad01898be63ddeca6cff4de225"
     },
     {
       "file": "association-extra-member.json",
@@ -66,6 +68,14 @@
       "family": "fldigi",
       "mapping": 1,
       "sha256": "5ff665f8edeafc824ad6257bf4ca6634429df6e2e753088e78299c7ceac3c998"
+    },
+    {
+      "file": "association-null.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "2ee82139526ca77befcf32d16924e1c918671f6ae02069c39d30983e5f63cee9"
     },
     {
       "file": "attributes-boundary.json",
@@ -257,7 +267,7 @@
       "spec": "0.1.0",
       "family": "fldigi",
       "mapping": 1,
-      "sha256": "307409f6782785e9d6703adb06381264f5f70c44cfda4103e4c0c09bd66cdf7d"
+      "sha256": "4018a563c3b13be673bb763832a9a38b857f346bfd7d189d73f57e879b9998f8"
     },
     {
       "file": "bundled-invalid-result-empty-param.json",
@@ -292,12 +302,28 @@
       "sha256": "5942e8a3ac16727c4972f013acb8a26a917f397cc35dbd156e15c0419da61f5b"
     },
     {
+      "file": "command-bad-cr.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "9a5813102edb653cd9454fd90e271b203d4dae8fc2f36cbd1b59564f061ce23d"
+    },
+    {
       "file": "command-bad-extra-argument.json",
       "class": "command_negative",
       "spec": "0.1.0",
       "family": "fldigi",
       "mapping": 1,
       "sha256": "fd3bd07f8f509549b3ba59e8181965fdb2fa7cb395f0fd9ff8b14c254f646f73"
+    },
+    {
+      "file": "command-bad-family-cr.json",
+      "class": "command_negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "8c47273a81f3a06791856397f4adb10208d90119f455a327eb5e09dd1a60f951"
     },
     {
       "file": "command-bad-frequency-float.json",
@@ -425,7 +451,7 @@
       "spec": "0.1.0",
       "family": "fldigi",
       "mapping": 1,
-      "sha256": "06dd5098cb9f7794db0dd8d6dcd6ab86e6884c10b19d4fa299ba2cd35be75f71"
+      "sha256": "54b1823f5352e4872517e1860255e40231c4e65bc8cc7c9724623e3a8cbe23f7"
     },
     {
       "file": "command-bad-unknown-operation.json",
@@ -465,7 +491,7 @@
       "spec": "0.1.0",
       "family": "fldigi",
       "mapping": 1,
-      "sha256": "dea8b74de0d1efcba38c304696a37634187ca621a3e25ef3183c0c768ff43d3c"
+      "sha256": "33940aa7b269efb37ea7b17565cf4ea1e5df8966c0c79129705fa1510389a019"
     },
     {
       "file": "command-frequency-and-offset.json",
@@ -516,6 +542,22 @@
       "sha256": "67cad3f6094b472736d9574c5810b7eb43ba99d7036062a7adce792b157b2cb0"
     },
     {
+      "file": "compatibility-fault-no-request.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "58b376966fa1c1a9cf7ba67b78b9797d63c3e968cbf708167342b858efe0d69f"
+    },
+    {
+      "file": "compatibility-fault-optional-future.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "407addef4cbb18fdcdff4330f8cd4e4ef731a95df001fbd0e3ff3009e97e40a7"
+    },
+    {
       "file": "compatibility-major.json",
       "class": "compatibility",
       "spec": "0.1.0",
@@ -564,12 +606,44 @@
       "sha256": "41829352bb4eb1b0ae96b365596b47a53ddc680c614e5e1212c68b16cc0fe849"
     },
     {
+      "file": "compatibility-opaque-root.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "23907c757973e9d4563f12466f52c4ebc393d3b637d6628d29ae915d71543bf0"
+    },
+    {
+      "file": "compatibility-opaque-type.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "139bc8eae975f2dca7906f5f20377858be663a67b32edd4658eeec359d99b268"
+    },
+    {
       "file": "compatibility-preserved-command.json",
       "class": "compatibility",
       "spec": "0.1.0",
       "family": "fldigi",
       "mapping": 1,
       "sha256": "4a0f30db60a4f5338835032413b2348bc0f62e4e2d5743c377228d8ca8855ef2"
+    },
+    {
+      "file": "compatibility-range-associated.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "5c36127d2586b55e6e3a4584312c03f8529106c3284eb54e037c4a04127ed7e2"
+    },
+    {
+      "file": "compatibility-range-no-arguments.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "86d2cd9c2f10115b764143ef4009ec5020014d706ce28e57e64d61e3f2679e1a"
     },
     {
       "file": "conflicting-close.json",
@@ -586,6 +660,78 @@
       "family": "fldigi",
       "mapping": 1,
       "sha256": "96dc877f852d7e68769229a86c0862d68261d7cbd9aaaca2ff143b938de800f2"
+    },
+    {
+      "file": "context-boundary-ascii.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "7c6179ff0bda28eaf0fbc08760e0793c35d22ac934ecceae9059324cc417b97a"
+    },
+    {
+      "file": "context-boundary-escaped.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "ff837b918a8b0cd872f5a3f6a8824bf62d84db127ceb1307ae138d1835a6a938"
+    },
+    {
+      "file": "context-boundary-unicode.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "af0b19636a1e902dd2bff9a8d6ba97205cb7a420deb4fb1b203182c98ce0e7cf"
+    },
+    {
+      "file": "context-eight-hops.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "efdd06bbc404fe7e378e8c30aaa6b1f246c3dbd94fc2a58a812af1c9aef1fe85"
+    },
+    {
+      "file": "context-hop-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "4b0f83b173b01b98a249521a3c9a8a9e8e84c6b4a4f21216cc89926d3428b926"
+    },
+    {
+      "file": "context-ninth-hop.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "42d8c1fbcf16672b8686b75547847b617f0e90f7e7f352cc07de8bc5e6fc43ec"
+    },
+    {
+      "file": "context-overflow-ascii.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "64b05f5cf4f6fb0ad8ca438da58f1274d3a20ae1a8eb6b7dfdd7db4b319378c3"
+    },
+    {
+      "file": "context-overflow-escaped.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "4788062995f56f3e429921b3f31e09bfaf5ee14e3dbd8d3823f031559b675ec3"
+    },
+    {
+      "file": "context-overflow-unicode.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "76e0b1049579c9b26f7970cd48424db07985a2102615ad6de6565e5c32fda11d"
     },
     {
       "file": "corrected-queue-name-unknown.json",
@@ -612,12 +758,20 @@
       "sha256": "cbc3a3263ad53d0baec13c9810cd27c8e638d14e2d65d33a39ca7c448c3c79ed"
     },
     {
+      "file": "decoded-text-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "433c29c916d8cd9d17a07248044a010060ea02be28611e737ea20962a0c3adf1"
+    },
+    {
       "file": "decoded-text-overflow.json",
       "class": "negative",
       "spec": "0.1.0",
       "family": "fldigi",
       "mapping": 1,
-      "sha256": "355839a38e6c8078357371f6000b8c6ff17685ab39f6dd0164c54dea007ce738"
+      "sha256": "975887ed829231f9623e5097a3c936e611f4c81db771190bbc77c3544c2afc8d"
     },
     {
       "file": "depth-boundary.json",
@@ -665,7 +819,7 @@
       "spec": "0.1.0",
       "family": "fldigi",
       "mapping": 1,
-      "sha256": "752865fa7931fd8107e76dae0879683f7ad086fec8f3887c3658c3044690150b"
+      "sha256": "5b182a395898415baf3626b0ebed551c75e08807940599150f6daf129a964d57"
     },
     {
       "file": "elements-overflow.json",
@@ -673,7 +827,7 @@
       "spec": "0.1.0",
       "family": "fldigi",
       "mapping": 1,
-      "sha256": "06adbf3204d9378d6727ac2c5102297311ede53f2db4ba44dfbb7a44c704cf09"
+      "sha256": "b16d8971c15962287f0d1a3dd355afdaa86def481432e0459af5c6bf654b1b56"
     },
     {
       "file": "empty-base64.json",
@@ -756,6 +910,46 @@
       "sha256": "09f8721dfeb5f1a66eeb8c21f0365df3d04d8867d18b45a780e9c1b004be2037"
     },
     {
+      "file": "fault-optional-future-bad-scalar.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "5c617da1e4504bc465a2bb1ed52552d2adadc674535128809f917e98278e64fa"
+    },
+    {
+      "file": "fault-optional-future-missing-code.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "d3afbb7a6160ba4c029bf25b9c97e0c45a522237b4fe10193b8cb512eeec597b"
+    },
+    {
+      "file": "fault-optional-future-required-type.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "4d4a703804e123a795c97d6bf6cf1af513cb3a992ba85c50fead25a2eedde0a4"
+    },
+    {
+      "file": "fault-optional-future-shape-before-scalar.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "ca6b1004db4f63a2bc9fb71a9090fb1f97fdb3e0b5676bcc82446e288a9351f0"
+    },
+    {
+      "file": "fault-optional-future.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "6ca8633e898ffb8a89e0cf55d99ceeb5829aaa229331a706d98ccffde2eface6"
+    },
+    {
       "file": "fault-unassociated.json",
       "class": "positive",
       "spec": "0.1.0",
@@ -794,6 +988,14 @@
       "family": "fldigi",
       "mapping": 1,
       "sha256": "ba521ebdeb34d0da30a6b8cf18c1f233e685e23c3acc630b3e63836a229394d7"
+    },
+    {
+      "file": "fldigi-list-full-source-shape.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "4cc04785deed929d2c27a2d5eee3ad752b3723600170bf40eee522e8d74b69df"
     },
     {
       "file": "fldigi-list-native-request.json",
@@ -884,6 +1086,14 @@
       "sha256": "f11bfcf0d3a640bfb128abfe9b8bab00f36069a3f683582613e279258fd09e1b"
     },
     {
+      "file": "fldigi-version-struct-full-source.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "aeb157aaa40fab8731adf0f874aac53bea0fbdf73db5c8c8c85b51baa9a6bfcb"
+    },
+    {
       "file": "fldigi-version-struct-native-request.json",
       "class": "positive",
       "spec": "0.1.0",
@@ -930,6 +1140,14 @@
       "family": "fldigi",
       "mapping": 1,
       "sha256": "4184a0133acfcd43c224a3b192c6ba29cc6b8f535467bbe8e567248e2ea75b5f"
+    },
+    {
+      "file": "flmsg-get_data-full-buffer.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "4ab0956aa29bb339faa6ca1f669e41df076bdbc1161e420b83811e626fa56a9f"
     },
     {
       "file": "flmsg-online-native-request.json",
@@ -2825,7 +3043,7 @@
       "spec": "0.1.0",
       "family": "fldigi",
       "mapping": 1,
-      "sha256": "3ed242706ff754ecceee640a9aa41589cd2e7776859a0bf1cdbcd4648871be49"
+      "sha256": "1ccb3ab17c9698b400574d77fc4010cb7f0edae89491a703e81a8eb71ba37758"
     },
     {
       "file": "members-boundary.json",
@@ -2940,6 +3158,14 @@
       "sha256": "f7f1d669a6f96f35d661a4d03963796302634a36a63acd2f8dbb12f8a5b0e5c0"
     },
     {
+      "file": "modem-get-io-names-full-source.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "39f747210f9ab5680c0d384d3dd5c069e30f67ba87f66f4c7d5e31c05513beae"
+    },
+    {
       "file": "modem-get-io-names-native-request.json",
       "class": "positive",
       "spec": "0.1.0",
@@ -3018,6 +3244,14 @@
       "family": "fldigi",
       "mapping": 1,
       "sha256": "dbc4776dec0e68dd0ff2cf80a7519d027d0211eb1b0a2e5011875bfe2841c528"
+    },
+    {
+      "file": "modem-get-names-full-source.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "13e9caa2c2b48e241ad708a4ee59e5dbfec36b445d4a1cdf422dc2cb3df070b9"
     },
     {
       "file": "modem-get-names-native-request.json",
@@ -3548,6 +3782,22 @@
       "sha256": "f31b032db9b441399911cc0b74705a7e0bd50fe7de111db898d8221552c77d9f"
     },
     {
+      "file": "output-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "3706044aca3a7fd75efdfef063a7fe9986b36de6b1202aacd900191ffb77cbe4"
+    },
+    {
+      "file": "output-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "ffcb2096395a0a498535ab713b7483923793c1eb07c4ac37f231b0061f43658f"
+    },
+    {
       "file": "outside-text.json",
       "class": "negative",
       "spec": "0.1.0",
@@ -3586,6 +3836,22 @@
       "family": "fldigi",
       "mapping": 1,
       "sha256": "5733e0c090afc676535c0d5fd87be6cb05512e14dcb0c98b631e0c2e9d2a557e"
+    },
+    {
+      "file": "precedence-association-before-context.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "3bdec08d0679804b1781d4cec43c7b758cb86396f41e63c1014041e897be4518"
+    },
+    {
+      "file": "precedence-context-before-dispatch.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "a55d294331a3317220fa41feb587ec2378a3bcc3494fcb9ba1144c5aac942ef4"
     },
     {
       "file": "precedence-declaration-version.json",
@@ -3636,12 +3902,20 @@
       "sha256": "68894cf1d6393c4f5311be6e7bb0e05a9b75c1fc6152245b7c527aaf1e06a299"
     },
     {
+      "file": "precedence-scalar-before-context.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "130cafa813ce8adf8e93685983c219436435c2530e33bfe89a04902e45c53b62"
+    },
+    {
       "file": "precedence-size-doctype.json",
       "class": "negative",
       "spec": "0.1.0",
       "family": "fldigi",
       "mapping": 1,
-      "sha256": "f4eb8b9642533ec21e6b16e33d0fcbcab2ea8e44aca96a6acc7abc50386411b6"
+      "sha256": "d6bf973ced59cd00cb591b7b5f7d2e76a75c513cae8001ec914980d3ee0a6438"
     },
     {
       "file": "precedence-version-doctype.json",
@@ -3650,6 +3924,14 @@
       "family": "fldigi",
       "mapping": 1,
       "sha256": "143ba49dfc8463cd82997ae9fc52154646c726be2a61be7a4444f371f022464b"
+    },
+    {
+      "file": "precedence-xml-before-context.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "46d65f597515c7430aca9b9678fca9f2e592453d2495b80d3c6ddf110718f9d3"
     },
     {
       "file": "range-length-disagrees.json",
@@ -3674,6 +3956,62 @@
       "family": "fldigi",
       "mapping": 1,
       "sha256": "a9380695641a035116da406b96f298e4324736563185eb6db4bec420d0b247cf"
+    },
+    {
+      "file": "reencode-bad-kind.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "0f89b53f6f5b13245f2a7a2f768478aba256daacc21e852458839bcda0f40361"
+    },
+    {
+      "file": "reencode-bad-mapped-extra.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "8cf835c363f188970a54c150919877ae4fe5a92d9774ba4819f5e93053d81b21"
+    },
+    {
+      "file": "reencode-bad-mapped-value.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "c5027732940baa61146d4e2c7adea2ef40037dc64b511361f3d10090b23b6434"
+    },
+    {
+      "file": "reencode-bad-native-version.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "a7d0a4271f04b4ca80ea9e3e5692d07a9be0226c02a57d4210c04f26de3e80e3"
+    },
+    {
+      "file": "reencode-bad-version-altered.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "e6e9c0bb81e613c737070d433e5e42c529dfd82093a8c7e03e42cb313901ded0"
+    },
+    {
+      "file": "reencode-bad-version-missing.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "816c3799e13eba09a559e09dbbd19d7b8417f7d4add615f13631bb6ce1454f38"
+    },
+    {
+      "file": "reencode-bad-wire-id.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "d8aaff0c5cfd0c9878afc3dd084af7e34e27affe20d37661922b5e67c2ec36de"
     },
     {
       "file": "request-association-mismatch.json",
@@ -4052,6 +4390,14 @@
       "sha256": "24d639f30dfaa34042557f273291f76aa21f2843ab30f748080ef09bfeea5cc2"
     },
     {
+      "file": "rx-get_data-full-buffer.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "75cc45b7678235919cdf51558c9902b2bc226ccb038e6bf8a571f8f5cced3624"
+    },
+    {
       "file": "rx-nul.json",
       "class": "positive",
       "spec": "0.1.0",
@@ -4098,6 +4444,14 @@
       "family": "fldigi",
       "mapping": 1,
       "sha256": "d793e942c828c27e701fb564dd0d8bdc9694d0eabbf1aca531d0d325bceceec1"
+    },
+    {
+      "file": "rxtx-get_data-full-buffer.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "8327a5e96059276a4084bb7730fd25a4cfe5ed31349d6b70f33b9e6f825565b6"
     },
     {
       "file": "scalar-whitespace.json",
@@ -4210,6 +4564,22 @@
       "family": "fldigi",
       "mapping": 1,
       "sha256": "cca1ec4f98535791c223e39880f74b12eed98da6e4d2fa9301e73eb3936f6dc4"
+    },
+    {
+      "file": "system-list-methods-full-source.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "773226256ead8306ff62cf1b9214ed5eaf889b075ccc37b21108c9522c0c11a9"
+    },
+    {
+      "file": "system-multicall-source-shape.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "772ff20282630bc903246e4811aafc391ca039aa4e570e243771830019441034"
     },
     {
       "file": "text-add-tx-bytes-native-request.json",
@@ -4426,6 +4796,14 @@
       "family": "fldigi",
       "mapping": 1,
       "sha256": "7fcf7dd65b89326b37e102594eb034640718e36714afbfff8791a542c60431a0"
+    },
+    {
+      "file": "tx-get_data-full-buffer.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "26681638c5aabd45f2d2ee32703584ffc66af3d4117c970e5224cb0b480dd3b0"
     },
     {
       "file": "unbound-prefix.json",

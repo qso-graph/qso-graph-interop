@@ -125,7 +125,7 @@ command input is not mutated. Native and mapping versions are independent.
 | ID | Requirement | Verify |
 |---|---|---|
 | `QGI-MAP-0001` | **Every family's mapping is pinned to released source or a dated published document**, named with its version and a cryptographic hash, and re-pinned only by a new revision of the family's section. | Inspection |
-| `QGI-MAP-0002` | **Additive revisions; never guess.** A new mapping revision MUST follow the MINOR rules in `QGI-GEN-0005`: only new native types, optional fields or operations, never changed meaning, types, units, defaults or newly required fields. A codec MUST follow its family’s version and type rules, returning a skip for an unknown future version or unknown type rather than interpreting an encoding it does not know. | Test |
+| `QGI-MAP-0002` | **Additive revisions; never guess.** A new mapping revision MUST follow the MINOR rules in `QGI-GEN-0005`: only new native types, optional fields or operations, never changed meaning, types, units, defaults or newly required fields. A codec MUST follow its family’s version and type rules, returning a skip for an unknown future version or unknown type rather than interpreting an encoding it does not know, unless the family explicitly defines an opaque `native` fallback after its isolation and resource validation. Such a fallback MUST preserve exact evidence without interpreting the unknown encoding and MUST report native verification as `unavailable` (`QGI-MAP-0015`). | Test |
 | `QGI-MAP-0003` | **Limits are declared per family** (largest message, largest field, and the largest admissible native message whose largest observation including structured views fits `QGI-SER-0004`) and checked before a codec allocates; a message beyond them is an error, not a truncation. | Test |
 | `QGI-MAP-0004` | **No identity from the wire.** A wire ID, an application or station label, or a network address is data, not proof of who sent the message, and never fills `source_id`. | Inspection |
 | `QGI-MAP-0005` | **Atomic errors.** On malformed input or any other message error, a decoder MUST return no events and commit no state updates for that message. | Test |
@@ -234,7 +234,7 @@ adds event carriage using the existing datagram and stream classes. Annex letter
 | `wsjtx` | 65,507 bytes; the full common and structured upper bound is 973,268 bytes (B.7). |
 | `qgi` | UDP: 65,507 bytes. TCP: frame limit 1,048,576 bytes, subject to exact output admission; guaranteed compact-event budget 1,044,444 bytes with a maximal receiving context (Annex I). |
 | `n1mm` | 65,507 bytes; the full common and structured upper bound is 972,500 bytes (D.7). |
-| `fldigi` | 71,155-byte HTTP body; 128-byte method name; E.3 XML/value limits; largest observation proof in E.7 reaches the conservative 1 MiB bound. |
+| `fldigi` | 262,144-byte HTTP body; 128-byte method name; 8,192 XML elements; 1,024 array values; 256 struct members; 32 params. E.7 proves the full released list fits 1 MiB; larger inputs also require the actual compact-output check (the sufficient universal body guarantee is 71,155 bytes). |
 | `js8call`, `pskreporter-mqtt`, `pskreporter-ipfix` | Not yet established: their annexes are unpinned/incomplete. Their native limits and largest-observation proofs remain conformance gates under `QGI-MAP-0003`. For IPFIX this includes record, template, message and all supporting-record evidence, rather than message length alone. |
 
 ## 6. Families and fields defined by others
@@ -315,6 +315,10 @@ recognized official families; a third-party family publishes its profile constra
 - **I.** [QG Interop event carriage](annex-i-qgi.md).
 - **Z.** [Informative extension design check](annex-z-design-check.md).
 
-The [vector format and coverage](vectors/README.md) describe the versioned suite. Annexes C, E and G
-reserve scope; Annex H additionally records submitter obligations. Annexes B, D and I define
-profiles and vectors without claiming reference-implementation or live-peer conformance.
+The [vector format and coverage](vectors/README.md) describe the versioned suite. Annexes C and G reserve
+scope; Annex H additionally records submitter obligations. Annexes B, D, E and I define
+normative profiles and vectors. Reference-implementation evidence for B, D and I
+is recorded separately in [QGI-RI-001](QGI-RI-001.md); Annex D has an implemented
+N1MM reader and command writer. Annex E specifies the pinned fldigi profile; its
+implementation remains separate work. Profiles and vectors do not establish
+live-peer conformance.

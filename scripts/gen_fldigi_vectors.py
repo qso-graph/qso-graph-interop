@@ -14,8 +14,69 @@ RELEASE = '4.2.13'
 RETRIEVED = '2026-11-12'
 ARCHIVE_URL = 'https://www.w1hkj.org/files/fldigi/fldigi-4.2.13.tar.gz'
 ARCHIVE_SHA256 = 'a1e8d990359ce9c0cce3ceb5116fd0cf72c95528969766898640ca6ca2dba8d4'
-LIMIT = 71155
+LIMIT = 262144
+ELEMENT_LIMIT = 8192
+ARRAY_LIMIT = 1024
+MEMBER_LIMIT = 256
+PARAM_LIMIT = 32
 DECL = '<?xml version="1.0" encoding="utf-8"?>'
+# S2 registration order includes both duplicate setters; S13 labels are wire data.
+SOURCE_REGISTRATIONS = """fldigi.list fldigi.name fldigi.version_struct fldigi.version fldigi.name_version fldigi.config_dir
+fldigi.terminate modem.get_mode modem.get_submode modem.get_name modem.get_io_names modem.get_names
+modem.get_id modem.get_max_id modem.set_by_name modem.set_by_id modem.set_carrier modem.inc_carrier
+modem.get_carrier modem.get_afc_search_range modem.set_afc_search_range modem.inc_afc_search_range
+modem.get_bandwidth modem.set_bandwidth modem.inc_bandwidth modem.get_quality modem.search_up
+modem.search_down modem.olivia.set_bandwidth modem.olivia.get_bandwidth modem.olivia.set_tones
+modem.olivia.get_tones main.get_status1 main.get_status2 main.get_sideband main.set_sideband
+main.get_wf_sideband main.set_wf_sideband main.get_frequency main.set_frequency main.inc_frequency
+main.get_afc main.set_afc main.toggle_afc main.get_squelch main.set_squelch main.toggle_squelch
+main.get_squelch_level main.set_squelch_level main.inc_squelch_level main.get_reverse
+main.set_reverse main.toggle_reverse main.get_lock main.set_lock main.toggle_lock main.get_txid
+main.set_txid main.toggle_txid main.get_rsid main.set_rsid main.toggle_rsid main.get_trx_status
+main.tx main.tune main.rsid main.rx main.rx_tx main.rx_only main.abort main.get_trx_state
+main.get_tx_timing main.get_char_rates main.get_char_timing main.set_rig_name main.set_rig_frequency
+main.set_rig_modes main.set_rig_mode main.get_rig_modes main.get_rig_mode main.set_rig_bandwidths
+main.set_rig_bandwidth main.get_rig_bandwidth main.get_rig_bandwidths main.run_macro
+main.get_max_macro_id rig.set_name rig.get_name rig.set_frequency rig.set_smeter rig.set_pwrmeter
+rig.set_modes rig.set_mode rig.get_modes rig.get_mode rig.set_bandwidths rig.set_bandwidth
+rig.get_frequency rig.get_bandwidth rig.get_bandwidths rig.get_notch rig.set_notch rig.enable_qsy
+log.get_frequency log.get_time_on log.get_time_off log.get_date_on log.get_date_off log.get_call
+log.get_name log.get_rst_in log.get_rst_out log.set_rst_in log.set_rst_out log.get_serial_number
+log.get_serial_number_sent log.get_exchange log.set_exchange log.get_state log.get_province
+log.get_country log.get_qth log.get_band log.get_sideband log.get_notes log.get_locator log.get_az
+log.clear log.set_call log.set_name log.set_qth log.set_locator log.set_rst_in log.set_rst_out
+log.set_serial_number log.set_contest_counter logbook.last_record logbook.all_records
+main.flmsg_online main.flmsg_available main.flmsg_transfer main.flmsg_squelch flmsg.online
+flmsg.available flmsg.transfer flmsg.squelch flmsg.get_data io.in_use io.enable_kiss io.enable_arq
+text.get_rx_length text.get_rx text.clear_rx text.add_tx text.add_tx_queu text.add_tx_bytes
+text.clear_tx rxtx.get_data rx.get_data tx.get_data spot.get_auto spot.set_auto spot.toggle_auto
+spot.pskrep.get_count wefax.state_string wefax.skip_apt wefax.skip_phasing wefax.set_tx_abort_flag
+wefax.end_reception wefax.start_manual_reception wefax.set_adif_log wefax.set_max_lines
+wefax.get_received_file wefax.send_file navtex.get_message navtex.send_message""".split()
+SOURCE_MODE_NAMES = """NULL CW CONTESTIA Cont-4/125 Cont-4/250 Cont-4/500 Cont-4/1K Cont-4/2K Cont-8/125 Cont-8/250
+Cont-8/500 Cont-8/1K Cont-8/2K Cont-16/250 Cont-16/500 Cont-16/1K Cont-16/2K Cont-32/1K Cont-32/2K
+Cont-64/500 Cont-64/1K Cont-64/2K DOMEXM DOMEX4 DOMEX5 DOMEX8 DOMX11 DOMX16 DOMX22 DOMX44 DOMX88
+FELDHELL SLOWHELL HELLX5 HELLX9 FSKH245 FSKH105 HELL80 MFSK8 MFSK16 MFSK32 MFSK4 MFSK11 MFSK22
+MFSK31 MFSK64 MFSK128 MFSK64L MFSK128L WEFAX576 WEFAX288 NAVTEX SITORB MT63-500S MT63-500L MT63-1KS
+MT63-1KL MT63-2KS MT63-2KL BPSK31 BPSK63 BPSK63F BPSK125 BPSK250 BPSK500 BPSK1000 PSK125C12 PSK250C6
+PSK500C2 PSK500C4 PSK800C2 PSK1000C2 QPSK31 QPSK63 QPSK125 QPSK250 QPSK500 8PSK125 8PSK125FL
+8PSK125F 8PSK250 8PSK250FL 8PSK250F 8PSK500 8PSK500F 8PSK1000 8PSK1000F 8PSK1200F OFDM500F OFDM750F
+OFDM3500 OLIVIA OLIVIA-4/125 OLIVIA-4/250 OLIVIA-4/500 OLIVIA-4/1K OLIVIA-4/2K OLIVIA-8/125
+OLIVIA-8/250 OLIVIA-8/500 OLIVIA-8/1K OLIVIA-8/2K OLIVIA-16/500 OLIVIA-16/1K OLIVIA-16/2K
+OLIVIA-32/1K OLIVIA-32/2K OLIVIA-64/500 OLIVIA-64/1K OLIVIA-64/2K RTTY SCAMPFSK SCAMPOOK SCFSKFST
+SCFSKSLW SCOOKSLW SCFSKVSL THORM THOR4 THOR5 THOR8 THOR11 THOR16 THOR22 THOR25 THOR32 THOR44 THOR56
+THOR25x4 THOR50x1 THOR50x2 THOR100 THROB1 THROB2 THROB4 THRBX1 THRBX2 THRBX4 PSK125R PSK250R PSK500R
+PSK1000R PSK63RC4 PSK63RC5 PSK63RC10 PSK63RC20 PSK63RC32 PSK125RC4 PSK125RC5 PSK125RC10 PSK125RC12
+PSK125RC16 PSK250RC2 PSK250RC3 PSK250RC5 PSK250RC6 PSK250RC7 PSK500RC2 PSK500RC3 PSK500RC4 PSK800RC2
+PSK1000RC2 FSQ IFKP SSB WWV ANALYSIS FMT RSID_EOT""".split()
+SOURCE_IO_INDICES = (
+    27, 28, 29, 30, 39, 40, 44, 45, 46, 47, 48, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65,
+    66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89,
+    90, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 122, 123,
+    124, 125, 126, 127, 128, 129, 130, 131, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148,
+    149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161,
+)
+
 # Released table signatures are evidence, not a generic method writer API.
 CATALOG = {'fldigi.list': 'A:n',
  'fldigi.name': 's:n',
@@ -261,7 +322,7 @@ def text_value(s, encoding):
 
 def xmlrpc(raw, substrate):
     """Independent grammar/type oracle; retains a small tree, not an implementation import."""
-    root, enc = substrate(raw, body_limit=LIMIT, numeric_catalog=False)
+    root, enc = substrate(raw, body_limit=LIMIT, element_limit=ELEMENT_LIMIT, numeric_catalog=False)
     values, containers = [], []
     extended = False
 
@@ -304,11 +365,11 @@ def xmlrpc(raw, substrate):
         if name == 'array':
             shape(child, ['data'])
             data = child['children'][0]
-            container(data, 'data', 'value', 256)
+            container(data, 'data', 'value', ARRAY_LIMIT)
             for item in data['children']:
                 value(item)
         elif name == 'struct':
-            container(child, 'struct', 'member', 256)
+            container(child, 'struct', 'member', MEMBER_LIMIT)
             for member in child['children']:
                 shape(member, ['name', 'value'])
                 shape(member['children'][0], leaf=True)
@@ -334,7 +395,7 @@ def xmlrpc(raw, substrate):
             shape(params, ['value'])
             value(params['children'][0])
         else:
-            container(params, 'params', 'param', 32)
+            container(params, 'params', 'param', PARAM_LIMIT)
             if name == 'methodResponse' and len(params['children']) != 1:
                 raise ValueError('malformed')
             for param in params['children']:
@@ -833,12 +894,12 @@ def boundary_vectors(suite, positive, negative, b64):
         ('odd-utf16', b'\xff\xfe<\x00x', 'truncated'),
         ('body-overflow', b'x' * (LIMIT + 1), 'oversized'),
         ('depth-overflow', b'<x>' * 17 + b'</x>' * 17, 'oversized'),
-        ('elements-overflow', b'<x>' + b'<y/>' * 1024 + b'</x>', 'oversized'),
+        ('elements-overflow', b'<x>' + b'<y/>' * ELEMENT_LIMIT + b'</x>', 'oversized'),
         ('attributes-overflow', ('<x ' + ' '.join(f'a{i}=""' for i in range(17)) + '/>').encode(), 'oversized'),
         ('name-overflow', ('<' + 'x' * 129 + '/>').encode(), 'oversized'),
-        ('params-overflow', call('future.method', *([''] * 33)), 'oversized'),
-        ('array-overflow', response('<array><data>' + '<value/>' * 257 + '</data></array>'), 'oversized'),
-        ('members-overflow', response('<struct>' + '<member><name>x</name><value/></member>' * 257 + '</struct>'), 'oversized'),
+        ('params-overflow', call('future.method', *([''] * (PARAM_LIMIT + 1))), 'oversized'),
+        ('array-overflow', response('<array><data>' + '<value/>' * (ARRAY_LIMIT + 1) + '</data></array>'), 'oversized'),
+        ('members-overflow', response('<struct>' + '<member><name>x</name><value/></member>' * (MEMBER_LIMIT + 1) + '</struct>'), 'oversized'),
         ('response-empty-params', b'<methodResponse><params/></methodResponse>', 'malformed'),
         ('params-and-fault', b'<methodResponse><params/><fault/></methodResponse>', 'malformed'),
         ('call-missing-name', b'<methodCall><params/></methodCall>', 'malformed'),
@@ -865,13 +926,13 @@ def boundary_vectors(suite, positive, negative, b64):
              {'status': 'ok', 'operation': 'fldigi.main_tx'}, 'main.tx')
     positive('empty-base64', response('<base64/>'), 'decode', {'text': ''}, 'rx.get_data')
     positive('numeric-token-boundary' , response('<int>' + '0' * 127 + '1</int>'), 'native', {}, 'future.method')
-    positive('params-boundary', call('future.method', *([''] * 32)), 'native', {}, 'future.method', is_request=True)
-    positive('array-boundary', response('<array><data>' + '<value/>' * 256 + '</data></array>'), 'native', {}, 'future.method')
-    positive('members-boundary', response('<struct>' + '<member><name>x</name><value/></member>' * 256 + '</struct>'), 'native', {}, 'future.method')
+    positive('params-boundary', call('future.method', *([''] * PARAM_LIMIT)), 'native', {}, 'future.method', is_request=True)
+    positive('array-boundary', response('<array><data>' + '<value/>' * ARRAY_LIMIT + '</data></array>'), 'native', {}, 'future.method')
+    positive('members-boundary', response('<struct>' + '<member><name>x</name><value/></member>' * MEMBER_LIMIT + '</struct>'), 'native', {}, 'future.method')
     positive('comment-cdata-declaration-text', response('<string><!-- <!DOCTYPE x> --><![CDATA[<!DOCTYPE x>]]></string>'),
              'result', {'status': 'ok', 'operation': 'fldigi.log_get_name', 'text': '<!DOCTYPE x>'}, 'log.get_name')
     for name, raw, root in [('depth-boundary', b'<x>' * 16 + b'</x>' * 16, 'x'),
-            ('elements-boundary', b'<x>' + b'<y/>' * 1023 + b'</x>', 'x'),
+            ('elements-boundary', b'<x>' + b'<y/>' * (ELEMENT_LIMIT - 1) + b'</x>', 'x'),
             ('attributes-boundary', ('<x ' + ' '.join(f'a{i}=""' for i in range(16)) + '/>').encode(), 'x'),
             ('name-boundary', ('<' + 'x' * 128 + '/>').encode(), 'x' * 128),
             ('unknown-root', b'<future>Q1AAA</future>', 'future'),
@@ -879,10 +940,10 @@ def boundary_vectors(suite, positive, negative, b64):
         v = positive(name, raw, 'native', {})
         v['expected_message']['root'] = root
     overhead = len(response('<string></string>'))
-    positive('maximum-body-with-view', response('<string>' + '"' * (LIMIT - overhead) + '</string>'), 'result',
-             {'status': 'ok', 'operation': 'fldigi.log_get_name', 'text': '"' * (LIMIT - overhead)}, 'log.get_name')
+    positive('maximum-body-with-view', response('<string>' + 'x' * (LIMIT - overhead) + '</string>'), 'result',
+             {'status': 'ok', 'operation': 'fldigi.log_get_name', 'text': 'x' * (LIMIT - overhead)}, 'log.get_name')
     # UTF-16 source bytes are smaller than decoded UTF-8; expansion is bounded separately.
-    raw = b'\xff\xfe' + ('<x>' + '\u0800' * 23719 + '</x>').encode('utf-16-le')
+    raw = b'\xff\xfe' + ('<x>' + '\u0800' * (LIMIT // 3 + 1) + '</x>').encode('utf-16-le')
     negative('decoded-text-overflow', raw, 'oversized')
     for name, encoding, bom, decl in [('utf8-bom', 'utf-8', b'\xef\xbb\xbf', ''),
             ('utf16le', 'utf-16-le', b'\xff\xfe', '<?xml version="1.0" encoding="utf-16"?>'),
@@ -968,7 +1029,7 @@ def validate(suite, substrate, root, producer_strict, producer_factory):
     rows = re.findall(r'^\| `([a-z][a-z0-9_.]+)` \| `([^`]+)` \|', document, re.M)
     assert dict(rows) == CATALOG, 'catalog prose and pinned vector signatures disagree'
     anchors = ['paired `<params></params>`', 'followed by exactly `.0`', 'quotes, tabs and LF remain literal',
-               '71,155 bytes', '32, 256 and 256', 'first failure', 'aggregate result',
+               '262,144 bytes', '32, 1,024 and 256', 'first failure', 'aggregate result',
                'double for rig.set_frequency, nil for', 'without synthesizing nil',
                'without translating renamed']
     def contract(text):
@@ -980,7 +1041,8 @@ def validate(suite, substrate, root, producer_strict, producer_factory):
     assert 'pinned to released `4.2.13`' in (root / 'spec/QGI-SPEC-001.md').read_text()
     # Check the maximum integer admitted by the published bound, independently.
     bound = lambda n: 4 * ((n + 2) // 3) + 12*n + 1536 + 32768 + 65536
-    assert bound(LIMIT) == 1048576 and bound(LIMIT + 1) > 1048576
+    assert bound(71155) == 1048576 and bound(71156) > 1048576
+    assert bound(LIMIT) == 3595096
     positives = commands = 0
     for name, vector in suite.vectors.items():
         cls, inp, expected = vector['class'], vector['input'], vector['expected']

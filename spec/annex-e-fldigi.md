@@ -15,7 +15,7 @@ no git-tag fallback is used, and no unverified tag or commit is attributed to it
 - Release source: [fldigi-4.2.13.tar.gz](https://www.w1hkj.org/files/fldigi/fldigi-4.2.13.tar.gz).
 - Retrieval: **2026-11-12**; SHA-256: `a1e8d990359ce9c0cce3ceb5116fd0cf72c95528969766898640ca6ca2dba8d4`.
 - Archive root: `fldigi-4.2.13/`; `configure.ac` (S16) declares 4.2.13.
-- S2–S6 and S8–S16 below identify complete files inside that archive, relative to
+- S2–S6 and S8–S18 below identify complete files inside that archive, relative to
   its root. Their links identify the containing tarball, not loose current files.
 - S1 and S7 retain the evidence retrieved earlier on the same day. Hashes cover
   complete downloaded bytes, not rendered text. No upstream source is bundled
@@ -39,6 +39,8 @@ no git-tag fallback is used, and no unverified tag or commit is attributed to it
 | S14 | [src/include/globals.h](https://www.w1hkj.org/files/fldigi/fldigi-4.2.13.tar.gz) | `65fa9d98cb6477edc9f52c89b8a1f987a0922ab05391c16225d2a83ddbe25ec5` |
 | S15 | [src/Makefile.am](https://www.w1hkj.org/files/fldigi/fldigi-4.2.13.tar.gz) | `10c6ff4ab161497c5fe01ec59086f200177f304549ecc26624c26fc5c6dee9a7` |
 | S16 | [configure.ac](https://www.w1hkj.org/files/fldigi/fldigi-4.2.13.tar.gz) | `d2fb2013db9915736d4a656746c833797734715f369fe536ff3694048c848994` |
+| S17 | [src/xmlrpcpp/XmlRpcUtil.cpp](https://www.w1hkj.org/files/fldigi/fldigi-4.2.13.tar.gz) | `14310e98508a7c767a0277c403264fe2db46b8440f8d55acd242afd57118f5de` |
+| S18 | [src/xmlrpcpp/XmlRpcBase64.h](https://www.w1hkj.org/files/fldigi/fldigi-4.2.13.tar.gz) | `2d245271c5aaa47966f12a9002adb6200900eec715a28b8781fa6277df99a1b4` |
 
 S2's METHOD_LIST and named handler constructors/bodies are the authority for
 method spelling, arguments, advertised signatures and effects. S1 is the 4.2.00
@@ -48,7 +50,11 @@ and S16 permit an external libflxmlrpc backend instead of the bundled sources;
 its parser/serializer behavior is not established by these bundled-file hashes.
 The profile's acceptance/construction rules are explicit policies, independent
 of backend permissiveness. S3's self-closing number defaults and permissive
-numeric conversion are not adopted.
+numeric conversion are not adopted. S3 stringFromXml passes string content to
+S17 xmlDecode, which decodes only the five named entities in one pass and leaves
+numeric references literal. S2 Text_add_tx receives that result directly. Thus
+`&#13;` cannot preserve a requested CR on the bundled backend; portable commands
+exclude CR rather than guessing a construction for an unverified backend.
 
 **`QGI-FLD-0068` — Authority.** A codec MUST use S2's released handlers in preference
 to conflicting S1 documentation; QGI acceptance and construction policies below
@@ -215,9 +221,10 @@ method spelling, polling order or program name (`QGI-CLS-0005`).
 receive the associated request's two integers in `request.arguments`; other
 response mappings need only `request.method`.
 
-**`QGI-FLD-0007` — Association validation.** A supplied association MUST have exactly
-`method` and optional `arguments` (an array of at most 32 values); its method obeys
-`0025`, and a supplied method disagreeing with a decoded methodCall MUST fail as
+**`QGI-FLD-0007` — Association validation.** A supplied association MUST be an object
+with exactly `method` and optional `arguments` (an array of at most 32 values); its method obeys
+`0025`; supplied null is `invalid_value`, distinct from an absent association.
+A supplied method disagreeing with a decoded methodCall MUST fail as
 `invalid_value`.
 
 **`QGI-FLD-0008` — No echoed method.** A response MUST NOT be checked against an
@@ -255,7 +262,7 @@ table; no outcome updates implicit session state.
 | Response without association, or range read without valid range association | `native` |
 | Fault with or without association | E.5 error `result` |
 | Newer peer with known method | Same mapping; version label does not disable it |
-| Unknown root or unknown value type | `native`, after complete XML validation |
+| Unknown root or unknown value type in a nonfault message | Opaque `native` after isolation/resource validation; verification `unavailable` |
 | Malformed XML/XML-RPC container | `malformed` |
 | Empty body or unfinished XML at EOF | `truncated` |
 | Unsupported XML version/encoding | `unsupported_version` |
@@ -268,7 +275,7 @@ These are QGI isolation policies (`QGI-SEC-0006`, `0007`), independent of the
 upstream XML library's permissiveness. XML whitespace means space, tab, CR and LF.
 References to Annex D select existing normative rules, not a second definition.
 
-**`QGI-FLD-0014` — Body bound.** A reader MUST reject bodies exceeding **71,155 bytes**
+**`QGI-FLD-0014` — Body bound.** A reader MUST reject bodies exceeding **262,144 bytes**
 before allocating XML structures.
 
 **`QGI-FLD-0015` — XML substrate.** A reader MUST apply `QGI-N1M-0017`, `0018`,
@@ -277,13 +284,18 @@ processing rules, substituting E.3's body/text limits and E.3's scalar rules for
 Annex D's datagram/mapped-number rules.
 
 **`QGI-FLD-0016` — XML resources.** The total processed text and attribute-value
-budget MUST be **71,155 bytes**, measured after entity and line-ending processing
+budget MUST be **262,144 bytes**, measured after entity and line-ending processing
 as UTF-8 for valid characters and original bytes for invalid code units.
 
 **`QGI-FLD-0017` — Value resources.** A reader MUST bound XML-RPC params, array
-values and struct members to **32, 256 and 256**, respectively, in each container.
-XML depth 16, 1,024 elements, 16 attributes per element, 256 attributes per document
-and 128-byte lexical names remain as specified by `QGI-N1M-0018`.
+values and struct members to **32, 1,024 and 256**, respectively, in each container,
+and the document to **8,192 elements**. XML depth 16, 16 attributes per element,
+256 attributes per document and 128-byte lexical names remain as specified by
+`QGI-N1M-0018`. These fldigi-specific bounds replace the inherited element count.
+A reader MUST accept the complete released `fldigi.list` response within these
+bounds, including every help string and duplicate registration, as native evidence.
+E.3.1 records the source sizes and the headroom calculation. Variable-size responses
+remain subject to these resource bounds and the actual output bound in E.7.
 
 **`QGI-FLD-0018` — Numeric resources.** Every known int/i4, boolean or double value,
 including inside native-only arrays/structs and unknown methods, MUST have at most
@@ -303,8 +315,12 @@ that leave their expanded name unqualified; duplicates, extra children, mixed
 nonwhitespace container text and conflicting params/fault MUST be `malformed`.
 
 **`QGI-FLD-0021` — Extension values.** A value with exactly one unknown type element
-MUST make the entire message native-only, without interpreting descendants as
+MUST make a nonfault message native-only, without interpreting descendants as
 XML-RPC values; XML isolation and XML resource limits still apply to that subtree.
+This is the opaque fallback permitted by `QGI-MAP-0002`; its native consistency
+status is `unavailable`, including unknown roots. In faults, unknown optional
+member values remain opaque but MUST NOT suppress required fault validation or
+the error `result` dispatch (`0028`, `0046`).
 
 **`QGI-FLD-0022` — Typed values.** A `value` MUST contain either character data alone
 (an untyped string, including empty), or exactly one type child with only XML
@@ -349,16 +365,74 @@ from these ordered stages, with no events or state changes:
    anywhere in document order; comments/CDATA/PI text cannot introduce declarations.
 4. XML syntax and nonnumeric XML resources in document order, exactly the construct
    validation and resource ordering of `QGI-N1M-0053` stage 4.
-5. Complete XML-RPC container grammar, then params/array/member bounds, then scalar
+5. Complete XML-RPC container grammar, including required fault shape even when
+   optional values have unknown types, then params/array/member bounds, then scalar
    numeric bounds, then scalar conversion, all in preorder within each stage.
    An unknown root bypasses XML-RPC stages; an unknown type bypasses only its subtree.
-6. Method name, then supplied association validation, then E.4 dispatch and common
-   conversion; only afterward check actual compact event size (`QGI-SER-0004`).
+6. Method name, then supplied association validation.
+7. Each supplied context, including each `via` hop context, in order: enforce the
+   4,096-byte compact UTF-8 JSON bound (`QGI-SER-0010`), then the eight-hop bound.
+8. E.4 dispatch and common conversion; only afterward check actual compact event
+   size (`QGI-SER-0004`), including the optional evidence view when emitted.
 
 **`QGI-FLD-0028` — Fault shape.** A recognized fault MUST contain a struct with exactly
 one member named `faultCode` of type int/i4 and exactly one `faultString` of string
 or untyped type; other members are retained, duplicate required names or wrong
-required types are `malformed` (S7 Fault example; uniqueness is QGI policy).
+required types are `malformed`, even with unknown optional values; known scalars
+in other members still undergo `0024` validation (S7 Fault example; uniqueness
+is QGI policy).
+
+### E.3.1 Released response size audit (informative)
+
+The following counts derive from the complete pinned archive, without running a
+peer. Bytes include S12 generateResponse's XML declaration, CRLF, tab and final
+CRLF, but exclude HTTP headers. Strings use S3's untyped `<value>text</value>` and
+S17's five entity escapes; structs use sorted member names. Each successful
+response has one param. Array length and members are maxima per container, not
+sums across containers. The full method table has 176 registrations and 174 distinct
+names: both duplicate `log.set_rst_in/out` registrations must be counted. S2's
+allow/deny filter can shorten the list, never enlarge it.
+
+| Method / returned value | XML elements | Array length | Struct members | Body bytes / payload bytes | Source derivation |
+|---|---:|---:|---:|---|---|
+| `fldigi.list`, all released help | 1,942 | 176 | 3 per row, 528 total | 42,903 / 6,992 help bytes; longest help 99 | S2 METHOD_LIST, constructors including inherited signatures/help, Fldigi_list; S3/S12/S17 serialization. Six envelope/array elements + 176 × 11. |
+| `system.listMethods` | 183 | 177 | 0 | 5,664 | S2 XmlRpcImpl::fl_open enables S12 introspection: 174 distinct program methods + system.listMethods + system.methodHelp + the appended system.multicall. Duplicate registrations occupy one method-map slot. |
+| `system.methodHelp` | 4 | 0 | 0 | at most 209 / 99 | S12 returns one S2 constructor help string (or shorter introspection help). It does not return the full catalog. |
+| `system.multicall` | depends on caller's k calls; 6 + 1,942k when each result is a full fldigi.list | k in outer result array; successful results have singleton wrappers | 2 per failure; nested successes retain their own members | depends on k and nested results; no fixed application maximum | S12 executeMulticall constructs arrays and fault structs. These backend methods are native under E.2; they do not add names to S2 METHOD_LIST or entries to the catalog. |
+| `modem.get_names` | 175 | 169 | 0 | 4,013 | S2 Modem_get_names; all 169 S13 mode_info rows, including NULL. Six envelope/array elements + 169 untyped values. |
+| `modem.get_io_names` | 107 | 101 | 0 | 2,509 | S2 Modem_get_io_names; 101 S13 rows with iface_io other than DISABLED_IO. |
+| `fldigi.version_struct` | 16 | 0 | 3 | 299 | S2 Fldigi_version_struct: major i4 4, minor i4 2, patch string 13. |
+| `rx.get_data`, `tx.get_data`, `rxtx.get_data`, `flmsg.get_data` | 5 | 0 | 0 | 5,666 / at most 4,096 raw bytes | S6 RAW_BUFF_LEN and get_rx_data/get_tx_data/get_rxtx_data; S2 callers; S18 emits LF after each full 72 base64 characters. 4 × ceil(4,096 / 3) = 5,464 base64 characters + 75 LF + 127 envelope/tag bytes. NUL can shorten strlen, never enlarge it. |
+| `modem.get_name`, successful `modem.set_by_name`; `modem.get_mode`, `modem.get_submode` | 4 | 0 | 0 | at most 123 / 13-byte longest label | S2; longest of S13 sname/export_mode/export_submode, no XML escapes needed. The no-such-modem string is also 13 bytes. |
+| `io.in_use` | 4 | 0 | 0 | 114 / 4 | S2 Io_in_use returns KISS, ARQ or empty; this is a scalar, not another name array. |
+| `main.get_char_rates` | 4 | 0 | 0 | at most 25,454 / 25,344 | S2 loops 32 × 8 times, appending at most sizeof(result) − 1 = 99 bytes per numeric record; conservative source bound, not a measured modem result. |
+| `rig.get_modes`, `main.get_rig_modes` | 6 + k | k, no fixed maximum | 0 | 138 + 15k + sum of escaped label bytes | S2 get_combo_contents reads all widget entries. Rig_set_modes/Main_set_rig_modes accept caller arrays without a count cap; no release-wide largest response exists. |
+| `rig.get_bandwidths` | 6 + k | k, no fixed maximum | 0 | 138 + 15k + sum of escaped label bytes | S2 Rig_set_bandwidths and Rig_get_bandwidths use the same caller-populated widget pattern. |
+| `main.get_rig_bandwidths` | 4 | 0 | 0 | 110 / 0 | Despite its name/help, S2 inherits Rig_set_bandwidths, expects one array and returns the setter's nil result. S12 executeMethod normalizes an invalid result to an empty string; this is not an additional array-returning getter. |
+| `text.get_rx` | 5 | 0 | 0 | 127 + 4 × ceil(b / 3) + floor(b / 54) | S2 reads a caller-selected range of b bytes from the growing S4 RX widget buffer. There is no fixed byte maximum in the handler; the UI's line scrollback cannot bound the length of a line. For base64 LF counting use floor(b / 54), including a final full group. |
+| `logbook.last_record`, `logbook.all_records` | 4 | 0 | 0 | 110 + escaped ADIF bytes; no fixed release maximum | S2 exports the last record or entire opened logbook as a string, not an XML-RPC array. Record count and field data depend on the logbook. |
+| `flmsg.transfer`, `main.flmsg_transfer` | 4 | 0 | 0 | 110 + escaped string bytes; no fixed release maximum | S2 returns the current flmsg_data string, independent of RAW_BUFF_LEN. |
+| Other E.4/E.5 scalar methods | 4 for untyped string, 5 for typed scalar, 3 for an empty param; faults 12 | 0 | 0; faults 2 | Numeric/boolean/nil/fixed status results are smaller than the full list; caller-, widget-, path-, modem- or message-dependent strings have no common fixed byte maximum | S2 handler bodies, not advertised signatures. This includes rig labels/name, status text, log fields, config_dir, timing strings, wefax filenames/status/errors and Navtex messages. No further successful array or struct constructors occur in S2. Faults have faultCode and faultString; string size depends on the failure. |
+
+The fixed response maxima are 1,942 elements, 177 array values, 3 struct members,
+one response param and 42,903 body bytes. Registered request handlers consume at
+most two params. The smallest powers of two at least four times these counts,
+without reducing inherited allowances, are:
+
+| Resource | Calculation | fldigi limit |
+|---|---|---:|
+| Elements | next_power_of_two(max(1,024, 4 × 1,942)) | 8,192 |
+| Array values | next_power_of_two(max(256, 4 × 177)) | 1,024 |
+| Struct members | next_power_of_two(max(256, 4 × 3)) | 256 |
+| Params | next_power_of_two(max(32, 4 × 2)) | 32 |
+| Body and processed text bytes | next_power_of_two(max(71,155, 4 × 42,903)) | 262,144 |
+
+No fixed released response needs more than depth 10, lexical XML name length 14,
+or method name length 28, so the existing depth and name bounds remain. These
+calculations provide fourfold headroom for fixed source responses. A finite
+hostile-input bound cannot provide fourfold headroom above every caller-sized
+rig list, multicall batch, growing widget read or entire logbook; those have no finite source
+maximum. This audit does not invent one or label a fixed list as hostile.
 
 ## E.4 Complete mapping catalog
 
@@ -706,11 +780,14 @@ integers without a sign or leading zeros except zero itself; a double writes the
 same integer digits followed by exactly `.0`, never exponent notation.
 
 **`QGI-FLD-0060` — Canonical text.** A writer MUST escape ampersand, less-than,
-greater-than and CR as `&amp;`, `&lt;`, `&gt;` and `&#13;`, respectively, in one pass;
+and greater-than as `&amp;`, `&lt;` and `&gt;`, respectively, in one pass;
 quotes, tabs and LF remain literal, with no Unicode normalization.
 
-**`QGI-FLD-0061` — Command text.** A writer MUST reject null, raw wrappers, surrogates
-and XML-forbidden characters in strings as `invalid_value`.
+**`QGI-FLD-0061` — Command text.** A writer MUST reject null, raw wrappers, surrogates,
+CR and XML-forbidden characters in strings as `invalid_value` (S3/S17). This
+restriction applies to every string command, including family setters; observed
+strings still preserve CR under `0023`. Literal text such as `&#13;` is allowed
+and escapes its ampersand, so the bundled decoder receives the same literal text.
 
 **`QGI-FLD-0062` — Command budget.** A writer MUST validate each constructed body's
 E.3 limits before returning the collection, failing atomically as `oversized`.
@@ -735,10 +812,18 @@ association; no other view members are defined.
 entity spellings and line endings, rather than the XML-processed common text.
 
 **`QGI-FLD-0065` — Re-encoding.** Observed re-encoding MUST check recognized common
-fields against the body and caller-supplied association, then return exact native
-bytes; original-byte retrieval is separate and needs no association/consistency
-check. Verification of method-dependent fields without association is unavailable
-under `QGI-MAP-0015`, not evidence of disagreement.
+fields, kind, family, native.format and the presence and value of every
+recognized evidence-derived envelope member (including native_version and wire_id)
+against the body and caller-supplied association, rejecting disagreement as
+`invalid_value`, then return exact native bytes; original-byte retrieval is
+separate and needs no association/consistency check. Verification of method-dependent fields without association is unavailable
+under `QGI-MAP-0015`, not evidence of disagreement. Missing range arguments likewise
+make range-decode verification unavailable. Unknown roots/types have unavailable
+verification; valid faults with unknown optional values can verify their defined
+error content. Context is caller-owned and MUST be preserved and budgeted, not
+inferred from the body. A reader of newer revisions ignores unknown additive
+members when comparing recognized content; it MUST NOT ignore recognized
+envelope members or report inconsistent content as verified.
 
 **`QGI-FLD-0066` — Output.** Observers MUST use compact UTF-8 JSON escaping only required
 characters (or an encoding no larger), E.7's closed view and the context/hop bounds
@@ -756,24 +841,40 @@ result, without synthesizing nil or a successful acknowledgment (E.3 grammar).
 ADIF mode and submode as their distinct E.4 strings, without translating renamed,
 new or empty labels using another release's mode table (S2, S13, S14).
 
-For body size N, exact evidence costs 4 × ceil(N / 3). Mapped scalar text, including native_version (at most
-one copy of a mapped return value, or the distinct two fault leaves) costs at most 6N,
-including JSON escapes/raw wrappers. Base64 RX decoding is smaller than its source
-and fits that same bound. The optional whole-document xml view costs at most 6N,
-including UTF-16 invalid-unit arrays. Root and caller method each have a 128-byte
-name bound: reserve 2 × 6 × 128 = 1,536. Reserve 32,768 for names, punctuation,
-wrappers, numeric scalars and envelope; this profile has fewer than 256 members,
-with 128 bytes per member. Context and eight hop contexts use 65,536 more.
+For body size N, exact evidence costs 4 × ceil(N / 3). Mapped scalar text,
+including native_version (one mapped return value, or the two distinct fault
+leaves), costs at most 6N including JSON escapes/raw wrappers. Base64 RX decoding
+fits that bound. The optional whole-document xml view costs at most 6N, including
+UTF-16 invalid-unit arrays. Root and caller method each have a 128-byte name bound:
+reserve 2 × 6 × 128 = 1,536. Reserve 32,768 for names, punctuation, wrappers, numeric
+scalars and envelope; E.7's closed view preserves arrays/structs only in the XML
+and base64 evidence, so raising XML counts adds no JSON members. Context and eight
+hop contexts use 65,536 more.
 
-The resulting conservative worst-case guarantee is
+The sufficient bound remains
 
-`4 × ceil(N / 3) + 12N + 1,536 + 32,768 + 65,536 ≤ 1,048,576`.
+`B(N) = 4 × ceil(N / 3) + 12N + 1,536 + 32,768 + 65,536`.
 
-Its **largest integer N is 71,155**: 94,876 + 853,860 + 1,536 + 32,768 + 65,536 =
-**1,048,576**. N = 71,156 raises the bound to 1,048,588. This is the largest body
-admitted by this sufficient proof, not an assertion that any particular XML body
-attains every conservative reserve simultaneously. The text expansion budget
-also prevents UTF-16-to-UTF-8 expansion from exceeding N's allowance.
+B(71,155) = 1,048,576; B(71,156) = 1,048,588. At the new input limit,
+B(262,144) = 349,528 + 3,145,728 + 99,840 = **3,595,096**, which exceeds
+1,048,576. Thus 262,144 is a parser/input ceiling, not an unconditional guarantee
+that every admitted body has an observation below 1 MiB. Observers MUST enforce
+the actual compact output size under QGI-FLD-0066/QGI-SER-0004 atomically, including
+the view when emitted. The sufficient universal guarantee remains N ≤ 71,155;
+larger inputs can pass when their actual observation fits. A raw-byte-heavy string
+can fail the output bound while satisfying every input bound. The output-boundary
+and output-overflow vectors exercise exactly 1,048,576 and 1,048,577 compact bytes.
+
+The complete released list does fit, even under the conservative proof:
+
+`B(42,903) = 57,204 + 514,836 + 99,840 = 671,880 < 1,048,576`.
+
+The full-list vector uses 99 synthetic ASCII help bytes in each of the 176 rows
+(the longest released help length), rather than abbreviating or removing help.
+Its 53,325-byte body likewise fits B(53,325) = 810,840. Its actual compact event
+with the optional XML view is checked independently by the generator. Full-list
+acceptance is required; it is not an output-budget exclusion. Variable-size
+responses can outgrow both finite input bounds and the 1 MiB output bound.
 
 ## E.8 Live-capture questions (informative)
 
