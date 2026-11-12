@@ -2697,7 +2697,8 @@ def fldigi_xmlrpc(raw, substrate):
     return root, enc, extended, params, fault
 
 
-def fldigi_observe(inp, substrate):
+def fldigi_observe(inp, substrate, *, include_message=True):
+    """Decode evidence; build and budget the XML view only when requested."""
     raw = base64.b64decode(inp['data'])
     root, enc, extension, params, fault = fldigi_xmlrpc(raw, substrate)
     method = root['children'][0]['text'] if root['name'] == 'methodCall' else None
@@ -2768,11 +2769,6 @@ def fldigi_observe(inp, substrate):
                 if method == 'fldigi.version' and isinstance(val, str) and val:
                     version = val
                     fields.pop('text', None)
-    parts = root['name'].split('|')
-    literal = parts[2] + ':' + parts[1] if len(parts) == 3 else parts[-1]
-    view = {'root': literal}
-    if method is not None:
-        view['method'] = method
     event = {'spec': SPEC, 'family': 'fldigi', 'mapping': 1, 'kind': kind,
              'context': copy.deepcopy(inp['context']), 'fields': fields,
              'native': {'format': 'fldigi_xmlrpc', 'data': inp['data']}}
@@ -2780,10 +2776,17 @@ def fldigi_observe(inp, substrate):
         event['via'] = copy.deepcopy(inp['via'])
     if version is not None:
         event['native_version'] = version
-    view = {**view, 'xml': fldigi.text_value(raw.decode(enc, 'surrogatepass' if enc.startswith('utf-16') else 'surrogateescape').lstrip('\ufeff'), enc)}
-    with_view = copy.deepcopy(event)
-    with_view['native']['message'] = view
-    if len(json.dumps(with_view, ensure_ascii=False, separators=(',', ':')).encode()) > 1048576:
+    view = None
+    output = copy.deepcopy(event)
+    if include_message:
+        parts = root['name'].split('|')
+        literal = parts[2] + ':' + parts[1] if len(parts) == 3 else parts[-1]
+        view = {'root': literal}
+        if method is not None:
+            view['method'] = method
+        view['xml'] = fldigi.text_value(raw.decode(enc, 'surrogatepass' if enc.startswith('utf-16') else 'surrogateescape').lstrip('\ufeff'), enc)
+        output['native']['message'] = view
+    if len(json.dumps(output, ensure_ascii=False, separators=(',', ':')).encode()) > 1048576:
         raise ValueError('oversized')
     return event, view
 
@@ -2866,14 +2869,15 @@ def fldigi_verify(inp, substrate):
             decoded_input[key] = inp[key]
         elif key == 'via' and key in event:
             decoded_input[key] = event[key]
-    actual, _ = fldigi_observe(decoded_input, substrate)
+    actual, view = fldigi_observe(decoded_input, substrate, include_message='message' in event['native'])
     root, _, extension, _, fault = fldigi_xmlrpc(base64.b64decode(event['native']['data']), substrate)
     # Compare all known evidence-derived envelope members even if mapping needs
     # association. spec/mapping may be newer; context/via are caller-owned.
     for key in ('family', 'native_version', 'wire_id'):
         if (key in event) != (key in actual) or (key in event and event[key] != actual[key]):
-            # native_version on a response cannot be verified without a method.
-            if key == 'native_version' and root['name'] == 'methodResponse' and 'request' not in inp:
+            # Only a nonfault response needs a method to decide native_version.
+            if (key == 'native_version' and root['name'] == 'methodResponse'
+                    and fault is None and 'request' not in inp):
                 continue
             raise ValueError('invalid_value')
     if event['native']['format'] != 'fldigi_xmlrpc':
@@ -2894,7 +2898,6 @@ def fldigi_verify(inp, substrate):
     if event['kind'] != actual['kind'] or fields != actual['fields']:
         raise ValueError('invalid_value')
     if 'message' in event['native']:
-        _, view = fldigi_observe(decoded_input, substrate)
         recognized_view = {k: v for k, v in event['native']['message'].items() if k in ('root', 'method', 'xml')}
         if recognized_view != view:
             raise ValueError('invalid_value')
@@ -2989,6 +2992,26 @@ def fldigi_limit_vectors(suite):
     too_big['context']['source_id'] += 'x'
     suite.add('output-overflow', {'class': 'negative', 'input': too_big,
               'expected': {'error': {'category': 'oversized'}}})
+    # A view is optional: this 600,143-byte event fits only when it is absent.
+    raw = (b'<methodResponse><params><param><value><string>' + b'\xff' * 112400 +
+           b'</string></value></param></params></methodResponse>')
+    event = copy.deepcopy(v['expected']['event'])
+    event['native']['data'] = b64(raw)
+    event['fields']['text'] = {'utf8_bytes': [255] * 112400}
+    event['context']['source_id'] = ''
+    size = len(json.dumps(event, ensure_ascii=False, separators=(',', ':')).encode())
+    event['context']['source_id'] = 'x' * (600143 - size)
+    suite.add('compatibility-large-absent-view', {'class': 'compatibility',
+        'input': {'event': event, 'request': {'method': 'log.get_name'},
+                  'reader_spec': SPEC, 'writer_spec': SPEC},
+        'expected': {'read': {k: event[k] for k in ('kind', 'fields', 'context', 'native')},
+                     'verification': {'status': 'verified'}}})
+    present = copy.deepcopy(event)
+    present['native']['message'] = {'root': 'methodResponse', 'method': 'log.get_name',
+                                   'xml': {'utf8_bytes': list(raw)}}
+    suite.add('reencode-large-present-view', {'class': 'negative',
+        'input': {'event': present, 'request': {'method': 'log.get_name'}},
+        'expected': {'error': {'category': 'oversized'}}})
 
 
 def fldigi_review_vectors():
@@ -3082,12 +3105,17 @@ def fldigi_review_vectors():
         suite.add('reencode-bad-version-' + name, {'class': 'negative',
             'input': {'event': event, 'request': {'method': 'fldigi.version'}},
             'expected': {'error': {'category': 'invalid_value'}}})
+    event = copy.deepcopy(suite.vectors['fault-unassociated']['expected']['event'])
+    event['native_version'] = '4.2.13'
+    suite.add('reencode-bad-unassociated-fault-version', {'class': 'negative',
+        'input': {'event': event}, 'expected': {'error': {'category': 'invalid_value'}}})
     for name, source, request, status in [
             ('opaque-type', 'value-future-type', {'method': 'future.method'}, 'unavailable'),
             ('opaque-root', 'unknown-root', None, 'unavailable'),
             ('fault-optional-future', 'fault-optional-future', {'method': 'main.abort'}, 'verified'),
             ('range-no-arguments', 'text-get-rx-response', {'method': 'text.get_rx'}, 'unavailable'),
             ('range-associated', 'text-get-rx-response', {'method': 'text.get_rx', 'arguments': [7, 4]}, 'verified'),
+            ('version-no-request', 'fldigi-version-response', None, 'unavailable'),
             ('fault-no-request', 'fault-unassociated', None, 'verified')]:
         event = copy.deepcopy(suite.vectors[source]['expected']['event'])
         inp = {'event': event, 'reader_spec': SPEC, 'writer_spec': SPEC}
@@ -3223,7 +3251,7 @@ def validate_fldigi(suite, substrate, root, producer_strict, producer_factory):
         assert not command_matches(mutant), 'numeric/text/type canonical mutant escaped'
     fldigi_review_plants(suite, substrate)
     # A sequence's first acknowledgment must satisfy its actual mapped type.
-    # Malformed bundled replies, faults, lost association and type swaps stop it.
+    # Normalized empty strings, malformed replies, faults and type swaps stop it.
     def can_advance(method, inp):
         if inp.get('request', {}).get('method') != method:
             return False
@@ -3241,7 +3269,8 @@ def validate_fldigi(suite, substrate, root, producer_strict, producer_factory):
         lost = copy.deepcopy(suite.vectors[accepted]['input'])
         lost.pop('request')
         assert not can_advance(method, lost)
-    assert not can_advance('text.add_tx', suite.vectors['bundled-invalid-result-empty-param']['input'])
+    assert not can_advance('text.add_tx', suite.vectors['response-empty-param']['input'])
+    assert not can_advance('text.add_tx', suite.vectors['bundled-invalid-result-empty-string']['input'])
     fault = copy.deepcopy(suite.vectors['fault-associated']['input'])
     fault['request']['method'] = 'text.add_tx'
     assert not can_advance('text.add_tx', fault)
@@ -3282,7 +3311,7 @@ def validate_fldigi(suite, substrate, root, producer_strict, producer_factory):
     mutant['family'] = 'wsjtx'
     mutant['native'].pop('message')
     assert not producer.is_valid(mutant)
-    return f'fldigi: {positives} independent XML/type/mapping/view/reencode checks, {commands} exact command sequences; strict schema and nine review regressions/planted failures passed'
+    return f'fldigi: {positives} independent XML/type/mapping/view/reencode checks, {commands} exact command sequences; strict schema and review regressions/planted failures passed'
 
 def fldigi_manifest(suite, dump, root):
     files = {name + '.json': dump(value) for name, value in suite.vectors.items()}
@@ -3319,6 +3348,9 @@ def fldigi_review_contract(suite, document):
         (core_flat, 'unless the family explicitly defines an opaque `native` fallback'),
         (flat, '4,096-byte compact UTF-8 JSON bound'),
         (flat, 'presence and value of every recognized evidence-derived envelope member'),
+        (flat, 'An absent native.message MUST NOT be added or budgeted during re-encoding'),
+        (flat, 'S12 executeMethod normalizes an invalid result to an empty string before S3 stringToXml serializes it as `<value></value>`'),
+        (flat, '`send_text` MUST NOT advance to main.tx on this response'),
         (flat, 'its name with dots replaced by underscores'),
         (flat, 'MUST accept the complete released `fldigi.list` response'),
         (flat, 'supplied null is `invalid_value`, distinct from an absent association'),
@@ -3378,6 +3410,20 @@ def fldigi_review_contract(suite, document):
         assert len(ET.fromstring(base64.b64decode(suite.vectors[name]['input']['data'])).findall('.//params/param')) == count
     assert len(base64.b64decode(suite.vectors['maximum-body-with-view']['input']['data'])) == 262144
     assert len(base64.b64decode(suite.vectors['body-overflow']['input']['data'])) == 262145
+    # Pin S12 normalization -> S3 stringToXml -> S12 response framing, rather
+    # than deriving a response from TypeInvalid::toXml in isolation.
+    for name in ('bundled-invalid-result-empty-string', 'bundled-no-op-bandwidth-empty-string'):
+        vector = suite.vectors[name]
+        assert base64.b64decode(vector['input']['data']) == fldigi_source_response('<value></value>')
+        assert vector['class'] == 'positive'
+        assert vector['expected']['event']['kind'] == 'native'
+        assert vector['expected']['event']['fields'] == {}
+    assert 'S12 wraps that in an empty param' not in document
+    event = suite.vectors['compatibility-large-absent-view']['input']['event']
+    assert 'message' not in event['native']
+    assert len(json.dumps(event, ensure_ascii=False, separators=(',', ':')).encode()) == 600143
+    present = suite.vectors['reencode-large-present-view']['input']['event']
+    assert len(json.dumps(present, ensure_ascii=False, separators=(',', ':')).encode()) > 1048576
 
 
 def fldigi_builder_oracle(suite, substrate):

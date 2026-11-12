@@ -1014,10 +1014,15 @@ def release_vectors(positive, negative):
     positive('bandwidth-zero-response', response('<int>0</int>'), 'native', {}, 'modem.get_bandwidth')
     positive('frequency-setter-nil-response', response('<nil/>'), 'native', {}, 'rig.set_frequency')
     positive('append-double-response', response('<double>14070000.0</double>'), 'native', {}, 'text.add_tx')
-    # Literal S12 response framing + empty S3 serialization, excluding HTTP headers.
-    negative('bundled-invalid-result-empty-param',
+    # Empty params are malformed, but are not S12's normalized invalid result.
+    negative('response-empty-param',
              b'<?xml version="1.0"?>\r\n<methodResponse><params><param>\r\n\t\r\n</param></params></methodResponse>\r\n',
              'malformed', request={'method': 'text.add_tx'})
+    # S12 executeMethod assigns std::string() before S3 stringToXml runs.
+    raw = b'<?xml version="1.0"?>\r\n<methodResponse><params><param>\r\n\t<value></value>\r\n</param></params></methodResponse>\r\n'
+    for name, method in [('bundled-invalid-result-empty-string', 'text.add_tx'),
+                         ('bundled-no-op-bandwidth-empty-string', 'modem.set_bandwidth')]:
+        positive(name, raw, 'native', {}, method)
 
 
 def validate(suite, substrate, root, producer_strict, producer_factory):
@@ -1120,7 +1125,7 @@ def validate(suite, substrate, root, producer_strict, producer_factory):
         mutant['expected']['requests'][0] = base64.b64encode(raw.replace(before, after)).decode()
         assert not command_matches(mutant), 'numeric/text/type canonical mutant escaped'
     # A sequence's first acknowledgment must satisfy its actual mapped type.
-    # Malformed bundled replies, faults, lost association and type swaps stop it.
+    # Normalized empty strings, malformed replies, faults and type swaps stop it.
     def can_advance(method, inp):
         if inp.get('request', {}).get('method') != method:
             return False
@@ -1138,7 +1143,8 @@ def validate(suite, substrate, root, producer_strict, producer_factory):
         lost = copy.deepcopy(suite.vectors[accepted]['input'])
         lost.pop('request')
         assert not can_advance(method, lost)
-    assert not can_advance('text.add_tx', suite.vectors['bundled-invalid-result-empty-param']['input'])
+    assert not can_advance('text.add_tx', suite.vectors['response-empty-param']['input'])
+    assert not can_advance('text.add_tx', suite.vectors['bundled-invalid-result-empty-string']['input'])
     fault = copy.deepcopy(suite.vectors['fault-associated']['input'])
     fault['request']['method'] = 'text.add_tx'
     assert not can_advance('text.add_tx', fault)

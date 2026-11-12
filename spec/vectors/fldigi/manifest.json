@@ -34,7 +34,7 @@
     "fldigi-4.2.13/src/xmlrpcpp/XmlRpcUtil.cpp": "14310e98508a7c767a0277c403264fe2db46b8440f8d55acd242afd57118f5de",
     "fldigi-4.2.13/src/xmlrpcpp/XmlRpcBase64.h": "2d245271c5aaa47966f12a9002adb6200900eec715a28b8781fa6277df99a1b4"
   },
-  "profile_sha256": "cafa822f14a3253ff1ef45627e55aa4eeb7ad369b6305100ad6e172d289f1cee",
+  "profile_sha256": "e577a890fdb81b2431e3b6952e9a3af349ee50cc5f413546e3ab3ffe43265336",
   "hash_scope": "SHA-256 of each complete vector file, including its final newline",
   "vectors": [
     {
@@ -270,12 +270,20 @@
       "sha256": "4018a563c3b13be673bb763832a9a38b857f346bfd7d189d73f57e879b9998f8"
     },
     {
-      "file": "bundled-invalid-result-empty-param.json",
-      "class": "negative",
+      "file": "bundled-invalid-result-empty-string.json",
+      "class": "positive",
       "spec": "0.1.0",
       "family": "fldigi",
       "mapping": 1,
-      "sha256": "39ff0184542a21f7454145a421ce37c9e09bdc61237234e27a9c6c3b6d87afc7"
+      "sha256": "6ce75d469a12265312f275c4c1d277edd9b8c1916652e6a0674ba78a7cdd033a"
+    },
+    {
+      "file": "bundled-no-op-bandwidth-empty-string.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "881ef046cb7bee1c0372c0d74f6e57f6ef5ab2d33a222c9c62f7138f54308e3e"
     },
     {
       "file": "call-duplicate-name.json",
@@ -558,6 +566,14 @@
       "sha256": "407addef4cbb18fdcdff4330f8cd4e4ef731a95df001fbd0e3ff3009e97e40a7"
     },
     {
+      "file": "compatibility-large-absent-view.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "8c1d47a67f92d2fb74a80ae3e8bb9969817ef9618524b63ef63115ec30d7f396"
+    },
+    {
       "file": "compatibility-major.json",
       "class": "compatibility",
       "spec": "0.1.0",
@@ -644,6 +660,14 @@
       "family": "fldigi",
       "mapping": 1,
       "sha256": "86d2cd9c2f10115b764143ef4009ec5020014d706ce28e57e64d61e3f2679e1a"
+    },
+    {
+      "file": "compatibility-version-no-request.json",
+      "class": "compatibility",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "f6870869f4ff405e0bdc9f97cb20a7da5b7692fa843dca83de9f8db568fadab7"
     },
     {
       "file": "conflicting-close.json",
@@ -3990,6 +4014,14 @@
       "sha256": "a7d0a4271f04b4ca80ea9e3e5692d07a9be0226c02a57d4210c04f26de3e80e3"
     },
     {
+      "file": "reencode-bad-unassociated-fault-version.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "28e92b78d977115b4d407a651ca36461662d83e4d0e5b74d66da3e7fad0203bf"
+    },
+    {
       "file": "reencode-bad-version-altered.json",
       "class": "negative",
       "spec": "0.1.0",
@@ -4014,12 +4046,28 @@
       "sha256": "d8aaff0c5cfd0c9878afc3dd084af7e34e27affe20d37661922b5e67c2ec36de"
     },
     {
+      "file": "reencode-large-present-view.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "979c6dbcb18168ae965bf952fc329c5041cd9ac198b11c2f56f7d023cb92064f"
+    },
+    {
       "file": "request-association-mismatch.json",
       "class": "negative",
       "spec": "0.1.0",
       "family": "fldigi",
       "mapping": 1,
       "sha256": "4d029a6300478536aed6b4adf53e34051921bb46c09e64026076df2b5d98e8a7"
+    },
+    {
+      "file": "response-empty-param.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "sha256": "39ff0184542a21f7454145a421ce37c9e09bdc61237234e27a9c6c3b6d87afc7"
     },
     {
       "file": "response-empty-params.json",

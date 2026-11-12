@@ -161,15 +161,17 @@ validate handler argument types or guarantee a returned value.
 For **47** nominal-nil names, the handler either assigns `value_nil()` (**45**,
 including inherited aliases) or leaves retval untouched (`main.flmsg_online`,
 `flmsg.online`). Crucially, S2 aliases value_nil to XmlRpcValue, whose default
-constructor is TypeInvalid in S11, not TypeNil. S3 serializes TypeInvalid to an
-empty string, and S12 wraps that in an empty param. The two no-op bandwidth
-handlers likewise leave the default result invalid. This is a derivation for the
+constructor is TypeInvalid in S11, not TypeNil. S12 executeMethod normalizes an
+invalid result to an empty string before S3 stringToXml serializes it as
+`<value></value>`; S12 generateResponse wraps that value in a param. The two no-op
+bandwidth handlers likewise leave the default result invalid. This is a derivation for the
 **bundled backend**, not a claim about externally linked libflxmlrpc builds.
 Every nominal-nil name outside the eight int/string exceptions above belongs to
 that 47-name set. E.4's nil response mappings are acceptance policy for actual
 well-formed nil replies; the vectors using nil are synthetic profile cases, not
-captures claimed from this bundled backend. Empty source-generated params are
-malformed under E.3 and cannot advance a multi-request operation.
+captures claimed from this bundled backend. The bundled empty-string response
+is well-formed and maps to `native` for these methods because it fails E.4's
+response type guard. It cannot advance a multi-request operation.
 
 S1 and S2 disagree on **10 shared signatures** (manual → released declaration):
 
@@ -412,7 +414,7 @@ allow/deny filter can shorten the list, never enlarge it.
 | `text.get_rx` | 5 | 0 | 0 | 127 + 4 × ceil(b / 3) + floor(b / 54) | S2 reads a caller-selected range of b bytes from the growing S4 RX widget buffer. There is no fixed byte maximum in the handler; the UI's line scrollback cannot bound the length of a line. For base64 LF counting use floor(b / 54), including a final full group. |
 | `logbook.last_record`, `logbook.all_records` | 4 | 0 | 0 | 110 + escaped ADIF bytes; no fixed release maximum | S2 exports the last record or entire opened logbook as a string, not an XML-RPC array. Record count and field data depend on the logbook. |
 | `flmsg.transfer`, `main.flmsg_transfer` | 4 | 0 | 0 | 110 + escaped string bytes; no fixed release maximum | S2 returns the current flmsg_data string, independent of RAW_BUFF_LEN. |
-| Other E.4/E.5 scalar methods | 4 for untyped string, 5 for typed scalar, 3 for an empty param; faults 12 | 0 | 0; faults 2 | Numeric/boolean/nil/fixed status results are smaller than the full list; caller-, widget-, path-, modem- or message-dependent strings have no common fixed byte maximum | S2 handler bodies, not advertised signatures. This includes rig labels/name, status text, log fields, config_dir, timing strings, wefax filenames/status/errors and Navtex messages. No further successful array or struct constructors occur in S2. Faults have faultCode and faultString; string size depends on the failure. |
+| Other E.4/E.5 scalar methods | 4 for untyped string (including normalized invalid results), 5 for typed scalar; faults 12 | 0 | 0; faults 2 | Numeric/boolean/nil/fixed status results are smaller than the full list; caller-, widget-, path-, modem- or message-dependent strings have no common fixed byte maximum | S2 handler bodies, not advertised signatures. This includes rig labels/name, status text, log fields, config_dir, timing strings, wefax filenames/status/errors and Navtex messages. No further successful array or struct constructors occur in S2. Faults have faultCode and faultString; string size depends on the failure. |
 
 The fixed response maxima are 1,942 elements, 177 array values, 3 struct members,
 one response param and 42,903 body bytes. Registered request handlers consume at
@@ -824,6 +826,9 @@ error content. Context is caller-owned and MUST be preserved and budgeted, not
 inferred from the body. A reader of newer revisions ignores unknown additive
 members when comparing recognized content; it MUST NOT ignore recognized
 envelope members or report inconsistent content as verified.
+An absent native.message MUST NOT be added or budgeted during re-encoding;
+when present, its recognized content MUST agree and its bytes count toward
+the actual output limit.
 
 **`QGI-FLD-0066` — Output.** Observers MUST use compact UTF-8 JSON escaping only required
 characters (or an encoding no larger), E.7's closed view and the context/hop bounds
@@ -833,9 +838,14 @@ of `QGI-SER-0010`, enforcing the actual `QGI-SER-0004` byte limit atomically.
 rx_length MUST be common integers in fldigi control fields only; they add schema
 capacity without changing Annex A's shared field meanings.
 
-**`QGI-FLD-0069` — Missing response value.** A reader MUST reject an empty response
-param as `malformed`, including S12's bundled-backend serialization of an invalid
-result, without synthesizing nil or a successful acknowledgment (E.3 grammar).
+**`QGI-FLD-0069` — Missing and normalized response values.** A reader MUST reject an
+empty response param as `malformed`, without synthesizing nil or a successful
+acknowledgment (E.3 grammar). S12 executeMethod instead normalizes an invalid
+handler result to an empty string; S3 stringToXml and S12 generateResponse emit
+`<param>\r\n\t<value></value>\r\n</param>`. This is a valid string value, not a
+missing value. For nominal-nil methods and the two no-op bandwidth setters in
+E.1.2, readers MUST map this response to `native` under E.4's type guard;
+`send_text` MUST NOT advance to main.tx on this response (`QGI-FLD-0055`).
 
 **`QGI-FLD-0070` — Modem labels.** A reader MUST preserve the returned modem name,
 ADIF mode and submode as their distinct E.4 strings, without translating renamed,
