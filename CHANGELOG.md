@@ -5,12 +5,18 @@
 
 ### Added
 
+- Timed `qg-interop sim` ALL.TXT playback with an embedded synthetic sample, Python-compatible
+  options, target-filtered Replay and WSJT-X state reactions, bounded local input, UDP NDJSON
+  capture playback and qgi carriage, signal cleanup, and independent Desktop capture checks.
+
 - Family-independent QGI-SPEC-001 event core, neutral values, open sans-I/O codec/profile traits,
   typed atomic errors, bounded event JSON, and exported conformance tools.
 - WSJT-X revision 1 command construction, native consistency and re-encoding, all 17 types in
   schemas 1–3, radio labels, and qgi UDP/TCP carriage with hop admission and stream recovery.
 - Manifest-driven acceptance of all 435 WSJT-X/qgi vectors and 94 embedded re-encoding checks;
   core-only feature tests, arbitrary event-JSON fuzzing, and CLI `decode` for files or standard input.
+- `qg-interop listen` reports what it receives as coming from WSJT-X, so Close is a `lifecycle`
+  event; `decode` keeps unknown direction.
 - `cargo xtask verify` runs every check, including the fuzz smoke, and prints one pass/fail table.
 
 
@@ -52,6 +58,11 @@
   old names, so there is no alias.
 
 ### Fixed
+
+- Skip and summarize ALL.TXT modes without established periods instead of aborting mixed-mode
+  playback; retain skipped modes in the empty-selection error. Play released Q65 labels with
+  recorded periods and submodes. Document all released mode periods and compare signal-handler
+  dependencies against the package-wide native-source rule.
 
 - Require a supported native version for specification verification, enforce carriage parser
   bounds after appending `via`, and validate preserved newer mapping revisions with the reader

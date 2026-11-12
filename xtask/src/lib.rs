@@ -144,6 +144,9 @@ pub fn source_tokens(tokens: TokenStream) -> Check {
 }
 
 pub fn native_tokens(tokens: TokenStream) -> Check {
+    native_tokens_with_system_bindings(tokens, false)
+}
+fn native_tokens_with_system_bindings(tokens: TokenStream, system_bindings: bool) -> Check {
     let trees: Vec<_> = tokens.into_iter().collect();
     for (i, t) in trees.iter().enumerate() {
         match t {
@@ -151,7 +154,10 @@ pub fn native_tokens(tokens: TokenStream) -> Check {
                 let name = id.to_string();
                 let name = name.trim_start_matches("r#");
                 require(
-                    !matches!(name, "asm" | "global_asm" | "naked_asm"),
+                    !(matches!(name, "asm" | "global_asm" | "naked_asm")
+                        && !matches!(trees.get(i+1),Some(TokenTree::Punct(p)) if p.as_char()==':')
+                        && !(i > 0
+                            && matches!(trees.get(i-1),Some(TokenTree::Ident(id)) if id=="mod"))),
                     "native assembly",
                 )?;
                 if name == "extern" {
@@ -161,7 +167,8 @@ pub fn native_tokens(tokens: TokenStream) -> Check {
                     let rust_abi =
                         matches!(next, Some(TokenTree::Literal(l)) if l.to_string() == "\"Rust\"");
                     require(
-                        rust_abi
+                        system_bindings
+                            || rust_abi
                             || !(brace(next)
                                 || matches!(next, Some(TokenTree::Literal(_))) && brace(after)),
                         "native foreign block",
@@ -176,11 +183,12 @@ pub fn native_tokens(tokens: TokenStream) -> Check {
                     .map(|t| t.to_string())
                     .unwrap_or_default();
                 require(
-                    g.delimiter() != Delimiter::Bracket
+                    system_bindings
+                        || g.delimiter() != Delimiter::Bracket
                         || !matches!(first.as_str(), "link" | "link_name" | "link_section"),
                     "native link attribute",
                 )?;
-                native_tokens(g.stream())?;
+                native_tokens_with_system_bindings(g.stream(), system_bindings)?;
             }
             _ => {}
         }
@@ -232,6 +240,10 @@ pub fn network_tokens(tokens: TokenStream, library: bool) -> Check {
                         let path = segments.join("::");
                         let allowed = [
                             "path::PathBuf",
+                            "sync::atomic",
+                            "sync::Arc",
+                            "sync::OnceLock",
+                            "result::Result",
                             "fs::File",
                             "io",
                             "time",
@@ -307,6 +319,10 @@ impl NumericUdp {
         self.0.recv_from(bytes)
     }
 
+    pub fn set_read_timeout(&self, timeout: Option<std::time::Duration>) -> io::Result<()> {
+        self.0.set_read_timeout(timeout)
+    }
+
     pub fn send(&self, bytes: &[u8]) -> io::Result<usize> {
         self.0.send(bytes)
     }
@@ -350,6 +366,9 @@ fn token_file(path: &Path) -> Result<TokenStream, String> {
         .map_err(|e| format!("{} does not tokenize: {e}", path.display()))
 }
 fn no_native(dir: &Path) -> Check {
+    no_native_with_system_bindings(dir, false)
+}
+fn no_native_with_system_bindings(dir: &Path, system_bindings: bool) -> Check {
     for path in files(dir)? {
         let ext = path
             .extension()
@@ -377,7 +396,8 @@ fn no_native(dir: &Path) -> Check {
             format!("native code: {}", path.display()),
         )?;
         if ext == "rs" {
-            native_tokens(token_file(&path)?).map_err(|e| format!("{}: {e}", path.display()))?;
+            native_tokens_with_system_bindings(token_file(&path)?, system_bindings)
+                .map_err(|e| format!("{}: {e}", path.display()))?;
         }
     }
     Ok(())
@@ -464,7 +484,9 @@ fn shipped_dependency_names(table: &toml::Table, library: bool) -> Check {
                     let allowed: &[&str] = match (library, key.as_str()) {
                         (true, "dependencies") => &["serde", "serde_json", "sha2-const-stable"],
                         (true, "dev-dependencies") => &["serde_json"],
-                        (false, "dependencies") => &["clap", "qso-graph-interop", "serde_json"],
+                        (false, "dependencies") => {
+                            &["clap", "qso-graph-interop", "serde_json", "signal-hook"]
+                        }
                         _ => &[],
                     };
                     require(
@@ -641,7 +663,19 @@ fn dependency_policy(meta: &Value) -> Check {
                 "only crates.io sources allowed",
             )?;
             let manifest = Path::new(pkg["manifest_path"].as_str().ok_or("missing manifest")?);
-            no_native(manifest.parent().ok_or("missing crate directory")?)?;
+            // Rust-only OS bindings used by safe signal handling. No bundled native sources,
+            // assembly, or foreign libraries enter the shipped graph. Versions require review.
+            let system_bindings = matches!(
+                (pkg["name"].as_str(), pkg["version"].as_str()),
+                (Some("libc"), Some("0.2.191"))
+                    | (Some("errno"), Some("0.3.15"))
+                    | (Some("windows-sys"), Some("0.61.2"))
+                    | (Some("windows-link"), Some("0.2.1"))
+            );
+            no_native_with_system_bindings(
+                manifest.parent().ok_or("missing crate directory")?,
+                system_bindings,
+            )?;
             // Build scripts and procedural macros are subject to cargo-vet, including exact
             // versions that remain explicitly not audited in supply-chain/config.toml.
         } else {
@@ -1029,6 +1063,22 @@ fn main() {}
         ] {
             assert!(numeric_udp_tokens(mutant.parse().unwrap()).is_err());
         }
+    }
+
+    #[test]
+    fn os_bindings_do_not_allow_native_code_in_ordinary_dependencies() {
+        let ffi = "unsafe extern \"C\" { fn signal(); }";
+        assert!(native_tokens(ffi.parse().unwrap()).is_err());
+        assert!(native_tokens_with_system_bindings(ffi.parse().unwrap(), true).is_ok());
+        for source in [
+            "asm!(\"nop\");",
+            "global_asm!(\"nop\");",
+            "naked_asm!(\"nop\");",
+            "use core::arch::asm as hidden; hidden!(\"nop\");",
+        ] {
+            assert!(native_tokens_with_system_bindings(source.parse().unwrap(), true).is_err());
+        }
+        assert!(native_tokens("use asm::socket; mod asm;".parse().unwrap()).is_ok());
     }
 
     #[test]

@@ -60,6 +60,8 @@ jobs:
         run: rustup show active-toolchain || rustup toolchain install
       - run: cargo xtask policy
       - run: python3 scripts/generate-fixtures.py --check
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+      - run: uv run --no-project --with jsonschema==4.26.0 python scripts/gen_vectors.py --check --producer-strict
       - name: cargo vet
         run: |
           cargo install cargo-vet --version 0.10.3 --locked --quiet

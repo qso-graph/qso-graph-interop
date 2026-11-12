@@ -105,10 +105,10 @@ fn listener_json_is_one_object_per_message_and_survives_malformed_input() {
         .collect::<Result<Vec<_>, _>>()
         .unwrap();
     assert_eq!(lines.len(), 1);
-    assert_eq!(
-        serde_json::from_str::<serde_json::Value>(&lines[0]).unwrap()["kind"],
-        "ambiguous"
-    );
+    // Close from a WSJT-X instance, as the listener observes it (QGI-WSJ-0022).
+    let event = serde_json::from_str::<serde_json::Value>(&lines[0]).unwrap();
+    assert_eq!(event["kind"], "lifecycle");
+    assert_eq!(event["fields"]["state"], "closed");
     assert!(!output.stderr.is_empty());
 }
 
@@ -139,7 +139,14 @@ fn simulator_to_listener_reports_consistent_transmit_frequency() {
         std::thread::sleep(Duration::from_millis(10));
     }
     let sim = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
-        .args(["sim", "--wsjtx", "--to", &address.to_string()])
+        .args([
+            "sim",
+            "--wsjtx",
+            "--to",
+            &address.to_string(),
+            "--mode",
+            "FT8",
+        ])
         .status()
         .unwrap();
     assert!(sim.success());
@@ -158,6 +165,12 @@ fn simulator_to_listener_reports_consistent_transmit_frequency() {
         .map(|line| serde_json::from_str(&line.unwrap()).unwrap())
         .collect();
     assert_eq!(events.len(), 9);
+    // The listener is the observer on a WSJT-X server port, so it supplies the direction.
+    assert!(
+        events
+            .iter()
+            .all(|v| v["context"]["direction"] == "from_application")
+    );
     let status = events.iter().find(|v| v["kind"] == "radio_state").unwrap();
     let qso = events.iter().find(|v| v["kind"] == "qso_logged").unwrap();
     assert_eq!(status["fields"]["dial_frequency_hz"], 14_074_000);
@@ -183,6 +196,9 @@ fn decode_reads_file_and_stdin_and_rejects_an_oversized_capture() {
     let output = child.wait_with_output().unwrap();
     assert!(output.status.success());
     let from_stdin: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    // A file's direction is unknown, so a Close is ambiguous (QGI-WSJ-0022).
+    assert_eq!(from_stdin["context"]["direction"], "unknown");
+    assert_eq!(from_stdin["kind"], "ambiguous");
     let path = std::env::temp_dir().join(format!("qgi-decode-{}.bin", std::process::id()));
     std::fs::write(&path, &bytes).unwrap();
     let output = Command::new(env!("CARGO_BIN_EXE_qg-interop"))

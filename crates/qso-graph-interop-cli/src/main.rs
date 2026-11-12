@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! UDP listener and finite scripted simulator. All destinations are numeric socket addresses.
+//! UDP listener and timed simulator. All destinations are numeric socket addresses.
 #![forbid(unsafe_code)]
 
+use qso_graph_interop_cli::alltxt;
+mod capture;
 mod numeric_udp;
+mod sim;
 
 use clap::{Args, Parser, Subcommand};
 use numeric_udp::NumericUdp;
@@ -12,7 +15,6 @@ use std::io::{self, Read, Write};
 use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::process::ExitCode;
-use std::time::{SystemTime, UNIX_EPOCH};
 
 #[derive(Parser)]
 #[command(
@@ -34,11 +36,11 @@ enum Command {
         after_help = "Examples:\n  qg-interop listen --wsjtx\n  qg-interop listen --wsjtx 127.0.0.1:2237 --json"
     )]
     Listen(Listen),
-    /// Send a finite heartbeat, status, decode and logged-QSO script.
+    /// Play ALL.TXT or native NDJSON captures over UDP.
     #[command(
         after_help = "Examples:\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call W1AW --mode FT4 --frequency 7074000"
     )]
-    Sim(Sim),
+    Sim(Box<Sim>),
     /// Decode one complete native WSJT-X datagram from a file or standard input.
     #[command(
         after_help = "Examples:\n  qg-interop decode --wsjtx capture.bin\n  qg-interop decode --wsjtx -"
@@ -73,25 +75,42 @@ struct Decode {
 
 #[derive(Args)]
 struct Sim {
-    #[arg(long, required = true)]
+    #[arg(long, required_unless_present = "capture", conflicts_with = "qgi")]
     wsjtx: bool,
-    /// Numeric destination; required, with no implicit broadcast or discovery.
-    #[arg(long)]
+    /// Play native.data from an NDJSON capture.
+    #[arg(long, conflicts_with_all = ["file", "from", "dx_call", "mode", "frequency"])]
+    capture: Option<PathBuf>,
+    /// Send each captured event as qgi UDP event carriage.
+    #[arg(long, requires = "capture")]
+    qgi: bool,
+    /// Numeric destination; no implicit broadcast or discovery.
+    #[arg(long, value_parser = sim::target)]
     to: SocketAddr,
-    /// Simulated station callsign.
-    #[arg(long, default_value = "N0CALL")]
+    /// ALL.TXT to play; the built-in synthetic sample is the default.
+    #[arg(long, conflicts_with_all = ["dx_call", "mode", "frequency"])]
+    file: Option<PathBuf>,
+    /// Start at this timestamp in the log.
+    #[arg(long, default_value = "", value_parser = sim::start)]
+    from: String,
+    #[arg(long, default_value = "", value_parser = sim::call)]
     call: String,
-    #[arg(long, default_value = "W1AW")]
-    dx_call: String,
-    #[arg(long, default_value = "FN31")]
+    #[arg(long, default_value = "", value_parser = sim::grid)]
     grid: String,
-    #[arg(long, default_value = "FT8")]
-    mode: String,
-    /// Dial frequency in Hz.
-    #[arg(long, default_value_t = 14_074_000)]
-    frequency: u64,
-    #[arg(long, default_value = "WSJT-X")]
+    #[arg(long, default_value = "WSJT-X", value_parser = sim::id)]
     id: String,
+    #[arg(long, default_value = "1", value_parser = sim::speed)]
+    speed: f64,
+    #[arg(long = "loop")]
+    repeat: bool,
+    /// Select the legacy fixed QSO script, with this DX callsign.
+    #[arg(long, value_parser = sim::call)]
+    dx_call: Option<String>,
+    /// Select the legacy fixed QSO script, with this mode.
+    #[arg(long)]
+    mode: Option<String>,
+    /// Select the legacy fixed QSO script, with this dial frequency in Hz.
+    #[arg(long)]
+    frequency: Option<u64>,
 }
 
 fn main() -> ExitCode {
@@ -107,7 +126,7 @@ fn main() -> ExitCode {
 fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
     match cli.command {
         Command::Listen(options) => listen(options),
-        Command::Sim(options) => simulate(options),
+        Command::Sim(options) => sim::run(*options),
         Command::Decode(options) => decode_file(options),
     }
 }
@@ -120,7 +139,9 @@ fn listen(options: Listen) -> Result<(), Box<dyn std::error::Error>> {
     let mut seen = 0_u64;
     loop {
         let (n, peer) = socket.recv_from(&mut bytes)?;
-        match emit(&bytes[..n], &mut output) {
+        // A WSJT-X server port receives only what WSJT-X instances send, so the listener, as the
+        // observer, knows the direction (QGI-MOD-0002). The codec still infers nothing.
+        match emit(&bytes[..n], &mut output, "from_application") {
             Ok(()) => output.flush()?,
             Err(e) => eprintln!("{peer}: {e}"),
         }
@@ -132,8 +153,14 @@ fn listen(options: Listen) -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn emit(bytes: &[u8], output: &mut impl Write) -> Result<(), Box<dyn std::error::Error>> {
-    let outcome = wsjtx::Wsjtx::default().decode(bytes, &DecodeOptions::default())?;
+fn emit(
+    bytes: &[u8],
+    output: &mut impl Write,
+    direction: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let mut options = DecodeOptions::default();
+    options.context = serde_json::json!({"direction": direction, "exchange": "unknown"});
+    let outcome = wsjtx::Wsjtx::default().decode(bytes, &options)?;
     for event in outcome.events {
         output.write_all(&qso_graph_interop::json::write(
             &event,
@@ -160,34 +187,30 @@ fn decode_file(options: Decode) -> Result<(), Box<dyn std::error::Error>> {
     input
         .take((wsjtx::MAX_DATAGRAM + 1) as u64)
         .read_to_end(&mut bytes)?;
-    emit(&bytes, &mut io::stdout().lock())
-}
-
-fn simulate(options: Sim) -> Result<(), Box<dyn std::error::Error>> {
-    let socket = NumericUdp::sender(options.to)?;
-    let now = SystemTime::now().duration_since(UNIX_EPOCH)?;
-    for packet in script(&options, now.as_secs())? {
-        socket.send(&wsjtx::encode(&packet)?)?;
-    }
-    Ok(())
+    emit(&bytes, &mut io::stdout().lock(), "unknown")
 }
 
 fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
     let make = |body| Packet::new(s.id.as_str(), body);
+    let mode = s.mode.as_deref().unwrap_or("FT8");
+    let dx_call = s.dx_call.as_deref().unwrap_or("W1AW");
+    let frequency = s.frequency.unwrap_or(14_074_000);
+    let call = if s.call.is_empty() { "N0CALL" } else { &s.call };
+    let grid = if s.grid.is_empty() { "FN31" } else { &s.grid };
     let mut status = {
         let mut value = wsjtx::Status::default();
-        value.dial_frequency_hz = s.frequency;
-        value.mode = s.mode.as_str().into();
+        value.dial_frequency_hz = frequency;
+        value.mode = mode.into();
         value.dx_call = "".into();
         value.report = "".into();
-        value.tx_mode = s.mode.as_str().into();
+        value.tx_mode = mode.into();
         value.tx_enabled = false;
         value.transmitting = false;
         value.decoding = true;
         value.rx_df_hz = 1200;
         value.tx_df_hz = 1500;
-        value.de_call = Some(s.call.as_str().into());
-        value.de_grid = Some(s.grid.as_str().into());
+        value.de_call = Some(call.into());
+        value.de_grid = Some(grid.into());
         value.dx_grid = Some("".into());
         value.tx_watchdog = Some(false);
         value.sub_mode = Some("".into());
@@ -199,8 +222,7 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
         value.tx_message = Some("".into());
         value
     };
-    let tx_frequency_hz = s
-        .frequency
+    let tx_frequency_hz = frequency
         .checked_add(u64::from(status.tx_df_hz))
         .ok_or_else(|| {
             io::Error::new(
@@ -220,9 +242,9 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
     ];
     let time = QTime::new(((seconds % 86_400) * 1000) as u32);
     for (index, text) in [
-        format!("CQ {} {}", s.dx_call, s.grid),
-        format!("{} {} -12", s.call, s.dx_call),
-        format!("{} {} RR73", s.call, s.dx_call),
+        format!("CQ {} {}", dx_call, grid),
+        format!("{} {} -12", call, dx_call),
+        format!("{} {} RR73", call, dx_call),
     ]
     .into_iter()
     .enumerate()
@@ -234,7 +256,7 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
             value.snr_db = -12 + index as i32;
             value.delta_time_seconds = 0.2;
             value.delta_frequency_hz = 1500;
-            value.mode = wsjtx::mode_character(&s.mode).into();
+            value.mode = wsjtx::mode_character(mode).into();
             value.message = text.into();
             value.low_confidence = Some(false);
             value.off_air = Some(false);
@@ -255,19 +277,19 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
     messages.push(make(Body::QsoLogged(Box::new({
         let mut value = wsjtx::QsoLogged::default();
         value.time_off = timestamp(seconds);
-        value.dx_call = s.dx_call.as_str().into();
-        value.dx_grid = s.grid.as_str().into();
+        value.dx_call = dx_call.into();
+        value.dx_grid = grid.into();
         value.frequency_hz = tx_frequency_hz;
-        value.mode = s.mode.as_str().into();
+        value.mode = mode.into();
         value.report_sent = "-12".into();
         value.report_received = "-10".into();
         value.tx_power = "5".into();
         value.comments = "Simulated QSO".into();
         value.name = "".into();
         value.time_on = Some(timestamp(seconds.saturating_sub(45)));
-        value.operator_call = Some(s.call.as_str().into());
-        value.my_call = Some(s.call.as_str().into());
-        value.my_grid = Some(s.grid.as_str().into());
+        value.operator_call = Some(call.into());
+        value.my_call = Some(call.into());
+        value.my_grid = Some(grid.into());
         value.exchange_sent = Some("".into());
         value.exchange_received = Some("".into());
         value.propagation_mode = Some("".into());
@@ -344,9 +366,9 @@ mod tests {
                 status.dial_frequency_hz + u64::from(status.tx_df_hz)
             );
             assert_eq!(qso.frequency_hz, 14_075_500);
-            sim.frequency = u64::MAX - 1500;
+            sim.frequency = Some(u64::MAX - 1500);
             assert!(script(&sim, 0).is_ok());
-            sim.frequency += 1;
+            sim.frequency = Some(u64::MAX - 1499);
             assert!(script(&sim, 0).is_err());
         }
     }

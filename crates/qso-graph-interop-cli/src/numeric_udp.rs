@@ -25,6 +25,10 @@ impl NumericUdp {
         self.0.recv_from(bytes)
     }
 
+    pub fn set_read_timeout(&self, timeout: Option<std::time::Duration>) -> io::Result<()> {
+        self.0.set_read_timeout(timeout)
+    }
+
     pub fn send(&self, bytes: &[u8]) -> io::Result<usize> {
         self.0.send(bytes)
     }

@@ -10,7 +10,15 @@ use qso_graph_interop::{
     qgi::{Qgi, Transport},
     wsjtx::Wsjtx,
 };
+use qso_graph_interop_cli::alltxt;
 fuzz_target!(|data: &[u8]| {
+    if let Ok(log) = alltxt::parse(data, "") {
+        for cycle in log.cycles {
+            let _ = alltxt::period_ms(&cycle.mode);
+            assert!(!cycle.stamp.is_empty());
+            let _ = cycle.dial_hz;
+        }
+    }
     let options = DecodeOptions::default();
     let _ = qso_graph_interop::json::parse(data, MAX_RECORD);
     for transport in [Transport::Udp, Transport::Tcp] {

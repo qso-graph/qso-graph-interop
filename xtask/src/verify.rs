@@ -137,7 +137,7 @@ pub fn steps(fuzz_seconds: u64) -> Vec<Step> {
                 "run",
                 "--no-project",
                 "--with",
-                "jsonschema",
+                "jsonschema==4.26.0",
                 "python",
                 "scripts/gen_vectors.py",
                 "--check",
@@ -386,9 +386,111 @@ pub fn verify(root: &Path, fuzz_seconds: u64) -> bool {
     failed.is_empty()
 }
 
+/// The command line a step runs, as CI's workflow would spell it. The fuzz time is a parameter
+/// in both places, so it is compared as a placeholder.
+pub fn command_line(s: &Step) -> String {
+    let mut line = s.program.clone();
+    for arg in &s.args {
+        line.push(' ');
+        line.push_str(if arg.starts_with("-max_total_time=") {
+            "-max_total_time=N"
+        } else {
+            arg
+        });
+    }
+    line
+}
+
+/// The check commands in CI's workflow: every `run:` line that starts a check. Toolchain setup,
+/// tool installation, shell control lines and the lockfile diff (which verify does in-process)
+/// are not checks.
+pub fn ci_commands(workflow: &str) -> std::collections::BTreeSet<String> {
+    let mut found = std::collections::BTreeSet::new();
+    let mut in_block = None;
+    for raw in workflow.lines() {
+        let indent = raw.len() - raw.trim_start().len();
+        let line = raw.trim();
+        let body = line.strip_prefix("- ").unwrap_or(line);
+        let command = if let Some(rest) = body.strip_prefix("run:") {
+            let rest = rest.trim();
+            if rest == "|" {
+                in_block = Some(indent);
+                continue;
+            }
+            in_block = None;
+            rest
+        } else if let Some(start) = in_block {
+            if !line.is_empty() && indent <= start {
+                in_block = None;
+                continue;
+            }
+            line
+        } else {
+            continue;
+        };
+        let checks = ["cargo ", "python3 ", "uv "];
+        if checks.iter().any(|p| command.starts_with(p)) && !command.starts_with("cargo install ") {
+            let mut normal: Vec<String> = Vec::new();
+            for word in command.split_whitespace() {
+                normal.push(if word.starts_with("-max_total_time=") {
+                    "-max_total_time=N".to_owned()
+                } else {
+                    word.to_owned()
+                });
+            }
+            found.insert(normal.join(" "));
+        }
+    }
+    found
+}
+
+/// Checks verify runs that CI does not, and checks CI runs that verify does not.
+pub fn drift(workflow: &str, list: &[Step]) -> (Vec<String>, Vec<String>) {
+    let ci = ci_commands(workflow);
+    let local: std::collections::BTreeSet<String> = list.iter().map(command_line).collect();
+    (
+        local.difference(&ci).cloned().collect(),
+        ci.difference(&local).cloned().collect(),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn workflow() -> String {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
+        fs::read_to_string(root.join(".github/workflows/ci.yml")).unwrap()
+    }
+
+    #[test]
+    fn ci_and_verify_run_the_same_checks() {
+        let (only_verify, only_ci) = drift(&workflow(), &steps(60));
+        assert!(
+            only_verify.is_empty() && only_ci.is_empty(),
+            "verify only: {only_verify:?}\nCI only: {only_ci:?}"
+        );
+    }
+
+    #[test]
+    fn planted_drift_is_caught_both_ways() {
+        let ci = workflow();
+        let dropped = ci.replace("      - run: cargo xtask policy\n", "");
+        assert_ne!(dropped, ci, "the planted removal must change the workflow");
+        assert_eq!(drift(&dropped, &steps(60)).0, ["cargo xtask policy"]);
+        let added = ci.replace(
+            "      - run: cargo xtask policy\n",
+            "      - run: cargo xtask policy\n      - run: cargo test --doc\n",
+        );
+        assert_eq!(drift(&added, &steps(60)).1, ["cargo test --doc"]);
+        let block = "        run: |\n          cargo install cargo-vet --version 0.10.3 --locked --quiet\n          cargo vet --locked\n";
+        assert!(ci_commands(block).contains("cargo vet --locked"));
+        assert!(
+            !ci_commands(block)
+                .iter()
+                .any(|c| c.starts_with("cargo install"))
+        );
+    }
 
     fn scratch(name: &str) -> PathBuf {
         let dir = std::env::temp_dir().join(format!("qgi-verify-{name}-{}", std::process::id()));

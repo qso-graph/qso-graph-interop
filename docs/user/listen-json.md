@@ -7,14 +7,22 @@ Run `qg-interop listen --wsjtx` to emit one QGI-SPEC-001 0.1.0 JSON event per li
 one complete datagram payload, without transport headers.
 
 Every event has `spec`, `family`, `mapping`, `kind`, `context`, and `fields`. WSJT-X observations
-also have `native_version`, `wire_id`, and `native`. The command-line tool supplies unknown direction and exchange;
-it never infers identity from a sender's network address or wire ID. Skip notices and malformed
+also have `native_version`, `wire_id`, and `native`. `listen` receives on a WSJT-X server port, where only WSJT-X
+instances send, so it supplies direction `from_application`; `decode` reads a file whose
+direction it cannot know, so it supplies `unknown`. Exchange is `unknown` in both. Neither infers identity from a sender's network address or wire ID. Skip notices and malformed
 input diagnostics go to standard error and produce no event.
 
-For example, this observed Close message has unknown direction:
+For example, `listen` reports WSJT-X closing like this:
 
 ```json
-{"spec":"0.1.0","family":"wsjtx","mapping":1,"native_version":"3","kind":"ambiguous","wire_id":"test-instance","context":{"direction":"unknown","exchange":"unknown"},"fields":{"operation":"close"},"native":{"format":"wsjtx_datagram","data":"rbzL2gAAAAMAAAAGAAAADXRlc3QtaW5zdGFuY2U="}}
+{"spec":"0.1.0","family":"wsjtx","mapping":1,"native_version":"3","kind":"lifecycle","wire_id":"test-instance","context":{"direction":"from_application","exchange":"unknown"},"fields":{"state":"closed"},"native":{"format":"wsjtx_datagram","data":"rbzL2gAAAAMAAAAGAAAADXRlc3QtaW5zdGFuY2U="}}
+```
+
+The same datagram through `decode` has unknown direction, so it is `ambiguous` with
+`"fields":{"operation":"close"}`.
+
+```text
+qg-interop decode --wsjtx close.bin
 ```
 
 Common frequencies use integer hertz. WSJT-X clock values use `HH:MM:SS.mmm`; resolved UTC dates

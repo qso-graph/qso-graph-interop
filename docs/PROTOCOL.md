@@ -136,3 +136,69 @@ producer rejection, partial and multiple TCP frames, EOF/recovery, and typed fam
 checks Annex B admission separately from Annex I rejection. The
 fuzz harness accepts arbitrary binary, arbitrary event JSON and qgi datagram/stream input through
 the public API on nightly-2026-10-30. Live-peer interoperability remains separate evidence.
+
+## Simulator timing and reactions
+
+The simulator's timing evidence comes from released WSJT-X `v3.0.2`, commit
+`ccdfaf3c1c109010d15399674ce278167cfde848`, the Annex B pin above. The source was fetched
+read-only from the WSJTX GitHub repository; playback itself needs no network fetch. The Python
+0.3.1 ALL.TXT reader supplies parsing compatibility evidence, and Desktop's independently
+captured Python 0.2.0 datagrams supply the output oracle after callsign substitution.
+See [simulator validation](simulator-validation.md) for normalization and planted failures.
+
+All periods below are T/R periods, not the duration of the encoded waveform. Source links
+refer to `widgets/mainwindow.cpp` at that exact released commit.
+
+| Mode or recorded label | Established period | ALL.TXT playback and released source |
+| --- | --- | --- |
+| FT8, FT8_SH, FT8_SF | 15 s | Play ordinary received decodes; SuperFox Tx lines remain skipped. [Period, line 11007](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L11007). |
+| FT4 | 7.5 s | Play. [Line 10914](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L10914). |
+| JT4 | 60 s | Play. [Line 11156](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L11156). |
+| JT65 | 60 s | Play. [Line 11301](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L11301). |
+| JT9 | 60 s; fast mode: 5, 10, 15, or 30 s | Skip: the recorded `JT9` name does not distinguish fast mode or its setting. [Lines 11245–11260](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L11245). |
+| MSK144 | 5, 10, 15, or 30 s | Skip: the selected setting is absent from the log. [Lines 11441–11478](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L11441). |
+| Q65 | 15, 30, 60, 120, or 300 s | Play only a period-bearing label such as `Q65-60C`; skip bare `Q65`. [Period choices, line 11381](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L11381), [label construction, lines 13135–13147](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L13135), and [log writer, lines 15221–15239](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L15221). |
+| FST4 | 15, 30, 60, 120, 300, 900, or 1800 s | Skip: the selected setting is absent from the log. [Lines 10854–10856](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L10854). |
+| FST4W | 120, 300, 900, or 1800 s | Skip: the selected setting is absent from the log. [Choices, line 566](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L566), [setting handler, lines 13121–13124](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L13121). |
+| WSPR | 120 s | Known period, but a separate log and WSPRDecode layout; skip as not an ordinary Decode. [Period, line 11541](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L11541), [WSPRDecode, lines 13419–13429](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L13419), [log destination, line 15272](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L15272). |
+| Echo | 3 s internal period | Known period, but measurements use a separate layout and `all_echo.txt`; skip as not an ordinary Decode. Automatic measurements are aligned to 6 s. [Period, line 11585](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L11585), [measurement formatting, lines 2440–2457](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L2440), [log destination, lines 15273–15275](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L15273). |
+| FreqCal | 5, 10, 15, or 30 s | Skip: the selected setting is absent from the log. [Lines 11628–11639](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L11628). |
+
+The [released log writer](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L15211)
+records timestamp, dial frequency, Rx/Tx, mode label, and decode text. Only Q65's label embeds
+the selected period; timestamp gaps, DT, and defaults do not establish a missing setting.
+Q65 label validation follows the released [submode bounds](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L13076):
+15 s allows A–C, 30 s A–D, 60 s A–E, 120 s A–F, and 300 s A–E. The label supplies Status
+mode `Q65`, its submode letter, and integer period; Decode uses the native `:` marker.
+The writer also records [FT8_SH/FT8_SF labels](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/widgets/mainwindow.cpp#L15242)
+while the active mode remains FT8. These labels retain the 15 s period, Status mode `FT8`,
+and Decode marker `~`; FT8_SF is written only for Tx, which remains skipped.
+FT4 uses the header's not-applicable integer T/R period sentinel because 7.5 seconds is not
+representable as u32 seconds. Other playable modes retain concrete integer periods.
+
+Unknown names and modes without a recorded selectable period are counted and skipped before
+cycle grouping. The summary lists their distinct names in sorted order, escaping non-ASCII and
+control characters for terminal output. Received lines before `--from` do not enter the skip
+count. If nothing playable remains, the error retains `no received decodes` and appends the
+skip summary when modes were skipped. WSPR captures can be played using native NDJSON playback
+without converting WSPRDecode into Decode.
+
+All header links below use the exact pin in Annex B:
+
+| Reaction | Header evidence |
+| --- | --- |
+| Replay: stored Decodes in order, New false, then Status | [lines 329–341](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/Network/NetworkMessage.hpp#L329) |
+| Status on supported state changes, including decoding start/end and changed Rx offset, DX fields, mode, or transmitted message | [lines 166–189](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/Network/NetworkMessage.hpp#L166) |
+| Halt Tx: disable Auto Tx, or halt immediately; changed state uses Status | [lines 344–350](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/Network/NetworkMessage.hpp#L344) |
+| Free Text: stage/clear text, or select staged text unchanged; no standalone acknowledgment | [lines 353–381](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/Network/NetworkMessage.hpp#L353) |
+| Configure: supported settings, empty/no-change sentinels, silently ignored invalid values; changed state uses Status | [lines 488–508](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/Network/NetworkMessage.hpp#L488) |
+| Clear: erase selected windows; no acknowledgment | [lines 235–253](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/Network/NetworkMessage.hpp#L235) |
+| Close: request graceful shutdown, send Close before exit | [lines 321–326](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/Network/NetworkMessage.hpp#L321) |
+| Location: change session locator | [lines 411–425](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/Network/NetworkMessage.hpp#L411) |
+| Heartbeat: exchange supported schema | [lines 109–138](https://github.com/WSJTX/wsjtx/blob/ccdfaf3c1c109010d15399674ce278167cfde848/Network/NetworkMessage.hpp#L109) |
+
+The simulator's receive-only state doesn't claim transmission or rig-frequency-table effects.
+It implements the state it can observe and emits no invented success response. Reply, highlighting,
+annotation and unavailable named configurations have no synthetic acknowledgment. Shutdown Clear
+then Close matches the Python retirement contract. UDP capture playback emits the captured
+messages unchanged; qgi playback forwards complete events and adds no hop at send time.

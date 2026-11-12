@@ -23,3 +23,7 @@ for family in ('wsjtx', 'qgi'):
             (corpus / (stem + '-event')).write_text(json.dumps(supplied['event'], separators=(',', ':')))
         if 'event_json' in supplied:
             (corpus / (stem + '-json')).write_text(supplied['event_json'])
+
+# Local input parsing shares the same arbitrary-byte harness.
+(corpus / "alltxt-sample").write_bytes((root / "crates/qso-graph-interop/tests/fixtures/ALL-sample.TXT").read_bytes())
+(corpus / "alltxt-edges").write_bytes(b"header\n260407_120000    14.074 Rx FT8 -12 -0.2 1234 CQ W1AAA AA00 ?\r\n260229_000000 14 Tx FT8 1 0 1 BAD\n")
