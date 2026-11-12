@@ -24,7 +24,10 @@
         "exchange": "unknown"
       },
       "fields": {
-        "adif": "<ADIF_VER:5>3.1.4<EOH><CALL:5>W1AAA<EOR>"
+        "adif": "<ADIF_VER:5>3.1.4<EOH><CALL:5>W1AAA<EOR>",
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

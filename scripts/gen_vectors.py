@@ -104,6 +104,8 @@ class Suite:
                  'native_version': str(schema), 'kind': kind, 'wire_id': text(identity),
                  'context': context(direction), 'fields': fields,
                  'native': {'format': 'wsjtx_datagram', 'data': b64(raw)}}
+        if kind in ('decode', 'radio_state', 'qso_logged', 'qso_changed', 'qso_deleted', 'spot'):
+            fields['radio'] = {'instance': text(identity)}
         if typ == 13:
             fields.update(background_color={'spec': 1, 'channels': [65535, 0x1111, 0x2222, 0x3333, 0x4444]},
                           foreground_color={'spec': 0, 'channels': [1, 2, 3, 4, 5]})
@@ -154,6 +156,11 @@ def build():
                             'dx_grid': 'FN42', 'tx_watchdog': False, 'sub_mode': 'sub-test', 'fast_mode': True,
                             'special_operation_mode': 3, 'frequency_tolerance_hz': 50, 'tr_period_seconds': 15,
                             'configuration_name': 'test-config', 'tx_message': 'test-tx'})
+        alternate = copy.deepcopy(status_parts)
+        alternate[5] = pack('BBBII', 0, 1, 1, 1201, 2302)
+        alternate_fields = dict(status_fields, tx_enabled=False, transmitting=True, decoding=True)
+        s.positive('status-distinct-booleans' + suffix, schema, 1, b''.join(alternate),
+                   'radio_state', alternate_fields)
         decode = pack('BIidI', 1, 45296123, -17, 0.25, 1234) + utf8('~') + utf8('CQ W1AAA FN42')
         decode_fields = {'is_new': True, 'time_of_day': '12:34:56.123', 'snr_db': -17, 'dt_seconds': 0.25,
                          'audio_offset_hz': 1234, 'mode': '~', 'text': 'CQ W1AAA FN42'}
@@ -353,6 +360,25 @@ def build():
     s.positive('configure-no-change', 3, 15, body, 'control', {'operation': 'wsjtx.configure', 'mode': '',
                'frequency_tolerance_hz': 0xffffffff, 'sub_mode': '', 'fast_mode': False,
                'tr_period_seconds': 0xffffffff, 'rx_offset_hz': 0xffffffff, 'dx_call': '', 'dx_grid': ''})
+    s.positive('free-text-empty-transmit', 3, 9, utf8('') + b'\x01', 'control',
+               {'operation': 'send_text', 'text': '', 'transmit': True},
+               message={'text': '', 'send': True})
+    decode_source = s.vectors['02-decode-s3']
+    raw = base64.b64decode(decode_source['input']['data'])
+    body = raw[len(header(3, 2)):]
+    for label, identity in [('null', None), ('empty', ''), ('raw', b'\xff'), ('unicode', 'receiver-\u03b1')]:
+        fields = copy.deepcopy(decode_source['expected']['event']['fields'])
+        s.positive('radio-instance-' + label, 3, 2, body, 'decode', fields, identity=identity)
+    # Maximum native size with both complete views and maximally escaped text/ID.
+    source = s.vectors['01-status-s3']
+    original = base64.b64decode(source['input']['data'])
+    prefix = original[len(header(3, 1)):-len(utf8('test-tx'))]
+    identity = '\x01' * 256
+    maximal_text = '\x01' * (65507 - len(header(3, 1, identity)) - len(prefix) - 4)
+    fields = dict(copy.deepcopy(source['expected']['event']['fields']), tx_message=maximal_text)
+    message = dict(copy.deepcopy(source['expected_message']['body']), tx_message=maximal_text)
+    s.positive('output-budget-maximum-text', 3, 1, prefix + utf8(maximal_text),
+               'radio_state', fields, identity=identity, message=message)
     # Error precedence and planted failures for every category.
     s.negative('error-empty', b'', 'truncated')
     s.negative('error-short-schema', pack('I', 0xadbccbda) + b'\x00', 'truncated')
@@ -428,6 +454,22 @@ def compatibility(s):
     new['kind'] = 'control'
     new['fields'] = {'operation': 'future_operation'}
     add('old-reader-new-operation', new)
+    s.vectors['compat-old-reader-new-operation']['expected']['verification'] = 'unavailable'
+    for name, native_type, kind, fields in [
+        ('known-kind-new-revision', 17, 'radio_state', {'dial_frequency_hz': 14074000}),
+        ('known-operation-new-revision', 8, 'control', {'operation': 'halt_tx', 'auto_tx_only': True}),
+    ]:
+        new = copy.deepcopy(old)
+        new.update(mapping=2, kind=kind, fields=fields)
+        new['native']['data'] = b64(header(3, native_type) + (b'\x01' if native_type == 8 else b''))
+        add(name, new)
+        s.vectors['compat-' + name]['expected']['verification'] = 'verified' if native_type == 8 else 'unavailable'
+    new = copy.deepcopy(s.vectors['13-highlight-callsign-s3']['expected']['event'])
+    new['mapping'] = 2
+    new['fields']['background_color']['future_component'] = 7
+    read = {k: copy.deepcopy(new[k]) for k in ('kind', 'fields', 'context', 'native')}
+    read['fields']['background_color'].pop('future_component')
+    add('nested-addition', new, expected=read)
     new = copy.deepcopy(old)
     new['spec'] = '1.0.0'
     add('different-major', new, error='unsupported_version')
@@ -501,7 +543,7 @@ def commands(s):
     # Default schema, optional tail boundaries, null/empty/raw text and boolean canonicalization.
     sources = [name for name in s.vectors if name.startswith(('tail-heartbeat-empty-', 'tail-reply-minimal-',
                 'tail-highlight-minimal-', 'tail-configure-minimal-', 'direction-clear-to_application-',
-                'text-', 'id-', 'configure-no-change'))]
+                'text-', 'id-', 'configure-no-change', 'free-text-empty-transmit'))]
     # Explicitly include all noncanonical-boolean sending vectors when present.
     sources += [name for name, v in s.vectors.items() if v.get('reencode') and
                 v['input'].get('data') != v['reencode']['data']]
@@ -576,6 +618,14 @@ def commands(s):
     event = copy.deepcopy(baselines['close'])
     event['fields']['operation'] = 'wsjtx.not_registered'
     negative('unknown-operation', event)
+    for label, bad in [('utf16-for-utf8', {'utf16_units': [0xd800]}),
+                       ('valid-text-raw-wrapper', {'utf8_bytes': [65]})]:
+        event = copy.deepcopy(baselines['send_text'])
+        event['fields']['text'] = bad
+        negative(label, event)
+    event = copy.deepcopy(baselines['send_text'])
+    event['mapping'] = 2
+    negative('known-operation-new-revision', event, category='unsupported_version')
     for schema in (0, 4, '3', True):
         negative('schema-' + str(schema), baselines['close'], {'schema': schema}, 'unsupported_version')
     old_command = copy.deepcopy(baselines['send_text'])
@@ -614,17 +664,15 @@ def qgi_vectors(wsjtx):
     def wire(event):
         return json.dumps(event, ensure_ascii=True, separators=(',', ':'), allow_nan=False).encode()
 
-    def positive(name, carried, transport='udp', delimiter=b'', recognized=None):
+    def positive(name, carried, transport='udp', delimiter=b'', observer=None):
         raw = wire(carried)
-        event = copy.deepcopy(carried if recognized is None else recognized)
-        event['context'] = context('unknown')
-        event['native'] = {'format': 'qgi_datagram' if transport == 'udp' else 'qgi_ndjson',
-                           'data': b64(raw)}
-        if 'native' in carried:
-            event['native']['carried_native'] = copy.deepcopy(carried['native'])
+        observer = observer or context('unknown')
+        event = copy.deepcopy(carried)
+        event.setdefault('via', []).append({'family': 'qgi', 'context': copy.deepcopy(observer)})
         s.add(name, {'class': 'positive',
-            'input': {'transport': transport, 'data': b64(raw + delimiter), 'context': context('unknown')},
-            'expected': {'event': event}, 'reencode': {'data': b64(raw + delimiter)}})
+            'input': {'transport': transport, 'data': b64(raw + delimiter), 'context': observer},
+            'expected': {'event': event},
+            'reencode': {'event': copy.deepcopy(event), 'delimiter': delimiter.decode('ascii')}})
 
     positive('carried-decode', observed)
     positive('carried-command', command)
@@ -635,9 +683,29 @@ def qgi_vectors(wsjtx):
     newer = copy.deepcopy(observed)
     newer.update(spec='0.2.0', kind='future_kind')
     newer['fields'] = {'future_field': 17}
-    recognized = copy.deepcopy(newer)
-    recognized.update(kind='native', fields={})
-    positive('newer-minor-unknown-kind', newer, recognized=recognized)
+    positive('newer-minor-unknown-kind', newer)
+    s.vectors['newer-minor-unknown-kind']['expected']['read'] = {'kind': 'native', 'fields': {}}
+    positive('two-hops', s.vectors['carried-decode']['expected']['event'],
+             observer=dict(context('from_application'), source_id='second-observer'))
+    eight = copy.deepcopy(observed)
+    eight['via'] = [{'family': 'qgi', 'context': dict(context('unknown'), source_id=f'hop-{i}')}
+                    for i in range(1, 8)]
+    positive('eight-hops', eight)
+    max_context = dict(context('unknown'), source_id='')
+    max_context['source_id'] = 'a' * (4096 - len(wire(max_context)))
+    positive('context-budget-boundary', observed, observer=max_context)
+    unicode_event = copy.deepcopy(command)
+    unicode_event['fields']['text'] = '\U0001f4fb'
+    positive('valid-unicode-surrogate-pair', unicode_event)
+
+    # Exactly one MiB after appending the hop, using synthetic text padding. String length and JSON element bounds remain independent.
+    boundary = copy.deepcopy(command)
+    boundary['fields']['text'] = ''
+    trial = copy.deepcopy(boundary)
+    trial['via'] = [{'family': 'qgi', 'context': context('unknown')}]
+    boundary['fields']['text'] = 'a' * (1048576 - len(wire(trial)))
+    positive('output-budget-boundary', boundary, 'tcp', b'\n')
+
 
     def negative(name, raw, category, transport='udp'):
         s.add(name, {'class': 'negative',
@@ -657,9 +725,15 @@ def qgi_vectors(wsjtx):
     invalid = copy.deepcopy(command)
     invalid.pop('fields')
     negative('schema-missing-fields', wire(invalid), 'invalid_value')
-    nested = copy.deepcopy(observed)
-    nested['native'] = copy.deepcopy(s.vectors['carried-decode']['expected']['event']['native'])
-    negative('native-nesting-too-deep', wire(nested), 'invalid_value')
+    too_much_context = dict(max_context, source_id=max_context['source_id'] + 'a')
+    negative('context-budget-overflow', wire(observed), 'oversized')
+    s.vectors['context-budget-overflow']['input']['context'] = too_much_context
+    negative('nine-hops', wire(s.vectors['eight-hops']['expected']['event']), 'invalid_value')
+    too_large = copy.deepcopy(boundary)
+    too_large['fields']['text'] += 'a'
+    negative('output-budget-overflow', wire(too_large) + b'\n', 'oversized', 'tcp')
+    negative('invalid-unicode-surrogate', wire(command).replace(b'synthetic', b'\\ud800synthetic'), 'malformed')
+    negative('invalid-unicode-key', b'{"\\udfff":0}', 'malformed')
     negative('not-an-object', b'[]', 'malformed')
     negative('trailing-object', wire(command) + b'{}', 'malformed')
     negative('oversized-stream', b' ' * 1048577 + b'\n', 'oversized', 'tcp')
@@ -703,7 +777,7 @@ def core_shapes():
     add('observed-control-missing-operation', event, False)
     event = copy.deepcopy(observation)
     event['native']['family_extra'] = 1
-    add('forbidden-native-member', event, False)
+    add('unknown-native-member', event)
     event['spec'] = '0.2.0'
     add('future-minor-native-member', event)
     for status in ('ok', 'error'):
@@ -743,6 +817,7 @@ def core_shapes():
     event['native']['retained'] = False
     add('datagram-with-retained', event, False)
     record = copy.deepcopy(observation)
+    record['family'] = 'pskreporter-ipfix'
     record['native'] = {'format': 'ipfix_record', 'data': '', 'template': '', 'message_data': '',
         'set_id': 256, 'set_index': 0, 'record_index': 0,
         'header': {'version': 10, 'length': 16, 'export_time': 0, 'sequence_number': 0, 'observation_domain_id': 7}}
@@ -768,18 +843,31 @@ def core_shapes():
     event['native']['topic'] = 'wrong/class'
     add('record-with-topic', event, False)
     carried = copy.deepcopy(observation)
-    carried['native'] = {'format': 'qgi_datagram', 'data': '',
-                          'carried_native': copy.deepcopy(observation['native'])}
-    add('qgi-one-native-level', carried)
-    event = copy.deepcopy(carried)
-    event['native']['carried_native'] = copy.deepcopy(carried['native'])
-    add('qgi-two-native-levels', event, False)
-    event = copy.deepcopy(carried)
-    event['native']['format'] = 'example_datagram'
-    add('non-qgi-carried-native', event, False)
-    event = copy.deepcopy(carried)
-    event['native']['carried_native'].pop('data')
-    add('qgi-incomplete-carried-native', event, False)
+    carried['via'] = [{'family': 'qgi', 'context': context('unknown')}]
+    add('qgi-one-hop', carried)
+    carried['via'] *= 8
+    add('qgi-eight-hops', carried)
+    carried['via'].append(copy.deepcopy(carried['via'][0]))
+    add('qgi-nine-hops', carried, False)
+    for label, base, change in [
+        ('nested-header-addition', record, lambda e: e['native']['header'].update(future=1)),
+        ('nested-dependency-addition', record, lambda e: e['native'].update(dependencies=[
+            dict({k: copy.deepcopy(record['native'][k]) for k in ('data', 'template', 'header', 'set_id')}, future=1)])),
+    ]:
+        event = copy.deepcopy(base)
+        change(event)
+        event['mapping'] = 2
+        add(label, event)
+    for kind in ('decode', 'radio_state', 'qso_logged', 'qso_changed', 'qso_deleted', 'spot'):
+        event = copy.deepcopy(observation)
+        event.update(family='n1mm', kind=kind, fields={'radio': {'instance': 'synthetic-station', 'number': 2}})
+        add('radio-' + kind, event)
+    event = copy.deepcopy(event)
+    event['fields']['radio']['number'] = '2'
+    add('radio-number-not-integer', event, False)
+    event.update(kind='radio_state', fields={'radio': {'number': 2}, 'focus_radio': 1,
+        'active_radio': 2, 'transmitting': True, 'running': False, 'stereo': True})
+    add('so2r-provisional-shape', event)
     event = copy.deepcopy(observation)
     event.update(family='qgi', kind='decode', fields={'snr_db': 'invalid'})
     add('qgi-common-field-type', event, False)
@@ -841,16 +929,26 @@ def validate_qgi(suite, validator):
                     pending.extend((key, depth + 1) for key in value)
                     value = value.values()
                 pending.extend((item, depth + 1) for item in value)
-            elif isinstance(value, str) and len(value.encode('utf-8')) > limit:
-                raise ValueError('oversized')
+            elif isinstance(value, str):
+                if any(0xd800 <= ord(char) <= 0xdfff for char in value):
+                    raise ValueError('malformed')
+                if len(value.encode('utf-8')) > limit:
+                    raise ValueError('oversized')
         version = event.get('spec')
         if isinstance(version, str) and version.split('.')[0].isdigit() and version.split('.')[0] != '0':
             raise ValueError('unsupported_version')
         if not validator.is_valid(event):
             raise ValueError('invalid_value')
-        if 'carried_native' in event.get('native', {}):
+        if len(event.get('via', [])) == 8:
             raise ValueError('invalid_value')
-        return event, raw
+        contexts = [inp['context'], event['context']] + [hop['context'] for hop in event.get('via', [])]
+        if any(len(json.dumps(c, ensure_ascii=True, separators=(',', ':')).encode()) > 4096 for c in contexts):
+            raise ValueError('oversized')
+        output = copy.deepcopy(event)
+        output.setdefault('via', []).append({'family': 'qgi', 'context': inp['context']})
+        if len(json.dumps(output, ensure_ascii=True, separators=(',', ':')).encode()) > 1048576:
+            raise ValueError('oversized')
+        return event, output
 
     count = 0
     for name, vector in suite.vectors.items():
@@ -862,45 +960,183 @@ def validate_qgi(suite, validator):
             else:
                 raise AssertionError(name + ' planted failure was accepted')
             continue
-        carried, raw = parse(vector['input'])
+        carried, actual = parse(vector['input'])
         observed = vector['expected']['event']
         validator.validate(observed)
-        assert observed['context'] == vector['input']['context'], name
-        assert observed['native']['data'] == b64(raw), name
-        assert observed['native'].get('carried_native') == carried.get('native'), name
-        assert vector['reencode']['data'] == vector['input']['data'], name
-        for key in ('spec', 'family', 'mapping', 'wire_id', 'native_version'):
-            assert observed.get(key) == carried.get(key), (name, key)
-        if name == 'newer-minor-unknown-kind':
-            assert observed['kind'] == 'native' and observed['fields'] == {}, name
-        else:
-            assert observed['kind'] == carried['kind'] and observed['fields'] == carried['fields'], name
+        assert actual == observed, name
+        assert observed['context'] == carried['context'], name
+        assert observed.get('native') == carried.get('native'), name
+        assert observed['via'][-1] == {'family': 'qgi', 'context': vector['input']['context']}, name
+        assert vector['reencode']['event'] == observed, name
+        if name == 'output-budget-boundary':
+            assert len(json.dumps(observed, ensure_ascii=True, separators=(',', ':')).encode()) == 1048576
         count += 1
     return count
 
 
-def validate(suite, qgi):
+def producer_validator(schema, jsonschema):
+    """QGI-SER-0009's producer_strict flag: close defined object member sets."""
+    strict = copy.deepcopy(schema)
+    strict['additionalProperties'] = False
+    strict['properties']['spec'] = {'const': SPEC}
+    strict['properties']['mapping'] = {'const': 1}
+    strict['properties']['family'] = {'enum': ['wsjtx', 'n1mm', 'fldigi', 'js8call',
+        'pskreporter-mqtt', 'pskreporter-ipfix', 'qgi']}
+    strict['properties']['kind'] = {'enum': [k for k in strict['$defs']
+        if k in ('decode', 'radio_state', 'qso_logged', 'qso_changed', 'qso_deleted', 'spot',
+                 'score', 'control', 'result', 'notification', 'lifecycle', 'ambiguous', 'native')]}
+    uint = lambda bits: {'type': 'integer', 'minimum': 0, 'maximum': 2**bits - 1}
+    sint = lambda bits: {'type': 'integer', 'minimum': -2**(bits - 1), 'maximum': 2**(bits - 1) - 1}
+    decimal = {'type': 'string', 'pattern': r'^(?:0|-?[1-9][0-9]*)(?![\s\S])'}
+    strict['$defs']['wsjtx_zone'] = {'type': 'object', 'required': ['key'], 'properties': {
+        **{key: {'$ref': '#/$defs/text'} for key in ('key', 'id', 'name', 'abbreviation', 'comment')},
+        'offset_seconds': sint(32), 'country': sint(32)}}
+    strict['$defs']['wsjtx_datetime'] = {'type': 'object',
+        'required': ['julian_day', 'milliseconds', 'time_spec'], 'properties': {
+            'julian_day': decimal, 'milliseconds': uint(32), 'time_spec': uint(8),
+            'offset_seconds': sint(32), 'zone': {'$ref': '#/$defs/wsjtx_zone'}}}
+    types = {'u8': uint(8), 'u32': uint(32), 'u64': decimal, 'i32': sint(32), 'i64': decimal,
+        'bool': {'type': 'boolean'}, 'f64': {'$ref': '#/$defs/binary64'},
+        'utf8': {'$ref': '#/$defs/text'}, 'QString': {'$ref': '#/$defs/text'},
+        'QTime': uint(32), 'QDateTime': {'$ref': '#/$defs/wsjtx_datetime'},
+        'QColor': {'$ref': '#/$defs/qcolor'}}
+    layouts = (ROOT / 'spec/annex-b-wsjtx.md').read_text().split('## B.4 Message layouts')[1].split('## B.5')[0]
+    message = {'type': 'object', 'required': ['schema', 'type', 'id', 'body', 'extensions'],
+        'properties': {'schema': {'enum': [1, 2, 3]}, 'type': {'enum': list(range(17))},
+            'id': {'$ref': '#/$defs/text'}, 'body': {'type': 'object'},
+            'extensions': {'$ref': '#/$defs/base64'}}, 'allOf': []}
+    for section in layouts.split('### ')[1:]:
+        typ = int(section.split(':')[0])
+        properties, required = {}, []
+        for line in section.splitlines():
+            if line.startswith('| `'):
+                columns = line.split('|')
+                key, wire_type = columns[1].strip(' `'), columns[2].strip(' `')
+                properties[key] = types[wire_type.rstrip('?')]
+                if not wire_type.endswith('?'):
+                    required.append(key)
+        body_name = f'wsjtx_body_{typ}'
+        strict['$defs'][body_name] = {'type': 'object', 'properties': properties, 'required': required}
+        message['allOf'].append({'if': {'properties': {'type': {'const': typ}}},
+            'then': {'properties': {'body': {'$ref': '#/$defs/' + body_name}}}})
+    strict['$defs']['wsjtx_message'] = message
+    strict['$defs']['native_payload']['properties']['message'] = {'$ref': '#/$defs/wsjtx_message'}
+    # Full definitions are closed; conditional fragments and the discriminator's
+    # body placeholder remain open so their referenced type can define members.
+    pending = list(strict['$defs'].values())
+    while pending:
+        definition = pending.pop()
+        if isinstance(definition, dict):
+            if definition.get('type') == 'object' and 'properties' in definition:
+                definition['additionalProperties'] = False
+            pending.extend(definition.values())
+        elif isinstance(definition, list):
+            pending.extend(definition)
+    strict['$defs']['context']['properties']['direction'] = {
+        'enum': ['from_application', 'to_application', 'unknown']}
+    strict['$defs']['context']['properties']['exchange'] = {
+        'enum': ['notification', 'request', 'response', 'unknown']}
+    jsonschema.Draft202012Validator.check_schema(strict)
+    return jsonschema.Draft202012Validator(strict, format_checker=jsonschema.FormatChecker())
+
+
+def check_status_sentinels(suite):
+    """Independent fixed-prefix reader plants each pair swap; no Rust implementation."""
+    names = ('tx_enabled', 'transmitting', 'decoding')
+    distinguished = set()
+    for vector in suite.vectors.values():
+        if vector['class'] != 'positive' or vector['expected']['event']['kind'] != 'radio_state':
+            continue
+        raw = base64.b64decode(vector['input']['data'])
+        offset = 16 + struct.unpack_from('>I', raw, 12)[0] + 8
+        for _ in range(4):
+            length = struct.unpack_from('>I', raw, offset)[0]
+            offset += 4 + (0 if length == 0xffffffff else length)
+        actual = dict(zip(names, (bool(b) for b in raw[offset:offset + 3])))
+        expected = vector['expected']['event']['fields']
+        assert all(actual[key] == expected[key] for key in names)
+        for i in range(3):
+            for j in range(i + 1, 3):
+                swapped = dict(actual)
+                swapped[names[i]], swapped[names[j]] = actual[names[j]], actual[names[i]]
+                if actual[names[i]] != actual[names[j]]:
+                    assert any(swapped[key] != expected[key] for key in names)
+                    distinguished.add((i, j))
+    assert len(distinguished) == 3, 'every Status boolean pair needs a planted failing swap'
+
+
+def check_command_text(suite):
+    """Encoding wrappers must match UTF-8 and be necessary, even if schema-valid."""
+    def valid(value):
+        if value is None or isinstance(value, str):
+            return True
+        if not isinstance(value, dict) or set(value) != {'utf8_bytes'}:
+            return False
+        try:
+            bytes(value['utf8_bytes']).decode('utf-8')
+        except UnicodeDecodeError:
+            return True
+        return False
+    for name in ('utf16-for-utf8', 'valid-text-raw-wrapper'):
+        assert not valid(suite.vectors['command-error-' + name]['input']['event']['fields']['text'])
+    assert valid({'utf8_bytes': [255]}) and valid('A')
+
+
+def check_revision_outcomes(suite):
+    """Revision support comes from the type catalog, not recognition of an operation."""
+    for name in ('old-reader-new-operation', 'known-kind-new-revision', 'known-operation-new-revision'):
+        vector = suite.vectors['compat-' + name]
+        event = vector['input']['event']
+        assert event['mapping'] == 2
+        raw = base64.b64decode(event['native']['data'])
+        typ = struct.unpack_from('>I', raw, 8)[0]
+        verification = 'verified' if typ in range(17) else 'unavailable'
+        assert vector['expected']['verification'] == verification
+        assert 'verification' not in event
+        if typ == 8:
+            assert event['fields'] == {'operation': 'halt_tx', 'auto_tx_only': bool(raw[-1])}
+    vector = suite.vectors['command-error-known-operation-new-revision']
+    assert vector['input']['event']['fields']['operation'] == 'send_text'
+    assert vector['input']['event']['mapping'] == 2
+    assert vector['expected']['error']['category'] == 'unsupported_version'
+
+
+def validate(suite, qgi, producer_strict=False):
     """Use a local schema only; importing jsonschema is optional, never install it."""
+    check_status_sentinels(suite)
+    check_command_text(suite)
+    check_revision_outcomes(suite)
     try:
         import jsonschema
     except ImportError:
+        if producer_strict:
+            raise SystemExit('--producer-strict requires jsonschema; use uv run --with jsonschema')
         return 'jsonschema unavailable; schema validation skipped'
     schema = json.loads((ROOT / 'spec/schema/qgi-event-0.1.0.schema.json').read_text())
     jsonschema.Draft202012Validator.check_schema(schema)
     validator = jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
+    producer = producer_validator(schema, jsonschema) if producer_strict else validator
     count = 0
     for name, vector in suite.vectors.items():
         if vector['class'] == 'positive':
             event = vector['expected']['event']
             validator.validate(event)
+            producer.validate(event)
+            if event['kind'] in ('decode', 'radio_state', 'qso_logged'):
+                assert event['fields']['radio'] == {'instance': event['wire_id']}, name
+                assert 'source_id' not in event['context'], name
+            assert len(json.dumps(event, ensure_ascii=True, separators=(',', ':')).encode()) <= 1048576
             # Validate the optional structured-view envelope too, when its oracle is supplied.
             if 'expected_message' in vector:
                 with_view = copy.deepcopy(event)
                 with_view['native']['message'] = vector['expected_message']
                 validator.validate(with_view)
+                producer.validate(with_view)
+                assert len(json.dumps(with_view, ensure_ascii=True, separators=(',', ':')).encode()) <= 1048576
             count += 1
         elif vector['class'] == 'command':
             validator.validate(vector['input']['event'])
+            producer.validate(vector['input']['event'])
             assert 'native' not in vector['input']['event']
             assert 'native_version' not in vector['input']['event']
         elif vector['class'] == 'compatibility' and vector['writer_spec'].startswith('0.'):
@@ -911,16 +1147,57 @@ def validate(suite, qgi):
     for case in shapes:
         assert validator.is_valid(case['event']) == case['valid'], case['name']
     qgi_count = validate_qgi(qgi, validator)
-    return f"schema checked {len(shapes)} planted core shapes; validated {count} WSJT-X and {qgi_count} qgi positive observations, all positive commands and same-MAJOR compatibility inputs; qgi negative parsing/bounds cases checked"
+    for vector in qgi.vectors.values():
+        if vector['class'] == 'positive':
+            event = vector['expected']['event']
+            if event['spec'] == SPEC:
+                producer.validate(event)
+            else:
+                # Forwarded unknown event members are preserved, not newly authored.
+                producer_validator(schema, jsonschema).evolve(schema={'$ref': '#/$defs/hop',
+                    '$defs': producer.schema['$defs']}).validate(event['via'][-1])
+    if producer_strict:
+        # Plant nested additions where the reader must accept and producer must reject.
+        event = copy.deepcopy(qgi.vectors['carried-decode']['expected']['event'])
+        event['via'][0]['future'] = 1
+        assert validator.is_valid(event) and not producer.is_valid(event)
+        for base_name, mutate in [
+            ('13-highlight-callsign-s3', lambda e: e['fields']['background_color'].update(future=1)),
+            ('01-status-s3', lambda e: e['fields']['radio'].update(future=1)),
+            ('radio-instance-raw', lambda e: e['fields']['radio']['instance'].update(future=1)),
+        ]:
+            event = copy.deepcopy(suite.vectors[base_name]['expected']['event'])
+            mutate(event)
+            assert validator.is_valid(event) and not producer.is_valid(event)
+        for case in shapes:
+            if case['name'].startswith('nested-'):
+                assert validator.is_valid(case['event']) and not producer.is_valid(case['event'])
+        event = copy.deepcopy(suite.vectors['00-heartbeat-s3']['expected']['event'])
+        event['native']['message'] = copy.deepcopy(suite.vectors['00-heartbeat-s3']['expected_message'])
+        for mutate in (lambda e: e['native']['message'].update(future=1),
+                       lambda e: e['native']['message']['body'].update(future=1)):
+            planted = copy.deepcopy(event)
+            mutate(planted)
+            assert validator.is_valid(planted) and not producer.is_valid(planted)
+        event = copy.deepcopy(suite.vectors['00-heartbeat-s3']['expected']['event'])
+        for mutate in (lambda e: e.update(future=1), lambda e: e['context'].update(future=1),
+                       lambda e: e['native'].update(future=1), lambda e: e['fields'].update(future=1)):
+            planted = copy.deepcopy(event)
+            mutate(planted)
+            assert validator.is_valid(planted) and not producer.is_valid(planted)
+
+    return f"schema checked {len(shapes)} planted core shapes; validated {count} WSJT-X and {qgi_count} qgi positive observations, all positive commands and same-MAJOR compatibility inputs; qgi negative parsing/bounds cases checked; producer_strict={producer_strict}; all three Status boolean swap mutations rejected"
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true', help='check exact generated files without writing')
+    parser.add_argument('--producer-strict', action='store_true',
+                        help='validate authored outputs with QGI-SER-0009 producer profile')
     args = parser.parse_args()
     suite = build()
     qgi = qgi_vectors(suite)
-    validation = validate(suite, qgi)
+    validation = validate(suite, qgi, args.producer_strict)
     outputs = {name + '.json': dump(vector) for name, vector in suite.vectors.items()}
     manifest = {'$comment': 'SPDX-License-Identifier: GPL-3.0-or-later', 'spec': SPEC, 'family': 'wsjtx', 'mapping': 1, 'source_sha256': PIN,
                 'hash_scope': 'SHA-256 of each complete vector file, including its final newline',

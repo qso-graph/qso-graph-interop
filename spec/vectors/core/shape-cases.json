@@ -228,7 +228,7 @@
       "valid": false
     },
     {
-      "name": "forbidden-native-member",
+      "name": "unknown-native-member",
       "event": {
         "spec": "0.1.0",
         "family": "x-org.example.shape",
@@ -245,7 +245,7 @@
           "family_extra": 1
         }
       },
-      "valid": false
+      "valid": true
     },
     {
       "name": "future-minor-native-member",
@@ -623,7 +623,7 @@
       "name": "templated-record-shape",
       "event": {
         "spec": "0.1.0",
-        "family": "x-org.example.shape",
+        "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
         "context": {
@@ -654,7 +654,7 @@
       "name": "templated-dependency-shape",
       "event": {
         "spec": "0.1.0",
-        "family": "x-org.example.shape",
+        "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
         "context": {
@@ -699,7 +699,7 @@
       "name": "record-missing-template",
       "event": {
         "spec": "0.1.0",
-        "family": "x-org.example.shape",
+        "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
         "context": {
@@ -729,7 +729,7 @@
       "name": "record-missing-message_data",
       "event": {
         "spec": "0.1.0",
-        "family": "x-org.example.shape",
+        "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
         "context": {
@@ -759,7 +759,7 @@
       "name": "record-missing-header",
       "event": {
         "spec": "0.1.0",
-        "family": "x-org.example.shape",
+        "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
         "context": {
@@ -783,7 +783,7 @@
       "name": "record-missing-set_id",
       "event": {
         "spec": "0.1.0",
-        "family": "x-org.example.shape",
+        "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
         "context": {
@@ -813,7 +813,7 @@
       "name": "record-missing-set_index",
       "event": {
         "spec": "0.1.0",
-        "family": "x-org.example.shape",
+        "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
         "context": {
@@ -843,7 +843,7 @@
       "name": "record-missing-record_index",
       "event": {
         "spec": "0.1.0",
-        "family": "x-org.example.shape",
+        "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
         "context": {
@@ -873,7 +873,7 @@
       "name": "record-header-overflow",
       "event": {
         "spec": "0.1.0",
-        "family": "x-org.example.shape",
+        "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
         "context": {
@@ -904,7 +904,7 @@
       "name": "negative-set-index",
       "event": {
         "spec": "0.1.0",
-        "family": "x-org.example.shape",
+        "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
         "context": {
@@ -935,7 +935,7 @@
       "name": "dependency-missing-template",
       "event": {
         "spec": "0.1.0",
-        "family": "x-org.example.shape",
+        "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
         "context": {
@@ -971,7 +971,7 @@
       "name": "record-with-topic",
       "event": {
         "spec": "0.1.0",
-        "family": "x-org.example.shape",
+        "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
         "context": {
@@ -1000,57 +1000,7 @@
       "valid": false
     },
     {
-      "name": "qgi-one-native-level",
-      "event": {
-        "spec": "0.1.0",
-        "family": "x-org.example.shape",
-        "mapping": 1,
-        "kind": "native",
-        "context": {
-          "direction": "from_application",
-          "exchange": "unknown"
-        },
-        "fields": {},
-        "native": {
-          "format": "qgi_datagram",
-          "data": "",
-          "carried_native": {
-            "format": "example_datagram",
-            "data": ""
-          }
-        }
-      },
-      "valid": true
-    },
-    {
-      "name": "qgi-two-native-levels",
-      "event": {
-        "spec": "0.1.0",
-        "family": "x-org.example.shape",
-        "mapping": 1,
-        "kind": "native",
-        "context": {
-          "direction": "from_application",
-          "exchange": "unknown"
-        },
-        "fields": {},
-        "native": {
-          "format": "qgi_datagram",
-          "data": "",
-          "carried_native": {
-            "format": "qgi_datagram",
-            "data": "",
-            "carried_native": {
-              "format": "example_datagram",
-              "data": ""
-            }
-          }
-        }
-      },
-      "valid": false
-    },
-    {
-      "name": "non-qgi-carried-native",
+      "name": "qgi-one-hop",
       "event": {
         "spec": "0.1.0",
         "family": "x-org.example.shape",
@@ -1063,17 +1013,22 @@
         "fields": {},
         "native": {
           "format": "example_datagram",
-          "data": "",
-          "carried_native": {
-            "format": "example_datagram",
-            "data": ""
+          "data": ""
+        },
+        "via": [
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
           }
-        }
+        ]
       },
-      "valid": false
+      "valid": true
     },
     {
-      "name": "qgi-incomplete-carried-native",
+      "name": "qgi-eight-hops",
       "event": {
         "spec": "0.1.0",
         "family": "x-org.example.shape",
@@ -1085,14 +1040,427 @@
         },
         "fields": {},
         "native": {
-          "format": "qgi_datagram",
+          "format": "example_datagram",
+          "data": ""
+        },
+        "via": [
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          },
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          },
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          },
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          },
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          },
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          },
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          },
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "qgi-nine-hops",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        },
+        "via": [
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          },
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          },
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          },
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          },
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          },
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          },
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          },
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          },
+          {
+            "family": "qgi",
+            "context": {
+              "direction": "unknown",
+              "exchange": "unknown"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "nested-header-addition",
+      "event": {
+        "spec": "0.1.0",
+        "family": "pskreporter-ipfix",
+        "mapping": 2,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "ipfix_record",
           "data": "",
-          "carried_native": {
-            "format": "example_datagram"
+          "template": "",
+          "message_data": "",
+          "set_id": 256,
+          "set_index": 0,
+          "record_index": 0,
+          "header": {
+            "version": 10,
+            "length": 16,
+            "export_time": 0,
+            "sequence_number": 0,
+            "observation_domain_id": 7,
+            "future": 1
           }
         }
       },
+      "valid": true
+    },
+    {
+      "name": "nested-dependency-addition",
+      "event": {
+        "spec": "0.1.0",
+        "family": "pskreporter-ipfix",
+        "mapping": 2,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "ipfix_record",
+          "data": "",
+          "template": "",
+          "message_data": "",
+          "set_id": 256,
+          "set_index": 0,
+          "record_index": 0,
+          "header": {
+            "version": 10,
+            "length": 16,
+            "export_time": 0,
+            "sequence_number": 0,
+            "observation_domain_id": 7
+          },
+          "dependencies": [
+            {
+              "data": "",
+              "template": "",
+              "header": {
+                "version": 10,
+                "length": 16,
+                "export_time": 0,
+                "sequence_number": 0,
+                "observation_domain_id": 7
+              },
+              "set_id": 256,
+              "future": 1
+            }
+          ]
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "radio-decode",
+      "event": {
+        "spec": "0.1.0",
+        "family": "n1mm",
+        "mapping": 1,
+        "kind": "decode",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "radio": {
+            "instance": "synthetic-station",
+            "number": 2
+          }
+        },
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "radio-radio_state",
+      "event": {
+        "spec": "0.1.0",
+        "family": "n1mm",
+        "mapping": 1,
+        "kind": "radio_state",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "radio": {
+            "instance": "synthetic-station",
+            "number": 2
+          }
+        },
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "radio-qso_logged",
+      "event": {
+        "spec": "0.1.0",
+        "family": "n1mm",
+        "mapping": 1,
+        "kind": "qso_logged",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "radio": {
+            "instance": "synthetic-station",
+            "number": 2
+          }
+        },
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "radio-qso_changed",
+      "event": {
+        "spec": "0.1.0",
+        "family": "n1mm",
+        "mapping": 1,
+        "kind": "qso_changed",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "radio": {
+            "instance": "synthetic-station",
+            "number": 2
+          }
+        },
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "radio-qso_deleted",
+      "event": {
+        "spec": "0.1.0",
+        "family": "n1mm",
+        "mapping": 1,
+        "kind": "qso_deleted",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "radio": {
+            "instance": "synthetic-station",
+            "number": 2
+          }
+        },
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "radio-spot",
+      "event": {
+        "spec": "0.1.0",
+        "family": "n1mm",
+        "mapping": 1,
+        "kind": "spot",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "radio": {
+            "instance": "synthetic-station",
+            "number": 2
+          }
+        },
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "radio-number-not-integer",
+      "event": {
+        "spec": "0.1.0",
+        "family": "n1mm",
+        "mapping": 1,
+        "kind": "spot",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "radio": {
+            "instance": "synthetic-station",
+            "number": "2"
+          }
+        },
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
       "valid": false
+    },
+    {
+      "name": "so2r-provisional-shape",
+      "event": {
+        "spec": "0.1.0",
+        "family": "n1mm",
+        "mapping": 1,
+        "kind": "radio_state",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "radio": {
+            "number": 2
+          },
+          "focus_radio": 1,
+          "active_radio": 2,
+          "transmitting": true,
+          "running": false,
+          "stereo": true
+        },
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
+      "valid": true
     },
     {
       "name": "qgi-common-field-type",

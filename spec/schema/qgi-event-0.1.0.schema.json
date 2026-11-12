@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://qso-graph.io/spec/qgi-event-0.1.0.schema.json",
-  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later. Unknown members, kinds, families and context enum tokens are allowed for same-MAJOR compatibility. Duplicate keys, scalar Unicode validity, binary64 nonfinite bits, time semantics, native consistency and version/mapping support need procedural checks. qgi carried_native retains one original native object; recursive evidence decoding is forbidden procedurally.",
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later. Reader schema: unknown members are open for same-MAJOR and additive mapping compatibility. Use the documented producer strictness flag for output validation (QGI-SER-0009). Unicode, byte bounds, supported revisions and native consistency require procedural checks. qgi appends via and preserves the carried event.",
   "title": "QGI-SPEC-001 event, base version 0.1.0",
   "type": "object",
   "properties": {
@@ -36,6 +36,13 @@
     },
     "native": {
       "$ref": "#/$defs/native_payload"
+    },
+    "via": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "$ref": "#/$defs/hop"
+      }
     }
   },
   "required": [
@@ -548,41 +555,6 @@
     {
       "if": {
         "properties": {
-          "spec": {
-            "const": "0.1.0"
-          }
-        },
-        "required": [
-          "spec"
-        ]
-      },
-      "then": {
-        "properties": {
-          "native": {
-            "propertyNames": {
-              "enum": [
-                "format",
-                "data",
-                "message",
-                "topic",
-                "retained",
-                "template",
-                "header",
-                "message_data",
-                "set_id",
-                "set_index",
-                "record_index",
-                "dependencies",
-                "carried_native"
-              ]
-            }
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
           "native": {
             "properties": {
               "format": {
@@ -756,34 +728,6 @@
           }
         }
       }
-    },
-    {
-      "if": {
-        "properties": {
-          "native": {
-            "required": [
-              "carried_native"
-            ]
-          }
-        },
-        "required": [
-          "native"
-        ]
-      },
-      "then": {
-        "properties": {
-          "native": {
-            "properties": {
-              "format": {
-                "enum": [
-                  "qgi_datagram",
-                  "qgi_ndjson"
-                ]
-              }
-            }
-          }
-        }
-      }
     }
   ],
   "$defs": {
@@ -940,6 +884,9 @@
         },
         "off_air": {
           "type": "boolean"
+        },
+        "radio": {
+          "$ref": "#/$defs/radio"
         }
       }
     },
@@ -1000,9 +947,6 @@
         "tx_message": {
           "$ref": "#/$defs/text"
         },
-        "radio_id": {
-          "$ref": "#/$defs/text"
-        },
         "band": {
           "$ref": "#/$defs/text"
         },
@@ -1011,6 +955,21 @@
         },
         "tr_period_seconds": {
           "$ref": "#/$defs/integer"
+        },
+        "radio": {
+          "$ref": "#/$defs/radio"
+        },
+        "focus_radio": {
+          "$ref": "#/$defs/integer"
+        },
+        "active_radio": {
+          "$ref": "#/$defs/integer"
+        },
+        "running": {
+          "type": "boolean"
+        },
+        "stereo": {
+          "type": "boolean"
         }
       }
     },
@@ -1097,180 +1056,17 @@
         },
         "adif": {
           "$ref": "#/$defs/text"
+        },
+        "radio": {
+          "$ref": "#/$defs/radio"
         }
       }
     },
     "qso_changed": {
-      "type": "object",
-      "properties": {
-        "record_id": {
-          "$ref": "#/$defs/text"
-        },
-        "call": {
-          "$ref": "#/$defs/text"
-        },
-        "grid": {
-          "$ref": "#/$defs/text"
-        },
-        "mode": {
-          "$ref": "#/$defs/text"
-        },
-        "station_call": {
-          "$ref": "#/$defs/text"
-        },
-        "station_grid": {
-          "$ref": "#/$defs/text"
-        },
-        "operator_call": {
-          "$ref": "#/$defs/text"
-        },
-        "report_sent": {
-          "$ref": "#/$defs/text"
-        },
-        "report_received": {
-          "$ref": "#/$defs/text"
-        },
-        "exchange_sent": {
-          "$ref": "#/$defs/text"
-        },
-        "exchange_received": {
-          "$ref": "#/$defs/text"
-        },
-        "start": {
-          "$ref": "#/$defs/instant"
-        },
-        "end": {
-          "$ref": "#/$defs/instant"
-        },
-        "tx_frequency_hz": {
-          "$ref": "#/$defs/integer"
-        },
-        "dial_frequency_hz": {
-          "$ref": "#/$defs/integer"
-        },
-        "band": {
-          "$ref": "#/$defs/text"
-        },
-        "contest_name": {
-          "$ref": "#/$defs/text"
-        },
-        "serial_sent": {
-          "$ref": "#/$defs/text"
-        },
-        "serial_received": {
-          "$ref": "#/$defs/text"
-        },
-        "section": {
-          "$ref": "#/$defs/text"
-        },
-        "precedence": {
-          "$ref": "#/$defs/text"
-        },
-        "check": {
-          "$ref": "#/$defs/text"
-        },
-        "tx_power": {
-          "$ref": "#/$defs/text"
-        },
-        "comments": {
-          "$ref": "#/$defs/text"
-        },
-        "name": {
-          "$ref": "#/$defs/text"
-        },
-        "propagation_mode": {
-          "$ref": "#/$defs/text"
-        },
-        "adif": {
-          "$ref": "#/$defs/text"
-        }
-      }
+      "$ref": "#/$defs/qso_logged"
     },
     "qso_deleted": {
-      "type": "object",
-      "properties": {
-        "record_id": {
-          "$ref": "#/$defs/text"
-        },
-        "call": {
-          "$ref": "#/$defs/text"
-        },
-        "grid": {
-          "$ref": "#/$defs/text"
-        },
-        "mode": {
-          "$ref": "#/$defs/text"
-        },
-        "station_call": {
-          "$ref": "#/$defs/text"
-        },
-        "station_grid": {
-          "$ref": "#/$defs/text"
-        },
-        "operator_call": {
-          "$ref": "#/$defs/text"
-        },
-        "report_sent": {
-          "$ref": "#/$defs/text"
-        },
-        "report_received": {
-          "$ref": "#/$defs/text"
-        },
-        "exchange_sent": {
-          "$ref": "#/$defs/text"
-        },
-        "exchange_received": {
-          "$ref": "#/$defs/text"
-        },
-        "start": {
-          "$ref": "#/$defs/instant"
-        },
-        "end": {
-          "$ref": "#/$defs/instant"
-        },
-        "tx_frequency_hz": {
-          "$ref": "#/$defs/integer"
-        },
-        "dial_frequency_hz": {
-          "$ref": "#/$defs/integer"
-        },
-        "band": {
-          "$ref": "#/$defs/text"
-        },
-        "contest_name": {
-          "$ref": "#/$defs/text"
-        },
-        "serial_sent": {
-          "$ref": "#/$defs/text"
-        },
-        "serial_received": {
-          "$ref": "#/$defs/text"
-        },
-        "section": {
-          "$ref": "#/$defs/text"
-        },
-        "precedence": {
-          "$ref": "#/$defs/text"
-        },
-        "check": {
-          "$ref": "#/$defs/text"
-        },
-        "tx_power": {
-          "$ref": "#/$defs/text"
-        },
-        "comments": {
-          "$ref": "#/$defs/text"
-        },
-        "name": {
-          "$ref": "#/$defs/text"
-        },
-        "propagation_mode": {
-          "$ref": "#/$defs/text"
-        },
-        "adif": {
-          "$ref": "#/$defs/text"
-        }
-      }
+      "$ref": "#/$defs/qso_logged"
     },
     "spot": {
       "type": "object",
@@ -1319,6 +1115,9 @@
         },
         "snr_db": {
           "$ref": "#/$defs/integer"
+        },
+        "radio": {
+          "$ref": "#/$defs/radio"
         }
       }
     },
@@ -1551,20 +1350,6 @@
           "items": {
             "$ref": "#/$defs/ipfix_dependency"
           }
-        },
-        "carried_native": {
-          "allOf": [
-            {
-              "$ref": "#/$defs/native_payload"
-            },
-            {
-              "not": {
-                "required": [
-                  "carried_native"
-                ]
-              }
-            }
-          ]
         }
       },
       "required": [
@@ -1598,8 +1383,7 @@
       "required": [
         "spec",
         "channels"
-      ],
-      "additionalProperties": false
+      ]
     },
     "result": {
       "type": "object",
@@ -1662,8 +1446,7 @@
         "export_time",
         "sequence_number",
         "observation_domain_id"
-      ],
-      "additionalProperties": false
+      ]
     },
     "ipfix_dependency": {
       "type": "object",
@@ -1688,8 +1471,34 @@
         "template",
         "header",
         "set_id"
-      ],
-      "additionalProperties": false
+      ]
+    },
+    "hop": {
+      "type": "object",
+      "properties": {
+        "family": {
+          "const": "qgi"
+        },
+        "context": {
+          "$ref": "#/$defs/context"
+        }
+      },
+      "required": [
+        "family",
+        "context"
+      ]
+    },
+    "radio": {
+      "type": "object",
+      "properties": {
+        "instance": {
+          "$ref": "#/$defs/text"
+        },
+        "number": {
+          "$ref": "#/$defs/integer"
+        }
+      },
+      "minProperties": 1
     }
   }
 }

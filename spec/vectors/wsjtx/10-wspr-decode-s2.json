@@ -33,7 +33,10 @@
         "call": "W1AAA",
         "grid": "FN42",
         "power_dbm": 37,
-        "off_air": true
+        "off_air": true,
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

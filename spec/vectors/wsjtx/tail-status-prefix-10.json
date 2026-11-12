@@ -42,7 +42,10 @@
         "fast_mode": true,
         "frequency_tolerance_hz": 50,
         "tr_period_seconds": 15,
-        "configuration_name": "test-config"
+        "configuration_name": "test-config",
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

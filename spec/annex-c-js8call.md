@@ -14,3 +14,7 @@ Reserved family: `js8call`. This is a scope placeholder, not a complete mapping 
 Annex A operation catalog. Required parameters, IDs, method availability and exact staging versus
 sending semantics remain to be confirmed in this annex. No encoding or field assignment is
 established by this placeholder.
+
+Radio parts have no established mapping in this placeholder (`QGI-MOD-0014`); their native
+source and per-kind availability remain annex work. The family output limit and expansion proof
+required by `QGI-MAP-0003` are also unestablished; no conformance is claimed for an assumed limit.

@@ -33,7 +33,10 @@
         "transmitting": false,
         "decoding": true,
         "rx_offset_hz": 1201,
-        "tx_offset_hz": 2302
+        "tx_offset_hz": 2302,
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

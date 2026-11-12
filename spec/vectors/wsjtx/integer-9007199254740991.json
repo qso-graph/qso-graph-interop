@@ -31,7 +31,10 @@
         "call": null,
         "grid": "",
         "power_dbm": 37,
-        "frequency_hz": 9007199254740991
+        "frequency_hz": 9007199254740991,
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

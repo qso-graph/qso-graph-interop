@@ -33,7 +33,10 @@
         "report_received": "-12",
         "tx_power": "5 W",
         "comments": "synthetic",
-        "name": "Test"
+        "name": "Test",
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

@@ -19,7 +19,7 @@
       "mapping": 1,
       "kind": "control",
       "context": {
-        "direction": "unknown",
+        "direction": "to_application",
         "exchange": "unknown"
       },
       "fields": {
@@ -27,13 +27,42 @@
         "text": "synthetic\nmessage",
         "transmit": false
       },
-      "native": {
-        "format": "qgi_datagram",
-        "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJxZ2kiLCJtYXBwaW5nIjoxLCJraW5kIjoiY29udHJvbCIsImNvbnRleHQiOnsiZGlyZWN0aW9uIjoidG9fYXBwbGljYXRpb24iLCJleGNoYW5nZSI6InVua25vd24ifSwiZmllbGRzIjp7Im9wZXJhdGlvbiI6InNlbmRfdGV4dCIsInRleHQiOiJzeW50aGV0aWNcbm1lc3NhZ2UiLCJ0cmFuc21pdCI6ZmFsc2V9fQ=="
-      }
+      "via": [
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown"
+          }
+        }
+      ]
     }
   },
   "reencode": {
-    "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJxZ2kiLCJtYXBwaW5nIjoxLCJraW5kIjoiY29udHJvbCIsImNvbnRleHQiOnsiZGlyZWN0aW9uIjoidG9fYXBwbGljYXRpb24iLCJleGNoYW5nZSI6InVua25vd24ifSwiZmllbGRzIjp7Im9wZXJhdGlvbiI6InNlbmRfdGV4dCIsInRleHQiOiJzeW50aGV0aWNcbm1lc3NhZ2UiLCJ0cmFuc21pdCI6ZmFsc2V9fQ=="
+    "event": {
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "kind": "control",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "send_text",
+        "text": "synthetic\nmessage",
+        "transmit": false
+      },
+      "via": [
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown"
+          }
+        }
+      ]
+    },
+    "delimiter": ""
   }
 }

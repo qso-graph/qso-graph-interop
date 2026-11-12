@@ -40,7 +40,10 @@
         "tx_watchdog": false,
         "sub_mode": "sub-test",
         "fast_mode": true,
-        "frequency_tolerance_hz": 50
+        "frequency_tolerance_hz": 50,
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

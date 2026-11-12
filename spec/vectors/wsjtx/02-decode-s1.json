@@ -32,7 +32,10 @@
         "mode": "~",
         "text": "CQ W1AAA FN42",
         "low_confidence": false,
-        "off_air": true
+        "off_air": true,
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

@@ -39,7 +39,10 @@
         "dx_grid": "FN42",
         "tx_watchdog": false,
         "sub_mode": "sub-test",
-        "fast_mode": true
+        "fast_mode": true,
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

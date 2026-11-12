@@ -30,7 +30,10 @@
         "dt_seconds": "ieee754:fff0000000000000",
         "audio_offset_hz": 100,
         "mode": "~",
-        "text": "test"
+        "text": "test",
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

@@ -138,3 +138,17 @@ Sources read on 2026-11-12 for the five incomplete family annexes:
 Only documents were read. No MQTT connection, subscription, report submission or external protocol
 probe was performed. [Annex Z](../spec/annex-z-design-check.md) checks model capacity for future
 families; it does not claim protocol pins or live interoperability for them.
+
+## QGI fourth-pass evidence
+
+The pinned WSJT-X header above was fetched by commit and its SHA-256 rechecked for this pass.
+Lines 353–381 define FreeText's staged-text behavior and application encoding/truncation; lines
+488–508 document Configure's possible indirect dial-frequency change. Annex B records the
+normative meanings (`QGI-WSJ-0029`). Header IDs label WSJT-X clients; the common radio mapping is
+specified by `QGI-WSJ-0028`. The association with a `--rig-name` label follows the task's supplied
+instance model; no additional command-line source was fetched.
+
+N1MM field names and intended assignments in Annex D are supplied review evidence referencing
+its External UDP Broadcasts appendix. No dated/hash pin is available here and the unpinned page
+was not fetched under this pass's network restriction. They remain provisional; no N1MM native
+wire fixtures or source-backed encoding rules are claimed.

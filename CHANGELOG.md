@@ -15,6 +15,11 @@
 
 ### Changed
 
+- Revise QGI-SPEC-001 after the fourth review: composable `via` carriage, additive mapping
+  compatibility and verification outcomes, open reader schema and strict producer validation,
+  radio labels and provisional SO2R fields, explicit WSJT-X command effects and output budgets,
+  multicast interface selection, receiver guidance, numbered rules and expanded vectors.
+
 - Add the seventh draft family, `qgi`, with bounded JSON/NDJSON event carriage, nested native
   evidence and conformance vectors; close producer conformance. Specify all-family simulator
   playback and service responses, local PSK Reporter test services, the complete 1.0 class gate,

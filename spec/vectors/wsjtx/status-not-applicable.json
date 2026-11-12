@@ -41,7 +41,10 @@
         "sub_mode": "",
         "fast_mode": false,
         "configuration_name": "",
-        "tx_message": ""
+        "tx_message": "",
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

@@ -1,0 +1,212 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "qgi",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "transport": "udp",
+    "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJ3c2p0eCIsIm1hcHBpbmciOjEsIm5hdGl2ZV92ZXJzaW9uIjoiMyIsImtpbmQiOiJkZWNvZGUiLCJ3aXJlX2lkIjoidGVzdC1pbnN0YW5jZSIsImNvbnRleHQiOnsiZGlyZWN0aW9uIjoidG9fYXBwbGljYXRpb24iLCJleGNoYW5nZSI6InJlcXVlc3QiLCJzb3VyY2VfaWQiOiJ1bnRydXN0ZWQtc2VyaWFsaXplZC1zb3VyY2UifSwiZmllbGRzIjp7ImlzX25ldyI6dHJ1ZSwidGltZV9vZl9kYXkiOiIxMjozNDo1Ni4xMjMiLCJzbnJfZGIiOi0xNywiZHRfc2Vjb25kcyI6MC4yNSwiYXVkaW9fb2Zmc2V0X2h6IjoxMjM0LCJtb2RlIjoifiIsInRleHQiOiJDUSBXMUFBQSBGTjQyIiwibG93X2NvbmZpZGVuY2UiOmZhbHNlLCJvZmZfYWlyIjp0cnVlLCJyYWRpbyI6eyJpbnN0YW5jZSI6InRlc3QtaW5zdGFuY2UifX0sIm5hdGl2ZSI6eyJmb3JtYXQiOiJ3c2p0eF9kYXRhZ3JhbSIsImRhdGEiOiJyYnpMMmdBQUFBTUFBQUFDQUFBQURYUmxjM1F0YVc1emRHRnVZMlVCQXJNcCsvLy8vKzgvMEFBQUFBQUFBQUFBQk5JQUFBQUJmZ0FBQUExRFVTQlhNVUZCUVNCR1RqUXlBQUU9In0sInZpYSI6W3siZmFtaWx5IjoicWdpIiwiY29udGV4dCI6eyJkaXJlY3Rpb24iOiJ1bmtub3duIiwiZXhjaGFuZ2UiOiJ1bmtub3duIiwic291cmNlX2lkIjoiaG9wLTEifX0seyJmYW1pbHkiOiJxZ2kiLCJjb250ZXh0Ijp7ImRpcmVjdGlvbiI6InVua25vd24iLCJleGNoYW5nZSI6InVua25vd24iLCJzb3VyY2VfaWQiOiJob3AtMiJ9fSx7ImZhbWlseSI6InFnaSIsImNvbnRleHQiOnsiZGlyZWN0aW9uIjoidW5rbm93biIsImV4Y2hhbmdlIjoidW5rbm93biIsInNvdXJjZV9pZCI6ImhvcC0zIn19LHsiZmFtaWx5IjoicWdpIiwiY29udGV4dCI6eyJkaXJlY3Rpb24iOiJ1bmtub3duIiwiZXhjaGFuZ2UiOiJ1bmtub3duIiwic291cmNlX2lkIjoiaG9wLTQifX0seyJmYW1pbHkiOiJxZ2kiLCJjb250ZXh0Ijp7ImRpcmVjdGlvbiI6InVua25vd24iLCJleGNoYW5nZSI6InVua25vd24iLCJzb3VyY2VfaWQiOiJob3AtNSJ9fSx7ImZhbWlseSI6InFnaSIsImNvbnRleHQiOnsiZGlyZWN0aW9uIjoidW5rbm93biIsImV4Y2hhbmdlIjoidW5rbm93biIsInNvdXJjZV9pZCI6ImhvcC02In19LHsiZmFtaWx5IjoicWdpIiwiY29udGV4dCI6eyJkaXJlY3Rpb24iOiJ1bmtub3duIiwiZXhjaGFuZ2UiOiJ1bmtub3duIiwic291cmNlX2lkIjoiaG9wLTcifX1dfQ==",
+    "context": {
+      "direction": "unknown",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "native_version": "3",
+      "kind": "decode",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "request",
+        "source_id": "untrusted-serialized-source"
+      },
+      "fields": {
+        "is_new": true,
+        "time_of_day": "12:34:56.123",
+        "snr_db": -17,
+        "dt_seconds": 0.25,
+        "audio_offset_hz": 1234,
+        "mode": "~",
+        "text": "CQ W1AAA FN42",
+        "low_confidence": false,
+        "off_air": true,
+        "radio": {
+          "instance": "test-instance"
+        }
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAACAAAADXRlc3QtaW5zdGFuY2UBArMp+////+8/0AAAAAAAAAAABNIAAAABfgAAAA1DUSBXMUFBQSBGTjQyAAE="
+      },
+      "via": [
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown",
+            "source_id": "hop-1"
+          }
+        },
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown",
+            "source_id": "hop-2"
+          }
+        },
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown",
+            "source_id": "hop-3"
+          }
+        },
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown",
+            "source_id": "hop-4"
+          }
+        },
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown",
+            "source_id": "hop-5"
+          }
+        },
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown",
+            "source_id": "hop-6"
+          }
+        },
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown",
+            "source_id": "hop-7"
+          }
+        },
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown"
+          }
+        }
+      ]
+    }
+  },
+  "reencode": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "native_version": "3",
+      "kind": "decode",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "request",
+        "source_id": "untrusted-serialized-source"
+      },
+      "fields": {
+        "is_new": true,
+        "time_of_day": "12:34:56.123",
+        "snr_db": -17,
+        "dt_seconds": 0.25,
+        "audio_offset_hz": 1234,
+        "mode": "~",
+        "text": "CQ W1AAA FN42",
+        "low_confidence": false,
+        "off_air": true,
+        "radio": {
+          "instance": "test-instance"
+        }
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAACAAAADXRlc3QtaW5zdGFuY2UBArMp+////+8/0AAAAAAAAAAABNIAAAABfgAAAA1DUSBXMUFBQSBGTjQyAAE="
+      },
+      "via": [
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown",
+            "source_id": "hop-1"
+          }
+        },
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown",
+            "source_id": "hop-2"
+          }
+        },
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown",
+            "source_id": "hop-3"
+          }
+        },
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown",
+            "source_id": "hop-4"
+          }
+        },
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown",
+            "source_id": "hop-5"
+          }
+        },
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown",
+            "source_id": "hop-6"
+          }
+        },
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown",
+            "source_id": "hop-7"
+          }
+        },
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown"
+          }
+        }
+      ]
+    },
+    "delimiter": ""
+  }
+}

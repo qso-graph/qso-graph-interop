@@ -31,6 +31,9 @@
         "audio_offset_hz": 1234,
         "mode": "~",
         "text": "CQ W1AAA FN42",
+        "radio": {
+          "instance": "test-instance"
+        },
         "low_confidence": false
       },
       "native": {

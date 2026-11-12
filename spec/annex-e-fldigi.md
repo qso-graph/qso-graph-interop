@@ -13,5 +13,9 @@ Reserved family: `fldigi`. This is a scope placeholder, not a complete mapping o
 The published rig/carrier frequency, text-buffer and transmit methods inform Annex A's provisional
 operations. A response body may not identify its method: the caller supplies request association
 and correlation. Valid faults can use `result` with `status: "error"`; malformed XML remains a
-codec error. Encoding a native request does not call a server. The annex must settle the
+codec error. Encoding a native request does not call a server. Annex work includes settling the
 single-request versus multi-request text/transmit issue recorded in Annex A.
+
+Radio parts have no established mapping in this placeholder (`QGI-MOD-0014`); their native
+source and per-kind availability remain annex work. The family output limit and expansion proof
+required by `QGI-MAP-0003` are also unestablished; no conformance is claimed for an assumed limit.

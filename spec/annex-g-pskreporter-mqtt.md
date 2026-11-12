@@ -27,3 +27,7 @@ Still to establish: a stable dated/hash pin, complete topic variants and payload
 version handling, exact optional fields, numeric bounds, retained spot behavior, empty metadata
 behavior and the software association. No broker connection, subscription or test publication was
 made during this review. HTTPS document reads do not validate broker behavior.
+
+Radio parts have no established mapping in this placeholder (`QGI-MOD-0014`); their native
+source and per-kind availability remain annex work. The family output limit and expansion proof
+required by `QGI-MAP-0003` are also unestablished; no conformance is claimed for an assumed limit.

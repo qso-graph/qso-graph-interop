@@ -26,7 +26,7 @@ published expectations, not an independently measured acceptance policy.
 Source for every row: [PSK Reporter developer information](https://pskreporter.info/pskdev.html).
 The linked [FAQ](https://pskreporter.info/faq) rendered only a loading placeholder when read.
 Unconfirmed: receiver-field acceptance minimum, exact duplicate key across modes/bands, and a
-required change threshold. Do not invent these or equate recommendations with observed rejection.
+required change threshold. These are the unconfirmed policies referenced by `QGI-PSI-0002`.
 
 | ID | Requirement | Verify |
 |---|---|---|
@@ -41,7 +41,7 @@ required change threshold. Do not invent these or equate recommendations with ob
 | Sending direction | Reception-report export toward PSK Reporter is the native sending direction. A possible outbound report encoder is not specified by this placeholder; no generic control operation is assigned. |
 | Source to pin | [RFC 7011](https://www.rfc-editor.org/rfc/rfc7011.txt), September 2013, plus a dated, hashed copy of PSK Reporter's [developer/IPFIX definition and examples](https://pskreporter.info/pskdev.html), consulted 2026-11-12. |
 
-The developer page describes separate receiver information and sender information records, enterprise
+**`QGI-PSI-0003` — Evidence and remaining profile gates.** The developer page describes separate receiver information and sender information records, enterprise
 number 30351, template caching and optional template-defined attributes. Candidate `spot` fields
 are Annex A's explicit receiver/sender fields, frequency, mode, SNR, time and reporting software.
 Receiver metadata needs its own record event and evidence when used by a sender's reception event;
@@ -54,3 +54,7 @@ The page cites RFC 5101 and uses inconsistent `decoderSoftware`/`decodingSoftwar
 must reconcile the examples with RFC 7011, not assume every example is a complete modern profile.
 A receiver-only record is not an invented reception, and a template-only message is not a spot.
 No report was sent to PSK Reporter and no server response was probed.
+
+Radio parts have no established mapping in this placeholder (`QGI-MOD-0014`); their native
+source and per-kind availability remain annex work. The family output limit and expansion proof
+required by `QGI-MAP-0003` are also unestablished; no conformance is claimed for an assumed limit.

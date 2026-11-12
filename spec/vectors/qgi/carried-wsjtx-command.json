@@ -20,7 +20,7 @@
       "kind": "control",
       "wire_id": "test-instance",
       "context": {
-        "direction": "unknown",
+        "direction": "to_application",
         "exchange": "unknown"
       },
       "fields": {
@@ -28,13 +28,43 @@
         "text": "test message",
         "transmit": false
       },
-      "native": {
-        "format": "qgi_datagram",
-        "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJ3c2p0eCIsIm1hcHBpbmciOjEsImtpbmQiOiJjb250cm9sIiwid2lyZV9pZCI6InRlc3QtaW5zdGFuY2UiLCJjb250ZXh0Ijp7ImRpcmVjdGlvbiI6InRvX2FwcGxpY2F0aW9uIiwiZXhjaGFuZ2UiOiJ1bmtub3duIn0sImZpZWxkcyI6eyJvcGVyYXRpb24iOiJzZW5kX3RleHQiLCJ0ZXh0IjoidGVzdCBtZXNzYWdlIiwidHJhbnNtaXQiOmZhbHNlfX0="
-      }
+      "via": [
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown"
+          }
+        }
+      ]
     }
   },
   "reencode": {
-    "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJ3c2p0eCIsIm1hcHBpbmciOjEsImtpbmQiOiJjb250cm9sIiwid2lyZV9pZCI6InRlc3QtaW5zdGFuY2UiLCJjb250ZXh0Ijp7ImRpcmVjdGlvbiI6InRvX2FwcGxpY2F0aW9uIiwiZXhjaGFuZ2UiOiJ1bmtub3duIn0sImZpZWxkcyI6eyJvcGVyYXRpb24iOiJzZW5kX3RleHQiLCJ0ZXh0IjoidGVzdCBtZXNzYWdlIiwidHJhbnNtaXQiOmZhbHNlfX0="
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "kind": "control",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "send_text",
+        "text": "test message",
+        "transmit": false
+      },
+      "via": [
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown"
+          }
+        }
+      ]
+    },
+    "delimiter": ""
   }
 }

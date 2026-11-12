@@ -35,7 +35,10 @@
         "rx_offset_hz": 1201,
         "tx_offset_hz": 2302,
         "station_call": "K1AAA",
-        "station_grid": "FN31"
+        "station_grid": "FN31",
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

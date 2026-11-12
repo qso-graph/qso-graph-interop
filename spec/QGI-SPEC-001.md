@@ -2,8 +2,8 @@
 # QGI-SPEC-001: the QG Interop specification
 
 **Status: draft 0.1.0, 2026-11-12.** The core, WSJT-X mapping, schema and conformance
-vectors are specified. Annexes C–E and G–I remain placeholders (Annex I already defines event carriage
-and its vectors); all seven families are planned for the first
+vectors are specified. Annexes C–E, G and H remain placeholders; Annex D records provisional radio/SO2R
+assignments and Annex I defines event carriage and its vectors; all seven families are planned for the first
 release. Reference implementation alignment and real-peer interoperability remain separate work.
 Nothing here is a promise of compatibility until the first numbered release of this specification.
 
@@ -14,8 +14,7 @@ It delivers the implementation in a CLI,
 a simulator and QSO Graph Desktop
 (`QGI-RI-001`).
 
-**This specification is independent of programming languages, libraries and operating systems.** Conformance means
-meeting the normative requirements, demonstrated by the versioned suite (§7).
+**This specification is independent of programming languages, libraries and operating systems.** Conformance is defined by `QGI-GEN-0003` and §7.
 
 ### Scope boundaries (informative)
 
@@ -30,7 +29,7 @@ meeting the normative requirements, demonstrated by the versioned suite (§7).
 
 ## 0.1 How this document works
 
-**One fact, one place.** Every normative statement lives here once, with an ID; other documents
+**`QGI-GEN-0009` — One fact, one place.** Every normative statement lives here once, with an ID; other documents
 cite it. The words MUST, MUST NOT, SHOULD and MAY are used as RFC 2119 defines them.
 
 | Area | Covers |
@@ -44,7 +43,7 @@ cite it. The words MUST, MUST NOT, SHOULD and MAY are used as RFC 2119 defines t
 | `QGI-VEC` | Test vectors and conformance |
 | `QGI-SEC` | Security considerations |
 
-**Verify methods:** `Test` (a test vector or automated check), `Inspection` (read against this text).
+**Verify methods (informative):** `Test` (a test vector or automated check), `Inspection` (read against this text).
 
 ## 1. General
 
@@ -68,7 +67,7 @@ cite it. The words MUST, MUST NOT, SHOULD and MAY are used as RFC 2119 defines t
 | `QGI-MOD-0004` | **Common fields.** A codec MUST map fields according to Annex A and its family annex, without inventing values or deriving them from free text; a native field that is absent MUST leave its common member absent. The representability exceptions are `QGI-MOD-0006` and `QGI-MOD-0013`. | Test |
 | `QGI-MOD-0005` | **Absent, null and empty are distinct** wherever the family distinguishes them, and the event preserves the distinction. | Test |
 | `QGI-MOD-0006` | **Time types.** An `instant` MUST be an RFC 3339 UTC string ending in `Z`; a `time_of_day` MUST be `HH:MM:SS` in UTC without a date. Both carry fractional seconds only to the native precision. A local, unresolved-zone, invalid or null native time MUST leave its common member absent; the original remains in `native`. Annex A assigns a type to each time field. | Test |
-| `QGI-MOD-0007` | **Lossless evidence.** An observed event MUST preserve exact native bytes, including unmapped fields and extensions, according to its protocol class; its family annex MUST list common-field canonicalizations. | Test |
+| `QGI-MOD-0007` | **Lossless evidence.** An observed event MUST preserve exact native bytes, including unmapped fields and extensions, according to its protocol class, except semantic event carriage (`QGI-QGI-0004`); its family annex MUST list common-field canonicalizations. | Test |
 | `QGI-MOD-0008` | **Reading never acts.** Mapping a native message to an event never changes `native` and never sends anything. Encoding an event into a native message is an explicit operation, and whether to send the result is the application's decision (`QGI-GEN-0004`); the event's kind is not an authorization. | Inspection |
 | `QGI-MOD-0009` | **Native object.** When present, `native` MUST contain `format` (class/profile format token) and `data` (canonical padded RFC 4648 base64), and MAY contain an informative family-defined `message` object. | Test |
 
@@ -80,12 +79,14 @@ cite it. The words MUST, MUST NOT, SHOULD and MAY are used as RFC 2119 defines t
 | `QGI-MOD-0011` | **All text in an event is untrusted**, including text supplied by the observer (§8). This specification does not define which characters an application may display; that is application policy (`QGI-GEN-0004`). | Inspection |
 | `QGI-MOD-0012` | **Native boundaries.** A family annex MUST select a protocol class from §4.1, define its native message and identify framing bytes separately from content bytes. | Test |
 | `QGI-MOD-0013` | **Common integers.** Every integer common field MUST lie in −9,007,199,254,740,991 through 9,007,199,254,740,991; a native integer outside that range MUST leave the common member absent. Frequencies MUST use integer hertz. | Test |
+| `QGI-MOD-0014` | **Radio label.** The common `fields.radio` object for `decode`, `radio_state`, `qso_logged`, `qso_changed`, `qso_deleted` and `spot` MUST contain only the family-carried parts: `instance` (text) and/or `number` (common integer); omit the object if neither part is carried. Each family annex MUST define those parts. A radio labels equipment or a program instance, never sender identity, and MUST NOT fill `context.source_id` (`QGI-MAP-0004`). | Test |
+| `QGI-MOD-0015` | **Hop history.** Optional `via` MUST be an array of at most eight objects, each containing `family: "qgi"` and the receiving observer's `context`, and no other defined members. Only carriage appends hops (`QGI-QGI-0004`); the event's own context is unchanged. Unknown future members follow reader compatibility and producer strictness. | Test |
 
 ### 2.2 Observations and commands
 
 | ID | Requirement | Verify |
 |---|---|---|
-| `QGI-MOD-0030` | An observed event MUST carry `native`. | Test |
+| `QGI-MOD-0030` | An observed event MUST carry `native`; carriage preserves the original observation/command distinction (`QGI-QGI-0004`). | Test |
 | `QGI-MOD-0031` | A command event MUST have `kind: "control"` and omit `native`. | Test |
 | `QGI-MOD-0032` | `control`, `notification` and `ambiguous` MUST carry `fields.operation` from Annex A or the family annex. | Test |
 | `QGI-MOD-0033` | A command MUST place its arguments in `fields` and its target in `wire_id` when the family uses a target ID. | Test |
@@ -95,7 +96,7 @@ cite it. The words MUST, MUST NOT, SHOULD and MAY are used as RFC 2119 defines t
 | `QGI-MOD-0037` | An operation specific to one family MUST use `<family>.<token>` (for example, `wsjtx.highlight_callsign`). | Test |
 | `QGI-MOD-0038` | A `result` MUST carry `fields.status` (`ok` or `error`); a native application error is a successfully decoded result, not a codec error. | Test |
 
-The narrow discriminator is presence of `native`, with no new envelope flag: even an observed
+**`QGI-MOD-0039` — Command distinction.** The narrow discriminator is presence of `native`, with no new envelope flag: even an observed
 `control` carries it. Annex F removes `native` from the unconditional `required` list and uses
 `if` (absence of `native`) / `then` (`kind` fixed to `control`, required `fields.operation`, and
 no `native_version`) / `else` (required `native`). Schema cannot establish that a producer
@@ -108,21 +109,23 @@ command input is not mutated. Native and mapping versions are independent.
 | ID | Requirement | Verify |
 |---|---|---|
 | `QGI-SER-0001` | **An event's interchange form is one JSON object (RFC 8259, UTF-8)**, valid against the JSON Schema published with each version of this specification. | Test |
-| `QGI-SER-0002` | **Text.** Valid text MUST be a JSON string; a family’s explicit null MUST be JSON `null`, empty text `""`, and a missing field an omitted member. Text invalid in its declared encoding MUST be `{"utf8_bytes": [...]}` (integers 0–255) or `{"utf16_units": [...]}` (integers 0–65535, including unpaired surrogates). These forms also apply to text in `wire_id`, context and the optional structured view. | Test |
+| `QGI-SER-0002` | **Text.** Valid text MUST be a JSON string; a family’s explicit null MUST be JSON `null`, empty text `""`, and a missing field an omitted member. Text invalid in its declared encoding MUST use the matching encoding wrapper, `{"utf8_bytes": [...]}` (integers 0–255) or `{"utf16_units": [...]}` (integers 0–65535, including unpaired surrogates). These forms also apply to text in `wire_id`, context and the optional structured view. | Test |
 | `QGI-SER-0003` | **Binary64 floating point:** a finite value is a JSON number written so that a correctly rounding reader recovers the same bits; a non-finite value is the string `ieee754:` followed by 16 lowercase hexadecimal digits of its bits, preserving NaN payloads. A consumer that cannot read numbers with correct rounding MUST use the native message instead. | Test |
-| `QGI-SER-0004` | **Sequences.** An event sequence MUST use newline-delimited JSON (NDJSON), one object per record, with each record at most 1,048,576 UTF-8 bytes excluding its line delimiter; a larger record MUST be an `oversized` error. | Test |
-| `QGI-SER-0005` | **Compatible reading.** A consumer reading a newer MINOR of the same MAJOR MUST ignore unknown members, treat unknown kinds as `native`, unknown context enums as `unknown`, and unknown families as kind `native` with uninterpreted fields; it MUST preserve any native evidence and the original command when evidence is absent. Such a command is not encodable without a supported family/operation mapping. | Test |
+| `QGI-SER-0004` | **Sequences.** An event sequence MUST use newline-delimited JSON (NDJSON), one object per record, with each record at most 1,048,576 UTF-8 bytes excluding its line delimiter; an observer that would emit a larger record MUST fail atomically with `oversized`, returning no events or state updates. The bound applies to the actual compact UTF-8 interchange record, including optional structured views and `via`, before publication. Arbitrary pretty printing is not the bounded representation. | Test |
+| `QGI-SER-0005` | **Compatible reading.** A consumer reading a newer MINOR of the same MAJOR MUST ignore unknown members, treat unknown kinds as `native`, unknown context enums as `unknown`, and unknown families as kind `native` with uninterpreted fields; it MUST preserve any native evidence and the original command when evidence is absent. The same compatible-reading rules apply to a newer additive mapping revision even at the same specification version; §4 gives the outcome table. A recognized view MUST NOT rewrite the preserved event used for carriage. Such a command is not encodable without a supported family, mapping revision and operation. | Test |
 | `QGI-SER-0006` | **Compatible writing.** A producer writing for an older reader of the same MAJOR MUST retain everything that version requires. | Test |
 | `QGI-SER-0007` | **Duplicate members.** An event with duplicate member names at any object depth MUST be rejected as `malformed`; this is a parsing rule that JSON Schema cannot express. | Test |
 | `QGI-SER-0008` | **Equality.** Events MUST be compared as parsed values, independent of object member order, using binary64 values for floating fields and exact integers otherwise; base64 data remains exact. | Test |
+| `QGI-SER-0009` | **Validation profiles.** A reader MUST use Annex F's open reader schema plus applicable parsing, compatibility and semantic checks. A producer MUST validate newly authored output with `producer_strict=true`: the reader schema plus rejection of every member not defined by the declared base version, family mapping and explicitly selected extension profile, recursively in the envelope, context, hops, common fields, radio, colors, headers, dependencies and structured view. The family's structured-view catalog supplies its allowed nested members. Producers MUST use known kinds and context tokens and their declared version; opaque forwarding of a newer event uses the reader profile for preserved content and strict validation for the appended hop. The test runner exposes this flag as `--producer-strict`. A schema-only success is not semantic verification. | Test |
+| `QGI-SER-0010` | **Observer budget.** Each observer-supplied `context`, including a context recorded in `via`, MUST occupy at most 4,096 bytes in compact UTF-8 JSON; exceeding that declared bound MUST return `oversized` atomically. The original context and up to eight hop contexts together fit the 65,536-byte reserve used in Annex B's output proof. | Test |
 
 ## 4. Mapping rules for every family
 
 | ID | Requirement | Verify |
 |---|---|---|
 | `QGI-MAP-0001` | **Every family's mapping is pinned to released source or a dated published document**, named with its version and a cryptographic hash, and re-pinned only by a new revision of the family's section. | Inspection |
-| `QGI-MAP-0002` | **Never guess.** A codec MUST follow its family’s version and type rules, returning a skip for an unknown future version or unknown type rather than interpreting an encoding it does not know. | Test |
-| `QGI-MAP-0003` | **Limits are declared per family** (largest message, largest field) and checked before a codec allocates; a message beyond them is an error, not a truncation. | Test |
+| `QGI-MAP-0002` | **Additive revisions; never guess.** A new mapping revision MUST follow the MINOR rules in `QGI-GEN-0005`: only new native types, optional fields or operations, never changed meaning, types, units, defaults or newly required fields. A codec MUST follow its family’s version and type rules, returning a skip for an unknown future version or unknown type rather than interpreting an encoding it does not know. | Test |
+| `QGI-MAP-0003` | **Limits are declared per family** (largest message, largest field, and the largest admissible native message whose largest observation including structured views fits `QGI-SER-0004`) and checked before a codec allocates; a message beyond them is an error, not a truncation. | Test |
 | `QGI-MAP-0004` | **No identity from the wire.** A wire ID, an application or station label, or a network address is data, not proof of who sent the message, and never fills `source_id`. | Inspection |
 | `QGI-MAP-0005` | **Atomic errors.** On malformed input or any other message error, a decoder MUST return no events and commit no state updates for that message. | Test |
 | `QGI-MAP-0006` | **Outcomes.** A decoder MUST return either a successful ordered collection of zero or more events and zero or more skip notices, or one error categorized as `truncated`, `oversized`, `malformed`, `unsupported_version` or `invalid_value`. | Test |
@@ -137,10 +140,20 @@ command input is not mutated. Native and mapping versions are independent.
 | `QGI-MAP-0012` | Re-encoding an observed event from its native evidence MUST be a separate explicit operation from command encoding. | Test |
 | `QGI-MAP-0013` | A family MUST publish command-to-byte reverse vectors, including missing and out-of-range arguments, for each defined sending type. | Test |
 | `QGI-MAP-0014` | Exceeding a declared state or event bound MUST return `oversized` atomically; codecs MUST NOT silently evict a live template to accept the message. | Test |
+| `QGI-MAP-0015` | **Revision outcomes.** A reader supporting family revision r MUST apply the table below. It MUST return native verification separately from the event, for example as an API validation status or validation report with `verified`, `unavailable` or an error; it MUST NOT add an event member. `unavailable` MUST NOT be presented as verified or sufficient to authorize a command. A command encoder MUST reject every unsupported mapping revision as `unsupported_version`, even if it recognizes the operation. | Test |
+
+The following table is normative under `QGI-MAP-0015` and `QGI-SEC-0010`.
+
+| Input for a reader supporting revision r | Recognized reading | Native consistency / encoding outcome |
+|---|---|---|
+| Observation at revision ≤ r | Full known reading | Check all defined mapped content against native evidence; disagreement is `invalid_value`. |
+| Observation at revision > r, known kind | Read common fields known to the reader; ignore additions in the recognized view | Check native types defined by r using r's mapping, ignoring additive fields. Other native types yield `unavailable`; preserve the event and evidence. |
+| Observation at revision > r, unknown kind | Read as `native`, uninterpreted fields | `unavailable`; preserve the original event and evidence. |
+| Command at a revision the encoder does not support, including a known operation | Preserve for reading; no encoding | `unsupported_version`. |
 
 ### 4.1 Protocol classes
 
-The class rules below select the native evidence boundary. A new family using these rules needs
+**`QGI-CLS-0033` — Class selection.** The class rules below select the native evidence boundary. A new family using these rules needs
 only an annex; it does not add envelope members. A genuinely new class requires a core/schema
 revision before introducing native envelope members.
 
@@ -155,7 +168,7 @@ revision before introducing native envelope members.
 | `QGI-CLS-0010` | **Publish/subscribe.** A decoded PUBLISH MUST carry `native.topic` (text), `native.retained` (boolean retain flag) and `native.data` (exact payload bytes). | Test |
 | `QGI-CLS-0011` | A retained PUBLISH MUST remain marked retained and MUST NOT be represented as a new observation solely because it was delivered now. | Test |
 | `QGI-CLS-0012` | Broker connections, subscriptions, credentials and delivery acknowledgments MUST remain outside the codec, which decodes one caller-supplied PUBLISH. | Inspection |
-| `QGI-CLS-0013` | Families MUST NOT add native envelope members beyond `format`, `data`, `message` and those listed by their selected class, except `qgi`'s `carried_native` (`QGI-QGI-0004`); family-specific structured members belong inside `native.message`. | Test |
+| `QGI-CLS-0013` | Families MUST NOT add native envelope members beyond `format`, `data`, `message` and those listed by their selected class; family-specific structured members belong inside `native.message`. | Test |
 | `QGI-CLS-0020` | **Templated records.** A valid templated message MUST produce one event per decoded data record in wire order; a template-only message MUST produce no events. | Test |
 | `QGI-CLS-0021` | A stateful decoder MUST scope cached templates by a caller-supplied session key plus the native observation domain; IPFIX session keys identify the exporter's transport session, not merely its domain or Template ID. | Test |
 | `QGI-CLS-0022` | A stateful codec MUST declare finite maxima for sessions, templates per session, bytes per template, cached dependency bytes and events per message before allocation. | Test |
@@ -170,7 +183,7 @@ revision before introducing native envelope members.
 | `QGI-CLS-0031` | A publish/subscribe event MUST use `native.format: "mqtt_publish"`. | Test |
 | `QGI-CLS-0032` | An IPFIX record event MUST use `native.format: "ipfix_record"`. | Test |
 
-For IPFIX, [RFC 7011 §§8.2, 8.4 and 9.3](https://www.rfc-editor.org/rfc/rfc7011.txt)
+**`QGI-CLS-0034` — Supporting records and ordering.** For IPFIX, [RFC 7011 §§8.2, 8.4 and 9.3](https://www.rfc-editor.org/rfc/rfc7011.txt)
 distinguish export-time validity from arrival order. This profile skips unknown-template Sets
 immediately instead of buffering them; a later template does not recover a previous skip. Identical
 IDs in different sessions/domains are unrelated. Sequence numbers count data records, not messages.
@@ -212,6 +225,14 @@ adds event carriage using the existing datagram and stream classes. Annex letter
 | `QGI-PSI-0001` | **PSK Reporter IPFIX** (`pskreporter-ipfix`) is reserved for reception reports in Annex H, using RFC 7011 over UDP and the published PSK Reporter information elements. | Inspection |
 | `QGI-QGI-0001` | **QG Interop events** (`qgi`) MUST follow the event-carriage profile in Annex I, mapping revision 1. | Test |
 
+### 5.1 Family output-budget status (informative)
+
+| Family | Largest native input admitted within the 1 MiB observation budget |
+|---|---|
+| `wsjtx` | 65,507 bytes; the full common and structured upper bound is 973,268 bytes (B.7). |
+| `qgi` | UDP: 65,507 bytes. TCP: frame limit 1,048,576 bytes, subject to exact output admission; guaranteed compact-event budget 1,044,444 bytes with a maximal receiving context (Annex I). |
+| `n1mm`, `fldigi`, `js8call`, `pskreporter-mqtt`, `pskreporter-ipfix` | Not yet established: their annexes are unpinned/incomplete. Their native limits and largest-observation proofs remain conformance gates under `QGI-MAP-0003`. For IPFIX this includes record, template, message and all supporting-record evidence, rather than message length alone. |
+
 ## 6. Families and fields defined by others
 
 | ID | Requirement | Verify |
@@ -229,7 +250,7 @@ adds event carriage using the existing datagram and stream classes. Annex letter
 | `QGI-VEC-0001` | **Versioned suite.** A specification release MUST publish its schema and positive, negative and compatibility vectors identifying base version, family revision, supplied input/context and expected outcome. | Test |
 | `QGI-VEC-0002` | **Vectors are produced independently of any one implementation** (from the family's published definition) and, where possible, checked against captures from the real peer. | Inspection |
 | `QGI-VEC-0003` | **Codec conformance.** A codec MUST meet every normative requirement applicable to its declared family and pass its versioned vectors in both defined directions; passing vectors alone does not excuse a requirement violation. | Test |
-| `QGI-VEC-0004` | **Producer conformance.** A producer MUST emit `qgi` native messages carrying events that validate against their declared version's schema and meet all applicable specification requirements, including version compatibility and Annex I's framing and bounds; the suite's positive and negative carriage vectors establish the sending contract. A producer need not decode another family's wire protocol to conform. | Test |
+| `QGI-VEC-0004` | **Producer conformance.** A producer MUST emit `qgi` native messages carrying events that validate against their declared version's producer profile (`QGI-SER-0009`) and meet all applicable specification requirements, including version compatibility and Annex I's framing and bounds; the suite's positive and negative carriage vectors establish the sending contract. A producer need not decode another family's wire protocol to conform. | Test |
 | `QGI-VEC-0005` | **Consumer conformance.** A consumer MUST meet applicable normative requirements, read the suite’s positive events, reject invalid events, and implement both directions of version compatibility as demonstrated by the compatibility vectors. | Test |
 | `QGI-VEC-0006` | **Independent families.** A family defined by others MUST publish its own vectors against the base version it names; it need not republish for each later base version. | Inspection |
 | `QGI-VEC-0007` | **Informative view comparison.** A vector runner MUST compare the normative event with `native.message` omitted and, when a view is emitted and an `expected_message` oracle is supplied, compare that view separately as parsed values. | Test |
@@ -246,8 +267,8 @@ adds event carriage using the existing datagram and stream classes. Annex letter
 | `QGI-SEC-0006` | **XML isolation.** An XML codec MUST NOT resolve external entities, DTDs, schemas, files or network resources, and MUST reject a document containing a DOCTYPE as `malformed`. | Test |
 | `QGI-SEC-0007` | **Parser bounds.** Every family MUST declare bounds on nesting depth, element count, attribute count, numeric token length and decoded text expansion, or mark each inapplicable for a fixed binary format. | Inspection |
 | `QGI-SEC-0008` | **Stream recovery.** A stream family MUST declare a maximum frame size and a resynchronization boundary after malformed or oversized input, including delimiter/escape handling or caller reset when no safe boundary exists. | Test |
-| `QGI-SEC-0009` | **Context trust.** An application MUST treat serialized context from storage or another peer, including a carried `qgi` event's context on arrival, as untrusted unless it trusts that boundary. | Inspection |
-| `QGI-SEC-0010` | **Consistency.** An observed event whose mapped fields or envelope disagree with its native evidence MUST be rejected as `invalid_value`; an informative `native.message` MUST NOT override that evidence. For `qgi` evidence, comparison uses Annex I's context replacement, native wrapping and compatible-reading rules, rather than the carried family's wire decoder. | Test |
+| `QGI-SEC-0009` | **Context trust.** An application MUST treat serialized context from storage or another peer, including a carried `qgi` event's `context` and every `via` entry on arrival, as untrusted unless it trusts that boundary. | Inspection |
+| `QGI-SEC-0010` | **Consistency.** An observed event whose mapped fields or envelope disagree with its native evidence MUST be rejected as `invalid_value`; an informative `native.message` MUST NOT override that evidence. The mapping-revision outcome table limits which native types can be checked. For `qgi`, compare the preserved carried event and appended hop under Annex I and `QGI-SER-0008`; its original native evidence is still checked only with a supported original-family decoder. Carriage adds no verification. | Test |
 | `QGI-SEC-0011` | **Delivery semantics.** This specification promises no ordering, deduplication or replay protection; applications acting on controls or QSO changes MUST handle those properties themselves. | Inspection |
 
 
@@ -265,12 +286,12 @@ the completed WSJT-X profile or authorize guessing:
    receiver-only metadata into a fictitious reception? How do PSK Reporter's older examples differ
    from RFC 7011 for field naming, Options scope and padding?
 4. What explicit template lifetime and reordering policy should Annex H pin, with caller-provided
-   time and session resets? No network-order inference or silent template eviction is allowed.
+   time and session resets? The existing ordering/eviction constraints are `QGI-CLS-0030` and `QGI-MAP-0014`.
 
 ## Annexes
 
-The requirements in Annexes A, B, H and I are normative; their tables are incorporated by reference.
-H and I remain placeholders for the profile work they explicitly leave open.
+**`QGI-GEN-0008` — Incorporated annexes.** The requirements in Annexes A, B, D, H and I are normative; their tables are incorporated by reference.
+D and H remain placeholders for the profile work they explicitly leave open; I defines carriage now.
 Annex F is the machine-readable event shape; parsing and mapping rules also apply. Its open string
 registries accept additions from newer MINOR versions. A schema check alone cannot establish that
 a family name is registered, a native version or mapping is supported, a JSON string contains only
@@ -287,10 +308,10 @@ recognized official families; a third-party family publishes its profile constra
 
 - **G.** [PSK Reporter MQTT placeholder](annex-g-pskreporter-mqtt.md).
 - **H.** [PSK Reporter IPFIX placeholder](annex-h-pskreporter-ipfix.md).
-- **I.** [QG Interop event-carriage placeholder](annex-i-qgi.md).
+- **I.** [QG Interop event carriage](annex-i-qgi.md).
 - **Z.** [Informative extension design check](annex-z-design-check.md).
 
 The [vector format and coverage](vectors/README.md) describe the versioned suite. Annexes C–E and G
-reserve names and scope only and make no claim that those family codecs conform yet.
+reserve scope (D additionally records provisional radio assignments) and make no claim that those family codecs conform yet.
 Annex H additionally records submitter obligations; Annex I defines carriage and vectors now,
 without claiming reference-implementation or live-peer conformance.

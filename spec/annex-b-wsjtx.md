@@ -24,7 +24,7 @@ this exact file. The source defines layouts; the requirements here define their 
 | `QGI-WSJ-0018` | Every non-null length MUST fit the remaining input before allocation; absence of those bytes is `truncated`. | Test |
 | `QGI-WSJ-0019` | A valid WSJT-X datagram MUST produce exactly one observed event; an unknown version/type MUST produce only its skip notice. | Test |
 
-These are profile resource bounds, not claims about all upstream instance names or network MTUs.
+**`QGI-WSJ-0050` — Binary parser bounds.** These are profile resource bounds, not claims about all upstream instance names or network MTUs.
 Fixed binary scalars have no numeric tokens. Nesting is fixed at the header/body and the bounded
 QDateTime/time-zone structure below; recursive nesting, elements and attributes are inapplicable.
 Text decoding expands no entities, performs no normalization and is bounded by its byte count
@@ -34,6 +34,8 @@ There is no stream delimiter or recovery state for this datagram family. Zero by
 header. A bad complete magic is malformed even when a later schema would be unsupported.
 
 ## B.2 Scalar and composite wire types
+
+**`QGI-WSJ-0051` — Wire values.** A codec MUST use the following wire types and composite layouts.
 
 | Type | Wire representation | Informative structured value |
 |---|---|---|
@@ -76,22 +78,36 @@ no conversion to another color space occurs.
 | `QGI-WSJ-0025` | A valid QTime MUST map to `time_of_day` using exactly three fractional digits; a QDateTime resolving without host data MUST map to `instant` using exactly three fractional digits, otherwise the common time MUST be absent. | Test |
 | `QGI-WSJ-0026` | Status frequency tolerance and T/R period equal to `0xffffffff` MUST leave their common members absent (not applicable); Configure MUST retain those integers because its sentinels are command arguments. | Test |
 | `QGI-WSJ-0027` | LoggedADIF MUST map only its verbatim ADIF text, without parsing tags into other common members; WSPRDecode MUST NOT synthesize a mode, and Decode MUST NOT extract call or grid from its text. | Test |
+| `QGI-WSJ-0028` | **Radio.** For types 1, 2, 5, 10 and 12, `fields.radio.instance` MUST equal the header client ID using the same text representation as `wire_id`, including null or empty; `radio.number` MUST be absent. The client ID labels the one-radio WSJT-X instance (including the program's `--rig-name` instance label), never sender identity. It MUST NOT fill `source_id`. Types with no common radio-bearing kind MUST NOT invent a radio field. | Test |
+| `QGI-WSJ-0029` | **Side effects.** The WSJT-X effects listed below are the family-defined meanings for `QGI-MOD-0022`; callers MUST NOT equate `fields.text` with guaranteed on-air content. Mapping and encoding MUST NOT execute these effects. | Inspection |
 
-For B.3 time conversion, a valid clock is less than 86,400,000 milliseconds. Schema 1 uses its
+| Operation | Possible WSJT-X application effects (pinned header) |
+|---|---|
+| `send_text` | Nonempty Text replaces the free-text and Tx5 fields; Send true selects the send action. Empty Text with Send true sends the previously staged text unchanged; that text is not carried by the command and this API cannot query it. Empty Text with Send false clears the text. The application may encode or truncate the on-air message (lines 353–381). |
+| `reply` | Selects a matching decode and can enable transmission according to the application's settings (lines 256–294). |
+| `halt_tx` | Stops transmission immediately or at the end of the current period according to Auto Tx Only (lines 344–350). |
+| `clear` | Clears the selected activity window (lines 235–253). |
+| `close` | Requests graceful application shutdown (lines 321–326). |
+| `replay` | Emits stored decodes marked not new, followed by Status (lines 329–341). |
+| `set_frequency` | No WSJT-X shared-operation mapping. |
+| `wsjtx.configure` | Changes settings; a mode/submode change can also retune to the band's default frequency for that mode if the current frequency is not in its frequency table (lines 488–508). |
+| Other family operations | Heartbeat participates in schema negotiation; Location changes the location used for WSPR/messages; HighlightCallsign changes highlighting; SwitchConfiguration changes the selected configuration; AnnotationInfo changes the application's annotation/sort value (B.4). |
+
+**`QGI-WSJ-0052` — Time conversion.** For B.3 time conversion, a valid clock is less than 86,400,000 milliseconds. Schema 1 uses its
 UTC clock regardless of time spec. For schemas 2–3, spec 1 resolves directly; spec 2 and custom
 zones resolve by subtracting the supplied offset; spec 0 and named zones remain unresolved.
 Julian day 2,440,588 is 1970-01-01. Conversion uses the proleptic Gregorian calendar and leaves
 instants outside years 0001–9999 absent, as well as null or invalid dates/clocks. It neither attaches
 an observer's date to QTime nor consults a clock. A family-carried UTC value is not receipt time.
 
-The other common canonicalizations are text presentation (`QGI-SER-0002`), binary64 presentation
+**`QGI-WSJ-0053` — Other canonicalizations.** The other common canonicalizations are text presentation (`QGI-SER-0002`), binary64 presentation
 (`QGI-SER-0003`), integer omission outside the common range (`QGI-MOD-0013`), and field renaming in
 the tables. There is no callsign case conversion, whitespace trimming, mode-symbol expansion,
 frequency addition, or loss of null versus empty text. UTF-8 invalidity itself is not an error.
 A nonfinite float retains its bits. A negative zero is emitted as a JSON negative-zero number;
 comparison of finite floating fields uses binary64 values as in `QGI-SER-0008`.
 
-Clear's native Window enum is 0 band activity (default when not supplied to the application),
+**`QGI-WSJ-0054` — Native sentinels and defaults.** Clear's native Window enum is 0 band activity (default when not supplied to the application),
 1 Rx frequency, 2 both (header lines 235–253); absence remains absent in the event. An out-of-range
 Window is preserved, without claiming an application action. The presence or absence of Window
 never supplies direction. Status special-operation mode remains native only. Configure empty text
@@ -102,7 +118,7 @@ executed by mapping. Native application defaults never create common fields.
 
 ## B.4 Message layouts
 
-These tables list body fields in wire order, after the common header and ID. `?` is an optional
+**`QGI-WSJ-0055` — Layout catalog.** These tables list body fields in wire order, after the common header and ID. `?` is an optional
 contiguous historical suffix, not a null marker; all fields through the last unmarked row are
 required on the wire. This optionality comes from the historical compatibility rules recorded in
 `docs/PROTOCOL.md`, not from a schema-number test. Header lines 89–102 allow appended fields
@@ -348,13 +364,15 @@ The direction column is the native protocol's defined direction; it never change
 |---|---|---|
 | `QGI-WSJ-0030` | If emitted, `native.message` MUST use `schema` (integer), `type` (integer), `id` (text), `body` (object using B.4 member names and B.2 values), and `extensions` (base64 of trailing bytes, including `""` when empty); absent suffix members MUST be omitted. | Test |
 
-This view is informative: its presence is optional, its values do not replace `native.data`, and
+**`QGI-WSJ-0056` — Structured value spelling.** This view is informative: its presence is optional, its values do not replace `native.data`, and
 the suite tests the permitted omitted view as its baseline, with separate structured-view oracles.
 Event comparison otherwise follows `QGI-SER-0008`. The `u64`/`i64` decimal strings prevent accidental
 precision loss even where the common integer cannot be represented. Their spelling is a minus
 sign only for negative values, followed by decimal digits without leading zeros, except `0`.
 
 ## B.6 Commands and observed re-encoding
+
+Command side effects are defined once in B.3 (`QGI-WSJ-0029`), including staged FreeText and indirect Configure retuning.
 
 | ID | Requirement | Verify |
 |---|---|---|
@@ -383,7 +401,7 @@ sign only for negative values, followed by decimal digits without leading zeros,
 | `wsjtx.configure` | 15 | `mode`, `frequency_tolerance_hz`, `sub_mode`, `fast_mode`, `tr_period_seconds`, `rx_offset_hz`, `dx_call`, `dx_grid` | `generate_messages` |
 | `wsjtx.annotation_info` | 16 | `dx_call`, `sort_order_provided`, `sort_order` | none |
 
-`operation` is `fields.operation`. Required text arguments accept explicit null and empty under
+**`QGI-WSJ-0057` — Argument representations.** `operation` is `fields.operation`. A text argument MUST use a string when valid in its native encoding, and only the matching raw wrapper when invalid; WSJT-X UTF-8 arguments MUST reject UTF-16 wrappers and raw UTF-8 wrappers containing valid UTF-8 as `invalid_value`. Required text arguments accept explicit null and empty under
 B.2, but omission is not null. QColor arguments use the B.2 object (`spec` u8, exactly five u16
 `channels`); every channel, including padding, is supplied explicitly. Integer fields use the
 corresponding B.4 scalar bounds: `snr_db` i32, `modifiers` u8, `max_schema`, offsets, tolerances,
@@ -391,21 +409,42 @@ periods and sort order u32. Boolean arguments require booleans. `reply.dt_second
 binary64 representation of §3, including nonfinite bits. Optional tails end at the last supplied
 argument, with no gaps. Empty heartbeat and Clear are valid historical command shapes.
 
-A command has no native bytes or native version. For example:
+Example command using `QGI-MOD-0031` and `QGI-MOD-0035`:
 
 ```json
 {"spec":"0.1.0","family":"wsjtx","mapping":1,"kind":"control","context":{"direction":"to_application","exchange":"request"},"wire_id":"test-instance","fields":{"operation":"send_text","text":"synthetic message","transmit":false}}
 ```
 
-Encoding with omitted options uses schema 3. Explicit `schema: 1` uses schema 1 even without
+**`QGI-WSJ-0058` — Encoding boundary.** Encoding with omitted options uses schema 3. Explicit `schema: 1` uses schema 1 even without
 previous wire traffic. Encoding performs no negotiation, transport or action. An application
 that negotiates limits the schema to its supported maximum, peer datagram schema and peer maximum;
 a heartbeat without maximum implies 2 to that application (header lines 135–138). Peer state,
 periodic heartbeats and transport stay outside this family codec. This does not prohibit bounded
 template state in templated families under `QGI-CLS-0021`.
 
-Observed re-encoding is available for the sending types; observation types 1, 2, 5, 10 and 12 may
+**`QGI-WSJ-0059` — Evidence operations.** Observed re-encoding is available for the sending types; observation types 1, 2, 5, 10 and 12 may
 also be offered for simulators. Explicit original-byte retrieval remains separate from re-encoding
 and always returns `native.data` exactly, including noncanonical boolean bytes. Commands cannot
 retrieve or re-encode absent native evidence. An observed out-of-range Clear window remains
 lossless under B.3; that does not make it an accepted argument for command construction.
+
+## B.7 Observation output budget
+
+**`QGI-WSJ-0060` — Bounded representation.** An observer MUST serialize with compact JSON
+separators and UTF-8 text (escaping only JSON-required characters), or a representation no larger
+than the bound below; it MUST enforce `QGI-SER-0004` before emission. An optional structured view
+MUST follow B.5, rather than arbitrary extra expansion. Contexts MUST meet `QGI-SER-0010`.
+
+The largest native datagram is N = 65,507 bytes. Its base64 evidence uses
+4 × ceil(N / 3) = 87,344 bytes. A valid text byte costs at most six JSON bytes (a control escape);
+an invalid UTF-8 byte array costs at most four per byte including commas, and UTF-16 unit arrays
+at most six per two native bytes. The common and structured views therefore use at most 12N =
+786,084 bytes for text/extension contents. The client ID occurs in `wire_id`, `radio.instance` and
+structured `id`; reserving two copies in 12N plus one extra maximum escaped ID costs 6 × 256 =
+1,536 bytes. Fixed member names, punctuation, scalar values, text-wrapper names and date/time
+objects use a conservative 32,768-byte reserve: each supported type has fewer than 256 such
+members/scalars across both views, each budgeted 128 bytes. Context and all hops use at most the
+65,536-byte reserve. Total: 87,344 + 786,084 + 1,536 + 32,768 + 65,536 = 973,268 bytes,
+leaving 75,308 bytes below 1 MiB. Consequently every admitted WSJT-X datagram fits, including
+maximal common fields and the specified structured view. The terms intentionally overcount
+shared wire storage; they are an upper bound rather than a claim that all maxima coexist.

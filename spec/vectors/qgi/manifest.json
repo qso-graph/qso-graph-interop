@@ -4,7 +4,7 @@
   "family": "qgi",
   "mapping": 1,
   "source": "../../annex-i-qgi.md",
-  "source_sha256": "c838c4834e87bebe375080047f2277dc22d61b169511950b36eb8837af419352",
+  "source_sha256": "044fbc8f1d2d427b9944c20e7adb4b5294c914dc6a4c4cc377d7f1da8d19f717",
   "hash_scope": "SHA-256 of each complete vector file, including its final newline",
   "vectors": [
     {
@@ -13,7 +13,7 @@
       "spec": "0.1.0",
       "family": "qgi",
       "mapping": 1,
-      "sha256": "d3daca396ab0b825edabc5cdc1309aa339867f7fca518bf16de00953879dfc4e"
+      "sha256": "2904a2b16001d61c8c0896d51b99c276494cdc0d51a78772311db7072e93cb11"
     },
     {
       "file": "carried-decode.json",
@@ -21,7 +21,7 @@
       "spec": "0.1.0",
       "family": "qgi",
       "mapping": 1,
-      "sha256": "862da1b9db5b5ec012b65649a288f1f04d8cdc6551e9772ea89a1768d4beb789"
+      "sha256": "29abff2c84bab54fb501d40a86fb494d5a560fa03564b9d2aa782e484f244fde"
     },
     {
       "file": "carried-wsjtx-command.json",
@@ -29,7 +29,23 @@
       "spec": "0.1.0",
       "family": "qgi",
       "mapping": 1,
-      "sha256": "7206cc7f3a2fa1ac88a77cf0caf9a29ce9395d653541160ca119d05b5fcdb4ca"
+      "sha256": "81f305b56a56f2034e995188db5714b5da9ce73dbdf41cede1b352ec0cf510b6"
+    },
+    {
+      "file": "context-budget-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "sha256": "1d9f4e90b804b2b242b0d4416d856e0f7c1619e2e2a6be071f538cf2c0b15716"
+    },
+    {
+      "file": "context-budget-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "sha256": "6a7ec76749e4816edf41f20497ee83ea418f18458180e32f6e5c07c47c6938bc"
     },
     {
       "file": "different-major.json",
@@ -56,6 +72,14 @@
       "sha256": "948a2093fab087bb2b01918e452297369561f43a88a036a9e6a4d6e677713134"
     },
     {
+      "file": "eight-hops.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "sha256": "cd7b76188ff6d448d264726be06635e02de146f381628db109e1606327ca0e5c"
+    },
+    {
       "file": "empty-stream-record.json",
       "class": "negative",
       "spec": "0.1.0",
@@ -70,6 +94,22 @@
       "family": "qgi",
       "mapping": 1,
       "sha256": "54d404ce58f19639d715b87b428c689971a49a2e0618e2588e7cadbfb89de48f"
+    },
+    {
+      "file": "invalid-unicode-key.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "sha256": "e693d172b6d5ff3bcdb3f0cdfb4a3b346338bceaedc7bdc528421e9d45921258"
+    },
+    {
+      "file": "invalid-unicode-surrogate.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "sha256": "905320465758d76ee9ee56c7c3bec2e6958d76d11ade65d510056c0a1df94593"
     },
     {
       "file": "invalid-utf8.json",
@@ -96,20 +136,20 @@
       "sha256": "59c57e76734ffa17e169da7faa30beef3246822787e8342e193a4b5ef2d681fe"
     },
     {
-      "file": "native-nesting-too-deep.json",
-      "class": "negative",
-      "spec": "0.1.0",
-      "family": "qgi",
-      "mapping": 1,
-      "sha256": "87881dd8c3755e24b1413540570e835c948d39a6c574fad2a776603e426d7720"
-    },
-    {
       "file": "newer-minor-unknown-kind.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "qgi",
       "mapping": 1,
-      "sha256": "9fabee76ba1f87cc4ccdc31e59cc58d391a05b8d37c62d589a7f874091822aec"
+      "sha256": "5308a8c7dbbf5ab38a19ae911b98f51ff49321c3c125aa7cbbe7a4fbcbb84060"
+    },
+    {
+      "file": "nine-hops.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "sha256": "b8b081226437ea8a41884e308fb29e654bb3ff204d5a4fb05569a30aadc69cd0"
     },
     {
       "file": "not-an-object.json",
@@ -126,6 +166,22 @@
       "family": "qgi",
       "mapping": 1,
       "sha256": "10247c81523ecf56a7447ecd677bf95b198aecf1f335124bbf6616f0e79720aa"
+    },
+    {
+      "file": "output-budget-boundary.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "sha256": "071fe395f2619f7a44313fef885c7fbde685514e5c0028a2e962770497f56c61"
+    },
+    {
+      "file": "output-budget-overflow.json",
+      "class": "negative",
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "sha256": "832cf165122ba2f75eb560701d740dff3fc18a5007c21a07731b9bfd0c4a25cd"
     },
     {
       "file": "oversized-datagram.json",
@@ -157,7 +213,7 @@
       "spec": "0.1.0",
       "family": "qgi",
       "mapping": 1,
-      "sha256": "eb1076f039cc100bed7c0c56b62925a60399fc2db91b2b47911b5e425c897c3b"
+      "sha256": "672a069cfe292ecce03e46e3fb063199413caa6004abc090946524c42ed5ec7d"
     },
     {
       "file": "stream-decode-lf.json",
@@ -165,7 +221,7 @@
       "spec": "0.1.0",
       "family": "qgi",
       "mapping": 1,
-      "sha256": "d2256d13a031f26b084e1e6ad94a986d4d6873fe1cae365c2b46228ea1f8ed4a"
+      "sha256": "a7b9a9aa3ef6395018e178fb3573403be790fac44406737ce6671d1a59163b91"
     },
     {
       "file": "trailing-object.json",
@@ -176,12 +232,28 @@
       "sha256": "925eda57054c181bffa39166b9d0fed70addbff0fae3c392d41cf7339a4dbb58"
     },
     {
+      "file": "two-hops.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "sha256": "7425a183ae899c98403051f03b7c96878449bcf56e299fd5bab3fd6f33b16a33"
+    },
+    {
       "file": "unfinished-stream-record.json",
       "class": "negative",
       "spec": "0.1.0",
       "family": "qgi",
       "mapping": 1,
       "sha256": "2a97e3964e6d371690c40603c2dd92270713a6cb32609631e16cbff8e8edb3ae"
+    },
+    {
+      "file": "valid-unicode-surrogate-pair.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "sha256": "0a1e929799d96e675dce37609367ec3d0e6302ed69e2aa11a8583e59f651f85e"
     }
   ]
 }

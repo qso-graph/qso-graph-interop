@@ -38,7 +38,10 @@
         "station_grid": "FN31",
         "dx_grid": "FN42",
         "tx_watchdog": false,
-        "sub_mode": "sub-test"
+        "sub_mode": "sub-test",
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

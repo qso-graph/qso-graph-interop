@@ -40,7 +40,10 @@
         "station_grid": "FN31",
         "exchange_sent": "001",
         "exchange_received": "002",
-        "propagation_mode": "TR"
+        "propagation_mode": "TR",
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

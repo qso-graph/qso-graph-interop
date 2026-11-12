@@ -30,7 +30,10 @@
         "drift_hz": -2,
         "call": null,
         "grid": "",
-        "power_dbm": 37
+        "power_dbm": 37,
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

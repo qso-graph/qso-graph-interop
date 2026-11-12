@@ -37,7 +37,10 @@
         "station_call": "K1AAA",
         "station_grid": "FN31",
         "dx_grid": "FN42",
-        "tx_watchdog": false
+        "tx_watchdog": false,
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",

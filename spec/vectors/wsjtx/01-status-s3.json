@@ -43,7 +43,10 @@
         "frequency_tolerance_hz": 50,
         "tr_period_seconds": 15,
         "configuration_name": "test-config",
-        "tx_message": "test-tx"
+        "tx_message": "test-tx",
+        "radio": {
+          "instance": "test-instance"
+        }
       },
       "native": {
         "format": "wsjtx_datagram",
