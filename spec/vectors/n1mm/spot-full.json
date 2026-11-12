@@ -28,6 +28,7 @@
         "call": "W1AAA",
         "frequency_hz": 7061200,
         "spotter_call": "K1BBB",
+        "time": "2026-11-12T12:34:56Z",
         "mode": "CW",
         "text": "synthetic spot "
       },

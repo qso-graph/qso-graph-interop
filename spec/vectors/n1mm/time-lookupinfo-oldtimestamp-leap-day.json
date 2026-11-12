@@ -1,0 +1,36 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PGxvb2t1cGluZm8+PG9sZHRpbWVzdGFtcD4yMDI0LTAyLTI5IDAwOjAwOjAwPC9vbGR0aW1lc3RhbXA+PC9sb29rdXBpbmZvPg==",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "native",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "previous_start": "2024-02-29T00:00:00Z"
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PGxvb2t1cGluZm8+PG9sZHRpbWVzdGFtcD4yMDI0LTAyLTI5IDAwOjAwOjAwPC9vbGR0aW1lc3RhbXA+PC9sb29rdXBpbmZvPg=="
+      }
+    }
+  },
+  "reencode": {
+    "data": "PGxvb2t1cGluZm8+PG9sZHRpbWVzdGFtcD4yMDI0LTAyLTI5IDAwOjAwOjAwPC9vbGR0aW1lc3RhbXA+PC9sb29rdXBpbmZvPg=="
+  }
+}

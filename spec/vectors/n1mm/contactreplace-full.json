@@ -23,6 +23,7 @@
       },
       "fields": {
         "contest_name": "SYNTHETIC",
+        "start": "2026-11-12T12:34:56Z",
         "station_call": "K1AAA",
         "band": "3,5",
         "dial_frequency_hz": 3525190,
@@ -45,6 +46,7 @@
           "instance": "SYNTHETIC-PC"
         },
         "record_id": "0123456789abcdef0123456789abcdef",
+        "previous_start": "2026-11-12T12:30:00Z",
         "exchange_received": "historical exchange"
       },
       "native": {

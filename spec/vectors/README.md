@@ -46,19 +46,20 @@ only Annex I and the event schema, without an external protocol definition.
 
 The [N1MM manifest](n1mm/manifest.json) uses the same file metadata and hashes.
 Its `source_sha256` is a URL-to-SHA-256 object covering the exact appendix HTML,
-examples download-page HTML and downloaded XML response pinned in Annex D. Retrieval
-is 2026-11-12; the example download page identifies its update as 2019-09-30.
+examples download-page HTML, downloaded XML response, and three UTC logging
+documentation pages pinned in Annex D. Retrieval is 2026-11-12; the example
+download page identifies its update as 2019-09-30.
 No upstream documentation is bundled. XML data in these vectors is synthetic.
 
-The N1MM suite has **792 positive**, **18 command**, **52 command_negative**,
-**42 negative**, **4 skip**, and **9 compatibility** vectors (917 total), plus
-**792 embedded re-encoding checks**. It covers all 11 documented root spellings, including historical
+The N1MM suite has **1,080 positive**, **18 command**, **52 command_negative**,
+**42 negative**, **4 skip**, and **9 compatibility** vectors (1,205 total), plus
+**1,080 embedded re-encoding checks**. It covers all 11 documented root spellings, including historical
 `lookup`, inbound `radio_setfrequency` and inbound `Spectrum`. Every catalog leaf
 has an individual present and empty case; a minimal case for every root checks
 all leaves absent. Nested score leaves and category/selector attributes have
 separate presence, absence and empty cases. The suite includes six accepted
 boolean spellings, rejected/ambiguous spellings, radio/SO2R distinctions, 10 Hz
-conversion, opaque contact IDs, exchange aliases, unresolved timestamps, deletion
+conversion, opaque contact IDs, exchange aliases, UTC timestamps, deletion
 spots, Unicode and invalid UTF-8/UTF-16 leaf wrappers, declarations/BOMs, duplicate
 and nested leaves, namespaces, unknown children/roots, XML isolation attacks,
 limits and limit-plus-one failures. Byte-preserving re-encoding is embedded in
@@ -70,7 +71,16 @@ sub-Hz and out-of-range values retain native evidence with the mapped field omit
 QSY and Spectrum commands take integer Hz and encode canonical decimal kHz without
 unit options. Vectors cover whole and fractional kHz, integer limits, trailing
 zeros, and 475.0/137.5 kHz on 630 m/2200 m without magnitude-based unit selection.
-Unzoned timestamps remain native-only. Spectrum construction derives DataCount.
+Cataloged timestamps map exact valid `YYYY-MM-DD HH:MM:SS` text to UTC instants:
+contacts and deletions use `start`, prior contact keys use `previous_start`, and
+spots and score snapshots use `time`. Lookup messages retain kind `native` and map
+only their `start`/`previous_start` timestamps. Every timestamped root and leaf has
+literal calendar and grammar oracles, including leap days, year end, years 0001
+and 9999, invalid dates/clocks, fractional/zoned variants, whitespace, duplicates,
+nested leaves and invalid encoding. Bad timestamp scalars are positive messages
+with the common member absent and native bytes unchanged. Valid values are
+accepted as sent without receiver-clock comparisons, plausibility windows,
+corrections or warnings (`QGI-N1M-0037`). Spectrum construction derives DataCount.
 Command failures include absent and out-of-range fields, radio selectors, XML text, unsupported
 revisions, token/datagram bounds and disallowed arguments. Compatibility covers
 both directions, newer program labels, additions, unknown roots/kinds, unavailable
@@ -81,7 +91,9 @@ that N1MM has accepted a live command.
 Generation uses the standard library only. The independent XML isolation/bounds
 checker never resolves external resources; the command checker compares bytes to
 separately authored expected strings and plants failures. SO2R pair swaps are
-checked against independently parsed native leaves. This is not a complete N1MM
+checked against independently parsed native leaves. Timestamp oracles have an
+independent calendar/grammar check with planted omission, correction, repair,
+field-swap and inferred-end failures. This is not a complete N1MM
 codec: all vector event oracles remain independent of the reference implementation.
 With `jsonschema`, every N1MM positive, command and same-MAJOR compatibility input
 is schema-checked, and producer strictness closes the N1MM whole-document view and

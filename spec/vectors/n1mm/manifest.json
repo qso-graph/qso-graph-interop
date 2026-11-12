@@ -8,7 +8,10 @@
   "source_sha256": {
     "https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/": "4bd29b8de620b867d8573d2f0dbff78b7af1f50d64f40804d809b4c281bafab9",
     "https://n1mmwp.hamdocs.com/mmfiles/udp_external_udp_broadcasts-xml/": "784c869b8a7d56ca57e6bb8d6c0308e36ebf6caed44ed28fd6b4c8619c6a5d51",
-    "https://n1mmwp.hamdocs.com/mmfile/get/file/UDP_External_UDP_Broadcasts.xml": "58e0d335c325d1fde94a285b581fdaa4d75965b1aaa564e40969dcbf7eb8400a"
+    "https://n1mmwp.hamdocs.com/mmfile/get/file/UDP_External_UDP_Broadcasts.xml": "58e0d335c325d1fde94a285b581fdaa4d75965b1aaa564e40969dcbf7eb8400a",
+    "https://n1mmwp.hamdocs.com/getting-started/installing-and-upgrading-n1mm-logger/": "17243f496261d1b53bb96640a9d9f4beedf2c1f8724790c2619bf092f4186506",
+    "https://n1mmwp.hamdocs.com/faq/": "af14392fdb130b033351417515fb8362863e8ec1392185d0072ed8fcbfe67e21",
+    "https://n1mmwp.hamdocs.com/n1mm-manual/windows/": "c3cf58fb16dcdfb24074317680298fab374069c29e93e8904eeb93a60d7f3ee4"
   },
   "hash_scope": "SHA-256 of each complete vector file, including its final newline",
   "vectors": [
@@ -1594,7 +1597,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "12ee1ff2e96966efa8643e1c8d6704d6dce619d2996b72a4e3d0e2913fb93a19"
+      "sha256": "f6d71cca19169524da7600937b006edeb3d4b15b06dfd7c35bf179606670debc"
     },
     {
       "file": "contactdelete-only-ID.json",
@@ -1658,7 +1661,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "9b76b39462a3a4cce722d965ea97f97c18438682052dbdc09ab7c03c77295b28"
+      "sha256": "6bcdb58913e5948502a36fe266e51f34df3f22b781a0a1bfa3a1917be1c2e2cf"
     },
     {
       "file": "contactinfo-absent.json",
@@ -2090,7 +2093,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "26c941be2b9c19fcfdd76b94a0789a7e18870bb021a0eb1d3969d9d79820ede4"
+      "sha256": "0de26486d0bcc20d97d8b2c74ed47e6bc956bff3567c877bab3f51223f5888ca"
     },
     {
       "file": "contactinfo-only-ContactType.json",
@@ -2362,7 +2365,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "78d1876692d826db192e93735558cc1c1c189a9f34497239e92d28fbca372b91"
+      "sha256": "203c01c257bc77db06da7f0b90f3291d9324e33a0169741eebc4caf63bf4d4ac"
     },
     {
       "file": "contactinfo-only-operator.json",
@@ -2482,7 +2485,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "ba0c62f91e899e8d7a7e77c9ad1718e844af32417bdfe9b2779ba9858fbcb754"
+      "sha256": "4c87ea8becd2ca7589963bbee5747581972eda16328fb013285e74db2b4f5a73"
     },
     {
       "file": "contactinfo-only-txfreq.json",
@@ -2938,7 +2941,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "e162edc8e0e885c5acea72c41a0c25abeb26d214b0cb0a8c93b9048c85080a96"
+      "sha256": "8943f8ac9bfc31ba3e2a5f2d3815d7bd7c4b1b5c336cc6b2c58279802a51f0a5"
     },
     {
       "file": "contactreplace-only-ContactType.json",
@@ -3210,7 +3213,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "a4086901f8e2804a9d15850799fd4f384af07449fc3cf654c9a4f5f468214b8c"
+      "sha256": "2fe6d10b6c6643741bbaecaaa9d0a8dad90dd0ff39cdf574e7c1116151a8634a"
     },
     {
       "file": "contactreplace-only-operator.json",
@@ -3330,7 +3333,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "a33accd8d874535c8d5e39717884c89a712d117b6dda8dfe40f359524581f894"
+      "sha256": "3081402f56405f515105f5f750f1bf1b9243ce595af9d1b340459eecc9ea245e"
     },
     {
       "file": "contactreplace-only-txfreq.json",
@@ -3458,7 +3461,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "347667858265679fdc8fd5eb8ad9e3b41d99efb58fc340127270393dc9d40b01"
+      "sha256": "c54f49fad194499c7d6d274550f107e07366d902873c025d96770f4109ab25ab"
     },
     {
       "file": "dynamicresults-only-breakdown.json",
@@ -3530,7 +3533,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "d431a0f3d51aea492c7eecb00f973c81fba4ad008ec3067fb8e7b87d294e5f54"
+      "sha256": "d744ffe2a188fa717b7f46e08a079145251ddf64e65f4f26ff1bb23dfd78caf7"
     },
     {
       "file": "element-boundary.json",
@@ -5058,7 +5061,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "b544b0c200e3463a271e2bb5339db020e44d42f1ac862f561a886aef926a85bf"
+      "sha256": "1fc8dece818ac71b2beabf4e1bb2a275e622cf3c1be2b1d8c210a3bff72b4f3b"
     },
     {
       "file": "lookup-only-ContactType.json",
@@ -5330,7 +5333,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "7d9671aeed96107aed4a3df8129cfa4b93185efc4668e1852e222a5d104899e9"
+      "sha256": "4032b6415980fb6b7991e670def1e0db12f43eee2569f2f4a1e604c76ea0c6f0"
     },
     {
       "file": "lookup-only-operator.json",
@@ -5450,7 +5453,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "c7dbd797edaab60573457b13fc2dfb5f6203e6bfd81674f33ede6651141f2462"
+      "sha256": "302c2e157578e51d9800952b52f7c5be6f01a1e39ff7690d693e716d02249dc0"
     },
     {
       "file": "lookup-only-txfreq.json",
@@ -5906,7 +5909,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "5d481c838e5e473c3a27526a028a1f42ff0fd43c4b0cee26f564cab19585435c"
+      "sha256": "c9d3be0f958428fcf93ff49d7f7d1aafda2ec8176f2580235d42d1286f726401"
     },
     {
       "file": "lookupinfo-only-ContactType.json",
@@ -6178,7 +6181,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "a074379d450f851a919aae308ce6d95e284ec28e82474f38c03d6c0d53495b6f"
+      "sha256": "3d40a4338dd4de214f1b9aed57ae5a864c971a2b820f736ac957436eb856572f"
     },
     {
       "file": "lookupinfo-only-operator.json",
@@ -6298,7 +6301,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "2bf7566a77a2d1fa4a3b923377f3a991737dc1e584e042e9ac4450f926090b21"
+      "sha256": "5e74003be70b38cb584013bd6670708a5d93e1005a62daa6d8921dbf56fa8ccf"
     },
     {
       "file": "lookupinfo-only-txfreq.json",
@@ -6722,7 +6725,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "759a300afa2b1327f251e74cec054ce5da2d0d62f61fe67fe54f35613d897c73"
+      "sha256": "4732a598702ddeb39ad6159f2d0f9be0b8415eae54c5ccc9609d20464ce77895"
     },
     {
       "file": "score-point-empty-band.json",
@@ -7154,7 +7157,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "09b09e76eabf28a8a94dfdf4e816482eb4a23514c887b41505eeca70622d3e96"
+      "sha256": "c920421cb70cb61c1ab620fc7b3e2cea205804b92e84f3452ef14835d4c7ec1f"
     },
     {
       "file": "spot-only-StationName.json",
@@ -7242,15 +7245,2319 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "dea96b50fa71f6b0b264ea90e58da035c0c78236a217f81cad19fb2230a330db"
+      "sha256": "d4c693b51b8ec7b024a11011c560e2b7d1d3020b904129f481c8098eee21fbe4"
     },
     {
-      "file": "unresolved-time.json",
+      "file": "time-contactdelete-timestamp-bad-century.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "ba0c62f91e899e8d7a7e77c9ad1718e844af32417bdfe9b2779ba9858fbcb754"
+      "sha256": "7bda4419d07901b97660480030da4cb1d2e7a972818d8cc18772e4a5ca54172e"
+    },
+    {
+      "file": "time-contactdelete-timestamp-bad-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0861312c25e8853544e6cc2a2dbeb6f3ee613becb4312b805da1cce8357a017d"
+    },
+    {
+      "file": "time-contactdelete-timestamp-bad-hour.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "91e8a203a356cfabf251482e23fd3de0e24f5aeb126f38cfd15a9c851fa797f6"
+    },
+    {
+      "file": "time-contactdelete-timestamp-bad-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "edbd0c4d4a9748c83ed48a7215b55b7201212c2fca25ae362b299556bc901175"
+    },
+    {
+      "file": "time-contactdelete-timestamp-bad-minute.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7d4efe061d36006c66b4b3258be3e70c3408f64029f24a45fbede011b3c4df26"
+    },
+    {
+      "file": "time-contactdelete-timestamp-bad-month.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3ebcec820bdd9488622bb7af09c458bc413d849af11bf14f148df1249f001bf2"
+    },
+    {
+      "file": "time-contactdelete-timestamp-bad-second.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3cb890f638ead25c91ba3deb6f39180b3cee99417869fec5f260f0c2d0364bcd"
+    },
+    {
+      "file": "time-contactdelete-timestamp-documented.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "06ab3774d7f3dfbba1f4c3a36d1f8317bd5f0ee805ce99952d174e27f4709c6b"
+    },
+    {
+      "file": "time-contactdelete-timestamp-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3c44da332642cf628b543c032e007fe5c66c377c9eb097ad39bb29f7060bd2f0"
+    },
+    {
+      "file": "time-contactdelete-timestamp-fractional.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d70dbdd8cf5fd1108f353b6a6aed51fa16bc70c6ef4d13f3c3f8b4f398726edf"
+    },
+    {
+      "file": "time-contactdelete-timestamp-invalid-utf8.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "68194b599b579378829188c4701d54efbbddb2d08bfaa1cae00ebec85e867b76"
+    },
+    {
+      "file": "time-contactdelete-timestamp-iso-separator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5c8c689fbd11ee2b7b93ae7d10881834cb7976179fa86aed799a527d7b3183f9"
+    },
+    {
+      "file": "time-contactdelete-timestamp-leap-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c4378c7dbfa67ad4f5163f4b8d021b077eb97b74fac3777c4af1cacd2b551e62"
+    },
+    {
+      "file": "time-contactdelete-timestamp-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a4975d2dec3170d57c2947aa55b8fbab20a7e300ae0969d4ed6af6e166548b07"
+    },
+    {
+      "file": "time-contactdelete-timestamp-maximum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fd8b4dd4c46d4780b68596161dfc2983770f8d122cc6ecc472ed23fa88bbc8ac"
+    },
+    {
+      "file": "time-contactdelete-timestamp-minimum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0fb04b20d51f69368026c3fac0c1324dace21111805bfb23c35e18ae29b4d8b5"
+    },
+    {
+      "file": "time-contactdelete-timestamp-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8d077b36fb5cfdc410e051e2aa59062da46327f2e11292e8763ef230e3c3bb62"
+    },
+    {
+      "file": "time-contactdelete-timestamp-offset.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bf141c7984245529fedfa05a1b68e53e74577b4639310f2de0dcb4564f11431e"
+    },
+    {
+      "file": "time-contactdelete-timestamp-short-component.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7af217f6fd15b95436cdfd3cbb6196897ab65712a9cd6f98999e49e5ab622f55"
+    },
+    {
+      "file": "time-contactdelete-timestamp-surrounding-space.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cc1395f693015b29bdaeb618bc783da7032f2341f308324e15c564e409743378"
+    },
+    {
+      "file": "time-contactdelete-timestamp-text.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b035fadf9211b767611998c3fe0749a35abba6f984c0e0648bf78fdc214d7598"
+    },
+    {
+      "file": "time-contactdelete-timestamp-trailing-newline.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4cc67bd429cf0b47de9229b5212a9eb58cdfcb9f8e4add2e1af4f28cffc368d6"
+    },
+    {
+      "file": "time-contactdelete-timestamp-unicode-digits.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f3c67d3a64ac001db783c3eed1d20122871ddb67d78269ad99ad67d35249d596"
+    },
+    {
+      "file": "time-contactdelete-timestamp-year-end.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4dfc457b91c7a2d6eecc96fe92faaf0af0a9f391f3fcbac35937ef5c5ecd20b4"
+    },
+    {
+      "file": "time-contactdelete-timestamp-zero-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fc0564cd9e80df17c5cf78685eb5166c3024cc2470889798d7121d5cf0a2fdec"
+    },
+    {
+      "file": "time-contactdelete-timestamp-zoned.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a4109df1781d26480a9980f23cfeca68907f3e62cbb210f4a4d38f37ae960fcb"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-bad-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "38371eda2feae663ec6ccfbf9d765f1e4729a4717af7d677d514353b9a00a342"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-bad-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ae0ebfb50cc19fc5a2d1dc0640f49cc06d985b1c776428e0939ecb27172757fb"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-bad-hour.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b34a522ccd015601d6571e51dddc3ea1f5c298d591dfbb478060758d5d353f05"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-bad-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3415fa16e06977089ccddb1f232b70dab0b2517d6a77cc20b6e70628c5208595"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-bad-minute.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9510aba31d3d79a6731b301b5dfa8fb714de3630b1a2c937b67f80ddcbf586fb"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-bad-month.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e327fe8bad81ab0fcb8407736c57bd65522becab78ddff6b47995f9bf3fe94fc"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-bad-second.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e132378fd165bf5ce5f545fe7580e172a0c5400cd4107bf71754584bc48500e1"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-documented.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f4f77f6949bf0485e90434e70d0ed65a753acb64ee8d9c825b53347fb815af26"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a95979683cf47a5e9960fd90a1988394365f4893cc5cfdaa38a00540cbd52dff"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-fractional.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f72934afee624914f689994dd38c8afe5a7fac5c5ea9bd9c92d52399804c35f3"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-invalid-utf8.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "623905a354030398f23a8f6e1f0a545c35d4ff4405633e2bdac4b8103e554098"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-iso-separator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d92f25608bda54d348a5bd68868b7f92cbcb21d2d75cdc1b0bfe9186b1d9caae"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-leap-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8b2584ebf00d04857f90665bf360b4d618868aa466774dea75359762db4274b8"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "83b5c1dd2f1f6470f3c6a7b599af189b1f9ae1a7ee9a2435e8cf678e7caae3f7"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-maximum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e0643dac2f0565026cdb05067a625cb30b12235a071507802d2b76173a16a1be"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-minimum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "98d03d925e57249a6c8d7f61d14c4a5e28c6070e6c37b77b158b1d60d115cc25"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "99a1b7be70b447b4af1589e635ba02ee2db06a4e9876ed632032ed9d6db135e5"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-offset.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "06ab668997bc8b68795bae132a3b23cf3863b182d30cb4be27528a7384b1bfa2"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-short-component.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "18da3a7b90e15e602bec3d9b42016c0b65f2bfd1ae27effe9909b38c96c66411"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-surrounding-space.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e6ddd25e3ba621d098394210bfd3dca46c68d42d737a3b4a9240fe98821eaa49"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-text.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c1e02a70dc88d152996ea28dc2773b2384c204ca20ad9dea26b93afa01af2ff3"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-trailing-newline.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b9c895f2cc437d19fbc26609ba6a2a6b90b331fbffc136badc4c9e4a422dc561"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-unicode-digits.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5495d547966a7610a4226354b4b6e45d9b4ae8dc79755a25a4903b9ce0db3ef7"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-year-end.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b94317f525fb7746db8613ce13b6639fb744f052aca761ab67745104cecec363"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-zero-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "04e21a25d33c5610dd3ccd6442a4a5cbca7d7b298ca53cbff48207ab5c1240cc"
+    },
+    {
+      "file": "time-contactinfo-oldtimestamp-zoned.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2399e28b69e296cd9aafd182676ea0f27a69a38fff711b2b75bd0d5722588361"
+    },
+    {
+      "file": "time-contactinfo-timestamp-bad-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d2056d173c808a6018ee7ecba8989407f6d48709c55bbba1996c5119931cbb45"
+    },
+    {
+      "file": "time-contactinfo-timestamp-bad-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3e9f8b3e3da4573e6362c192d0b65cb0e1b7d40c6402b2dd8068508ba4bdb895"
+    },
+    {
+      "file": "time-contactinfo-timestamp-bad-hour.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b0490ff7c4c1a80c04218e66e704f8d41d0f7f319eb88f3ac7eed991f85ecd7b"
+    },
+    {
+      "file": "time-contactinfo-timestamp-bad-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "15891c5316eb72e60a8b97874e91171ab7da634dbbd58dff245b32ec7ec34302"
+    },
+    {
+      "file": "time-contactinfo-timestamp-bad-minute.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "56aa198f2f7d64ad86a31ceaa286716259befd5d831b6a547b0eb89c4a1a24f0"
+    },
+    {
+      "file": "time-contactinfo-timestamp-bad-month.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4e21118033193bb3a2bc3175e159f16bf5b7476b6ab1899dcc5036d65ac64261"
+    },
+    {
+      "file": "time-contactinfo-timestamp-bad-second.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "971c4f9eb28d227cfb1e3e08e37598e28030e5188e3e8535f3826a4aa115261c"
+    },
+    {
+      "file": "time-contactinfo-timestamp-documented.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "13048d966b7d90e65504a5e5a0f304588a720449c3576cdbb0bd4737e190848b"
+    },
+    {
+      "file": "time-contactinfo-timestamp-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3f3f48e7384218b4b293c24051f28535cf90b5556799e2afe73b82122404820b"
+    },
+    {
+      "file": "time-contactinfo-timestamp-fractional.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "975f6cd991e7f2e217429a44c158f845287207abe2cdb77ac23c6c2516cceaa9"
+    },
+    {
+      "file": "time-contactinfo-timestamp-invalid-utf8.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1d0b87f5bc6eb76c7d2d47944d9a38c8340d3871c9da786fe51e79758cb8ae1a"
+    },
+    {
+      "file": "time-contactinfo-timestamp-iso-separator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1a26679876a9beb377bfda4e40637a27509fed1614852f86bb0248622ba4f98f"
+    },
+    {
+      "file": "time-contactinfo-timestamp-leap-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "894c46e13a610f2fc10b98bff8a8d53e6f249bd0cfda59952348e1bd0787ef4c"
+    },
+    {
+      "file": "time-contactinfo-timestamp-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4e373b96f19ad18b7a73a2461a425b971dcf9d50351f89aa96dec8f3a72e0143"
+    },
+    {
+      "file": "time-contactinfo-timestamp-maximum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "95014107d70caa0eeec160c00d6a0f86e9a7601e7c9ee35a9f6e11fd16b0366f"
+    },
+    {
+      "file": "time-contactinfo-timestamp-minimum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e5e8896a4f172a74cae00c87845e420c47c01097f121da676bb90e558cd4b934"
+    },
+    {
+      "file": "time-contactinfo-timestamp-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cee9034a075e51b48cca2ca3dc3dfbf8daf7ade080b90a91a07cdec963c8bcdb"
+    },
+    {
+      "file": "time-contactinfo-timestamp-offset.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1c07eb67e093bd7b6badb7787240241796f3fb32d9860689d27b182ea05a6cf0"
+    },
+    {
+      "file": "time-contactinfo-timestamp-short-component.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a4b85f2ed328abe1e2c751b24155b92f0d34200dde38672fae3e0f492f3a2355"
+    },
+    {
+      "file": "time-contactinfo-timestamp-surrounding-space.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e56afa778831d8c112dece9a0ca232138d365ddaaca08e9eb5830db592c2ceb9"
+    },
+    {
+      "file": "time-contactinfo-timestamp-text.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b7c66a8dd0170e8b87b4aa9cb49328de814b7f831e0b240f93b599a82e8ec0b8"
+    },
+    {
+      "file": "time-contactinfo-timestamp-trailing-newline.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d6d90da08ddf35e6b250088a7cff6693795f78cdbbe944d9d573230009295c82"
+    },
+    {
+      "file": "time-contactinfo-timestamp-unicode-digits.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fcfbd0fcf1b0182cccb644fcf80d0ca7624e29b92a727ad8731a65d986e75ba2"
+    },
+    {
+      "file": "time-contactinfo-timestamp-year-end.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "54c1fddf33464a45dd0424708e288686ba8ac14fe52cfdebee256d75012cd4a6"
+    },
+    {
+      "file": "time-contactinfo-timestamp-zero-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cd133dd89db9e75b2a45bbda8f9989bea02010b6d2efed70688b0afc9502e7da"
+    },
+    {
+      "file": "time-contactinfo-timestamp-zoned.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2c857e2ba17006ee9d4cec961d1261aa570239d664fc36100878a0837fc4e5e5"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-bad-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d1e99d5006d550e16db249e5199e21f975a71543b14e188ae90329b665be2c40"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-bad-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1154b8ea65876b582dbeb65b787eba3732bf29aa5b60e0a32ed46735040db94a"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-bad-hour.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fd37b071fba9bb9b63aa97bf0e3d0311e16bb8adc8252f389a283ecbf45f4146"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-bad-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fd2639a2f9da73386998e4ff0ac720a5a1ddcd2ae05473a7576fbea388fa4772"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-bad-minute.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "401442848d173d978fa8c3e3d302ed0fe0096f16aee6322b417a65f0a94f98ec"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-bad-month.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c535ee78fd37ac8323ae15cc3e7275e2ed8987baa7eb01154bd7360575ac4e13"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-bad-second.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3b8342e75cac0f3861c49961430e671d40b40d7aa3db6e42b778b68f2a002e51"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-documented.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e829d4733c157928fb796a8ac31b3080dd70144416ef4709acca8167190e9d4d"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b3f6ca90d781f2086543ddf0424ab92959b69d6b4ae082703cff71d042b19390"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-fractional.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "696c97192bc327d874e3025793646dc6cec1b0d26c2ad8f4282a593b28b81f7c"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-invalid-utf8.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cada5b1e84653826b641e54399a87827d322e1c80a803d5d47d155c26b1a6bda"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-iso-separator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4a50681ceebb676fe82d9bd96a55d215ebc37485693a29ea91f9318044dae5b4"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-leap-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7caf4dce67b94628c429df188e6383da0dc45aa5ee9045824f69c9c15273825f"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0f6d656cacc4e816126748f9b3a8e190b7b6ceed6ed2ab258a3c6f560b782086"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-maximum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "08157db2c345d8ba545fd9d6b3907e5967f8a35badead8ffb13eb14a64d893e1"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-minimum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "cf40605fdd408e2d1d880e9bcb49c8c445236d1e11ff8665ad7f2a1dbd263ebf"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "42713542748171c63bec9a53d3515e2919f26afa9d88ad22a083ad04ecf492e1"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-offset.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "184f6b5c6af022cf812d5af0fadfcda97a249e4a2fdbd63c0a5fc31a31efc331"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-short-component.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a73b149e792d4205c713dbcfe6506610fbaa135ca07cff100e09bea0ca188ad6"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-surrounding-space.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f5967a2963b0a6d0985ec9b6d3c39f3c0bb5ca4b9d7cb9010db62d8383fdfb33"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-text.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9f4fb21d6404e5ad3f7b6af7a876087d23ab30f2387863b88e303d6358f0156e"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-trailing-newline.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dc17b362df0f41b2122aac42fc713f3f7a3670e861c6f4320a2aecd207ead43e"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-unicode-digits.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b16ebda2ac321e1db0a9638ec7d26af725e60a886aab8d44f39ad502ce133b43"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-year-end.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b9c5aa031bb613e710f336ed3ecb32081154c82bbb9e2be7f6fb9c2637375934"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-zero-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d839286c6b13409e003c9c0517a09e88c806bd3256b4c405d9997b2ae34c2786"
+    },
+    {
+      "file": "time-contactreplace-oldtimestamp-zoned.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a1ca63cc877f1e65245ec41816f09aa9831f32f9d9d677575695835136825118"
+    },
+    {
+      "file": "time-contactreplace-timestamp-bad-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ee85221e0d1352bf5aa2132a3ae9f34283f59a6f40e6923c7c2dabff3b485e41"
+    },
+    {
+      "file": "time-contactreplace-timestamp-bad-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a8ad766996bbdc40f5eab2de745cdade6067f88994b32078b20cf77ea10b8083"
+    },
+    {
+      "file": "time-contactreplace-timestamp-bad-hour.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "af87524c4cb68049e945537cb812370bf2dd7e5a13ee48d5379b5750643eb6ed"
+    },
+    {
+      "file": "time-contactreplace-timestamp-bad-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7c74bb313f690eff5c7404ce939fa5e09d6cd0589bc265e3f3c66463452e1bef"
+    },
+    {
+      "file": "time-contactreplace-timestamp-bad-minute.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9bc36abf3a61f9f64e4aa4487bbdc6d0b34d3eed796c43d6d1a82e52625c1d77"
+    },
+    {
+      "file": "time-contactreplace-timestamp-bad-month.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "da74f5c2dd32e6a44f359c9018467dd2e2f6db28a120f4b873671064ea6641ed"
+    },
+    {
+      "file": "time-contactreplace-timestamp-bad-second.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "af759a47c1da263087b0ba78618a3f8ffbc2c497d9d2cb787faaee07c858da04"
+    },
+    {
+      "file": "time-contactreplace-timestamp-documented.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d373d494ee975bfb0a38891012f9f90e3ccc79056b79524d9fa2ed02ee6d31b3"
+    },
+    {
+      "file": "time-contactreplace-timestamp-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d84f6e661ce75bcdcee6e7791471bbc8801c20c574070aada5454008cab8b036"
+    },
+    {
+      "file": "time-contactreplace-timestamp-fractional.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "13c469b62b22f29376f155168c69f65356bd908a2c4f9fb641446564f338d13c"
+    },
+    {
+      "file": "time-contactreplace-timestamp-invalid-utf8.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2691d7287fcaa6dce9ea897160b715029c221e20e73b24275c21e189d9a39333"
+    },
+    {
+      "file": "time-contactreplace-timestamp-iso-separator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "92a5c05bb75c5b259b4a5698f0f6b92bc4812c7e33cb0f91a2b5afe538c495e5"
+    },
+    {
+      "file": "time-contactreplace-timestamp-leap-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3b984e3720f26b08ad49eed0fb0060b733d144ca9402d6b45290163a66b07e8a"
+    },
+    {
+      "file": "time-contactreplace-timestamp-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "98116bd8cd4b56af31ce1d07cbea6dc24234058f2af34d99ca844b3fbeb25f67"
+    },
+    {
+      "file": "time-contactreplace-timestamp-maximum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "50b9ea49c339267953c5eb60f11f17689f0e1d2418289f3381f6ba702dd052c5"
+    },
+    {
+      "file": "time-contactreplace-timestamp-minimum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ff232845372ff449720f0e7dd47fc2cf512177a5f997c98a54bf6e145b4a30fb"
+    },
+    {
+      "file": "time-contactreplace-timestamp-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b5066767a6fc53c5c04a75b84570b061955dbb0484cd8fac0c3dd0c9b2f9c39a"
+    },
+    {
+      "file": "time-contactreplace-timestamp-offset.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "60e19e395c2c17d27d996a561fde6bc6a00db7ac7e91012ff9ee926a0cda5e6e"
+    },
+    {
+      "file": "time-contactreplace-timestamp-short-component.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "083cdcff6711937a27ac24b93bc9ffa00b55dcbef303939f92e56b691024fbaa"
+    },
+    {
+      "file": "time-contactreplace-timestamp-surrounding-space.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d7f682964ce44bb0504be3d75244fe8f5c68747c16fd5a55f10f9d687031181b"
+    },
+    {
+      "file": "time-contactreplace-timestamp-text.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c2194049cfff864312f540db3199d90704cbf7e88ac60973f494b3045fea281b"
+    },
+    {
+      "file": "time-contactreplace-timestamp-trailing-newline.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "220d6eccb7be364a909e63a903505f59ebf1bf84bf0ce8332f5f0a8b3073c5ca"
+    },
+    {
+      "file": "time-contactreplace-timestamp-unicode-digits.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a64fa7fe9b1aa5049a79abefd642558bee3e02681c553dd9ce21ff552bf53a88"
+    },
+    {
+      "file": "time-contactreplace-timestamp-year-end.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "64e50e6a2cd75581bec31ec4260753a81e22d0eabcbc5ffcb814f79a724d1cf3"
+    },
+    {
+      "file": "time-contactreplace-timestamp-zero-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7b90829f94e73d3411a04b6d462719234029f3ab9fd2cf0944cdea6cb5162189"
+    },
+    {
+      "file": "time-contactreplace-timestamp-zoned.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ae87686d6a9723e6ac7e5bb16231aa8f134c552df59f85ab19919a50ef0978e6"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-bad-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "75eeba1f296cf2afad5d83b8ccad7ec1d1b27b1062606a6f23853b2ebc2f3a60"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-bad-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4fbfbffbb2ca4f318ea4412adf26f1a7296c40d69ae029264565988d8738eabc"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-bad-hour.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7a1ea32a062a2476a66f48e9bb44fb68bf92d064f64347fedf84e2e2f0a4f17b"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-bad-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "334a1f6e56c04598d512111753feaf73ea775f0524839af6e3ace454f53c0aa3"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-bad-minute.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0e99f83aef69cdd71cf0d5a69e7d3000a1477744eaee3e3b8d3dbf1cd1283a21"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-bad-month.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bee9fd9693887814e1656784405293dfa383d2b26a51f939bd1e34c2b8318cff"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-bad-second.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d96a8c67073475f8db4bfaa83e33bf1b13d144c472d3b0f568e20520ee325ca1"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-documented.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f060bf19bf353586dc31019f8355ecb9ead71d10b526bcd6fd045c5cd9635b7a"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6de860051113589fe8553fa2d480384fc1e2d0574288407a68d438bf2de5dc9c"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-fractional.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c90bf815f9bac1708ccb87aa80621492b16a4fcc8b1471cf708d5a09bfcb4f4f"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-invalid-utf8.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "019aea808aafc4638443b9bc42e7a8c6a76dbfd2d904e513582cfd52b2dac1bd"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-iso-separator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dfa66f7c6511de93395e36f1824d48bd90904f4f78fac2046e2c5abacf4e72fb"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-leap-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "de255c5cfeb3da3d3f06f770c2e1d2cd0f220e53b7dde4080d2b756c00c76477"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6790c0e08f7938be49aa8a2a2847f4b2eae774abe4bf04b3e741d266526af8f6"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-maximum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7682264cab5df270c2ac1ef0e7c90bb53695b637f69ec8d79885576d70b62078"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-minimum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5134c31cfca4fa6c62cd2c4edd4884b3438d4c1c280025104292592d3901d517"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "545b4017f52f8d1464170f028f5207b91dc794bad717ebe5ad85227593117d94"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-offset.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3168112081c5a1a89256968a983df9038ed8ebf9306fd585ca79ae5f3cc55b93"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-short-component.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "44c583f970976061430d22e58fe99706429a0e5916387afbe6e4dfffc7a82d20"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-surrounding-space.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "41d20750f58bf3f5d5afcc236bd441876d870108d2f190249c2c16da5f1a7504"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-text.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "205772a3a5819d49fbe9d506a011c0592b807b01a6143bd358a9935cbf1404be"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-trailing-newline.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "95b5a8709fe8bb04c502cf1374c6313a3f46bb79a110afeec1ccae3a84619c5a"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-unicode-digits.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "525fabc7e97c9c21bfa0151ff00ccdb7c55124b49ea0e228bab4910f45dcd802"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-year-end.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "53a01ed8144a174ee4a4c7127573e0e6f496b06a290170ee32f26ca2104b49db"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-zero-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ed4c900fbe8b7fc90b1c4a8a80f47b3edc17bec6e05222facf542a261f90627e"
+    },
+    {
+      "file": "time-dynamicresults-timestamp-zoned.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "eab910bf0025f180374755358b18126f64b90b52a206109f600ee9bc897b5949"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-bad-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b6d5537e1da560c90633e88b6bd0263e7e1b5b4c36ed32fa98876396575ee563"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-bad-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "291f841a099332485642d276d2bef189f83dfe087bcbac856bf3167f1b94f5d4"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-bad-hour.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "59a2e776bb69166085eead9a5251472b9c20319ab4575fbe3680e1381924378d"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-bad-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1729abae96fcf9ec163c809a8fb5b576c8d78642b8d0ed971e503cba9c3f8313"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-bad-minute.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0cd1cee4918949a41a44ff22292df5c473dac9c120c8dfa1232600c86453ed5a"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-bad-month.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "299a9b73bd2e46198c31b85eaa0bdae2d85e91cca5a2d0ed1070b5c381f2c9b7"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-bad-second.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8ff114f1edb153a8299fb40633034eeedde502fa7a2c888b1813ba6f3a5ea5b4"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-documented.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "198a636a1c820d1de3d35818da7a6c50677020f27c6aae1ff48a1a05f3eefc28"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "df16cb5b00c9a9bd60b75e8dd39466a209cf3f11035cbb90b1ee7b5876a08f94"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-fractional.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "308ec9f21858cf0cb0a33dffaad42fd9719f69caa7194151223dd204907ff103"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-invalid-utf8.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c675059fc87dc5756fd31e9e7a758a0e4917e93f7c6d1edccd9956e105ec9736"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-iso-separator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c5307abe3b0a60218b5cb1e47f131e1ce310ef51408f447e03f8e7dc98233049"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-leap-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b223d8ec14250eb500edac4175fd303bd753e1e979e31c1d0c384cf7c59310d7"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "abc9ea46576b967bf14123d235b0819933cf1befc545f9e67a01dd628b2d779d"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-maximum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c5fd9402160ca9d7a475df4a287e4e6f887d5f7972b218f88cbe563bc3128184"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-minimum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "756a9b11c1c3ab3b10471f7d186dcc6299399d9c8211deca5ec9731144a67120"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e1294500e0c8dd16e3e3c6f1ba4939d077154763e9ccd8e38004bce58c18d4e1"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-offset.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "36afd4945c045859da1a8f3f369fab1bd86faf59fcc4f4f22b992971df69ba2c"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-short-component.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b9aaa735061733b7db222db616449e0e9ed81b19fc933a20ba0cf06314beaf6c"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-surrounding-space.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "878f880f6a3b70a57c9ee44bb02616bfa70013feaa3e4510cfb45841489564c8"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-text.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ab7a2d57e05aeabdaf3c2c0fe9be9d546b8fea14306d145a2878e16527e0d963"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-trailing-newline.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "23a0065147c8816728861eba990ce6ce6e002f8acb6d31d887e9be8316cc2ea0"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-unicode-digits.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7f025542e4773c9467f26bb38035655e1fbfcda7a1752a83085910f0bed6f58f"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-year-end.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5da89ddcd2526591d6015eaab0bfcad0999151ce1852dfe488bf8241b5d6d9e4"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-zero-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ed01cceb944b03907fe4d07c32cf5289b9d74f00cf640a847edc2ae01e5fd47e"
+    },
+    {
+      "file": "time-lookup-oldtimestamp-zoned.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5d4144142feba41373bbd39facaafacdcec9024456ddbb88627eeb333d5490cd"
+    },
+    {
+      "file": "time-lookup-timestamp-bad-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5d8004a061e56079bddd056b4d3316171d09576eb6fe5632de01238ff472d821"
+    },
+    {
+      "file": "time-lookup-timestamp-bad-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "60abbe200e2cfc40540b8978e900710a7b67255ae3a87dc07f4489e0246516d9"
+    },
+    {
+      "file": "time-lookup-timestamp-bad-hour.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dc79461b8b59eef02f39be9fe6e1fe388b2a158c8557751b673631d513457391"
+    },
+    {
+      "file": "time-lookup-timestamp-bad-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "36a54b4ddece1681f7dab79a925fbba70c186cae06ca523a8e6d04fb8e5fb7b1"
+    },
+    {
+      "file": "time-lookup-timestamp-bad-minute.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a32879a32817ff6a96629cc2230600cb0d0b87bcfbef188bc0f0e5538052d2fd"
+    },
+    {
+      "file": "time-lookup-timestamp-bad-month.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "02879cf842739833af1e36f8cc74199587785b79ac86b48edccdfd4236b41d5c"
+    },
+    {
+      "file": "time-lookup-timestamp-bad-second.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "005303136dd51dc6f41ffa4027ff09dd7510b3ada37bcff3b4e7d62ee79c8349"
+    },
+    {
+      "file": "time-lookup-timestamp-documented.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4dbff59f495e3dda527f4c54ef2827c2cad694706d2bb5515e9f20f98b50e1b0"
+    },
+    {
+      "file": "time-lookup-timestamp-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c486746d92f817ad6613fea0adc34b4215da3a8328e7a45b4bea5f609380d1d0"
+    },
+    {
+      "file": "time-lookup-timestamp-fractional.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "366701ac019282cb5c170ca86f508c9e4d8d733f87b0843de2a719fef02a0569"
+    },
+    {
+      "file": "time-lookup-timestamp-invalid-utf8.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8e0861385923a1747f82601f525c22d286e15f972a0501987844a9411d6189e6"
+    },
+    {
+      "file": "time-lookup-timestamp-iso-separator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c904a5e498efe99218b29ac76a16048a3baf2114c88dc27457b0cb51681a5cb6"
+    },
+    {
+      "file": "time-lookup-timestamp-leap-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d48b11303525eec0796a9741589415cc5eae7ded15b407868c101e682fca9818"
+    },
+    {
+      "file": "time-lookup-timestamp-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "24d90d862847034b771bcda8c319e843916552d6bb51a0fda2190fe45c392e2b"
+    },
+    {
+      "file": "time-lookup-timestamp-maximum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0d4c2025bd777523b5fb61647eb5627d8c89dafe46500102e6df1e560fea5ccb"
+    },
+    {
+      "file": "time-lookup-timestamp-minimum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "869b89cedb38e6f2f0a1d62624ea9b755d99cb3de4037f11ef06d7c44c2c3a7e"
+    },
+    {
+      "file": "time-lookup-timestamp-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e3bb155accaa8893e4e4d07ae2c04effcf8361446fa1af589428f9dd8a95712c"
+    },
+    {
+      "file": "time-lookup-timestamp-offset.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fc4ec355c62f86da0d2d81140c5e6117ef0cd84246233871b094d714b678c023"
+    },
+    {
+      "file": "time-lookup-timestamp-short-component.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "7b775989b7104e9158cdc183dbf1926d592478fb57bdcad6986ed50e2a440974"
+    },
+    {
+      "file": "time-lookup-timestamp-surrounding-space.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f9c2997f6ff33314db3a5edee916624b397e85cafbd38bb8fcea7fd8a361a6a6"
+    },
+    {
+      "file": "time-lookup-timestamp-text.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6d7359212e59871bf7498e898c71c89494315ca2b43e7d3d963995c1f44047c9"
+    },
+    {
+      "file": "time-lookup-timestamp-trailing-newline.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b5a98ed15ee4d0e2a82109a3252902f26238c370fb2d89ffd892086a223221aa"
+    },
+    {
+      "file": "time-lookup-timestamp-unicode-digits.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fa6c4affddfbc09f491c2607edf0e63ff2c416992bd56e90dc12fa0af06a9831"
+    },
+    {
+      "file": "time-lookup-timestamp-year-end.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bc2f9f8762c73922f0a437edef209c6e2feaf358dfef216e256d20773f3c1b83"
+    },
+    {
+      "file": "time-lookup-timestamp-zero-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bf9187752fd2f7c833a34c683b60bb24d5705374742fb90c6fe208a18fef00f7"
+    },
+    {
+      "file": "time-lookup-timestamp-zoned.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fb6ec56243689c8f2dd7878f7bc9565cf14707d02ce6c86ae8ffbb799dee4f5a"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-bad-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8ebb7c16657a080a100001a73176a5c22206b7f8b2bf6aa00be195c0295c12e4"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-bad-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e67a2ee8cdd68e6d378c54fe924c0b6438adf44849bdf020cf7df9e0f5574f81"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-bad-hour.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "1c4223c848aa895bd4e06e41cdfec47936f9de737cdb13ad4ca5e9b9b0417c10"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-bad-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "09ca75c474ed4c3d4c1ff7e6390817c25876bbcf30789136fee60834dd5f6737"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-bad-minute.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "366b6c578d517ec76b50bc1c34e9273a25d87bc3ed9cca729ec5dafb6d48cf53"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-bad-month.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0399addddd2f78a964402cec102bd2609fbdb5f31727a53cd534c2e690a3dcdc"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-bad-second.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "3500b44c8e07182ace0a4578c967d803716a7bb01a99f50b18e95c3fd4ea195f"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-documented.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a57745b763d993a804c0153eb19087d5280e53e237b2186ba7bbaf11aa3b42d9"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "220f6a8f37b3f9a8358f9c0217510228c2523e52d8c7838c34200820ab68eef6"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-fractional.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5656246c9eb3ffa52f15a32fe070b6d038de44f9d8a4c3d2a8e279db94f14ade"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-invalid-utf8.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0b57faeecedf79b2697a97570542ccc177d476cfd4db8404686533831691606a"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-iso-separator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "525fe4de2f03907a5cf3504bd756be3b90ec4990127ab91818c6e268c2cc88c2"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-leap-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8d762e3268959ced1d243a6186570ec57452920fb5472d88567931aaacaa59af"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9754b3df8d642deb171033fb3396dae02e5c8d6161610fa3e75599a69bbd1c12"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-maximum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4075ca589c201d1b0d7598fbc379a175b0c836fa1ea958a538789162c4047832"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-minimum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d4a2a3f4a4faa82c2342140197fc6a97bb170451bb5ee618bc66003d11a457d5"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "58ecdb171345a26fad462759237643ba479e82d70769e3ff05c91a2394c15ec8"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-offset.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fae7938096ddc4812695a4c58b14ca9353a9b4af35dd340e687ef1a474598d53"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-short-component.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "97d52d95919bdc699d277a27dac40d37945d7d6984a4eef89dae9e7323b7a3c7"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-surrounding-space.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "aa788edc79687ec671e6dbdf6a77b1aeb10ecf60870db9029fe9904f26dfcf1a"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-text.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f25042e3517200f5c51c6756274c0321b1cb38888bb10e09f72f383c16a887b9"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-trailing-newline.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f4b09657f4e88cbdb8ad23d8c80b218e834467726f6c478bc0ae8ae47689c069"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-unicode-digits.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "72ce62121903736cf2a34962f3c31a8bf4ebda2d0b7bce6292c9cf5bb06b546f"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-year-end.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "72e95d3d3a492e2c178c98bca78431b255dac4965bae671818e671fc61d4d645"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-zero-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fd737322cfc7454da1ab1795f3b7b3dab0319012d85db7a8d11617e60f9c2496"
+    },
+    {
+      "file": "time-lookupinfo-oldtimestamp-zoned.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "310c42ed4fe434a52ae2c5f1ca27072507a32a66dc6750f32bd843f60f1df706"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-bad-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8330f43e52b6b4317a7bc0685fd035e5def9b186069f130dc644fa7a18443737"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-bad-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e9a9dbc21b58d605c76cf572b81b4296e23bd27652f6bdf8f96dd7be93da5e11"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-bad-hour.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4485bd410f92b1a60bfa082bd6434dcdea82d00898771add6552bacdbfef6ae2"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-bad-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4b00d3ac6e6aa181e7147770c2979bb8a195cf003855b3ab32d38bd38d26feda"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-bad-minute.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5b10c501710015cef6644ea6968b695968da0bcf52390c241bbaf391a1f8bf70"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-bad-month.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "046e9c4667b58db742158ec670085f19ee4e3ad4bd489c04bccf6eeeedb3b964"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-bad-second.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9956017f076ca568ef179c09234a0ac0302901c6b3f663146c905249b0714d70"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-documented.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a1d00d5bed0e3b89e98b0d92e07013198db90928f4dbf637bbc42c89c15a6692"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2bdfbd7c18d8fbe6415b5ab6afc18a71cc05153c06285fa1f13611c61d0a15ec"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-fractional.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "8e50b44902edeb2a94f277f17c050ddb75002c8f2c1be972198ae0067b2ed2b3"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-invalid-utf8.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "90eef8238f74c681e850ee08acf311be7cae200a71709b6ae87d39babddfb4fc"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-iso-separator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f808ea150ef1b5d6864876cdedaa1a03e13b3f4db8fec0f2fe6768a97e90cdc0"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-leap-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "304e0324deb621955095bab4f0f1ac9b8102cd6bc9aaacbd38c4a1f6178282dc"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "f06c0c9cc971e45430a2b06da2ba1a085876e73b2b4a26c91b712f1cf53ee8f1"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-maximum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "e566452eac4438b9cc669f374c67d1230a3b74dcc092aa00205d8bbb0bffc230"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-minimum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4afcd0fbdfd612e8843e36fae0f481fa297fa17970295e985a7ed581a8fb19fd"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "bffb8c09ee88f3ca2da47f005ca40f59ace1d027ec619e3ccab51a3d8e88ccca"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-offset.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "26642164bc2ca4bbac77cb44fa61b5098da3dbdd6c5ada415deb2083e4f0f091"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-short-component.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c73ea1d50a96f8667654eac009bbb21d32c15439e3d94df06d2b5061aec4b5bf"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-surrounding-space.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b0d78461988083ef172a5d3cd4a71973fa7c46d12f699ce6690ef072ffecf4c3"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-text.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "de9610751c75997d8ef344dfc40977937a684f979bedc4f52acbb984503abd8c"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-trailing-newline.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4941659cb7de0b1e8c143a011773f2d3e8ebc4181d16fad464a5da2891283d9b"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-unicode-digits.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "195e03c372448f2f1c330961a3dab18daacb09e78e7d6fdfe9835c0a505da017"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-year-end.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "6a16cfb43b26536561f815a7d7dc3da5ff11268cbdee7f5d2ea57d50ba6c7db3"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-zero-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "de21b9254fe9d9af5b863d5da34334239c1517b84fbe84eab886be79fa919c93"
+    },
+    {
+      "file": "time-lookupinfo-timestamp-zoned.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "fd2a4635ef8c6cb89566fbe4e5cb1e52d10e11bbf9a9aa8bc0263bcc3ee59512"
+    },
+    {
+      "file": "time-replace-bad-current.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2a79a3fc285743720dca593163c09791b8818cccb342f7687902932ab4d60b1c"
+    },
+    {
+      "file": "time-replace-bad-prior.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a698d410d3c6143021b8ac375e610bac23266c0a53add03258908881c2003e68"
+    },
+    {
+      "file": "time-spot-timestamp-bad-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2bf9d4417d59702b5ca4ca4c2feaf0e5777ec7a45d92fa604491d103b022c4d3"
+    },
+    {
+      "file": "time-spot-timestamp-bad-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "37c60127950e73eab5e0fab305c6f97724de76c63338bd030dc530f8c26a9b57"
+    },
+    {
+      "file": "time-spot-timestamp-bad-hour.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "5d97611e3b4e4b5e29231547a422ada245229d2b5fffa8e59932e28ce0d1eeff"
+    },
+    {
+      "file": "time-spot-timestamp-bad-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a9648ebdf2a4f260bc17211fb0914cc51e582b9fa716cb0090ebb19a9cc7dd44"
+    },
+    {
+      "file": "time-spot-timestamp-bad-minute.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "ccc4e258701322116fec4d6fdc9d32333b38ea0405fd5da3cf63fc1edfd94fbf"
+    },
+    {
+      "file": "time-spot-timestamp-bad-month.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a6807d34a65cd6029ef6942050fd25ba63807d7ebe58f883551a904adca80395"
+    },
+    {
+      "file": "time-spot-timestamp-bad-second.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "88e10d2213ebafece3dbf1aeedf4c1df676ab59640290b4e5642db3f13707e5e"
+    },
+    {
+      "file": "time-spot-timestamp-documented.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0adddd9736cea856c560c3c989695daae2324252c181cf71c7fbabf22f20050d"
+    },
+    {
+      "file": "time-spot-timestamp-duplicate.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4651decc78b95c772217aa11db8f447ca4aa8ac38f4e1b67d9602c69088702b4"
+    },
+    {
+      "file": "time-spot-timestamp-fractional.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2623d5824746ac1ce3b76a32c50a870c8169756c96f88bf00742a49c05ff342f"
+    },
+    {
+      "file": "time-spot-timestamp-invalid-utf8.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "2be04d1f355507782c267a83bb6fe8fd808b5bc41e973824e29f0dfa8b9398dd"
+    },
+    {
+      "file": "time-spot-timestamp-iso-separator.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "0b8dd401678a964039c2b0e2ab59c612e64af1255285c69318649ec6b2afbe54"
+    },
+    {
+      "file": "time-spot-timestamp-leap-century.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "c7d27aa94733c84bdbf78f237489aee285e6b9201662e985c45b2a349b348464"
+    },
+    {
+      "file": "time-spot-timestamp-leap-day.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "94f5dafa244f5ee5edce0b47bb20c48316e8a465ab5c2b92422beeb17dee1bb0"
+    },
+    {
+      "file": "time-spot-timestamp-maximum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b92920cf6b902c0fe6be49907a96abae113da7d18d9053bd6fa2788ef7e22284"
+    },
+    {
+      "file": "time-spot-timestamp-minimum-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "b53fdbbeda9558fe956bd20d595b97a81128bf8bcced472b4611d0eaa5db486b"
+    },
+    {
+      "file": "time-spot-timestamp-nested.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "d64ff2985c7993b8a4048d4bd0fd5349267f06a5a289661930513f06be9d8555"
+    },
+    {
+      "file": "time-spot-timestamp-offset.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4a60a66a080480556cdd4990a140400219db0bd27ab5035cc595b28a83518842"
+    },
+    {
+      "file": "time-spot-timestamp-short-component.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "82c67b61c6eb68a951e3509c023a4c4dc45459fd29348611901b06587aa3386a"
+    },
+    {
+      "file": "time-spot-timestamp-surrounding-space.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "9ec04f3b9bb6a19c26109c27f514ab7b1ed96c29263843b05b8a44010beb0c90"
+    },
+    {
+      "file": "time-spot-timestamp-text.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "a17cdf4ecebec95b9e6e4890f67fd98812ef7a34420fd28c2786a6195aa49a40"
+    },
+    {
+      "file": "time-spot-timestamp-trailing-newline.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "643d372ae8e51bf77cb40a3df754112b4a14c1dd2714ee568a271d098558bbcd"
+    },
+    {
+      "file": "time-spot-timestamp-unicode-digits.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "097675cb9e4413e751b7166f69fe1c9874be8f72dbafb30f2a862b9d6dd435fa"
+    },
+    {
+      "file": "time-spot-timestamp-year-end.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "dc1b0a5034029bc9325fa735169d40dfc424c738e4f54894d802bff5b0993a91"
+    },
+    {
+      "file": "time-spot-timestamp-zero-year.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "4876e3128aa6fff5d7133d5efefa08842ff269d9c24fb87078b0d9350aecafae"
+    },
+    {
+      "file": "time-spot-timestamp-zoned.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "84386c73effaa7f1fb3506861d0667e8eeb575193636ef5a09d953a3904ff6cc"
+    },
+    {
+      "file": "time-xml-text.json",
+      "class": "positive",
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "sha256": "648a557e64fd7a21667da0907e1c9a87aa3fa94603c32ad5b4c3005b7fa856e8"
     },
     {
       "file": "xml-attribute-normalization.json",

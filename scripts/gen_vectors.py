@@ -1259,6 +1259,12 @@ N1MM_SOURCES = {
         '784c869b8a7d56ca57e6bb8d6c0308e36ebf6caed44ed28fd6b4c8619c6a5d51',
     'https://n1mmwp.hamdocs.com/mmfile/get/file/UDP_External_UDP_Broadcasts.xml':
         '58e0d335c325d1fde94a285b581fdaa4d75965b1aaa564e40969dcbf7eb8400a',
+    'https://n1mmwp.hamdocs.com/getting-started/installing-and-upgrading-n1mm-logger/':
+        '17243f496261d1b53bb96640a9d9f4beedf2c1f8724790c2619bf092f4186506',
+    'https://n1mmwp.hamdocs.com/faq/':
+        'af14392fdb130b033351417515fb8362863e8ec1392185d0072ed8fcbfe67e21',
+    'https://n1mmwp.hamdocs.com/n1mm-manual/windows/':
+        'c3cf58fb16dcdfb24074317680298fab374069c29e93e8904eeb93a60d7f3ee4',
 }
 XML_DECL = '<?xml version="1.0" encoding="utf-8"?>'
 
@@ -1270,7 +1276,7 @@ def n1mm_vectors():
         return name, value, {} if key is None else {key: value if oracle is None else oracle}
 
     contact = [row('app', 'synthetic-logger'), row('contestname', 'SYNTHETIC', 'contest_name'),
-        row('contestnr', '23'), row('timestamp', '2026-11-12 12:34:56'),
+        row('contestnr', '23'), row('timestamp', '2026-11-12 12:34:56', 'start', '2026-11-12T12:34:56Z'),
         row('mycall', 'K1AAA', 'station_call'), row('band', '3,5', 'band'),
         row('rxfreq', '352519', 'dial_frequency_hz', 3525190),
         row('txfreq', '352621', 'tx_frequency_hz', 3526210),
@@ -1288,7 +1294,8 @@ def n1mm_vectors():
         row('IsOriginal', 'False'), row('NetBiosName', 'SYNTHETIC-ORIG'), row('IsRunQSO', '0'),
         row('StationName', 'SYNTHETIC-PC', 'radio', {'instance': 'SYNTHETIC-PC'}),
         row('ID', '0123456789abcdef0123456789abcdef', 'record_id'), row('IsClaimedQso', '1'),
-        row('oldtimestamp', '2026-11-12 12:30:00'), row('oldcall', 'W1BBB'), row('SentExchange', '# SYN')]
+        row('oldtimestamp', '2026-11-12 12:30:00', 'previous_start', '2026-11-12T12:30:00Z'),
+        row('oldcall', 'W1BBB'), row('SentExchange', '# SYN')]
     historical = [row('exchange1', 'historical exchange', 'exchange_received'), row('ismultiplier1', '1'),
                   row('Run1Run2', '2'), row('ContactType', 'synthetic')]
     radio = [row('app', 'synthetic-logger'), row('StationName', 'SYNTHETIC-PC', 'radio', {'instance': 'SYNTHETIC-PC'}),
@@ -1302,14 +1309,16 @@ def n1mm_vectors():
         row('AuxAntSelectedName', ''), row('IsConnected', '')]
     spot = [row('app', 'synthetic-logger'), row('StationName', 'K1AAA', 'radio', {'instance': 'K1AAA'}),
         row('dxcall', 'W1AAA', 'call'), row('frequency', '7061.2', 'frequency_hz', 7061200), row('spottercall', 'K1BBB', 'spotter_call'),
-        row('timestamp', '2026-11-12 12:34:56'), row('action', 'add'), row('mode', 'CW', 'mode'),
+        row('timestamp', '2026-11-12 12:34:56', 'time', '2026-11-12T12:34:56Z'),
+        row('action', 'add'), row('mode', 'CW', 'mode'),
         row('comment', 'synthetic spot ', 'text'), row('status', 'single mult'), row('statuslist', 'single mult')]
     app = [row('app', 'synthetic-logger'), row('dbname', 'synthetic.s3db'), row('contestnr', '23'),
         row('contestname', 'SYNTHETIC'), row('StationName', 'SYNTHETIC-PC'), row('mycall', 'K1AAA')]
     deletion = [r for r in contact if r[0] in ('app', 'timestamp', 'mycall', 'band', 'call', 'contestnr', 'StationName', 'ID')]
     score = [row('contest', 'SYNTHETIC', 'contest_name'), row('call', 'K1AAA', 'station_call'),
         row('ops', 'K1BBB'), row('class', ''), row('club', 'synthetic-club'), row('qth', ''),
-        row('breakdown', ''), row('score', '4321', 'total_score', 4321), row('timestamp', '2026-11-12 12:34:56')]
+        row('breakdown', ''), row('score', '4321', 'total_score', 4321),
+        row('timestamp', '2026-11-12 12:34:56', 'time', '2026-11-12T12:34:56Z')]
     qsy = [row('app', 'synthetic-client', 'app'), row('radionr', '2', 'radio', {'number': 2}),
            row('frequency', '14053.284', 'frequency_hz', 14053284), row('mousebutton', 'Right')]
     spectrum = [row('app', 'synthetic-client', 'app'), row('Name', 'synthetic-spectrum', 'spectrum_name'),
@@ -1330,7 +1339,7 @@ def n1mm_vectors():
     def fields(root, rows):
         out = {}
         for name, _, oracle in rows:
-            if root in ('AppInfo', 'lookupinfo', 'lookup'):
+            if root == 'AppInfo' or root in ('lookupinfo', 'lookup') and name not in ('timestamp', 'oldtimestamp'):
                 continue
             if name == 'exchangel' and any(n == 'exchange1' for n, _, _ in rows):
                 continue
@@ -1368,7 +1377,8 @@ def n1mm_vectors():
                      fields(root, [(name, value, oracle)]), direction)
             empty_oracle = {k: ({'instance': ''} if k == 'radio' and 'instance' in v else '')
                             for k, v in oracle.items()
-                            if isinstance(v, str) or k == 'radio' and 'instance' in v}
+                            if k not in ('start', 'previous_start', 'time')
+                            and (isinstance(v, str) or k == 'radio' and 'instance' in v)}
             positive(root + '-empty-' + name, xml(root, [(name, '', {})]), kind,
                      fields(root, [(name, '', empty_oracle)]), direction)
     # Score nested children and every optional category/selector attribute.
@@ -1380,7 +1390,7 @@ def n1mm_vectors():
         b'<qso band="total" mode="ALL">33</qso><point band="total" mode="ALL">44</point></breakdown>'
         b'<score>55</score><timestamp>2026-11-12 12:34:56</timestamp></dynamicresults>')
     positive('score-nested', score_raw, 'score', {'contest_name': 'SYNTHETIC', 'station_call': 'K1AAA',
-        'qso_count': 33, 'points': 44, 'total_score': 55}, view=True)
+        'qso_count': 33, 'points': 44, 'total_score': 55, 'time': '2026-11-12T12:34:56Z'}, view=True)
     for attr in ('power', 'assisted', 'transmitter', 'ops', 'bands', 'mode', 'overlay'):
         positive('score-class-attribute-' + attr, f'<dynamicresults><class {attr}="synthetic"/></dynamicresults>'.encode(), 'score', {})
         positive('score-class-empty-attribute-' + attr, f'<dynamicresults><class {attr}=""/></dynamicresults>'.encode(), 'score', {})
@@ -1469,7 +1479,59 @@ def n1mm_vectors():
     positive('aliases-prefer-empty', b'<contactinfo><exchangel>old</exchangel><exchange1/></contactinfo>', 'qso_logged', {'exchange_received': ''})
     positive('aliases-no-fallback-on-duplicate', b'<contactinfo><exchangel>old</exchangel><exchange1>a</exchange1><exchange1>b</exchange1></contactinfo>', 'qso_logged', {})
     positive('spot-delete', b'<spot><action>delete</action><dxcall>W1AAA</dxcall></spot>', 'spot', {'call': 'W1AAA'})
-    positive('unresolved-time', b'<contactinfo><timestamp>2026-11-12 12:34:56</timestamp></contactinfo>', 'qso_logged', {})
+    # Timestamp oracles are literal pairs, independent of the calendar checker.
+    # Bad timestamp scalars still produce positive messages with native evidence.
+    timestamp_cases = [
+        ('documented', '2020-01-17 16:43:38', '2020-01-17T16:43:38Z'),
+        ('leap-day', '2024-02-29 00:00:00', '2024-02-29T00:00:00Z'),
+        ('leap-century', '2000-02-29 23:59:59', '2000-02-29T23:59:59Z'),
+        ('year-end', '2020-12-31 23:59:59', '2020-12-31T23:59:59Z'),
+        ('minimum-year', '0001-01-01 00:00:00', '0001-01-01T00:00:00Z'),
+        ('maximum-year', '9999-12-31 23:59:59', '9999-12-31T23:59:59Z'),
+        ('bad-leap-day', '2023-02-29 12:00:00', None),
+        ('bad-century', '1900-02-29 12:00:00', None),
+        ('bad-month', '2020-13-01 12:00:00', None),
+        ('bad-day', '2020-04-31 12:00:00', None),
+        ('zero-year', '0000-01-01 00:00:00', None),
+        ('bad-hour', '2020-01-17 24:00:00', None),
+        ('bad-minute', '2020-01-17 16:60:00', None),
+        ('bad-second', '2020-01-17 16:43:60', None),
+        ('fractional', '2020-01-17 16:43:38.125', None),
+        ('zoned', '2020-01-17 16:43:38Z', None),
+        ('offset', '2020-01-17 16:43:38+00:00', None),
+        ('iso-separator', '2020-01-17T16:43:38', None),
+        ('short-component', '2020-1-17 16:43:38', None),
+        ('surrounding-space', ' 2020-01-17 16:43:38 ', None),
+        ('trailing-newline', '2020-01-17 16:43:38\n', None),
+        ('unicode-digits', '２０２０-01-17 16:43:38', None),
+        ('text', 'synthetic-clock', None),
+    ]
+    for root, tag, key in [
+        ('contactinfo', 'timestamp', 'start'), ('contactinfo', 'oldtimestamp', 'previous_start'),
+        ('contactreplace', 'timestamp', 'start'), ('contactreplace', 'oldtimestamp', 'previous_start'),
+        ('contactdelete', 'timestamp', 'start'), ('lookupinfo', 'timestamp', 'start'),
+        ('lookupinfo', 'oldtimestamp', 'previous_start'), ('lookup', 'timestamp', 'start'),
+        ('lookup', 'oldtimestamp', 'previous_start'), ('spot', 'timestamp', 'time'),
+        ('dynamicresults', 'timestamp', 'time')]:
+        kind = catalogs[root][1]
+        for label, text, instant in timestamp_cases:
+            raw = f'<{root}><{tag}>{text}</{tag}></{root}>'.encode()
+            positive(f'time-{root}-{tag}-{label}', raw, kind, {} if instant is None else {key: instant})
+        for label, content in [('duplicate', '<{t}>2020-01-17 16:43:38</{t}>' * 2),
+                ('nested', '<{t}><part>2020-01-17 16:43:38</part></{t}>')]:
+            positive(f'time-{root}-{tag}-{label}',
+                ('<' + root + '>' + content.format(t=tag) + '</' + root + '>').encode(), kind, {})
+        positive(f'time-{root}-{tag}-invalid-utf8',
+            f'<{root}><{tag}>2020-01-17 16:43:'.encode() + b'\xff' + f'</{tag}></{root}>'.encode(), kind, {})
+    positive('time-replace-bad-current',
+        b'<contactreplace><timestamp>synthetic</timestamp><oldtimestamp>2020-01-17 16:43:38</oldtimestamp></contactreplace>',
+        'qso_changed', {'previous_start': '2020-01-17T16:43:38Z'})
+    positive('time-replace-bad-prior',
+        b'<contactreplace><timestamp>2020-01-17 16:43:38</timestamp><oldtimestamp>synthetic</oldtimestamp></contactreplace>',
+        'qso_changed', {'start': '2020-01-17T16:43:38Z'})
+    positive('time-xml-text',
+        b'<contactinfo><timestamp>2020-01-17&#32;16:<![CDATA[43:38]]></timestamp></contactinfo>',
+        'qso_logged', {'start': '2020-01-17T16:43:38Z'})
     for encoding in ('utf-8-sig', 'utf-16-le', 'utf-16-be'):
         declaration = '<?xml version="1.0" encoding="UTF-16"?>' if encoding.startswith('utf-16') else XML_DECL
         raw = (declaration + '<RadioInfo><StationName>synthetic-α</StationName></RadioInfo>').encode(encoding)
@@ -1877,6 +1939,7 @@ def validate_n1mm(suite, producer_strict):
     # Exact rational arithmetic checks the separately authored frequency oracles.
     import re
     from fractions import Fraction
+    from datetime import datetime
     import xml.etree.ElementTree as ET
     conversions = {'spot': [('frequency', 'frequency_hz')],
         'radio_setfrequency': [('frequency', 'frequency_hz')],
@@ -1896,7 +1959,33 @@ def validate_n1mm(suite, producer_strict):
                 return False
         return True
 
-    frequency_checks = 0
+    timestamps = {
+        'contactinfo': [('timestamp', 'start'), ('oldtimestamp', 'previous_start')],
+        'contactreplace': [('timestamp', 'start'), ('oldtimestamp', 'previous_start')],
+        'contactdelete': [('timestamp', 'start')],
+        'lookupinfo': [('timestamp', 'start'), ('oldtimestamp', 'previous_start')],
+        'lookup': [('timestamp', 'start'), ('oldtimestamp', 'previous_start')],
+        'spot': [('timestamp', 'time')], 'dynamicresults': [('timestamp', 'time')]}
+
+    def timestamps_match(root, fields):
+        for tag, key in timestamps.get(root.tag, []):
+            leaves = root.findall(tag)
+            instant = None
+            if len(leaves) == 1 and not len(leaves[0]):
+                text = leaves[0].text or ''
+                if re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}', text):
+                    parts = [int(text[a:b]) for a, b in [(0, 4), (5, 7), (8, 10), (11, 13), (14, 16), (17, 19)]]
+                    try:
+                        datetime(*parts)  # Calendar validity only; no receiver clock or local zone.
+                    except ValueError:
+                        pass
+                    else:
+                        instant = text[:10] + 'T' + text[11:] + 'Z'
+            if not (key not in fields if instant is None else fields.get(key) == instant):
+                return False
+        return not (root.tag in timestamps and ('end' in fields or 'time_of_day' in fields))
+
+    frequency_checks = timestamp_checks = 0
     for name, vector in suite.vectors.items():
         if vector['class'] != 'positive':
             continue
@@ -1905,7 +1994,9 @@ def validate_n1mm(suite, producer_strict):
         except ET.ParseError:
             continue  # Invalid-code-unit oracles are checked separately.
         assert frequencies_match(root, vector['expected']['event']['fields']), name
+        assert timestamps_match(root, vector['expected']['event']['fields']), name
         frequency_checks += len(conversions.get(root.tag, []))
+        timestamp_checks += len(timestamps.get(root.tag, []))
     # Plant unit, truncation, rounding and boundary errors against the same checker.
     for name, changed in [('khz-spot-frequency-630m', 475000000),
             ('khz-spot-frequency-2200m', 137), ('khz-spot-frequency-sub-hz', 7061200),
@@ -1915,6 +2006,20 @@ def validate_n1mm(suite, producer_strict):
         root = ET.fromstring(base64.b64decode(vector['input']['data']))
         assert not frequencies_match(root, fields), name + ' planted frequency failure accepted'
     assert frequency_checks > 0
+    # Plant omission, clock correction, bad-scalar repair, field swaps and
+    # inferred endpoint failures, without consulting any implementation or clock.
+    for name, changed in [
+        ('time-contactinfo-timestamp-documented', {}),
+        ('time-contactinfo-timestamp-documented', {'start': '2020-01-17T15:43:38Z'}),
+        ('time-contactinfo-timestamp-bad-leap-day', {'start': '2023-03-01T12:00:00Z'}),
+        ('time-spot-timestamp-fractional', {'time': '2020-01-17T16:43:38.125Z'}),
+        ('time-dynamicresults-timestamp-zoned', {'time': '2020-01-17T16:43:38Z'}),
+        ('time-contactreplace-oldtimestamp-documented', {'start': '2020-01-17T16:43:38Z'}),
+        ('time-contactinfo-timestamp-documented', {'start': '2020-01-17T16:43:38Z', 'end': '2020-01-17T16:43:38Z'}),
+    ]:
+        root = ET.fromstring(base64.b64decode(suite.vectors[name]['input']['data']))
+        assert not timestamps_match(root, changed), name + ' planted timestamp failure accepted'
+    assert timestamp_checks > 0
     # Read native SO2R sentinels independently of the fixture row/oracle catalog.
     vector = suite.vectors['RadioInfo-full']
     root = ET.fromstring(base64.b64decode(vector['input']['data']))
@@ -1971,7 +2076,17 @@ def validate_n1mm(suite, producer_strict):
         event = copy.deepcopy(suite.vectors['RadioInfo-full']['expected']['event'])
         event['native']['message'] = dict(suite.vectors['RadioInfo-full']['expected_message'], future=1)
         assert reader.is_valid(event) and not producer.is_valid(event)
-    return 'N1MM XML isolation/bounds, exact kHz/Hz oracles, command bytes/errors, radio swap sentinels, positive/command schemas and same-MAJOR compatibility shapes checked'
+        for name, key in [('contactreplace-full', 'previous_start'), ('lookupinfo-full', 'start')]:
+            event = copy.deepcopy(suite.vectors[name]['expected']['event'])
+            event['fields'][key] = 123
+            assert not reader.is_valid(event), name + ' accepted a non-instant'
+            event = copy.deepcopy(suite.vectors[name]['expected']['event'])
+            event['family'] = 'wsjtx'
+            assert reader.is_valid(event) and not producer.is_valid(event), name + ' leaked N1MM profile members'
+        event = copy.deepcopy(suite.vectors['dynamicresults-full']['expected']['event'])
+        event['fields']['time'] = '2023-02-29T12:00:00Z'
+        assert not reader.is_valid(event), 'score accepted an invalid common calendar date'
+    return 'N1MM XML isolation/bounds, exact kHz/Hz and UTC/calendar timestamp oracles with planted failures, command bytes/errors, radio swap sentinels, positive/command schemas and same-MAJOR compatibility shapes checked'
 
 
 def main():

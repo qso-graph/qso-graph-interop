@@ -26,7 +26,8 @@
         "station_call": "K1AAA",
         "qso_count": 33,
         "points": 44,
-        "total_score": 55
+        "total_score": 55,
+        "time": "2026-11-12T12:34:56Z"
       },
       "native": {
         "format": "n1mm_xml",

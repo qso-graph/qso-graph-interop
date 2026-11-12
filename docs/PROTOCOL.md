@@ -106,6 +106,19 @@ the reader profile for newer preserved content. TCP errors consume through the n
 oversized incomplete frame has no LF, the codec enters delimiter-discard recovery; reset clears
 that framing state. EOF with an unfinished frame returns `truncated`.
 
+## N1MM timestamp evidence (specification only)
+
+Annex D's [source pins S4–S6](../spec/annex-d-n1mm.md#d1-source-pin-and-evidence-boundaries)
+record the URLs, retrieval date **2026-11-12 UTC**, and SHA-256 of the exact response
+bodies for N1MM's installation guidance, FAQ and Windows manual. They establish
+UTC logging using the computer's time-zone/DST conversion and UTC Log window
+display. The UDP `timestamp` is that logged time. `QGI-N1M-0029` defines exact
+calendar-valid conversion; `QGI-N1M-0037` requires accepting the valid value as
+sent, including a wrong operator clock, without receiver-clock checks, plausibility
+windows, corrections or warnings. The independent Annex D vectors cover contacts,
+prior contact keys, lookups, deletions, spots and scores. This evidence defines
+the draft profile; it does not claim a Rust N1MM codec or live-peer validation.
+
 ## Acceptance and supplemental evidence
 
 `tests/conformance.rs` hashes every complete vector file, checks manifest metadata, executes every

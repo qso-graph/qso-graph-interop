@@ -35,6 +35,10 @@
 
 ### Changed
 
+- Map Annex D N1MM timestamps to UTC instants using pinned logging documentation.
+  Preserve invalid timestamp text without rejecting the message, accept valid times
+  as sent without clock checks or corrections, and cover contact, prior-contact,
+  lookup, spot and score timestamps with independent vectors.
 - Derive N1MM spot, QSY and Spectrum scope frequency units as kHz from the pinned
   examples. Map exact whole-Hz observations, encode integer-Hz commands as canonical
   decimal kHz without a unit option, and cover limits and 630 m/2200 m in vectors.

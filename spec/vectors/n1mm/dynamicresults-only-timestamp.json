@@ -21,7 +21,9 @@
         "direction": "from_application",
         "exchange": "unknown"
       },
-      "fields": {},
+      "fields": {
+        "time": "2026-11-12T12:34:56Z"
+      },
       "native": {
         "format": "n1mm_xml",
         "data": "PGR5bmFtaWNyZXN1bHRzPjx0aW1lc3RhbXA+MjAyNi0xMS0xMiAxMjozNDo1NjwvdGltZXN0YW1wPjwvZHluYW1pY3Jlc3VsdHM+"

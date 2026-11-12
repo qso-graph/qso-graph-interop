@@ -23,7 +23,7 @@ a later annex assigns a named common field. Serial numbers are text to preserve 
 only a changed frequency, a logged QSO may contain only ADIF, and a QSO change/delete may identify a
 record without repeating its content. A missing record ID does not authorize synthesizing one.
 `operation`, `state` and `status` are required to identify the meaning of otherwise empty events. The `native` kind
-needs no common members; `{}` is its complete common view.
+needs no common members; `{}` is its common view unless a family annex defines optional profile members.
 
 **`QGI-MOD-0025` — Field meanings.** `frequency_hz` on a decode or spot is the native reported frequency, not dial plus audio offset.
 `tx_frequency_hz` and `dial_frequency_hz` are distinct on a QSO; no addition is implicit. `tx_power`
@@ -31,6 +31,8 @@ is text (such as the peer's entry), distinct from a decode's numeric `power_dbm`
 `start` and `end` are QSO instants. `time` is an observation instant, independent of observer receipt
 time. A score is a reported snapshot, not an instruction to increment a counter. A `qso_changed`
 event contains the fields the native change carries, not a reconstructed complete record.
+N1MM `previous_start` is the prior contact-key instant carried with an edit, independent of the
+current `start`; it is not a QSO end time. Each timestamp maps independently.
 
 ## decode
 
@@ -102,6 +104,7 @@ event contains the fields the native change carries, not a reconstructed complet
 | `exchange_received` | text | — | wsjtx (logged only), n1mm, fldigi, js8call |
 | `start` | instant | UTC | wsjtx (logged only), n1mm, fldigi, js8call |
 | `end` | instant | UTC | wsjtx (logged only), n1mm, fldigi, js8call |
+| `previous_start` | instant | UTC | n1mm profile only; prior contact key (Annex D) |
 | `tx_frequency_hz` | integer | Hz | wsjtx (logged: tx only), n1mm, fldigi, js8call |
 | `dial_frequency_hz` | integer | Hz | wsjtx (logged: tx only), n1mm, fldigi, js8call |
 | `band` | text | — | n1mm |
@@ -160,6 +163,7 @@ onto a sender reception event. These choices specify model capacity, not a compl
 | `multiplier_count` | integer | count | n1mm |
 | `points` | integer | points | n1mm |
 | `total_score` | integer | points | n1mm |
+| `time` | instant | UTC | n1mm; native snapshot instant |
 
 ## control
 
@@ -276,7 +280,10 @@ native error codes into a universal enum. Unmapped result data remains in native
 
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|
-| — | object with no defined members | — | all families |
+| `start` | instant | UTC | n1mm profile only; lookup contact timestamp (Annex D) |
+| `previous_start` | instant | UTC | n1mm profile only; lookup prior contact key (Annex D) |
+
+Other families have no defined `native` common members.
 
 
 ## Consolidating receivers (informative)

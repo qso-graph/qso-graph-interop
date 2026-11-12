@@ -171,9 +171,25 @@
         ]
       },
       "then": {
-        "properties": {
-          "fields": {
-            "$ref": "#/$defs/qso_logged"
+        "if": {
+          "properties": {
+            "family": {
+              "const": "n1mm"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/n1mm_qso"
+            }
+          }
+        },
+        "else": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/qso_logged"
+            }
           }
         }
       }
@@ -202,9 +218,25 @@
         ]
       },
       "then": {
-        "properties": {
-          "fields": {
-            "$ref": "#/$defs/qso_changed"
+        "if": {
+          "properties": {
+            "family": {
+              "const": "n1mm"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/n1mm_qso"
+            }
+          }
+        },
+        "else": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/qso_changed"
+            }
           }
         }
       }
@@ -233,9 +265,25 @@
         ]
       },
       "then": {
-        "properties": {
-          "fields": {
-            "$ref": "#/$defs/qso_deleted"
+        "if": {
+          "properties": {
+            "family": {
+              "const": "n1mm"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/n1mm_qso"
+            }
+          }
+        },
+        "else": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/qso_deleted"
+            }
           }
         }
       }
@@ -466,9 +514,25 @@
         ]
       },
       "then": {
-        "properties": {
-          "fields": {
-            "$ref": "#/$defs/native"
+        "if": {
+          "properties": {
+            "family": {
+              "const": "n1mm"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/n1mm_native"
+            }
+          }
+        },
+        "else": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/native"
+            }
           }
         }
       }
@@ -1179,6 +1243,9 @@
         },
         "total_score": {
           "$ref": "#/$defs/integer"
+        },
+        "time": {
+          "$ref": "#/$defs/instant"
         }
       }
     },
@@ -1665,6 +1732,109 @@
       "required": [
         "operation"
       ]
+    },
+    "n1mm_qso": {
+      "type": "object",
+      "properties": {
+        "record_id": {
+          "$ref": "#/$defs/text"
+        },
+        "call": {
+          "$ref": "#/$defs/text"
+        },
+        "grid": {
+          "$ref": "#/$defs/text"
+        },
+        "mode": {
+          "$ref": "#/$defs/text"
+        },
+        "station_call": {
+          "$ref": "#/$defs/text"
+        },
+        "station_grid": {
+          "$ref": "#/$defs/text"
+        },
+        "operator_call": {
+          "$ref": "#/$defs/text"
+        },
+        "report_sent": {
+          "$ref": "#/$defs/text"
+        },
+        "report_received": {
+          "$ref": "#/$defs/text"
+        },
+        "exchange_sent": {
+          "$ref": "#/$defs/text"
+        },
+        "exchange_received": {
+          "$ref": "#/$defs/text"
+        },
+        "start": {
+          "$ref": "#/$defs/instant"
+        },
+        "end": {
+          "$ref": "#/$defs/instant"
+        },
+        "tx_frequency_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "dial_frequency_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "band": {
+          "$ref": "#/$defs/text"
+        },
+        "contest_name": {
+          "$ref": "#/$defs/text"
+        },
+        "serial_sent": {
+          "$ref": "#/$defs/text"
+        },
+        "serial_received": {
+          "$ref": "#/$defs/text"
+        },
+        "section": {
+          "$ref": "#/$defs/text"
+        },
+        "precedence": {
+          "$ref": "#/$defs/text"
+        },
+        "check": {
+          "$ref": "#/$defs/text"
+        },
+        "tx_power": {
+          "$ref": "#/$defs/text"
+        },
+        "comments": {
+          "$ref": "#/$defs/text"
+        },
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "propagation_mode": {
+          "$ref": "#/$defs/text"
+        },
+        "adif": {
+          "$ref": "#/$defs/text"
+        },
+        "radio": {
+          "$ref": "#/$defs/radio"
+        },
+        "previous_start": {
+          "$ref": "#/$defs/instant"
+        }
+      }
+    },
+    "n1mm_native": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "$ref": "#/$defs/instant"
+        },
+        "previous_start": {
+          "$ref": "#/$defs/instant"
+        }
+      }
     }
   }
 }

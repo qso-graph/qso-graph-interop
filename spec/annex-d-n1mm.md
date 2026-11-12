@@ -6,7 +6,7 @@ reader and a command writer, not a claim of testing with a running logger.
 
 ## D.1 Source pin and evidence boundaries
 
-All three documents were retrieved on **2026-11-12 UTC**. Hashes cover the exact
+All six documents were retrieved on **2026-11-12 UTC**. Hashes cover the exact
 response bodies, before newline conversion, HTML extraction, or XML parsing.
 No upstream document is distributed with these vectors.
 
@@ -15,6 +15,17 @@ No upstream document is distributed with these vectors.
 | S1 | [External UDP Broadcasts appendix](https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/) | `4bd29b8de620b867d8573d2f0dbff78b7af1f50d64f40804d809b4c281bafab9` |
 | S2 | [XML examples download page](https://n1mmwp.hamdocs.com/mmfiles/udp_external_udp_broadcasts-xml/), marked Updated **2019-09-30** | `784c869b8a7d56ca57e6bb8d6c0308e36ebf6caed44ed28fd6b4c8619c6a5d51` |
 | S3 | [UDP_External_UDP_Broadcasts.xml](https://n1mmwp.hamdocs.com/mmfile/get/file/UDP_External_UDP_Broadcasts.xml), obtained with S2's download form | `58e0d335c325d1fde94a285b581fdaa4d75965b1aaa564e40969dcbf7eb8400a` |
+| S4 | [Installing and Upgrading N1MM Logger+](https://n1mmwp.hamdocs.com/getting-started/installing-and-upgrading-n1mm-logger/) | `17243f496261d1b53bb96640a9d9f4beedf2c1f8724790c2619bf092f4186506` |
+| S5 | [Frequently Asked Questions](https://n1mmwp.hamdocs.com/faq/) | `af14392fdb130b033351417515fb8362863e8ec1392185d0072ed8fcbfe67e21` |
+| S6 | [Windows](https://n1mmwp.hamdocs.com/n1mm-manual/windows/) | `c3cf58fb16dcdfb24074317680298fab374069c29e93e8904eeb93a60d7f3ee4` |
+
+S4's Windows time-setting guidance establishes that N1MM logs contacts in UTC,
+converting the computer's local time using its time-zone and DST settings, even
+across a DST transition. S5's logging-computer GMT/UTC question confirms that
+conversion. S6 **The Log Window** identifies UTC date and time in the Log window.
+The UDP broadcast's `timestamp` is that logged time. On this evidence, this
+profile treats the unzoned timestamps cataloged below, including `oldtimestamp`,
+as UTC; their exact accepted grammar is the reader policy in `QGI-N1M-0029`.
 
 S1 names no program build or protocol revision. Its example dates are sample
 content, not a release pin. S3 is a collection of snippets, not one well-formed XML
@@ -90,7 +101,8 @@ and ordinary elements; they do not define the limits or error handling below.
 | `QGI-N1M-0026` | A reader MUST leave a common member absent when its singleton native leaf is repeated or contains child elements, or its scalar cannot be converted by D.3; it MUST NOT select the first or last duplicate. | Test |
 | `QGI-N1M-0027` | A reader MUST parse mapped integers as optional sign plus ASCII decimal digits, with only surrounding XML whitespace ignored, omitting results outside the common integer range; a mapped 10 Hz frequency MUST multiply exactly by 10 and omit a result outside that range. | Test |
 | `QGI-N1M-0028` | A reader MUST accept exactly `True`, `true`, `1` as true and `False`, `false`, `0` as false, ignoring only surrounding XML whitespace for that conversion; any other or invalid-text spelling MUST leave the boolean common member absent. | Test |
-| `QGI-N1M-0029` | A reader MUST leave unzoned timestamps native-only: S1/S3 do not establish UTC, and receipt time or local timezone MUST NOT create an instant or time of day. | Test |
+| `QGI-N1M-0029` | A reader MUST map each cataloged timestamp to its D.4 common UTC instant when its decoded leaf text matches exactly `YYYY-MM-DD HH:MM:SS` with ASCII digits, year 0001–9999, a valid Gregorian date, hour 00–23, minute 00–59 and second 00–59. It MUST replace the space with `T` and append `Z`, without trimming or accepting fractions, zone suffixes or offsets. A nonmatching, invalid-calendar, empty, absent, invalid-text, duplicate or nested leaf MUST leave only its corresponding common member absent, without rejecting an otherwise valid message; native text and bytes MUST remain preserved. For example, `2020-01-17 16:43:38` maps to `2020-01-17T16:43:38Z` (S4–S6; exact grammar is reader policy). | Test |
+| `QGI-N1M-0037` | A reader MUST accept every valid timestamp as sent, including an operator's wrong clock. It MUST NOT compare any timestamp with the receiver's clock, apply a plausibility window, correct it, or issue a timestamp warning. Receipt time, the receiver's local time zone and DST settings MUST NOT alter the instant or fill an absent common timestamp. | Test |
 
 XML whitespace here means space, tab, CR and LF. For invalid leaf encoding, parse
 markup independently of character decoding: XML delimiters still delimit content;
@@ -158,16 +170,18 @@ These describe a contest instance, not a logged QSO; all remain native-only.
 
 Evidence for every row unless marked otherwise: **S1 Contact Info and notes**;
 S1 Contact Replace and LookupInfo explicitly share that layout. **S3 contactinfo /
-lookup** supplies the additional historical spellings. For lookup roots all entries
-are native-only: a prospective contact is not a logged or changed QSO. The common
-column applies only to the two contact roots.
+lookup** supplies the additional historical spellings. Lookup roots retain kind
+`native`: a prospective contact is not a logged or changed QSO. Only their
+`timestamp` and `oldtimestamp` map to the N1MM profile's `start` and
+`previous_start` instants; the other common mappings in this table apply only to
+the two contact roots.
 
 | Element | Type / unit | Requiredness | Common mapping |
 |---|---|---|---|
 | `app` | text / — | O | native only |
 | `contestname` | text / — | O | `contest_name` |
 | `contestnr` | integer text / local contest instance | O | native only |
-| `timestamp` | text / unresolved timestamp | O | native only (D.3) |
+| `timestamp` | timestamp text / UTC | O | `start` (`QGI-N1M-0029`) |
 | `mycall` | text / callsign | O | `station_call` |
 | `band` | text / native band label, localized delimiter | O | `band`, unchanged |
 | `rxfreq` | int / 10 Hz | O | `dial_frequency_hz` = value × 10 |
@@ -213,7 +227,7 @@ column applies only to the two contact roots.
 | `StationName` | text / forwarding computer label | O | `radio.instance` |
 | `ID` (S1) | text / opaque contact identifier | O | `record_id`, no GUID length repair |
 | `IsClaimedQso` (S1) | boolean text / 1 claimed, 0 X-QSO | O | native only |
-| `oldtimestamp` (S1) | text / prior unresolved timestamp | O | native only |
+| `oldtimestamp` (S1) | timestamp text / prior UTC contact key | O | `previous_start` (`QGI-N1M-0029`), independent of `start` |
 | `oldcall` (S1) | text / prior callsign | O | native only |
 | `SentExchange` (S1) | text / configured exchange template | O | native only; never actual `exchange_sent` |
 
@@ -225,8 +239,10 @@ the logger accepts either spelling as input.
 
 S1 says edits can emit a delete followed by replace, and describes `oldcall` and
 `oldtimestamp` as the prior key. Mapping preserves each datagram independently;
-it does not synthesize a transaction. S1's ID prose says both “32 byte” and two hex
-characters per byte, while its samples disagree about length/hex validity. Keeping
+it does not synthesize a transaction. `previous_start` identifies the prior
+contact timestamp, not the QSO's end; no `end` is inferred. S1's ID prose says both
+“32 byte” and two hex characters per byte, while its samples disagree about
+length/hex validity. Keeping
 an opaque record ID avoids enforcing an unsupported GUID grammar. `SentExchange`
 may contain serial placeholders and is not necessarily the actual sent exchange
 (S1 Contact notes). No composite exchange is assembled from other fields.
@@ -240,7 +256,7 @@ unknown-child rule, without importing the full add/change catalog into deletion.
 | Element | Type / unit | Requiredness | Common mapping |
 |---|---|---|---|
 | `app` | text / — | O | native only |
-| `timestamp` | text / unresolved timestamp | O | native only |
+| `timestamp` | timestamp text / UTC | O | `start` (`QGI-N1M-0029`) |
 | `mycall` | text / callsign | O | `station_call` |
 | `band` | text / native band label | O | `band` |
 | `call` | text / callsign | O | `call` |
@@ -315,7 +331,7 @@ Evidence for every row: **S1 Spot Data; S3 spot** (S3 omits app, mode, statuslis
 | `dxcall` | text / spotted callsign | O | `call` |
 | `frequency` | decimal / kHz (D.1 derivation) | O | `frequency_hz` = value × 1,000 (`QGI-N1M-0036`) |
 | `spottercall` | text / spotter callsign | O | `spotter_call` |
-| `timestamp` | text / unresolved spot time | O | native only |
+| `timestamp` | timestamp text / UTC spot time | O | `time` (`QGI-N1M-0029`); no separate `time_of_day` is inferred |
 | `action` | text / add or delete per S1 | O | native only |
 | `mode` | text / — | O | `mode` |
 | `comment` | text / — | O | `text` |
@@ -375,7 +391,7 @@ optional; each listed attribute is optional. Attribute types are text. Score sel
 | `breakdown/point/@band` | text / native band selector | O | selector only |
 | `breakdown/point/@mode` | text / native mode selector | O | selector only |
 | `score` | int / score | O | `total_score` |
-| `timestamp` | text / unresolved timestamp | O | native only |
+| `timestamp` | timestamp text / UTC snapshot time | O | `time` (`QGI-N1M-0029`) |
 
 **`QGI-N1M-0033` — Score totals.** A reader MUST map only the unique `qso` or
 `point` leaf with attributes exactly `band="total"` and `mode="ALL"` within the
@@ -495,57 +511,59 @@ must not misuse `wire_id`. It changes no existing meaning or required field. The
 `control` arguments `app`, `spectrum_name`, `low_scope_frequency`,
 `high_scope_frequency`, `scaling_factor`, and `spectrum_data` are **N1MM profile
 members only**, enabled by the schema's `family: n1mm` condition; they do not
-change the shared field catalog. No score/QSO capacity is added. In particular,
-RadioInfo TXFreq, unresolved times and exchange templates remain native-only
-instead of changing or overloading existing common members.
+change the shared field catalog. UTC timestamps use the existing QSO `start` and
+spot `time` instants. Score `time` adds a snapshot instant to the shared catalog;
+`previous_start` adds an independent prior-contact-key instant for N1MM contacts.
+N1MM's `native` lookup observations permit only the profile members `start` and
+`previous_start`; this adds no common fields to other families' `native` events.
+These add schema capacity without changing existing field meanings. RadioInfo
+TXFreq and exchange templates remain native-only.
 
 ## D.8 Numbered questions for live captures (QGI-RI-0063)
 
 These questions do not authorize changing the policies above without a mapping
 revision. The read-only comparison with the local Python adapter is implementation
-evidence only, never a protocol source; it motivates Q12–Q15 below.
+evidence only, never a protocol source; it motivates Q11–Q14 below.
 
 1. What are the accepted precision/range of spot `frequency`,
    `radio_setfrequency/frequency`, LowScopeFrequency and HighScopeFrequency?
-2. Are contact, spot and score timestamps UTC, local, or configurable? What is their
-   exact grammar, fractional precision and behavior at DST transitions?
-3. Which leaves are required by each current build, and what do omitted, paired
+2. Which leaves are required by each current build, and what do omitted, paired
    empty and self-closing leaves mean, especially numeric and boolean leaves?
-4. Which boolean spellings occur or are accepted: True/False, true/false, 1/0,
+3. Which boolean spellings occur or are accepted: True/False, true/false, 1/0,
    uppercase, yes/no or surrounding whitespace? Are blank connection flags meaningful?
-5. Are non-UTF-8 broadcasts possible? Is a BOM/declaration required or accepted,
+4. Are non-UTF-8 broadcasts possible? Is a BOM/declaration required or accepted,
    and how are non-ASCII/invalid text, XML entities and line endings serialized?
    The local adapter replaces invalid UTF-8 while referring to Windows-1252;
    do captures establish a legacy encoding? This profile preserves invalid units.
-6. What is the actual maximum datagram/text/count/depth size? Can broadcasts fragment,
+5. What is the actual maximum datagram/text/count/depth size? Can broadcasts fragment,
    combine documents, or contain trailing bytes? Are large spectrum arrays accepted?
-7. Do current builds emit `lookupinfo` or `lookup`, `exchange1` or `exchangel`,
+6. Do current builds emit `lookupinfo` or `lookup`, `exchange1` or `exchangel`,
    `ismultiplier1` or `ismultiplierl`, and `run1run2` or `Run1Run2`? What does
    ContactType mean? Can both alias spellings coexist?
-8. What are the exact contact ID length/encoding, delete fields and edit packet
+7. What are the exact contact ID length/encoding, delete fields and edit packet
    sequence? Do forwarded contacts keep StationName, NetBiosName and IsOriginal as described?
-9. Is spot StationName a callsign or a computer label in every mode? Can radio
+8. Is spot StationName a callsign or a computer label in every mode? Can radio
    numbers exceed 1/2, and do different topology modes change their interpretation?
-10. For inbound QSY, which of radionr or mousebutton wins on conflict, are both
+9. For inbound QSY, which of radionr or mousebutton wins on conflict, are both
     required, is zero frequency accepted, and is there any response not documented
     in S1? Which other inbound messages are actually supported?
-11. What are spectrum ScalingFactor's range and sign, levels/count mismatch rules,
+10. What are spectrum ScalingFactor's range and sign, levels/count mismatch rules,
     endpoint ordering, accepted source names and update-rate limits? What is the
     unspecified rotator wire layout, and does it even use XML?
-12. The local adapter trims all text and substitutes defaults for missing station,
+11. The local adapter trims all text and substitutes defaults for missing station,
     radio, booleans and integers. Do captures justify any of these transformations?
     This profile preserves text and omits unmappable values instead.
-13. The local adapter accepts case-insensitive `yes` and treats other boolean text
+12. The local adapter accepts case-insensitive `yes` and treats other boolean text
     as false. Do captures show those spellings? This profile does not guess false.
-14. The local adapter reads score qth values as attributes, while S1 shows children,
+13. The local adapter reads score qth values as attributes, while S1 shows children,
     and stores radio frequency integers without this profile's ×10 conversion.
     What do live bytes show? Neither behavior is treated as source evidence.
-15. The local adapter recognizes lookup bearing/distance not listed in S1/S3, uses
+14. The local adapter recognizes lookup bearing/distance not listed in S1/S3, uses
     a 4,096-byte receive buffer and does not cover the inbound spectrum/QSY layouts.
     Which extra fields or larger packets occur? Units and semantics need evidence.
-16. Can duplicate/nested leaves, namespaces, attributes on scalar elements or new
+15. Can duplicate/nested leaves, namespaces, attributes on scalar elements or new
     program-version metadata occur? What semantics should a later profile assign?
-17. Are score total/ALL selectors stable, can totals repeat, and are multiplier
+16. Are score total/ALL selectors stable, can totals repeat, and are multiplier
     rows or extra attributes present? Are breakdown counts/points additive or overlapping?
-18. Do malformed snippets in S1/S3 reflect only documentation errors (including
+17. Do malformed snippets in S1/S3 reflect only documentation errors (including
     declaration `1 .0`, broken run1run2, ambiguous ID prose and timestamp typos)?
