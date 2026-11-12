@@ -998,6 +998,122 @@
         }
       },
       "valid": false
+    },
+    {
+      "name": "qgi-one-native-level",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "qgi_datagram",
+          "data": "",
+          "carried_native": {
+            "format": "example_datagram",
+            "data": ""
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "qgi-two-native-levels",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "qgi_datagram",
+          "data": "",
+          "carried_native": {
+            "format": "qgi_datagram",
+            "data": "",
+            "carried_native": {
+              "format": "example_datagram",
+              "data": ""
+            }
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "non-qgi-carried-native",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "example_datagram",
+          "data": "",
+          "carried_native": {
+            "format": "example_datagram",
+            "data": ""
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "qgi-incomplete-carried-native",
+      "event": {
+        "spec": "0.1.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "qgi_datagram",
+          "data": "",
+          "carried_native": {
+            "format": "example_datagram"
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "qgi-common-field-type",
+      "event": {
+        "spec": "0.1.0",
+        "family": "qgi",
+        "mapping": 1,
+        "kind": "decode",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "snr_db": "invalid"
+        },
+        "native": {
+          "format": "example_datagram",
+          "data": ""
+        }
+      },
+      "valid": false
     }
   ]
 }

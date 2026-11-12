@@ -1,0 +1,40 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "qgi",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "transport": "udp",
+    "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJ3c2p0eCIsIm1hcHBpbmciOjEsImtpbmQiOiJjb250cm9sIiwid2lyZV9pZCI6InRlc3QtaW5zdGFuY2UiLCJjb250ZXh0Ijp7ImRpcmVjdGlvbiI6InRvX2FwcGxpY2F0aW9uIiwiZXhjaGFuZ2UiOiJ1bmtub3duIn0sImZpZWxkcyI6eyJvcGVyYXRpb24iOiJzZW5kX3RleHQiLCJ0ZXh0IjoidGVzdCBtZXNzYWdlIiwidHJhbnNtaXQiOmZhbHNlfX0=",
+    "context": {
+      "direction": "unknown",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "kind": "control",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "send_text",
+        "text": "test message",
+        "transmit": false
+      },
+      "native": {
+        "format": "qgi_datagram",
+        "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJ3c2p0eCIsIm1hcHBpbmciOjEsImtpbmQiOiJjb250cm9sIiwid2lyZV9pZCI6InRlc3QtaW5zdGFuY2UiLCJjb250ZXh0Ijp7ImRpcmVjdGlvbiI6InRvX2FwcGxpY2F0aW9uIiwiZXhjaGFuZ2UiOiJ1bmtub3duIn0sImZpZWxkcyI6eyJvcGVyYXRpb24iOiJzZW5kX3RleHQiLCJ0ZXh0IjoidGVzdCBtZXNzYWdlIiwidHJhbnNtaXQiOmZhbHNlfX0="
+      }
+    }
+  },
+  "reencode": {
+    "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJ3c2p0eCIsIm1hcHBpbmciOjEsImtpbmQiOiJjb250cm9sIiwid2lyZV9pZCI6InRlc3QtaW5zdGFuY2UiLCJjb250ZXh0Ijp7ImRpcmVjdGlvbiI6InRvX2FwcGxpY2F0aW9uIiwiZXhjaGFuZ2UiOiJ1bmtub3duIn0sImZpZWxkcyI6eyJvcGVyYXRpb24iOiJzZW5kX3RleHQiLCJ0ZXh0IjoidGVzdCBtZXNzYWdlIiwidHJhbnNtaXQiOmZhbHNlfX0="
+  }
+}

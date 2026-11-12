@@ -27,7 +27,7 @@ needs no common members; `{}` is its complete common view.
 
 `frequency_hz` on a decode or spot is the native reported frequency, not dial plus audio offset.
 `tx_frequency_hz` and `dial_frequency_hz` are distinct on a QSO; no addition is implicit. `tx_power`
-is text (such as the station program's entry), distinct from a decode's numeric `power_dbm`.
+is text (such as the peer's entry), distinct from a decode's numeric `power_dbm`.
 `start` and `end` are QSO instants. `time` is an observation instant, independent of observer receipt
 time. A score is a reported snapshot, not an instruction to increment a counter. A `qso_changed`
 event contains the fields the native change carries, not a reconstructed complete record.

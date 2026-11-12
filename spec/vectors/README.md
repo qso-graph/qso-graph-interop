@@ -1,13 +1,13 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # QGI 0.1.0 conformance vectors
 
-The [WSJT-X manifest](wsjtx/manifest.json) lists every vector's base specification version, family,
+The [WSJT-X manifest](wsjtx/manifest.json) lists each WSJT-X vector's base specification version, family,
 mapping revision, class and SHA-256 of its complete file including the final newline. The manifest
 itself is not self-hashed. Its `source_sha256` identifies the pinned header in Annex B.
 
 Each vector is a JSON object with `spec`, `family`, `mapping`, `class`, `input` and `expected`.
 These wrapper objects are test instructions, not events; Annex F validates their positive event members.
-For this exactly-one-event family, `expected.event` abbreviates the outcome `events: [event]` with
+For the exactly-one-event WSJT-X and `qgi` families, `expected.event` abbreviates the outcome `events: [event]` with
 no skips; `expected.skip` abbreviates an empty event list and one skip notice. An error returns no
 events or state updates. These singleton shorthands do not restrict the core collection outcome.
 
@@ -23,6 +23,22 @@ events or state updates. These singleton shorthands do not restrict the core col
 | `negative` with `input.event_json` | Parse one serialized NDJSON record excluding its delimiter; apply the byte bound and duplicate-member rule before returning an event. |
 | `skip` | Compare the reason and the readable native version/type in `expected.skip`. No event, ID parsing or reply is expected. |
 | `compatibility` | Read `input.event` with the declared `reader_spec`, supplied by a hypothetical producer of `writer_spec`. `expected.read` is the reader's recognized `kind`, `fields`, `context` and any preserved `native`, not a rewritten stored event. For a command without native evidence, `expected.preserved_command`, when present, checks the original retained command separately. An unsupported MAJOR yields an error. |
+
+The [qgi manifest](qgi/manifest.json) uses the same per-vector metadata and hashes; its
+`source_sha256` pins the complete Annex I file named by `source`, relative to the manifest.
+`qgi` positive and negative inputs declare `transport` (`udp` or `tcp`); `input.data` contains
+one datagram or a TCP record including its LF/CRLF delimiter. An unterminated TCP negative means
+EOF. Its `expected.event.native.data` excludes only the TCP delimiter. Its `reencode.data` checks
+exact event emission/replay with the input delimiter; it does not encode the carried family's
+command. `expected.event.native.carried_native` retains the input event's original native object
+when present; the observed context comes from `input.context`, never the serialized identities.
+
+The `qgi` suite has six positive cases: a carried decode, an own-family command, a WSJT-X command,
+LF/CRLF stream carriage and a newer-MINOR unknown kind read as `native`. Its 16 negative cases
+plant oversized UDP/TCP messages, invalid JSON/UTF-8, top-level and nested duplicate members,
+a different MAJOR, a schema violation, excessive native nesting, nonobject/trailing JSON,
+unfinished/empty TCP records, and container-depth, element-count and numeric-token bounds.
+They need only Annex I and the event schema, without an external protocol definition.
 
 The hypothetical 0.2.0 values exercise only the additions permitted by `QGI-GEN-0005`; they do not
 publish version 0.2.0 or add real WSJT-X message types. An unknown operation token remains a string;
@@ -46,14 +62,16 @@ Regenerate with `uv run --no-project python scripts/gen_vectors.py`; check with
 `uv run --no-project python scripts/gen_vectors.py --check`. The generator uses only the standard
 library for generation. If `jsonschema` is already importable, it also checks the local schema,
 every positive observation, command and supplied structured view, same-MAJOR compatibility inputs and planted
-schema failures and the core shape cases. It does not fetch schemas or install dependencies. Without that optional module,
+schema failures and the core shape cases. It also validates the carried and resulting `qgi` events
+and checks the planted JSON parsing/bounds failures. It does not fetch schemas or install dependencies. Without that optional module,
 it reports the skipped validation and still checks exact deterministic vector files and hashes.
 
 
 The [core shape cases](core/shape-cases.json) contain planted valid/invalid event-schema examples
 for observed versus command forms, application results, class-specific envelopes, retained/empty
 PUBLISH shapes, required template evidence, dependency evidence, header bounds and future-MINOR
-native members. The [core manifest](core/manifest.json) hashes their complete file including its
+native members, plus one-level `qgi` native evidence and planted nesting/type failures.
+The [core manifest](core/manifest.json) hashes their complete file including its
 final newline. These are structural checks only: their empty byte strings are explicit placeholders,
 not valid PSK Reporter captures or complete MQTT/IPFIX decode fixtures. No mapping conformance for
 Annexes G or H is claimed by passing a shape check.

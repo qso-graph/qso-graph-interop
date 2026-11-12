@@ -1,8 +1,9 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # Annex Z: informative extension design check
 
-This annex checks the core's capacity, not protocol conformance. These four families are outside
-the first release. Names below are proposed annex-local operations, not new registered families.
+This annex checks the core's capacity, not protocol conformance. These four families are designed
+for, not yet mapped, and outside the first release. Names below are proposed annex-local
+operations, not new registered families.
 An implementer first obtains a controlled extension-family name under `QGI-EXT-0002` and pins the
 appropriate released definitions under `QGI-MAP-0001`. No wire layout, numeric error catalog or
 product interoperability is established by these sketches. The native protocols in the task are

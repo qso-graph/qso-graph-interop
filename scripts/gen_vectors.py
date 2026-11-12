@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Generate QGI 0.1.0 vectors from Annex B and the pinned released header.
+"""Generate QGI 0.1.0 vectors from Annexes B and I and the pinned released header.
 
 No implementation imports, subprocesses, third-party generation dependencies or network access.
 The byte packers transcribe wire primitives; expected common fields are explicit test oracles.
@@ -87,12 +87,13 @@ def date(schema, spec=1, milliseconds=3600123, day=2440588, offset=3600, zone=No
 
 
 class Suite:
-    def __init__(self):
+    def __init__(self, family='wsjtx'):
+        self.family = family
         self.vectors = {}
 
     def add(self, name, value):
         assert name not in self.vectors, name
-        self.vectors[name] = {'$comment': 'SPDX-License-Identifier: GPL-3.0-or-later', 'spec': SPEC, 'family': 'wsjtx', 'mapping': 1, **value}
+        self.vectors[name] = {'$comment': 'SPDX-License-Identifier: GPL-3.0-or-later', 'spec': SPEC, 'family': self.family, 'mapping': 1, **value}
 
     def positive(self, name, schema, typ, body, kind, fields, *, direction=None,
                  identity='test-instance', message=None, extensions=b'', canonical=None):
@@ -597,6 +598,79 @@ def commands(s):
 
 
 
+def qgi_vectors(wsjtx):
+    """Explicit carriage oracles, independent of any Rust implementation."""
+    s = Suite('qgi')
+    observed = copy.deepcopy(next(v['expected']['event'] for v in wsjtx.vectors.values()
+        if v['class'] == 'positive' and v['expected']['event']['kind'] == 'decode'
+        and v['expected']['event']['native_version'] == '3'))
+    # Deliberately spoofed serialized identities must not replace observer context.
+    observed['context'] = {'direction': 'to_application', 'exchange': 'request',
+                           'source_id': 'untrusted-serialized-source'}
+    command = {'spec': SPEC, 'family': 'qgi', 'mapping': 1, 'kind': 'control',
+               'context': context('to_application'),
+               'fields': {'operation': 'send_text', 'text': 'synthetic\nmessage', 'transmit': False}}
+
+    def wire(event):
+        return json.dumps(event, ensure_ascii=True, separators=(',', ':'), allow_nan=False).encode()
+
+    def positive(name, carried, transport='udp', delimiter=b'', recognized=None):
+        raw = wire(carried)
+        event = copy.deepcopy(carried if recognized is None else recognized)
+        event['context'] = context('unknown')
+        event['native'] = {'format': 'qgi_datagram' if transport == 'udp' else 'qgi_ndjson',
+                           'data': b64(raw)}
+        if 'native' in carried:
+            event['native']['carried_native'] = copy.deepcopy(carried['native'])
+        s.add(name, {'class': 'positive',
+            'input': {'transport': transport, 'data': b64(raw + delimiter), 'context': context('unknown')},
+            'expected': {'event': event}, 'reencode': {'data': b64(raw + delimiter)}})
+
+    positive('carried-decode', observed)
+    positive('carried-command', command)
+    wsjtx_command = copy.deepcopy(wsjtx.vectors['command-09-s3']['input']['event'])
+    positive('carried-wsjtx-command', wsjtx_command)
+    positive('stream-decode-lf', observed, 'tcp', b'\n')
+    positive('stream-command-crlf', command, 'tcp', b'\r\n')
+    newer = copy.deepcopy(observed)
+    newer.update(spec='0.2.0', kind='future_kind')
+    newer['fields'] = {'future_field': 17}
+    recognized = copy.deepcopy(newer)
+    recognized.update(kind='native', fields={})
+    positive('newer-minor-unknown-kind', newer, recognized=recognized)
+
+    def negative(name, raw, category, transport='udp'):
+        s.add(name, {'class': 'negative',
+            'input': {'transport': transport, 'data': b64(raw), 'context': context('unknown')},
+            'expected': {'error': {'category': category}}})
+
+    negative('oversized-datagram', b' ' * 65508, 'oversized')
+    negative('invalid-json', b'{', 'malformed')
+    negative('invalid-utf8', b'{"bad":"\xff"}', 'malformed')
+    negative('duplicate-members', wire(command)[:-1] + b',"kind":"control"}', 'malformed')
+    duplicate = copy.deepcopy(command)
+    duplicate['fields']['x-org.example.nested'] = {'a': 1}
+    negative('duplicate-nested-members', wire(duplicate).replace(b'"a":1', b'"a":1,"a":2'), 'malformed')
+    other_major = copy.deepcopy(command)
+    other_major['spec'] = '1.0.0'
+    negative('different-major', wire(other_major), 'unsupported_version')
+    invalid = copy.deepcopy(command)
+    invalid.pop('fields')
+    negative('schema-missing-fields', wire(invalid), 'invalid_value')
+    nested = copy.deepcopy(observed)
+    nested['native'] = copy.deepcopy(s.vectors['carried-decode']['expected']['event']['native'])
+    negative('native-nesting-too-deep', wire(nested), 'invalid_value')
+    negative('not-an-object', b'[]', 'malformed')
+    negative('trailing-object', wire(command) + b'{}', 'malformed')
+    negative('oversized-stream', b' ' * 1048577 + b'\n', 'oversized', 'tcp')
+    negative('unfinished-stream-record', wire(command), 'truncated', 'tcp')
+    negative('empty-stream-record', b'\n', 'malformed', 'tcp')
+    negative('json-depth-bound', b'{"nested":' + b'[' * 32 + b'0' + b']' * 32 + b'}', 'oversized')
+    negative('json-element-bound', b'{"nested":[' + b'0,' * 65536 + b'0]}\n', 'oversized', 'tcp')
+    negative('numeric-token-bound', b'{"number":' + b'1' * 129 + b'}', 'oversized')
+    return s
+
+
 def core_shapes():
     """Structural schema cases only, not invented native-family decode fixtures."""
     cases = []
@@ -693,11 +767,119 @@ def core_shapes():
     event = copy.deepcopy(record)
     event['native']['topic'] = 'wrong/class'
     add('record-with-topic', event, False)
+    carried = copy.deepcopy(observation)
+    carried['native'] = {'format': 'qgi_datagram', 'data': '',
+                          'carried_native': copy.deepcopy(observation['native'])}
+    add('qgi-one-native-level', carried)
+    event = copy.deepcopy(carried)
+    event['native']['carried_native'] = copy.deepcopy(carried['native'])
+    add('qgi-two-native-levels', event, False)
+    event = copy.deepcopy(carried)
+    event['native']['format'] = 'example_datagram'
+    add('non-qgi-carried-native', event, False)
+    event = copy.deepcopy(carried)
+    event['native']['carried_native'].pop('data')
+    add('qgi-incomplete-carried-native', event, False)
+    event = copy.deepcopy(observation)
+    event.update(family='qgi', kind='decode', fields={'snr_db': 'invalid'})
+    add('qgi-common-field-type', event, False)
     return {'$comment': 'SPDX-License-Identifier: GPL-3.0-or-later. Schema shapes only; empty byte strings are structural placeholders, not valid MQTT/IPFIX decode fixtures.',
             'spec': SPEC, 'class': 'schema_shape', 'cases': cases}
 
 
-def validate(suite):
+def validate_qgi(suite, validator):
+    """Check explicit oracles with local schema and planted carriage parser failures.
+
+    This test-only parser checks Annex I's JSON bounds, not any carried family's native codec.
+    Expected events are authored above, never generated by this parser.
+    """
+    def bounded_number(token):
+        if len(token) > 128:
+            raise ValueError('oversized')
+        return float(token) if any(c in token for c in '.eE') else int(token)
+
+    def pairs(items):
+        result = {}
+        for key, value in items:
+            if key in result:
+                raise ValueError('malformed')
+            result[key] = value
+        return result
+
+    def bad_constant(_):
+        raise ValueError('malformed')
+
+    def parse(inp):
+        raw = base64.b64decode(inp['data'], validate=True)
+        limit = 65507 if inp['transport'] == 'udp' else 1048576
+        if inp['transport'] == 'tcp':
+            terminated = raw.endswith(b'\n')
+            raw = raw[:-2] if raw.endswith(b'\r\n') else raw[:-1] if terminated else raw
+        if len(raw) > limit:
+            raise ValueError('oversized')
+        if inp['transport'] == 'tcp' and not terminated:
+            raise ValueError('truncated')
+        try:
+            event = json.loads(raw.decode('utf-8'), object_pairs_hook=pairs,
+                               parse_int=bounded_number, parse_float=bounded_number,
+                               parse_constant=bad_constant)
+        except (json.JSONDecodeError, UnicodeDecodeError) as error:
+            raise ValueError('malformed') from error
+        if not isinstance(event, dict):
+            raise ValueError('malformed')
+        count = 0
+        pending = [(event, 1)]
+        while pending:
+            value, depth = pending.pop()
+            if isinstance(value, (dict, list)):
+                if depth > 32:
+                    raise ValueError('oversized')
+                count += len(value)
+                if count > 65536:
+                    raise ValueError('oversized')
+                if isinstance(value, dict):
+                    pending.extend((key, depth + 1) for key in value)
+                    value = value.values()
+                pending.extend((item, depth + 1) for item in value)
+            elif isinstance(value, str) and len(value.encode('utf-8')) > limit:
+                raise ValueError('oversized')
+        version = event.get('spec')
+        if isinstance(version, str) and version.split('.')[0].isdigit() and version.split('.')[0] != '0':
+            raise ValueError('unsupported_version')
+        if not validator.is_valid(event):
+            raise ValueError('invalid_value')
+        if 'carried_native' in event.get('native', {}):
+            raise ValueError('invalid_value')
+        return event, raw
+
+    count = 0
+    for name, vector in suite.vectors.items():
+        if vector['class'] == 'negative':
+            try:
+                parse(vector['input'])
+            except ValueError as error:
+                assert str(error) == vector['expected']['error']['category'], (name, error)
+            else:
+                raise AssertionError(name + ' planted failure was accepted')
+            continue
+        carried, raw = parse(vector['input'])
+        observed = vector['expected']['event']
+        validator.validate(observed)
+        assert observed['context'] == vector['input']['context'], name
+        assert observed['native']['data'] == b64(raw), name
+        assert observed['native'].get('carried_native') == carried.get('native'), name
+        assert vector['reencode']['data'] == vector['input']['data'], name
+        for key in ('spec', 'family', 'mapping', 'wire_id', 'native_version'):
+            assert observed.get(key) == carried.get(key), (name, key)
+        if name == 'newer-minor-unknown-kind':
+            assert observed['kind'] == 'native' and observed['fields'] == {}, name
+        else:
+            assert observed['kind'] == carried['kind'] and observed['fields'] == carried['fields'], name
+        count += 1
+    return count
+
+
+def validate(suite, qgi):
     """Use a local schema only; importing jsonschema is optional, never install it."""
     try:
         import jsonschema
@@ -728,7 +910,8 @@ def validate(suite):
     shapes = core_shapes()['cases']
     for case in shapes:
         assert validator.is_valid(case['event']) == case['valid'], case['name']
-    return f"schema checked {len(shapes)} planted core shapes; validated {count} positive observations, all positive commands and same-MAJOR compatibility inputs"
+    qgi_count = validate_qgi(qgi, validator)
+    return f"schema checked {len(shapes)} planted core shapes; validated {count} WSJT-X and {qgi_count} qgi positive observations, all positive commands and same-MAJOR compatibility inputs; qgi negative parsing/bounds cases checked"
 
 
 def main():
@@ -736,7 +919,8 @@ def main():
     parser.add_argument('--check', action='store_true', help='check exact generated files without writing')
     args = parser.parse_args()
     suite = build()
-    validation = validate(suite)
+    qgi = qgi_vectors(suite)
+    validation = validate(suite, qgi)
     outputs = {name + '.json': dump(vector) for name, vector in suite.vectors.items()}
     manifest = {'$comment': 'SPDX-License-Identifier: GPL-3.0-or-later', 'spec': SPEC, 'family': 'wsjtx', 'mapping': 1, 'source_sha256': PIN,
                 'hash_scope': 'SHA-256 of each complete vector file, including its final newline',
@@ -750,6 +934,16 @@ def main():
     outputs['core/manifest.json'] = dump({
         '$comment': 'SPDX-License-Identifier: GPL-3.0-or-later', 'spec': SPEC,
         'files': [{'file': 'shape-cases.json', 'sha256': hashlib.sha256(shapes).hexdigest()}]})
+    qgi_outputs = {name + '.json': dump(vector) for name, vector in qgi.vectors.items()}
+    qgi_outputs['manifest.json'] = dump({
+        '$comment': 'SPDX-License-Identifier: GPL-3.0-or-later', 'spec': SPEC, 'family': 'qgi', 'mapping': 1,
+        'source': '../../annex-i-qgi.md',
+        'source_sha256': hashlib.sha256((ROOT / 'spec/annex-i-qgi.md').read_bytes()).hexdigest(),
+        'hash_scope': 'SHA-256 of each complete vector file, including its final newline',
+        'vectors': [{'file': name, 'class': qgi.vectors[name[:-5]]['class'], 'spec': SPEC,
+                     'family': 'qgi', 'mapping': 1, 'sha256': hashlib.sha256(data).hexdigest()}
+                    for name, data in sorted(qgi_outputs.items())]})
+    outputs.update({'qgi/' + name: data for name, data in qgi_outputs.items()})
     vector_root = DEST.parent
     if args.check:
         missing_or_different = [name for name, data in outputs.items()
@@ -766,7 +960,9 @@ def main():
             target.write_bytes(data)
     counts = {kind: sum(v['class'] == kind for v in suite.vectors.values())
               for kind in ['positive', 'command', 'command_negative', 'negative', 'skip', 'compatibility']}
-    print(('Checked' if args.check else 'Wrote') + ': ' + ', '.join(f'{n} {k}' for k, n in counts.items()))
+    print(('Checked' if args.check else 'Wrote') + ' WSJT-X: ' + ', '.join(f'{n} {k}' for k, n in counts.items()))
+    print('qgi: ' + ', '.join(f"{sum(v['class'] == kind for v in qgi.vectors.values())} {kind}"
+                            for kind in ('positive', 'negative')))
     print(validation)
     return 0
 

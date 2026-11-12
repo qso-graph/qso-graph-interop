@@ -15,6 +15,12 @@
 
 ### Changed
 
+- Add the seventh draft family, `qgi`, with bounded JSON/NDJSON event carriage, nested native
+  evidence and conformance vectors; close producer conformance. Specify all-family simulator
+  playback and service responses, local PSK Reporter test services, the complete 1.0 class gate,
+  program/service scope boundaries, published IPFIX submitter obligations, and C header generation
+  with foreign-caller contracts remaining targets. No Rust implementation alignment is claimed.
+
 - Revise QGI-SPEC-001 for commands built from fields, shared operations, MQTT publish envelopes,
   zero-or-more events and bounded template sessions; add five family placeholders and the
   informative Annex Z design check, result events, and command/schema regression vectors.

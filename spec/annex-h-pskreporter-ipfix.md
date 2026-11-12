@@ -4,6 +4,36 @@
 Reserved family: `pskreporter-ipfix`. This is a scope placeholder, not a complete mapping or
 conformance claim.
 
+Submission sends the operator's callsign, location and reception data to a third-party service.
+The caller chooses whether to submit (`QGI-GEN-0004`); codec support does not authorize disclosure.
+
+## H.1 Published submitter rules
+
+These facts were read on 2026-11-12 in PSK Reporter's
+[developer page](https://pskreporter.info/pskdev.html), specifically Data Gathering, Data Reporting,
+Technical IPFIX Information, Record Format Descriptor and Field Notes. They describe the service's
+published expectations, not an independently measured acceptance policy.
+
+| Topic | Published guidance |
+|---|---|
+| Interval | At most one datagram per five minutes unless full; avoid clock-synchronized timers and randomize timers based on last reception. |
+| Duplicates | Report each callsign at most once per five minutes; preferably once per hour while unchanged. The developer defines “changed.” |
+| Sender fields | Nonoptional: `senderCallsign`, `mode`, `informationSource`, `flowStartSeconds`. Optional: frequency, iMD, SNR, sender locator. |
+| Receiver fields | Include receiver information each datagram. The list names callsign, locator, software and optional antenna information, but says to include as much as possible. |
+| Templates | Send at least hourly; first three startup datagrams are recommended. Keep the UDP source port stable. |
+| Source indicator | Field Notes requests `informationSource=1` for automatic reports; value 2 marks QSO records. |
+
+Source for every row: [PSK Reporter developer information](https://pskreporter.info/pskdev.html).
+The linked [FAQ](https://pskreporter.info/faq) rendered only a loading placeholder when read.
+Unconfirmed: receiver-field acceptance minimum, exact duplicate key across modes/bands, and a
+required change threshold. Do not invent these or equate recommendations with observed rejection.
+
+| ID | Requirement | Verify |
+|---|---|---|
+| `QGI-PSI-0002` | **Responsible submission.** A producer of PSK Reporter IPFIX submissions MUST follow the published submitter rules sourced in H.1, including reporting intervals, duplicate suppression and required fields. It MUST preserve the source's distinctions between requirements and recommendations and MUST NOT invent constraints where H.1 marks the service policy unconfirmed. Scheduling and cross-message duplicate state belong to the submitting application, outside the pure codec. | Test, Inspection |
+
+## H.2 Mapping work remaining
+
 | Item | Scope to be completed |
 |---|---|
 | Native message | One complete IPFIX message in a UDP datagram. |

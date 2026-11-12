@@ -1,0 +1,39 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "qgi",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "transport": "tcp",
+    "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJxZ2kiLCJtYXBwaW5nIjoxLCJraW5kIjoiY29udHJvbCIsImNvbnRleHQiOnsiZGlyZWN0aW9uIjoidG9fYXBwbGljYXRpb24iLCJleGNoYW5nZSI6InVua25vd24ifSwiZmllbGRzIjp7Im9wZXJhdGlvbiI6InNlbmRfdGV4dCIsInRleHQiOiJzeW50aGV0aWNcbm1lc3NhZ2UiLCJ0cmFuc21pdCI6ZmFsc2V9fQ0K",
+    "context": {
+      "direction": "unknown",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "qgi",
+      "mapping": 1,
+      "kind": "control",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "send_text",
+        "text": "synthetic\nmessage",
+        "transmit": false
+      },
+      "native": {
+        "format": "qgi_ndjson",
+        "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJxZ2kiLCJtYXBwaW5nIjoxLCJraW5kIjoiY29udHJvbCIsImNvbnRleHQiOnsiZGlyZWN0aW9uIjoidG9fYXBwbGljYXRpb24iLCJleGNoYW5nZSI6InVua25vd24ifSwiZmllbGRzIjp7Im9wZXJhdGlvbiI6InNlbmRfdGV4dCIsInRleHQiOiJzeW50aGV0aWNcbm1lc3NhZ2UiLCJ0cmFuc21pdCI6ZmFsc2V9fQ=="
+      }
+    }
+  },
+  "reencode": {
+    "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJxZ2kiLCJtYXBwaW5nIjoxLCJraW5kIjoiY29udHJvbCIsImNvbnRleHQiOnsiZGlyZWN0aW9uIjoidG9fYXBwbGljYXRpb24iLCJleGNoYW5nZSI6InVua25vd24ifSwiZmllbGRzIjp7Im9wZXJhdGlvbiI6InNlbmRfdGV4dCIsInRleHQiOiJzeW50aGV0aWNcbm1lc3NhZ2UiLCJ0cmFuc21pdCI6ZmFsc2V9fQ0K"
+  }
+}
