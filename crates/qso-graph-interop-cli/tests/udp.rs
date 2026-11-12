@@ -1,6 +1,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #![forbid(unsafe_code)]
 use qso_graph_interop::wsjtx::{self, Body, Outcome};
+
+/// Every test here starts child processes, and the socket tests reserve a port by binding and releasing
+/// it. Run in parallel, a child started by one test can briefly inherit another test's socket before
+/// it executes, so the listener and its probe disagree about who holds the port. Measured: 3 to 4 of
+/// 40 runs failed in parallel, 0 of 40 single-threaded. All of them hold one lock.
+fn serial() -> std::sync::MutexGuard<'static, ()> {
+    static SOCKETS: std::sync::Mutex<()> = std::sync::Mutex::new(());
+    SOCKETS
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner)
+}
 use std::{
     io::{BufRead, BufReader},
     net::UdpSocket,
@@ -10,6 +21,7 @@ use std::{
 
 #[test]
 fn simulator_sends_only_to_the_named_loopback_socket() {
+    let _sockets = serial();
     let socket = UdpSocket::bind("127.0.0.1:0").unwrap();
     socket
         .set_read_timeout(Some(Duration::from_secs(3)))
@@ -57,6 +69,7 @@ fn simulator_sends_only_to_the_named_loopback_socket() {
 
 #[test]
 fn listener_json_is_one_object_per_message_and_survives_malformed_input() {
+    let _sockets = serial();
     // Reserve a candidate port, then wait until the child owns it. No fixed test port.
     let reserve = UdpSocket::bind("127.0.0.1:0").unwrap();
     let address = reserve.local_addr().unwrap();
@@ -114,6 +127,7 @@ fn listener_json_is_one_object_per_message_and_survives_malformed_input() {
 
 #[test]
 fn simulator_to_listener_reports_consistent_transmit_frequency() {
+    let _sockets = serial();
     let reserve = UdpSocket::bind("127.0.0.1:0").unwrap();
     let address = reserve.local_addr().unwrap();
     drop(reserve);
@@ -184,6 +198,7 @@ fn simulator_to_listener_reports_consistent_transmit_frequency() {
 
 #[test]
 fn decode_reads_file_and_stdin_and_rejects_an_oversized_capture() {
+    let _sockets = serial();
     use std::io::Write;
     let bytes = wsjtx::encode(&wsjtx::Packet::new("synthetic-instance", Body::Close)).unwrap();
     let mut child = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
@@ -220,4 +235,86 @@ fn decode_reads_file_and_stdin_and_rejects_an_oversized_capture() {
     std::fs::remove_file(&path).unwrap();
     assert!(!output.status.success());
     assert!(output.stdout.is_empty());
+}
+
+#[test]
+fn n1mm_listener_and_capture_decoder_supply_observer_context() {
+    let _sockets = serial();
+    use std::io::Write;
+    let bytes = include_bytes!("../../qso-graph-interop/tests/fixtures/n1mm-radio.xml");
+    let reserve = UdpSocket::bind("127.0.0.1:0").unwrap();
+    let address = reserve.local_addr().unwrap();
+    drop(reserve);
+    let mut listener = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
+        .args(["listen", "--n1mm", &address.to_string(), "--count", "3"])
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .unwrap();
+    let start = Instant::now();
+    while UdpSocket::bind(address).is_ok() {
+        if start.elapsed() > Duration::from_secs(5) {
+            let _ = listener.kill();
+            panic!("N1MM listener did not bind");
+        }
+        std::thread::sleep(Duration::from_millis(10));
+    }
+    let sender = UdpSocket::bind("127.0.0.1:0").unwrap();
+    for data in [
+        b"<RadioInfo><bad></RadioInfo>".as_slice(),
+        b"<Unknown/>".as_slice(),
+        bytes.as_slice(),
+    ] {
+        sender.send_to(data, address).unwrap();
+    }
+    while listener.try_wait().unwrap().is_none() {
+        if start.elapsed() > Duration::from_secs(5) {
+            let _ = listener.kill();
+            panic!("N1MM listener did not exit");
+        }
+        std::thread::sleep(Duration::from_millis(10));
+    }
+    let output = listener.wait_with_output().unwrap();
+    assert!(output.status.success());
+    assert_eq!(output.stdout.iter().filter(|&&b| b == b'\n').count(), 1);
+    let observed: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(observed["family"], "n1mm");
+    assert_eq!(observed["context"]["direction"], "from_application");
+    assert_eq!(observed["fields"]["dial_frequency_hz"], 137500);
+    assert!(!output.stderr.is_empty());
+    let mut child = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
+        .args(["decode", "--n1mm", "-"])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .spawn()
+        .unwrap();
+    child.stdin.take().unwrap().write_all(bytes).unwrap();
+    let output = child.wait_with_output().unwrap();
+    assert!(output.status.success());
+    let captured: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(captured["context"]["direction"], "unknown");
+    assert_eq!(captured["native"], observed["native"]);
+    let path = std::env::temp_dir().join(format!("qgi-n1mm-decode-{}.xml", std::process::id()));
+    std::fs::write(&path, bytes).unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
+        .args(["decode", "--n1mm"])
+        .arg(&path)
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    assert_eq!(
+        serde_json::from_slice::<serde_json::Value>(&output.stdout).unwrap(),
+        captured
+    );
+    for bad in [b"<RadioInfo>".to_vec(), vec![b'x'; 65_508]] {
+        std::fs::write(&path, bad).unwrap();
+        let output = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
+            .args(["decode", "--n1mm"])
+            .arg(&path)
+            .output()
+            .unwrap();
+        assert!(!output.status.success());
+        assert!(output.stdout.is_empty());
+    }
+    std::fs::remove_file(path).unwrap();
 }

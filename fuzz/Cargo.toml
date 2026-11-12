@@ -27,6 +27,13 @@ unsafe_code = "forbid"
 all = { level = "warn", priority = -1 }
 
 [[bin]]
+name = "n1mm"
+path = "fuzz_targets/n1mm.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
 name = "wsjtx"
 path = "fuzz_targets/wsjtx.rs"
 test = false

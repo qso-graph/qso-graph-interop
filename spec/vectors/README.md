@@ -51,9 +51,9 @@ documentation pages pinned in Annex D. Retrieval is 2026-11-12; the example
 download page identifies its update as 2019-09-30.
 No upstream documentation is bundled. XML data in these vectors is synthetic.
 
-The N1MM suite has **1,100 positive**, **21 command**, **56 command_negative**,
-**61 negative**, **4 skip**, and **9 compatibility** vectors (1,251 total), plus
-**1,100 embedded re-encoding checks**. It covers all 11 documented root spellings, including historical
+The N1MM suite has **1,105 positive**, **21 command**, **56 command_negative**,
+**65 negative**, **4 skip**, and **9 compatibility** vectors (1,260 total), plus
+**1,105 embedded re-encoding checks**. It covers all 11 documented root spellings, including historical
 `lookup`, inbound `radio_setfrequency` and inbound `Spectrum`. Every catalog leaf
 has an individual present and empty case; a minimal case for every root checks
 all leaves absent. Nested score leaves and category/selector attributes have

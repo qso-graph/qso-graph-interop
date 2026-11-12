@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # `qg-interop`
 
-Test amateur radio applications without a radio. `qg-interop` listens to WSJT-X UDP messages,
+Test amateur radio applications without a radio. `qg-interop` listens to WSJT-X and N1MM Logger+ UDP messages,
 decodes captured datagrams as QGI-SPEC-001 NDJSON events, and simulates WSJT-X from ALL.TXT logs.
 The single binary runs without Python or other runtime packages.
 
@@ -9,6 +9,8 @@ Install from a checkout with `cargo install --path crates/qso-graph-interop-cli 
 
 ```sh
 qg-interop listen --wsjtx
+qg-interop listen --n1mm
+qg-interop decode --n1mm capture.xml
 qg-interop decode --wsjtx capture.bin
 qg-interop sim --wsjtx --to 127.0.0.1:2237
 qg-interop sim --wsjtx --to 127.0.0.1:2237 --file ALL.TXT --speed 60
@@ -20,7 +22,8 @@ Choose a numeric IPv4 or IPv6 destination with `--to`. Use `--call`, `--grid`, a
 the simulated station, and `--loop` to repeat. See the [simulator guide](../../docs/user/simulator.md)
 for options and capture playback.
 
-The listener defaults to `127.0.0.1:2237`. Standard output contains one specification event per line;
+The listener defaults to `127.0.0.1:2237` for WSJT-X and `127.0.0.1:12060` for N1MM.
+See the [N1MM guide](../../docs/user/n1mm.md) for logger setup and capture decoding. Standard output contains one specification event per line;
 errors and skip notices go to standard error. Each subcommand's `--help` includes examples.
 
 Licensed under GPL-3.0-or-later.

@@ -8,6 +8,8 @@ pub mod codec;
 pub mod error;
 pub mod json;
 pub mod model;
+#[cfg(feature = "n1mm")]
+pub mod n1mm;
 pub use codec::Codec;
 pub use error::{Category, Error};
 pub use model::{Context, Event, Text};

@@ -33,7 +33,7 @@ struct Cli {
 enum Command {
     /// Print each decoded datagram as one line.
     #[command(
-        after_help = "Examples:\n  qg-interop listen --wsjtx\n  qg-interop listen --wsjtx 127.0.0.1:2237 --json"
+        after_help = "Examples:\n  qg-interop listen --wsjtx\n  qg-interop listen --n1mm\n  qg-interop listen --n1mm 127.0.0.1:12060 --json"
     )]
     Listen(Listen),
     /// Play ALL.TXT or native NDJSON captures over UDP.
@@ -41,9 +41,9 @@ enum Command {
         after_help = "Examples:\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call W1AW --mode FT4 --frequency 7074000"
     )]
     Sim(Box<Sim>),
-    /// Decode one complete native WSJT-X datagram from a file or standard input.
+    /// Decode one complete native datagram from a file or standard input.
     #[command(
-        after_help = "Examples:\n  qg-interop decode --wsjtx capture.bin\n  qg-interop decode --wsjtx -"
+        after_help = "Examples:\n  qg-interop decode --wsjtx capture.bin\n  qg-interop decode --n1mm capture.xml\n  qg-interop decode --n1mm -"
     )]
     Decode(Decode),
 }
@@ -51,11 +51,13 @@ enum Command {
 #[derive(Args)]
 struct Listen {
     /// Select the WSJT-X protocol family.
-    #[arg(long, required = true)]
+    #[arg(long, required_unless_present = "n1mm", conflicts_with = "n1mm")]
     wsjtx: bool,
+    /// Select N1MM Logger+ broadcasts (default port 12060).
+    #[arg(long)]
+    n1mm: bool,
     /// Numeric local address to bind (IPv6 uses brackets).
-    #[arg(default_value = "127.0.0.1:2237")]
-    address: SocketAddr,
+    address: Option<SocketAddr>,
     /// Emit specification NDJSON (also the default output).
     #[arg(long)]
     json: bool,
@@ -66,8 +68,11 @@ struct Listen {
 
 #[derive(Args)]
 struct Decode {
-    #[arg(long, required = true)]
+    #[arg(long, required_unless_present = "n1mm", conflicts_with = "n1mm")]
     wsjtx: bool,
+    /// Select the N1MM Logger+ protocol family.
+    #[arg(long)]
+    n1mm: bool,
     /// File containing one native datagram; '-' reads standard input.
     #[arg(default_value = "-")]
     file: PathBuf,
@@ -132,16 +137,16 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn listen(options: Listen) -> Result<(), Box<dyn std::error::Error>> {
-    let socket = NumericUdp::bind(options.address)?;
+    let socket = NumericUdp::bind(listen_address(&options))?;
+    let mut codec = selected_codec(options.n1mm);
     let mut bytes = [0_u8; 65_535];
     let stdout = io::stdout();
     let mut output = stdout.lock();
     let mut seen = 0_u64;
     loop {
         let (n, peer) = socket.recv_from(&mut bytes)?;
-        // A WSJT-X server port receives only what WSJT-X instances send, so the listener, as the
-        // observer, knows the direction (QGI-MOD-0002). The codec still infers nothing.
-        match emit(&bytes[..n], &mut output, "from_application") {
+        // The observer on the selected application's broadcast/server port supplies direction.
+        match emit(codec.as_mut(), &bytes[..n], &mut output, "from_application") {
             Ok(()) => output.flush()?,
             Err(e) => eprintln!("{peer}: {e}"),
         }
@@ -154,19 +159,16 @@ fn listen(options: Listen) -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn emit(
+    codec: &mut dyn Codec,
     bytes: &[u8],
     output: &mut impl Write,
     direction: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let mut options = DecodeOptions::default();
     options.context = serde_json::json!({"direction": direction, "exchange": "unknown"});
-    let outcome = wsjtx::Wsjtx::default().decode(bytes, &options)?;
+    let outcome = codec.decode(bytes, &options)?;
     for event in outcome.events {
-        output.write_all(&qso_graph_interop::json::write(
-            &event,
-            true,
-            Some(&wsjtx::Wsjtx::default()),
-        )?)?;
+        output.write_all(&qso_graph_interop::json::write(&event, true, Some(codec))?)?;
         writeln!(output)?;
     }
     for skip in outcome.skips {
@@ -178,6 +180,7 @@ fn emit(
     Ok(())
 }
 fn decode_file(options: Decode) -> Result<(), Box<dyn std::error::Error>> {
+    let mut codec = selected_codec(options.n1mm);
     let input: Box<dyn Read> = if options.file.as_os_str() == "-" {
         Box::new(io::stdin().lock())
     } else {
@@ -185,9 +188,21 @@ fn decode_file(options: Decode) -> Result<(), Box<dyn std::error::Error>> {
     };
     let mut bytes = Vec::new();
     input
-        .take((wsjtx::MAX_DATAGRAM + 1) as u64)
+        .take((codec.limits().message_bytes + 1) as u64)
         .read_to_end(&mut bytes)?;
-    emit(&bytes, &mut io::stdout().lock(), "unknown")
+    emit(codec.as_mut(), &bytes, &mut io::stdout().lock(), "unknown")
+}
+fn selected_codec(n1mm: bool) -> Box<dyn Codec> {
+    if n1mm {
+        Box::new(qso_graph_interop::n1mm::N1mm::default())
+    } else {
+        Box::new(wsjtx::Wsjtx::default())
+    }
+}
+fn listen_address(options: &Listen) -> SocketAddr {
+    options.address.unwrap_or_else(|| {
+        SocketAddr::from(([127, 0, 0, 1], if options.n1mm { 12060 } else { 2237 }))
+    })
 }
 
 fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
@@ -335,7 +350,22 @@ mod tests {
         let Command::Listen(l) = c.command else {
             panic!("listen");
         };
-        assert_eq!(l.address.to_string(), "127.0.0.1:2237");
+        assert_eq!(listen_address(&l).to_string(), "127.0.0.1:2237");
+        let c = Cli::try_parse_from(["qg-interop", "listen", "--n1mm"]).unwrap();
+        let Command::Listen(l) = c.command else {
+            panic!("listen")
+        };
+        assert_eq!(listen_address(&l).to_string(), "127.0.0.1:12060");
+        for args in [
+            vec!["listen", "--n1mm", "example.com:12060"],
+            vec!["listen", "--n1mm", "--wsjtx"],
+            vec!["decode", "--n1mm", "--wsjtx"],
+            vec!["decode"],
+        ] {
+            let mut argv = vec!["qg-interop"];
+            argv.extend(args);
+            assert!(Cli::try_parse_from(argv).is_err());
+        }
     }
 
     #[test]

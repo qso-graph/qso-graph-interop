@@ -574,6 +574,9 @@ fn shape(v: &Value, name: &str, strict: bool) -> Result<(), Error> {
             "string" => v.is_string(),
             "object" => v.is_object(),
             "array" => v.is_array(),
+            "spectrum_levels" => v.as_array().is_some_and(|levels| {
+                levels.len() <= 4096 && levels.iter().all(|v| integer(v, 0, 65535))
+            }),
             "operation" => v.as_str().is_some_and(operation),
             "token" => v.as_str().is_some_and(token),
             "enum_status" => matches!(v.as_str(), Some("ok" | "error")),
@@ -820,7 +823,21 @@ pub fn validate(v: &Value, strict: bool) -> Result<(), Error> {
         return Err(invalid("invalid command form"));
     }
     if official(family) && known_kind(kind) {
-        shape(&v["fields"], kind, strict)?;
+        let extra = family_fields(v);
+        if let Some(extra) = extra {
+            let (props, _) = crate::catalog::catalog(extra).expect("profile catalog");
+            let mut common = v["fields"].clone();
+            let mut profile = Map::new();
+            for (key, _) in props {
+                if let Some(value) = common.as_object_mut().expect("fields").remove(*key) {
+                    profile.insert((*key).into(), value);
+                }
+            }
+            shape(&profile.into(), extra, strict)?;
+            shape(&common, kind, strict)?;
+        } else {
+            shape(&v["fields"], kind, strict)?;
+        }
     }
     if let Some(hops) = m.get("via") {
         let a = hops
@@ -887,7 +904,27 @@ fn project(v: &Value, name: &str) -> Value {
     Value::Object(result)
 }
 pub fn known_fields(v: &Value) -> Value {
-    project(&v["fields"], v["kind"].as_str().unwrap_or("native"))
+    let mut fields = project(&v["fields"], v["kind"].as_str().unwrap_or("native"));
+    if let Some(extra) = family_fields(v) {
+        fields.as_object_mut().expect("fields").extend(
+            project(&v["fields"], extra)
+                .as_object()
+                .expect("profile fields")
+                .clone(),
+        );
+    }
+    fields
+}
+fn family_fields(v: &Value) -> Option<&'static str> {
+    if v["family"] != "n1mm" {
+        return None;
+    }
+    match v["kind"].as_str()? {
+        "native" => Some("n1mm_native"),
+        "control" => Some("n1mm_control"),
+        "qso_logged" | "qso_changed" | "qso_deleted" => Some("n1mm_qso"),
+        _ => None,
+    }
 }
 pub fn recognized(event: &Event, profile: Option<&dyn Profile>) -> Result<Recognized, Error> {
     let v = event.value();
@@ -918,7 +955,9 @@ pub fn recognized(event: &Event, profile: Option<&dyn Profile>) -> Result<Recogn
     } else {
         kind
     };
-    let fields = if recognized_kind == "native" {
+    let fields = if recognized_kind == "native"
+        && (kind != "native" || !native_version_supported || !official(family))
+    {
         serde_json::json!({})
     } else if let Some(p) = profile {
         p.fields(event)

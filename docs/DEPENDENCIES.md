@@ -6,6 +6,27 @@ Only crates.io sources are allowed. The library uses serde and serde_json, plus 
 clap and the Rust-only signal-hook flag API. xtask adds TOML and Rust-token parsers without entering the shipped graph.
 The isolated fuzz workspace adds libfuzzer-sys and serde_json JSON-path checks and never enters either shipped crate.
 
+## N1MM XML decision
+
+Annex D requires invalid UTF-8 bytes and unpaired UTF-16 units to survive in leaf text, while
+invalid units in markup are errors. It also orders declaration syntax/version/encoding checks,
+whole-document DOCTYPE/entity isolation, document-order resources, then mapping eligibility and
+numeric conversion. Lexical names use original-encoding byte lengths; decoded text budgets count
+valid UTF-8 lengths and original invalid-unit lengths after entity and line-ending processing.
+
+Use the small bounded tokenizer in `src/n1mm/xml.rs`. A conventional XML parser that requires
+well-formed decoded character data cannot meet the invalid-unit contract. Repairing or replacing
+input before using such a parser would lose the units and change admission/error precedence;
+wrapping a parser with a second lexical pass would duplicate the tokenizer. No crates.io XML crate
+is added or claimed to meet these requirements without workarounds. The tokenizer has no resolver,
+DTD processor, I/O, unsafe code, or macro definitions. Only predefined entities and legal numeric
+character references expand. UTF-8 and UTF-16 retain their own units through processing.
+
+The existing dependency graph and both lockfiles remain unchanged. The normal policy, cargo-vet,
+cargo-deny, and cargo-audit checks still apply. Specification vectors plant each limit and XML
+isolation failure; the isolated N1MM fuzz target exercises decoding, command construction, native
+round trips, and strict JSON publication.
+
 ## Direct dependencies
 
 | Crate | Range lower bound | License | Why |

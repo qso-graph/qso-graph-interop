@@ -311,3 +311,33 @@ fn request_response_context_and_application_faults_need_no_family_dependency() {
     assert_eq!(read.context["correlation_id"], "synthetic-request");
     assert_eq!(read.verification, Verification::Unavailable);
 }
+
+#[test]
+fn n1mm_profile_shapes_work_without_loading_a_family() {
+    let mut value = command();
+    value["family"] = "n1mm".into();
+    value["fields"] = json!({"operation":"n1mm.spectrum","spectrum_data":[0,65535],"app":"","scaling_factor":"001.00"});
+    let event = Event::from_value(value.clone()).unwrap();
+    json::write(&event, true, None).unwrap();
+    assert_eq!(event.recognized(None).unwrap().fields, value["fields"]);
+    for bad in [
+        json!([-1]),
+        json!([65536]),
+        json!([0.5]),
+        json!(["1"]),
+        json!([true]),
+        json!(vec![0; 4097]),
+    ] {
+        value["fields"]["spectrum_data"] = bad;
+        assert!(Event::from_value(value.clone()).is_err());
+    }
+    value["fields"]["spectrum_data"] = json!([]); // reader capacity; command writer requires at least one
+    assert!(Event::from_value(value.clone()).is_ok());
+    value["family"] = "wsjtx".into();
+    let other = Event::from_value(value).unwrap();
+    assert_eq!(
+        other.recognized(None).unwrap().fields,
+        json!({"operation":"n1mm.spectrum"})
+    );
+    assert!(json::write(&other, true, None).is_err());
+}

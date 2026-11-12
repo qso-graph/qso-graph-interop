@@ -18,6 +18,19 @@ pub(super) fn catalog(name: &str) -> Option<Shape> {
             &["direction", "exchange"],
         )),
         "native" => Some((&[], &[])),
+        "n1mm_native" => Some((&[("start", "instant"), ("previous_start", "instant")], &[])),
+        "n1mm_qso" => Some((&[("previous_start", "instant")], &[])),
+        "n1mm_control" => Some((
+            &[
+                ("app", "text"),
+                ("spectrum_name", "text"),
+                ("low_scope_frequency", "integer"),
+                ("high_scope_frequency", "integer"),
+                ("scaling_factor", "text"),
+                ("spectrum_data", "spectrum_levels"),
+            ],
+            &[],
+        )),
         "decode" => Some((
             &[
                 ("time_of_day", "time_of_day"),
@@ -134,11 +147,13 @@ pub(super) fn catalog(name: &str) -> Option<Shape> {
                 ("multiplier_count", "integer"),
                 ("points", "integer"),
                 ("total_score", "integer"),
+                ("time", "instant"),
             ],
             &[],
         )),
         "control" => Some((
             &[
+                ("radio", "radio"),
                 ("operation", "operation"),
                 ("window", "integer"),
                 ("time_of_day", "time_of_day"),

@@ -99,6 +99,12 @@ jobs:
         env:
           SECONDS_EACH: ${{ github.event_name == 'schedule' && '600' || '60' }}
         run: cargo fuzz run wsjtx -- -max_total_time="$SECONDS_EACH" -max_len=65508 -timeout=10 -rss_limit_mb=2048 -print_final_stats=1
+      - name: Fuzz N1MM decoding and command encoding
+        # Each family gets the same fuzz duration as the local verifier.
+        working-directory: fuzz
+        env:
+          SECONDS_EACH: ${{ github.event_name == 'schedule' && '600' || '60' }}
+        run: cargo fuzz run n1mm -- -max_total_time="$SECONDS_EACH" -max_len=65508 -timeout=10 -rss_limit_mb=2048 -print_final_stats=1
       - name: Lockfiles did not change
         run: git diff --exit-code -- Cargo.lock fuzz/Cargo.lock
       - name: Keep failure inputs

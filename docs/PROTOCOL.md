@@ -29,25 +29,25 @@ The implementation is Rust; upstream C++ is not compiled or shipped here.
 ## Specification and public API
 
 The implementation follows [QGI-SPEC-001 0.1.0](../spec/QGI-SPEC-001.md), Annex A's common
-fields, Annex B revision 1 for WSJT-X, and Annex I revision 1 for event carriage. The source pins
+fields, Annex B revision 1 for WSJT-X, Annex D revision 1 for N1MM, and Annex I revision 1 for event carriage. The source pins
 above remain the native-layout evidence. No upstream source was fetched during this alignment.
 
 The family-independent core exports `Event`, `Context`, neutral text/integer/time/binary64 values,
 radio labels, hops, class-native evidence, `Codec`, `Profile`, outcomes, skips, limits, and errors.
-It imports no family. Default features select `wsjtx`, `qgi`, and `serde`; disabling default features
+It imports no family. Default features select `wsjtx`, `n1mm`, `qgi`, and `serde`; disabling default features
 builds and tests the core alone. `conformance` exports the vector runner and hash, round-trip,
 truncation, limit and fuzz helpers. The `serde` feature enables serde traits on neutral values and events. The core retains serde_json
 for the preserved JSON value model and bounded JSON format, including with serde integration off.
 
 `Codec::decode` returns an ordered collection of events and skip notices or one atomic error.
 The caller supplies a session key, observer context and optional expiry input. `Limits` declares
-message, field, event, session, template and dependency budgets. WSJT-X and qgi have no semantic
+message, field, event, session, template and dependency budgets. WSJT-X, N1MM, and qgi have no semantic
 session state. `reset` resets one session or all sessions. Stream decoding consumes a caller-owned
 buffer without an async runtime. The external implementation in `tests/core.rs` proves the open
 trait with bounded session state and planted atomic failures.
 
 `encode_command` constructs bytes from common fields, operation, target `wire_id` and encoding
-options. `reencode` separately validates observed native evidence and canonicalizes booleans.
+options. `reencode` separately validates observed native evidence; WSJT-X canonicalizes booleans, and N1MM returns exact original XML bytes.
 `Event::native_bytes` retrieves exact original bytes. Decoding and encoding never perform I/O.
 `Profile` supplies family interpretation and producer validation through public core APIs.
 Family errors remain typed sources of the non-exhaustive core error. Display messages are prose.
@@ -106,18 +106,59 @@ the reader profile for newer preserved content. TCP errors consume through the n
 oversized incomplete frame has no LF, the codec enters delimiter-discard recovery; reset clears
 that framing state. EOF with an unfinished frame returns `truncated`.
 
-## N1MM timestamp evidence (specification only)
+## N1MM mapping and evidence
 
-Annex D's [source pins S4–S6](../spec/annex-d-n1mm.md#d1-source-pin-and-evidence-boundaries)
-record the URLs, retrieval date **2026-11-12 UTC**, and SHA-256 of the exact response
-bodies for N1MM's installation guidance, FAQ and Windows manual. They establish
-UTC logging using the computer's time-zone/DST conversion and UTC Log window
-display. The UDP `timestamp` is that logged time. `QGI-N1M-0029` defines exact
-calendar-valid conversion; `QGI-N1M-0037` requires accepting the valid value as
-sent, including a wrong operator clock, without receiver-clock checks, plausibility
-windows, corrections or warnings. The independent Annex D vectors cover contacts,
-prior contact keys, lookups, deletions, spots and scores. This evidence defines
-the draft profile; it does not claim a Rust N1MM codec or live-peer validation.
+`n1mm::N1mm` implements Annex D revision 1 for all 11 exact root spellings. It implements
+`Codec` and `Profile`, with datagram framing, one event or one textual unknown-type skip,
+and no session state. `Skip::native_name` carries the literal qualified root name;
+`native_type` retains numeric discriminators for other families. `N1mmError` is the typed source
+of core errors. The XML declaration never becomes `native_version`, and contact IDs become
+opaque `record_id` text, never `wire_id` or observer identity.
+
+The six [dated source pins](../spec/annex-d-n1mm.md#d1-source-pin-and-evidence-boundaries)
+cover the published appendix, example download page/XML, installation guidance, FAQ, and Windows
+manual, retrieved November 12, 2026. These documents define the native layouts; Annex D states the
+reader/writer policies separately. No upstream content was fetched during implementation.
+The appendix recommends broadcast/lookup port 12060; the CLI defaults to `127.0.0.1:12060`.
+Its listener supplies `from_application`; capture decoding supplies `unknown` direction.
+
+Contact/radio integers in 10 Hz units multiply exactly by 10. Spot, QSY, and scope decimal kHz
+convert exactly to integer hertz without floating point, including 137.5 and 475.0 kHz. Sub-Hz,
+out-of-range, duplicate, nested, and invalid-encoding scalars remain native-only. Radio labels,
+focus/active radios, running/stereo/transmitting flags, opaque contact IDs, and received-exchange
+aliases follow their individual catalog entries; nothing infers physical topology or source identity.
+Score counts/points map only the unique total/ALL selectors within the unique breakdown container.
+
+Annex D's UTC sources establish the logged time's time-zone/DST conversion. Exact calendar-valid
+`YYYY-MM-DD HH:MM:SS` text maps independently to start, previous_start, or time. Every valid time
+is accepted as sent, including a wrong operator clock. No clock comparison, plausibility window,
+repair, inferred end, or warning is added. Invalid timestamps preserve native evidence and omit only
+their mapped field. Lookup roots map only their cataloged timestamps.
+
+The [XML decision](DEPENDENCIES.md#n1mm-xml-decision) uses an in-module bounded tokenizer with no
+external resolution. Admission checks datagram size, detection/UTF-16 completeness, declaration
+syntax/version/encoding, document-wide declaration isolation, document-order syntax/resources,
+then root dispatch, mapping eligibility, and numeric conversion. Names use original-encoding
+byte budgets; text uses UTF-8 scalar lengths and original invalid-unit lengths. Invalid units
+survive only in root-contained character data/CDATA. Comments, processing instructions, namespaces,
+attribute normalization, entities, and line endings follow Annex D. Bounds are 65,507 datagram/text
+bytes, depth 16, 1,024 elements, 16 attributes per element/256 total, 128 lexical-name bytes,
+and 128 characters per eligible interpreted numeric token.
+
+`set_frequency` and `n1mm.spectrum` commands require only their cataloged fields and no encoding
+options, native version, wire ID, or radio instance. Frequencies use integer Hz and canonical kHz.
+The writer preserves positive scale text, derives DataCount, preserves level order, escapes XML
+text in one pass, uses paired tags and the exact UTF-8 declaration, and admits the complete result
+before returning bytes. No acknowledgment is synthesized.
+
+Observed re-encoding verifies recognized fields against native evidence and returns exact original
+bytes. The optional view contains only `root` and BOM-excluded, otherwise unprocessed `xml`, with
+matching invalid-text wrappers. Strict publication checks that entire view and rejects additions.
+N1MM-only field capacities are scoped by family in the neutral JSON validator, including core-only
+builds; the core imports no codec. Independent `n1mm-radio.xml` evidence plants SO2R swaps, and
+process tests exercise numeric binds, malformed/unknown input, listener context, file/stdin decoding,
+and oversized capture rejection. Live-peer captures and command acceptance remain unverified;
+Annex D.8's numbered capture questions remain open.
 
 ## Acceptance and supplemental evidence
 
@@ -129,11 +170,15 @@ above. Informative views and original-byte retrieval are tested separately from 
 | Family | Positive | Command | Command negative | Negative | Skip | Compatibility | Embedded reencode |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | wsjtx | 165 | 67 | 69 | 80 | 5 | 14 | 81 |
+| n1mm | 1105 | 21 | 56 | 65 | 4 | 9 | 1105 |
 | qgi | 13 | 0 | 0 | 22 | 0 | 0 | 13 |
 
 The manifests contain no standalone `reencode` class today; the exported runner handles it, and
 all embedded re-encoding instructions execute. qgi compatibility checks are embedded in positives.
-All 435 manifest vectors and 94 embedded re-encoding operations pass.
+All 1,695 manifest vectors and 1,199 embedded re-encoding operations pass. Counts come from
+the current manifests; the N1MM vector README lists older totals. The runner retains a negative
+command containing an unpaired surrogate as raw JSON until construction rejects it; it never
+replaces the offending scalar. `conformance::read_vector` exposes that instruction reader.
 
 The old layout/schema/string/date/color/boolean/sentinel/direction fixtures and corresponding
 `tests/protocol.rs` tests were retired because the independently reviewed specification vectors
@@ -148,7 +193,9 @@ JSON keys, precise unknown integers, null/empty/absent context, neutral value bo
 producer rejection, partial and multiple TCP frames, EOF/recovery, and typed family errors. A maximum-size invalid UTF-8 observation with its structured view
 checks Annex B admission separately from Annex I rejection. The
 fuzz harness accepts arbitrary binary, arbitrary event JSON and qgi datagram/stream input through
-the public API on nightly-2026-10-30. Live-peer interoperability remains separate evidence.
+the public API on nightly-2026-10-30. A separate `n1mm` target checks arbitrary XML and field-built
+commands with exact observed round trips and strict publication. Both targets are seeded from the
+independent vectors and run for 60 seconds each in `cargo xtask verify`. Live-peer interoperability remains separate evidence.
 
 ## Simulator timing and reactions
 

@@ -211,6 +211,10 @@ pub fn steps(fuzz_seconds: u64) -> Vec<Step> {
                 requires: Some("cargo-fuzz"),
             },
         ]);
+        let mut n1mm = list.last().expect("WSJT-X fuzz step").clone();
+        n1mm.name = "fuzz n1mm";
+        n1mm.args[2] = "n1mm".into();
+        list.push(n1mm);
     }
     list
 }
@@ -555,6 +559,7 @@ mod tests {
             "cargo deny",
             "cargo audit",
             "fuzz run",
+            "fuzz n1mm",
         ] {
             assert!(names.contains(&required), "{required} missing");
         }

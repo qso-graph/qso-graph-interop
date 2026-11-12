@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 [package]
 name = "qso-graph-interop"
-description = "Bounded, bidirectional WSJT-X UDP protocol codecs"
+description = "Bounded sans-I/O amateur radio protocol codecs"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -10,8 +10,9 @@ repository.workspace = true
 readme = "README.md"
 
 [features]
-default = ["wsjtx", "qgi", "serde"]
+default = ["wsjtx", "n1mm", "qgi", "serde"]
 wsjtx = ["serde"]
+n1mm = ["serde"]
 qgi = ["serde"]
 serde = ["dep:serde"]
 conformance = ["serde", "dep:sha2-const-stable"]
@@ -29,5 +30,9 @@ name = "protocol"
 required-features = ["wsjtx"]
 
 [[test]]
+name = "n1mm"
+required-features = ["n1mm"]
+
+[[test]]
 name = "conformance"
-required-features = ["conformance", "wsjtx", "qgi"]
+required-features = ["conformance", "wsjtx", "n1mm", "qgi"]

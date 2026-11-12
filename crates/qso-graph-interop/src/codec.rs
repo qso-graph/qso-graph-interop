@@ -93,6 +93,8 @@ pub struct Skip {
     pub reason: SkipReason,
     pub native_version: Option<String>,
     pub native_type: Option<u64>,
+    /// Literal type name for families whose native discriminator is textual.
+    pub native_name: Option<String>,
     pub set_index: Option<usize>,
     pub record_index: Option<usize>,
 }
@@ -106,6 +108,7 @@ impl Skip {
             reason,
             native_version,
             native_type,
+            native_name: None,
             set_index: None,
             record_index: None,
         }

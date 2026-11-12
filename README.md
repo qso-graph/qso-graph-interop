@@ -6,8 +6,9 @@
 QG Interop gives radio app developers a Rust library for specification events and commands,
 and gives operators the `qg-interop` listener, capture decoder, and simulator.
 
-The library implements QGI-SPEC-001 0.1.0 for all 17 WSJT-X message types, schemas 1–3, and QGI event
-carriage over UDP and TCP. Events preserve native evidence and distinguish observations from
+The library implements QGI-SPEC-001 0.1.0 for all 17 WSJT-X message types, schemas 1–3,
+N1MM Logger+ XML, and QGI event carriage over UDP and TCP.
+Events preserve native evidence and distinguish observations from
 commands. Applications supply observer context and own transport and control policy.
 
 ## Install
@@ -41,11 +42,15 @@ qg-interop decode --wsjtx capture.bin
 qg-interop decode --wsjtx - < capture.bin
 ```
 
+Listen to N1MM Logger+ broadcasts on `127.0.0.1:12060` with
+`qg-interop listen --n1mm`, or decode a captured XML datagram with
+`qg-interop decode --n1mm capture.xml`. See the [N1MM guide](docs/user/n1mm.md).
+
 See the [event JSON guide](docs/user/listen-json.md). Each command's `--help` includes examples.
 
 ## Use the library
 
-Install with `cargo add qso-graph-interop`. Default features select `wsjtx`, `qgi`, and `serde`.
+Install with `cargo add qso-graph-interop`. Default features select `wsjtx`, `n1mm`, `qgi`, and `serde`.
 Use `default-features = false` for the core without protocol families or enable `conformance` to test a
 third-party codec. The public `Codec` trait decodes observations, encodes commands from common
 fields, and separately re-encodes native evidence. Stream input uses caller-owned buffers.

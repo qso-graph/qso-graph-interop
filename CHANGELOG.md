@@ -5,6 +5,15 @@
 
 ### Added
 
+- Default-feature N1MM Logger+ codec implementing Annex D revision 1: bounded XML,
+  all documented roots, radio and SO2R state, exact frequency units, UTC timestamps,
+  canonical frequency/spectrum commands, and byte-preserving observed re-encoding.
+- `listen --n1mm` on loopback port 12060 and `decode --n1mm` for files or standard input.
+- Manifest-driven execution of all 1,260 current N1MM vectors and 1,105 embedded re-encoding
+  checks, independent radio evidence, and N1MM decoder/command fuzzing in CI and the verifier.
+- Textual skip discriminators, N1MM-only event field validation, and raw negative-command
+  instruction reading in the public conformance kit.
+
 - Complete draft Annex D N1MM profile with dated source hashes, XML isolation policies,
   contact/radio/spot/score mappings, QSY and spectrum command writers,
   independent conformance vectors and numbered questions for live captures.

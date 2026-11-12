@@ -70,6 +70,34 @@ pub fn fuzz_one(codec: &mut dyn Codec, data: &[u8]) {
     }
 }
 
+/// Read instructions while retaining an event that cannot inhabit a Rust JSON value (for
+/// example an unpaired surrogate) for the command-construction rejection path.
+pub fn read_vector(bytes: &[u8]) -> Result<Value, String> {
+    use serde_json::value::RawValue;
+    use std::collections::BTreeMap;
+    let mut raw: BTreeMap<String, Box<RawValue>> =
+        serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
+    let mut input: BTreeMap<String, Box<RawValue>> =
+        serde_json::from_str(raw.remove("input").ok_or("missing input")?.get())
+            .map_err(|e| e.to_string())?;
+    let event = input.remove("event");
+    let mut value: Value =
+        serde_json::from_str(&serde_json::to_string(&raw).map_err(|e| e.to_string())?)
+            .map_err(|e| e.to_string())?;
+    value["input"] =
+        serde_json::from_str(&serde_json::to_string(&input).map_err(|e| e.to_string())?)
+            .map_err(|e| e.to_string())?;
+    if let Some(event) = event {
+        match serde_json::from_str::<Value>(event.get()) {
+            Ok(event) => value["input"]["event"] = event,
+            Err(_) if value["class"] == "command_negative" => {
+                value["input"]["event_json"] = event.get().into()
+            }
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+    Ok(value)
+}
 /// Execute every defined vector class through an external codec. Unknown instructions fail closed.
 /// The caller verifies manifest hashes and selects the transport/delimiter before calling.
 pub fn run_vector(codec: &mut dyn Codec, vector: &Value) -> Result<(), String> {
@@ -139,7 +167,14 @@ pub fn run_vector(codec: &mut dyn Codec, vector: &Value) -> Result<(), String> {
     };
     match class {
         "command" | "command_negative" => {
-            let result = Event::from_value(input["event"].clone())
+            let authored = if let Some(raw) = input.get("event_json").and_then(Value::as_str) {
+                serde_json::from_str(raw)
+                    .map_err(|_| crate::error::invalid("command cannot represent invalid Unicode"))
+            } else {
+                Ok(input["event"].clone())
+            };
+            let result = authored
+                .and_then(Event::from_value)
                 .and_then(|e| codec.encode_command(&e, &encode_options));
             if class == "command_negative" {
                 check_error(result.map(|_| ()))
@@ -199,6 +234,9 @@ pub fn run_vector(codec: &mut dyn Codec, vector: &Value) -> Result<(), String> {
                 }
                 if let Some(t) = skip.native_type {
                     actual["type"] = t.into();
+                }
+                if let Some(t) = &skip.native_name {
+                    actual["type"] = t.clone().into();
                 }
                 if !crate::json::semantic_eq(&actual, &expected["skip"]) {
                     return Err(format!("skip differs: {actual}"));

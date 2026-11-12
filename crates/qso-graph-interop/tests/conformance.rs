@@ -3,7 +3,8 @@
 #![forbid(unsafe_code)]
 use qso_graph_interop::{
     Codec,
-    conformance::{check_hash, run_vector},
+    conformance::{check_hash, read_vector, run_vector},
+    n1mm::N1mm,
     qgi::{Delimiter, Qgi, Transport},
     wsjtx::Wsjtx,
 };
@@ -16,7 +17,7 @@ use std::{
 fn all_specification_vectors() {
     let base = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../spec/vectors");
     let mut failures = Vec::new();
-    for family in ["wsjtx", "qgi"] {
+    for family in ["wsjtx", "n1mm", "qgi"] {
         let dir = base.join(family);
         let manifest: Value =
             serde_json::from_slice(&std::fs::read(dir.join("manifest.json")).unwrap()).unwrap();
@@ -42,12 +43,14 @@ fn all_specification_vectors() {
                 check_hash(&data, entry["sha256"].as_str().unwrap()),
                 "{family}/{name} hash"
             );
-            let vector: Value = serde_json::from_slice(&data).unwrap();
+            let vector = read_vector(&data).unwrap_or_else(|e| panic!("{family}/{name}: {e}"));
             for key in ["spec", "family", "mapping", "class"] {
                 assert_eq!(entry[key], vector[key], "{family}/{name} {key}");
             }
             let mut codec: Box<dyn Codec> = if family == "wsjtx" {
                 Box::new(Wsjtx::default())
+            } else if family == "n1mm" {
+                Box::new(N1mm::default())
             } else {
                 let transport = match vector["input"]["transport"].as_str() {
                     Some("udp") => Transport::Udp,
@@ -111,6 +114,20 @@ fn planted_manifest_and_unknown_class_failures() {
 fn declared_message_limits() {
     use qso_graph_interop::conformance::check_message_limit;
     assert!(check_message_limit(&mut Wsjtx::default()).is_ok());
+    assert!(check_message_limit(&mut N1mm::default()).is_ok());
     assert!(check_message_limit(&mut Qgi::new(Transport::Udp)).is_ok());
     assert!(check_message_limit(&mut Qgi::new(Transport::Tcp)).is_ok());
+}
+
+#[test]
+fn raw_invalid_command_instructions_are_executed_and_rejections_are_checked() {
+    let bytes = include_bytes!("../../../spec/vectors/n1mm/command-error-surrogate-app.json");
+    let mut vector = read_vector(bytes).unwrap();
+    assert!(run_vector(&mut N1mm::default(), &vector).is_ok());
+    vector["expected"]["error"]["category"] = "malformed".into();
+    assert!(run_vector(&mut N1mm::default(), &vector).is_err());
+    vector["class"] = "positive".into();
+    let raw = serde_json::to_vec(&vector).unwrap();
+    assert!(run_vector(&mut N1mm::default(), &read_vector(&raw).unwrap()).is_err());
+    assert!(read_vector(b"invalid instructions").is_err());
 }
