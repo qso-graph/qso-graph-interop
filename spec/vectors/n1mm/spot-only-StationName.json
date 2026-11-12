@@ -5,7 +5,7 @@
   "mapping": 1,
   "class": "positive",
   "input": {
-    "data": "PHNwb3Q+PFN0YXRpb25OYW1lPksxQUFBPC9TdGF0aW9uTmFtZT48L3Nwb3Q+",
+    "data": "PHNwb3Q+PFN0YXRpb25OYW1lPlEyQUFBPC9TdGF0aW9uTmFtZT48L3Nwb3Q+",
     "context": {
       "direction": "from_application",
       "exchange": "unknown"
@@ -23,16 +23,16 @@
       },
       "fields": {
         "radio": {
-          "instance": "K1AAA"
+          "instance": "Q2AAA"
         }
       },
       "native": {
         "format": "n1mm_xml",
-        "data": "PHNwb3Q+PFN0YXRpb25OYW1lPksxQUFBPC9TdGF0aW9uTmFtZT48L3Nwb3Q+"
+        "data": "PHNwb3Q+PFN0YXRpb25OYW1lPlEyQUFBPC9TdGF0aW9uTmFtZT48L3Nwb3Q+"
       }
     }
   },
   "reencode": {
-    "data": "PHNwb3Q+PFN0YXRpb25OYW1lPksxQUFBPC9TdGF0aW9uTmFtZT48L3Nwb3Q+"
+    "data": "PHNwb3Q+PFN0YXRpb25OYW1lPlEyQUFBPC9TdGF0aW9uTmFtZT48L3Nwb3Q+"
   }
 }

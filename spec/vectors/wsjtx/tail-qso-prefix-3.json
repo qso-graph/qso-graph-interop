@@ -5,7 +5,7 @@
   "mapping": 1,
   "class": "positive",
   "input": {
-    "data": "rbzL2gAAAAMAAAAFAAAADXRlc3QtaW5zdGFuY2UAAAAAACU9jAA27vsCAAAOEAAAAAVXMUFBQQAAAARGTjQyAAAAAADWxmwAAAADRlQ4AAAAAy0xMQAAAAMtMTIAAAADNSBXAAAACXN5bnRoZXRpYwAAAARUZXN0AAAAAAAlPYwAAAB7AQAAAAVLMUJCQgAAAAVLMUFBQQ==",
+    "data": "rbzL2gAAAAMAAAAFAAAADXRlc3QtaW5zdGFuY2UAAAAAACU9jAA27vsCAAAOEAAAAAVRMUFBQQAAAARGTjQyAAAAAADWxmwAAAADRlQ4AAAAAy0xMQAAAAMtMTIAAAADNSBXAAAACXN5bnRoZXRpYwAAAARUZXN0AAAAAAAlPYwAAAB7AQAAAAVRMkJCQgAAAAVRMkFBQQ==",
     "context": {
       "direction": "from_application",
       "exchange": "unknown"
@@ -25,7 +25,7 @@
       },
       "fields": {
         "end": "1970-01-01T00:00:00.123Z",
-        "call": "W1AAA",
+        "call": "Q1AAA",
         "grid": "FN42",
         "tx_frequency_hz": 14075500,
         "mode": "FT8",
@@ -38,12 +38,12 @@
           "instance": "test-instance"
         },
         "start": "1970-01-01T00:00:00.123Z",
-        "operator_call": "K1BBB",
-        "station_call": "K1AAA"
+        "operator_call": "Q2BBB",
+        "station_call": "Q2AAA"
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAMAAAAFAAAADXRlc3QtaW5zdGFuY2UAAAAAACU9jAA27vsCAAAOEAAAAAVXMUFBQQAAAARGTjQyAAAAAADWxmwAAAADRlQ4AAAAAy0xMQAAAAMtMTIAAAADNSBXAAAACXN5bnRoZXRpYwAAAARUZXN0AAAAAAAlPYwAAAB7AQAAAAVLMUJCQgAAAAVLMUFBQQ=="
+        "data": "rbzL2gAAAAMAAAAFAAAADXRlc3QtaW5zdGFuY2UAAAAAACU9jAA27vsCAAAOEAAAAAVRMUFBQQAAAARGTjQyAAAAAADWxmwAAAADRlQ4AAAAAy0xMQAAAAMtMTIAAAADNSBXAAAACXN5bnRoZXRpYwAAAARUZXN0AAAAAAAlPYwAAAB7AQAAAAVRMkJCQgAAAAVRMkFBQQ=="
       }
     }
   }

@@ -22,7 +22,7 @@
         "dt_seconds": 0.25,
         "audio_offset_hz": 1234,
         "mode": "~",
-        "text": "CQ W1AAA FN42"
+        "text": "CQ Q1AAA FN42"
       }
     },
     "options": {
@@ -30,6 +30,6 @@
     }
   },
   "expected": {
-    "data": "rbzL2gAAAAIAAAAEAAAADXRlc3QtaW5zdGFuY2UCsyn7////7z/QAAAAAAAAAAAE0gAAAAF+AAAADUNRIFcxQUFBIEZONDI="
+    "data": "rbzL2gAAAAIAAAAEAAAADXRlc3QtaW5zdGFuY2UCsyn7////7z/QAAAAAAAAAAAE0gAAAAF+AAAADUNRIFExQUFBIEZONDI="
   }
 }

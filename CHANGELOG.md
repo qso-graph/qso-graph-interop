@@ -48,6 +48,9 @@
 
 ### Changed
 
+- Use Q-prefixed invented callsigns in simulators, samples, fixtures, specification vectors,
+  and examples. Preserve distinct identities and byte lengths, retain the `N0CALL` station
+  default, and guard against legacy synthetic calls with planted generator and policy failures.
 - Map Annex D N1MM timestamps to UTC instants using pinned logging documentation.
   Preserve invalid timestamp text without rejecting the message, accept valid times
   as sent without clock checks or corrections, and cover contact, prior-contact,

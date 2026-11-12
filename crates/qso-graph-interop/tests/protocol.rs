@@ -61,7 +61,7 @@ fn finite_float_json_preserves_boundary_and_10000_random_bits() {
         if !f.is_finite() {
             return;
         }
-        let mut fields = json!({"operation":"reply","time_of_day":"12:34:56.000","snr_db":-12,"dt_seconds":f,"audio_offset_hz":1234,"mode":"~","text":"CQ W1AAA FN42"});
+        let mut fields = json!({"operation":"reply","time_of_day":"12:34:56.000","snr_db":-12,"dt_seconds":f,"audio_offset_hz":1234,"mode":"~","text":"CQ Q1AAA FN42"});
         fields["dt_seconds"] = serde_json::to_value(f).unwrap();
         let command=Event::from_value(json!({"spec":"0.1.0","family":"wsjtx","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"wire_id":"synthetic-instance","fields":fields})).unwrap();
         let bytes = Wsjtx::default()

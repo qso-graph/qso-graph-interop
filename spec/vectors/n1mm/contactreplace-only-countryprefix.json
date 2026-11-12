@@ -5,7 +5,7 @@
   "mapping": 1,
   "class": "positive",
   "input": {
-    "data": "PGNvbnRhY3RyZXBsYWNlPjxjb3VudHJ5cHJlZml4Pks8L2NvdW50cnlwcmVmaXg+PC9jb250YWN0cmVwbGFjZT4=",
+    "data": "PGNvbnRhY3RyZXBsYWNlPjxjb3VudHJ5cHJlZml4PlE8L2NvdW50cnlwcmVmaXg+PC9jb250YWN0cmVwbGFjZT4=",
     "context": {
       "direction": "from_application",
       "exchange": "unknown"
@@ -24,11 +24,11 @@
       "fields": {},
       "native": {
         "format": "n1mm_xml",
-        "data": "PGNvbnRhY3RyZXBsYWNlPjxjb3VudHJ5cHJlZml4Pks8L2NvdW50cnlwcmVmaXg+PC9jb250YWN0cmVwbGFjZT4="
+        "data": "PGNvbnRhY3RyZXBsYWNlPjxjb3VudHJ5cHJlZml4PlE8L2NvdW50cnlwcmVmaXg+PC9jb250YWN0cmVwbGFjZT4="
       }
     }
   },
   "reencode": {
-    "data": "PGNvbnRhY3RyZXBsYWNlPjxjb3VudHJ5cHJlZml4Pks8L2NvdW50cnlwcmVmaXg+PC9jb250YWN0cmVwbGFjZT4="
+    "data": "PGNvbnRhY3RyZXBsYWNlPjxjb3VudHJ5cHJlZml4PlE8L2NvdW50cnlwcmVmaXg+PC9jb250YWN0cmVwbGFjZT4="
   }
 }

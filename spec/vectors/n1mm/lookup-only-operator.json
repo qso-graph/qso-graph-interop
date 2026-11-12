@@ -5,7 +5,7 @@
   "mapping": 1,
   "class": "positive",
   "input": {
-    "data": "PGxvb2t1cD48b3BlcmF0b3I+SzFCQkI8L29wZXJhdG9yPjwvbG9va3VwPg==",
+    "data": "PGxvb2t1cD48b3BlcmF0b3I+UTJCQkI8L29wZXJhdG9yPjwvbG9va3VwPg==",
     "context": {
       "direction": "from_application",
       "exchange": "unknown"
@@ -24,11 +24,11 @@
       "fields": {},
       "native": {
         "format": "n1mm_xml",
-        "data": "PGxvb2t1cD48b3BlcmF0b3I+SzFCQkI8L29wZXJhdG9yPjwvbG9va3VwPg=="
+        "data": "PGxvb2t1cD48b3BlcmF0b3I+UTJCQkI8L29wZXJhdG9yPjwvbG9va3VwPg=="
       }
     }
   },
   "reencode": {
-    "data": "PGxvb2t1cD48b3BlcmF0b3I+SzFCQkI8L29wZXJhdG9yPjwvbG9va3VwPg=="
+    "data": "PGxvb2t1cD48b3BlcmF0b3I+UTJCQkI8L29wZXJhdG9yPjwvbG9va3VwPg=="
   }
 }

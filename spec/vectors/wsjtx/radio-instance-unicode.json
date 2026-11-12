@@ -5,7 +5,7 @@
   "mapping": 1,
   "class": "positive",
   "input": {
-    "data": "rbzL2gAAAAMAAAACAAAAC3JlY2VpdmVyLc6xAQKzKfv////vP9AAAAAAAAAAAATSAAAAAX4AAAANQ1EgVzFBQUEgRk40MgAB",
+    "data": "rbzL2gAAAAMAAAACAAAAC3JlY2VpdmVyLc6xAQKzKfv////vP9AAAAAAAAAAAATSAAAAAX4AAAANQ1EgUTFBQUEgRk40MgAB",
     "context": {
       "direction": "from_application",
       "exchange": "unknown"
@@ -30,7 +30,7 @@
         "dt_seconds": 0.25,
         "audio_offset_hz": 1234,
         "mode": "~",
-        "text": "CQ W1AAA FN42",
+        "text": "CQ Q1AAA FN42",
         "low_confidence": false,
         "off_air": true,
         "radio": {
@@ -39,7 +39,7 @@
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAMAAAACAAAAC3JlY2VpdmVyLc6xAQKzKfv////vP9AAAAAAAAAAAATSAAAAAX4AAAANQ1EgVzFBQUEgRk40MgAB"
+        "data": "rbzL2gAAAAMAAAACAAAAC3JlY2VpdmVyLc6xAQKzKfv////vP9AAAAAAAAAAAATSAAAAAX4AAAANQ1EgUTFBQUEgRk40MgAB"
       }
     }
   }

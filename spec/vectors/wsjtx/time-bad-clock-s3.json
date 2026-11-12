@@ -5,7 +5,7 @@
   "mapping": 1,
   "class": "positive",
   "input": {
-    "data": "rbzL2gAAAAMAAAAFAAAADXRlc3QtaW5zdGFuY2UAAAAAACU9jAUmXAABAAAABVcxQUFBAAAABEZONDIAAAAAANbGbAAAAANGVDgAAAADLTExAAAAAy0xMgAAAAM1IFcAAAAJc3ludGhldGljAAAABFRlc3Q=",
+    "data": "rbzL2gAAAAMAAAAFAAAADXRlc3QtaW5zdGFuY2UAAAAAACU9jAUmXAABAAAABVExQUFBAAAABEZONDIAAAAAANbGbAAAAANGVDgAAAADLTExAAAAAy0xMgAAAAM1IFcAAAAJc3ludGhldGljAAAABFRlc3Q=",
     "context": {
       "direction": "from_application",
       "exchange": "unknown"
@@ -24,7 +24,7 @@
         "exchange": "unknown"
       },
       "fields": {
-        "call": "W1AAA",
+        "call": "Q1AAA",
         "grid": "FN42",
         "tx_frequency_hz": 14075500,
         "mode": "FT8",
@@ -39,7 +39,7 @@
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAMAAAAFAAAADXRlc3QtaW5zdGFuY2UAAAAAACU9jAUmXAABAAAABVcxQUFBAAAABEZONDIAAAAAANbGbAAAAANGVDgAAAADLTExAAAAAy0xMgAAAAM1IFcAAAAJc3ludGhldGljAAAABFRlc3Q="
+        "data": "rbzL2gAAAAMAAAAFAAAADXRlc3QtaW5zdGFuY2UAAAAAACU9jAUmXAABAAAABVExQUFBAAAABEZONDIAAAAAANbGbAAAAANGVDgAAAADLTExAAAAAy0xMgAAAAM1IFcAAAAJc3ludGhldGljAAAABFRlc3Q="
       }
     }
   },
@@ -53,7 +53,7 @@
         "milliseconds": 86400000,
         "time_spec": 1
       },
-      "dx_call": "W1AAA",
+      "dx_call": "Q1AAA",
       "dx_grid": "FN42",
       "frequency_hz": "14075500",
       "mode": "FT8",

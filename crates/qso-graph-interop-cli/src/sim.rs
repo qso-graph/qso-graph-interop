@@ -474,7 +474,7 @@ mod tests {
     fn replay_clear_close_and_no_invented_acknowledgments() {
         let mut p = player();
         let log =
-            alltxt::parse(b"260407_120000 14.074 Rx FT8 -1 0.1 1500 CQ W1AAA AA00", "").unwrap();
+            alltxt::parse(b"260407_120000 14.074 Rx FT8 -1 0.1 1500 CQ Q1AAA AA00", "").unwrap();
         p.play(&log.cycles[0], 86_399_000).unwrap();
         let out = react(&mut p, Body::Replay);
         assert_eq!(out.len(), 2);
@@ -506,7 +506,7 @@ mod tests {
         heartbeat.max_schema = Some(2);
         assert!(react(&mut p, Body::Heartbeat(heartbeat)).is_empty());
         let log =
-            alltxt::parse(b"260407_120000 14.074 Rx FT8 -1 0.1 1500 CQ W1AAA AA00", "").unwrap();
+            alltxt::parse(b"260407_120000 14.074 Rx FT8 -1 0.1 1500 CQ Q1AAA AA00", "").unwrap();
         assert!(
             p.play(&log.cycles[0], 0)
                 .unwrap()
@@ -547,7 +547,7 @@ mod tests {
         c.mode = "FT4".into();
         c.frequency_tolerance_hz = u32::MAX;
         c.rx_df_hz = 1700;
-        c.dx_call = "W1AAA".into();
+        c.dx_call = "Q1AAA".into();
         c.dx_grid = "AA00".into();
         c.tr_period_seconds = u32::MAX;
         p.status.sub_mode = Some("C".into());
@@ -567,7 +567,7 @@ mod tests {
     }
     #[test]
     fn validation_boundaries() {
-        assert_eq!(call("w1aaa/p").unwrap(), "W1AAA/P");
+        assert_eq!(call("q1aaa/p").unwrap(), "Q1AAA/P");
         assert!(call("").is_ok());
         assert!(grid("").is_ok());
         assert!(grid("AA00XX").is_ok());

@@ -5,7 +5,7 @@
   "mapping": 1,
   "class": "positive",
   "input": {
-    "data": "rbzL2gAAAAEAAAAKAAAADXRlc3QtaW5zdGFuY2UAArMp+////+W/4AAAAAAAAAAAAAAA1xTw/////gAAAAVXMUFBQQAAAARGTjQyAAAAJQE=",
+    "data": "rbzL2gAAAAEAAAAKAAAADXRlc3QtaW5zdGFuY2UAArMp+////+W/4AAAAAAAAAAAAAAA1xTw/////gAAAAVRMUFBQQAAAARGTjQyAAAAJQE=",
     "context": {
       "direction": "from_application",
       "exchange": "unknown"
@@ -30,7 +30,7 @@
         "dt_seconds": -0.5,
         "frequency_hz": 14095600,
         "drift_hz": -2,
-        "call": "W1AAA",
+        "call": "Q1AAA",
         "grid": "FN42",
         "power_dbm": 37,
         "off_air": true,
@@ -40,7 +40,7 @@
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAEAAAAKAAAADXRlc3QtaW5zdGFuY2UAArMp+////+W/4AAAAAAAAAAAAAAA1xTw/////gAAAAVXMUFBQQAAAARGTjQyAAAAJQE="
+        "data": "rbzL2gAAAAEAAAAKAAAADXRlc3QtaW5zdGFuY2UAArMp+////+W/4AAAAAAAAAAAAAAA1xTw/////gAAAAVRMUFBQQAAAARGTjQyAAAAJQE="
       }
     }
   },
@@ -55,7 +55,7 @@
       "delta_time_seconds": -0.5,
       "frequency_hz": "14095600",
       "drift_hz": -2,
-      "callsign": "W1AAA",
+      "callsign": "Q1AAA",
       "grid": "FN42",
       "power_dbm": 37,
       "off_air": true

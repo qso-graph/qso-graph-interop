@@ -21,15 +21,21 @@ Replace the executable prefix `qg-sim` with `qg-interop sim` and keep the playba
 | Empty selection | Exit 1, `qg-interop: no received decodes in NAME[ from STAMP]`, plus the skip summary when modes lack a period; the executable prefix changes. |
 
 The old `--dx-call`, `--mode`, and `--frequency` options remain available and select the original
-immediate nine-message QSO script. They conflict with file and capture input. Their old station
-defaults are retained in that script. The timed ALL.TXT player is now the default.
+immediate nine-message QSO script. They conflict with file and capture input. The station
+default remains `N0CALL`; the default DX call is `Q1AW`. The timed ALL.TXT player is now the default.
+
+All invented callsigns use the Q prefix, including built-in samples, generated contacts,
+portable edits, independent captures, and specification vectors. Call substitutions preserve
+lengths and distinct identities, so reply pairing, ADIF lengths, truncation offsets, and native
+message-size boundaries remain unchanged. Caller-supplied calls and captured input retain their
+original values. The `N0CALL` station default remains unchanged.
 
 ## Independent capture oracle
 
 `crates/qso-graph-interop/tests/fixtures/sim-python-synthetic.json` derives from Desktop's
 `extensions/wsjtx/tests/fixtures/qso-graph-sim-0.2.0.json`. The fixture records its original SHA-256.
 A Python `struct` transformation replaced callsigns using matching original/synthetic ALL.TXT
-line pairs and replaced the Status station with W1ZZZ; it rewrote length prefixes. No Rust encoder
+line pairs and replaced the Status station with Q1ZZZ; it rewrote length prefixes. No Rust encoder
 produced the oracle. The source capture contains seven cycles, 120 new decodes, one Replay of the
 first 15 decodes followed by Status, and Clear/Close: 159 datagrams total.
 
@@ -113,6 +119,10 @@ The default is 12 new contacts; `--loop` removes that default limit, while an ex
 always bounds the run. Looping keeps the clock, serials, IDs, random sequence, and score moving
 forward. A fixed UTC epoch and a wrapping 64-bit LCG make the stream reproducible without
 system time, a platform random generator, or additional dependencies.
+Generated contacts have the shape `Q1ABC`, with digits from 0 through 9 and three suffix
+letters. The many-seed test checks contact, spot, and prior-call fields and CLI validation,
+including `/P` edits, and rejects a planted non-Q prefix. Repository policy also rejects the
+retired invented calls in source text, hexadecimal datagrams, and base64 native data.
 
 SO2R clears the previous transmitter's reported state before setting the next transmitter.
 Every fifth new contact changes callsign to `/P` and points from two to three; every seventh

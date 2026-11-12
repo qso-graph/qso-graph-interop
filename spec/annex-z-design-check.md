@@ -49,8 +49,8 @@ not a guess that every line is a spot.
 `frequency_hz`, `text`, and the actual time representation supplied by the line. A UTC clock with
 no date maps to `time_of_day`, not an invented dated `time`. A mode is present only if a pinned
 structural field supplies it; an incidental word in the comment does not establish mode.
-For example, a synthetic spot of W1AAA by K1AAA at 14,074,000 Hz can have
-`{"call":"W1AAA","spotter_call":"K1AAA","frequency_hz":14074000,"text":"synthetic spot"}`.
+For example, a synthetic spot of Q1AAA by Q2AAA at 14,074,000 Hz can have
+`{"call":"Q1AAA","spotter_call":"Q2AAA","frequency_hz":14074000,"text":"synthetic spot"}`.
 If the line only declares minute precision, the annex must establish a compatible common-time
 representation or leave the common time absent under `QGI-MOD-0006`; it cannot imply measured seconds.
 Exact original spacing, comment and clock spelling remain in `native.data`.
@@ -74,7 +74,7 @@ records in their declared order. No extra native envelope member is necessary.
 
 **Kinds and fields.** `qso_logged` has verbatim `adif` and, if the pinned mapping parses the ADIF
 record, structurally supplied `call`, `grid`, `mode`, `station_call`, `start`, `end`, reports and
-frequency. A synthetic W1AAA QSO can expose `call: "W1AAA"` and `mode: "FT8"`; a bare logging
+frequency. A synthetic Q1AAA QSO can expose `call: "Q1AAA"` and `mode: "FT8"`; a bare logging
 record does not imply a remote-control request. Exact tags, tag lengths, optional values, unknown
 tags, capitalization and extensions remain in native evidence. A decimal native frequency needs
 an annex-defined exact conversion to integer hertz, never an inferred frequency unit or rounding.

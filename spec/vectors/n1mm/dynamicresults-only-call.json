@@ -5,7 +5,7 @@
   "mapping": 1,
   "class": "positive",
   "input": {
-    "data": "PGR5bmFtaWNyZXN1bHRzPjxjYWxsPksxQUFBPC9jYWxsPjwvZHluYW1pY3Jlc3VsdHM+",
+    "data": "PGR5bmFtaWNyZXN1bHRzPjxjYWxsPlEyQUFBPC9jYWxsPjwvZHluYW1pY3Jlc3VsdHM+",
     "context": {
       "direction": "from_application",
       "exchange": "unknown"
@@ -22,15 +22,15 @@
         "exchange": "unknown"
       },
       "fields": {
-        "station_call": "K1AAA"
+        "station_call": "Q2AAA"
       },
       "native": {
         "format": "n1mm_xml",
-        "data": "PGR5bmFtaWNyZXN1bHRzPjxjYWxsPksxQUFBPC9jYWxsPjwvZHluYW1pY3Jlc3VsdHM+"
+        "data": "PGR5bmFtaWNyZXN1bHRzPjxjYWxsPlEyQUFBPC9jYWxsPjwvZHluYW1pY3Jlc3VsdHM+"
       }
     }
   },
   "reencode": {
-    "data": "PGR5bmFtaWNyZXN1bHRzPjxjYWxsPksxQUFBPC9jYWxsPjwvZHluYW1pY3Jlc3VsdHM+"
+    "data": "PGR5bmFtaWNyZXN1bHRzPjxjYWxsPlEyQUFBPC9jYWxsPjwvZHluYW1pY3Jlc3VsdHM+"
   }
 }

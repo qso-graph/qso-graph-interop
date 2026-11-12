@@ -140,19 +140,19 @@ def build():
         s.positive('00-heartbeat' + suffix, schema, 0, pack('I', 3) + utf8('3.0.2') + utf8('test-r1'),
                    'lifecycle', {'state': 'heartbeat', 'max_schema': 3, 'version': '3.0.2', 'revision': 'test-r1'},
                    message={'max_schema': 3, 'version': '3.0.2', 'revision': 'test-r1'})
-        status_parts = [pack('Q', 14074000), utf8('FT8'), utf8('W1AAA'), utf8('-09'), utf8('FT4'),
-                        pack('BBBII', 1, 0, 1, 1201, 2302), utf8('K1AAA'), utf8('FN31'), utf8('FN42'),
+        status_parts = [pack('Q', 14074000), utf8('FT8'), utf8('Q1AAA'), utf8('-09'), utf8('FT4'),
+                        pack('BBBII', 1, 0, 1, 1201, 2302), utf8('Q2AAA'), utf8('FN31'), utf8('FN42'),
                         pack('B', 0), utf8('sub-test'), pack('BBII', 1, 3, 50, 15), utf8('test-config'), utf8('test-tx')]
-        status_fields = {'dial_frequency_hz': 14074000, 'mode': 'FT8', 'dx_call': 'W1AAA', 'report': '-09',
+        status_fields = {'dial_frequency_hz': 14074000, 'mode': 'FT8', 'dx_call': 'Q1AAA', 'report': '-09',
                          'tx_mode': 'FT4', 'tx_enabled': True, 'transmitting': False, 'decoding': True,
-                         'rx_offset_hz': 1201, 'tx_offset_hz': 2302, 'station_call': 'K1AAA',
+                         'rx_offset_hz': 1201, 'tx_offset_hz': 2302, 'station_call': 'Q2AAA',
                          'station_grid': 'FN31', 'dx_grid': 'FN42', 'tx_watchdog': False, 'sub_mode': 'sub-test',
                          'fast_mode': True, 'frequency_tolerance_hz': 50, 'tr_period_seconds': 15,
                          'configuration_name': 'test-config', 'tx_message': 'test-tx'}
         s.positive('01-status' + suffix, schema, 1, b''.join(status_parts), 'radio_state', status_fields,
-                   message={'dial_frequency_hz': '14074000', 'mode': 'FT8', 'dx_call': 'W1AAA', 'report': '-09',
+                   message={'dial_frequency_hz': '14074000', 'mode': 'FT8', 'dx_call': 'Q1AAA', 'report': '-09',
                             'tx_mode': 'FT4', 'tx_enabled': True, 'transmitting': False, 'decoding': True,
-                            'rx_df_hz': 1201, 'tx_df_hz': 2302, 'de_call': 'K1AAA', 'de_grid': 'FN31',
+                            'rx_df_hz': 1201, 'tx_df_hz': 2302, 'de_call': 'Q2AAA', 'de_grid': 'FN31',
                             'dx_grid': 'FN42', 'tx_watchdog': False, 'sub_mode': 'sub-test', 'fast_mode': True,
                             'special_operation_mode': 3, 'frequency_tolerance_hz': 50, 'tr_period_seconds': 15,
                             'configuration_name': 'test-config', 'tx_message': 'test-tx'})
@@ -161,40 +161,40 @@ def build():
         alternate_fields = dict(status_fields, tx_enabled=False, transmitting=True, decoding=True)
         s.positive('status-distinct-booleans' + suffix, schema, 1, b''.join(alternate),
                    'radio_state', alternate_fields)
-        decode = pack('BIidI', 1, 45296123, -17, 0.25, 1234) + utf8('~') + utf8('CQ W1AAA FN42')
+        decode = pack('BIidI', 1, 45296123, -17, 0.25, 1234) + utf8('~') + utf8('CQ Q1AAA FN42')
         decode_fields = {'is_new': True, 'time_of_day': '12:34:56.123', 'snr_db': -17, 'dt_seconds': 0.25,
-                         'audio_offset_hz': 1234, 'mode': '~', 'text': 'CQ W1AAA FN42'}
+                         'audio_offset_hz': 1234, 'mode': '~', 'text': 'CQ Q1AAA FN42'}
         s.positive('02-decode' + suffix, schema, 2, decode + b'\x00\x01', 'decode',
                    dict(decode_fields, low_confidence=False, off_air=True),
                    message={'new': True, 'time': 45296123, 'snr_db': -17, 'delta_time_seconds': 0.25,
-                            'delta_frequency_hz': 1234, 'mode': '~', 'message': 'CQ W1AAA FN42',
+                            'delta_frequency_hz': 1234, 'mode': '~', 'message': 'CQ Q1AAA FN42',
                             'low_confidence': False, 'off_air': True})
         s.positive('03-clear' + suffix, schema, 3, b'\x02', 'control', {'operation': 'clear', 'window': 2},
                    direction='to_application', message={'window': 2})
-        reply = pack('IidI', 45296123, -17, 0.25, 1234) + utf8('~') + utf8('CQ W1AAA FN42')
+        reply = pack('IidI', 45296123, -17, 0.25, 1234) + utf8('~') + utf8('CQ Q1AAA FN42')
         reply_fields = {'operation': 'reply', 'time_of_day': '12:34:56.123', 'snr_db': -17, 'dt_seconds': 0.25,
-                        'audio_offset_hz': 1234, 'mode': '~', 'text': 'CQ W1AAA FN42'}
+                        'audio_offset_hz': 1234, 'mode': '~', 'text': 'CQ Q1AAA FN42'}
         s.positive('04-reply' + suffix, schema, 4, reply + b'\x01\x04', 'control',
                    dict(reply_fields, low_confidence=True, modifiers=4),
                    message={'time': 45296123, 'snr_db': -17, 'delta_time_seconds': 0.25,
-                            'delta_frequency_hz': 1234, 'mode': '~', 'message': 'CQ W1AAA FN42',
+                            'delta_frequency_hz': 1234, 'mode': '~', 'message': 'CQ Q1AAA FN42',
                             'low_confidence': True, 'modifiers': 4})
         # Date offset suffix differs in schema 1; common UTC oracle is explicit.
         dt, dt_view = date(schema, spec=2)
         on, on_view = date(schema, milliseconds=123)
-        qso_core = dt + utf8('W1AAA') + utf8('FN42') + pack('Q', 14075500)
+        qso_core = dt + utf8('Q1AAA') + utf8('FN42') + pack('Q', 14075500)
         qso_core += b''.join(utf8(v) for v in ['FT8', '-11', '-12', '5 W', 'synthetic', 'Test'])
-        qso_tail = [on] + [utf8(v) for v in ['K1BBB', 'K1AAA', 'FN31', '001', '002', 'TR']]
+        qso_tail = [on] + [utf8(v) for v in ['Q2BBB', 'Q2AAA', 'FN31', '001', '002', 'TR']]
         qso_fields = {'end': '1970-01-01T01:00:00.123Z' if schema == 1 else '1970-01-01T00:00:00.123Z',
-                      'call': 'W1AAA', 'grid': 'FN42', 'tx_frequency_hz': 14075500, 'mode': 'FT8',
+                      'call': 'Q1AAA', 'grid': 'FN42', 'tx_frequency_hz': 14075500, 'mode': 'FT8',
                       'report_sent': '-11', 'report_received': '-12', 'tx_power': '5 W',
                       'comments': 'synthetic', 'name': 'Test'}
-        qso_extra = {'start': '1970-01-01T00:00:00.123Z', 'operator_call': 'K1BBB', 'station_call': 'K1AAA',
+        qso_extra = {'start': '1970-01-01T00:00:00.123Z', 'operator_call': 'Q2BBB', 'station_call': 'Q2AAA',
                      'station_grid': 'FN31', 'exchange_sent': '001', 'exchange_received': '002', 'propagation_mode': 'TR'}
-        qso_view = {'time_off': dt_view, 'dx_call': 'W1AAA', 'dx_grid': 'FN42', 'frequency_hz': '14075500',
+        qso_view = {'time_off': dt_view, 'dx_call': 'Q1AAA', 'dx_grid': 'FN42', 'frequency_hz': '14075500',
                     'mode': 'FT8', 'report_sent': '-11', 'report_received': '-12', 'tx_power': '5 W',
-                    'comments': 'synthetic', 'name': 'Test', 'time_on': on_view, 'operator_call': 'K1BBB',
-                    'my_call': 'K1AAA', 'my_grid': 'FN31', 'exchange_sent': '001', 'exchange_received': '002',
+                    'comments': 'synthetic', 'name': 'Test', 'time_on': on_view, 'operator_call': 'Q2BBB',
+                    'my_call': 'Q2AAA', 'my_grid': 'FN31', 'exchange_sent': '001', 'exchange_received': '002',
                     'propagation_mode': 'TR'}
         s.positive('05-qso-logged' + suffix, schema, 5, qso_core + b''.join(qso_tail), 'qso_logged',
                    qso_fields | qso_extra, message=qso_view)
@@ -205,34 +205,34 @@ def build():
         s.positive('09-free-text' + suffix, schema, 9, utf8('test message') + b'\x00', 'control',
                    {'operation': 'send_text', 'text': 'test message', 'transmit': False},
                    message={'text': 'test message', 'send': False})
-        wspr = pack('BIidQi', 0, 45296123, -27, -0.5, 14095600, -2) + utf8('W1AAA') + utf8('FN42') + pack('i', 37)
+        wspr = pack('BIidQi', 0, 45296123, -27, -0.5, 14095600, -2) + utf8('Q1AAA') + utf8('FN42') + pack('i', 37)
         wspr_fields = {'is_new': False, 'time_of_day': '12:34:56.123', 'snr_db': -27, 'dt_seconds': -0.5,
-                       'frequency_hz': 14095600, 'drift_hz': -2, 'call': 'W1AAA', 'grid': 'FN42', 'power_dbm': 37}
+                       'frequency_hz': 14095600, 'drift_hz': -2, 'call': 'Q1AAA', 'grid': 'FN42', 'power_dbm': 37}
         s.positive('10-wspr-decode' + suffix, schema, 10, wspr + b'\x01', 'decode', dict(wspr_fields, off_air=True),
                    message={'new': False, 'time': 45296123, 'snr_db': -27, 'delta_time_seconds': -0.5,
-                            'frequency_hz': '14095600', 'drift_hz': -2, 'callsign': 'W1AAA', 'grid': 'FN42',
+                            'frequency_hz': '14095600', 'drift_hz': -2, 'callsign': 'Q1AAA', 'grid': 'FN42',
                             'power_dbm': 37, 'off_air': True})
         s.positive('11-location' + suffix, schema, 11, utf8('FN31aa'), 'control',
                    {'operation': 'wsjtx.location', 'location': 'FN31aa'}, message={'location': 'FN31aa'})
-        adif = '<ADIF_VER:5>3.1.4<EOH><CALL:5>W1AAA<EOR>'
+        adif = '<ADIF_VER:5>3.1.4<EOH><CALL:5>Q1AAA<EOR>'
         s.positive('12-logged-adif' + suffix, schema, 12, utf8(adif), 'qso_logged', {'adif': adif}, message={'adif': adif})
         colors = pack('B5H', 1, 65535, 0x1111, 0x2222, 0x3333, 0x4444) + pack('B5H', 0, 1, 2, 3, 4, 5)
-        s.positive('13-highlight-callsign' + suffix, schema, 13, utf8('W1AAA') + colors + b'\x01', 'control',
-                   {'operation': 'wsjtx.highlight_callsign', 'call': 'W1AAA', 'highlight_last': True},
-                   message={'callsign': 'W1AAA', 'background': {'spec': 1, 'channels': [65535, 0x1111, 0x2222, 0x3333, 0x4444]},
+        s.positive('13-highlight-callsign' + suffix, schema, 13, utf8('Q1AAA') + colors + b'\x01', 'control',
+                   {'operation': 'wsjtx.highlight_callsign', 'call': 'Q1AAA', 'highlight_last': True},
+                   message={'callsign': 'Q1AAA', 'background': {'spec': 1, 'channels': [65535, 0x1111, 0x2222, 0x3333, 0x4444]},
                             'foreground': {'spec': 0, 'channels': [1, 2, 3, 4, 5]}, 'highlight_last': True})
         s.positive('14-switch-configuration' + suffix, schema, 14, utf8('test-config'), 'control',
                    {'operation': 'wsjtx.switch_configuration', 'configuration_name': 'test-config'},
                    message={'configuration_name': 'test-config'})
-        configure = utf8('FT8') + pack('I', 100) + utf8('sub-test') + pack('BII', 0, 15, 1800) + utf8('W1AAA') + utf8('FN42')
+        configure = utf8('FT8') + pack('I', 100) + utf8('sub-test') + pack('BII', 0, 15, 1800) + utf8('Q1AAA') + utf8('FN42')
         cfg_fields = {'operation': 'wsjtx.configure', 'mode': 'FT8', 'frequency_tolerance_hz': 100, 'sub_mode': 'sub-test',
-                      'fast_mode': False, 'tr_period_seconds': 15, 'rx_offset_hz': 1800, 'dx_call': 'W1AAA', 'dx_grid': 'FN42'}
+                      'fast_mode': False, 'tr_period_seconds': 15, 'rx_offset_hz': 1800, 'dx_call': 'Q1AAA', 'dx_grid': 'FN42'}
         s.positive('15-configure' + suffix, schema, 15, configure + b'\x01', 'control', dict(cfg_fields, generate_messages=True),
                    message={'mode': 'FT8', 'frequency_tolerance_hz': 100, 'sub_mode': 'sub-test', 'fast_mode': False,
-                            'tr_period_seconds': 15, 'rx_df_hz': 1800, 'dx_call': 'W1AAA', 'dx_grid': 'FN42', 'generate_messages': True})
-        s.positive('16-annotation-info' + suffix, schema, 16, utf8('W1AAA') + pack('BI', 0, 12345), 'control',
-                   {'operation': 'wsjtx.annotation_info', 'dx_call': 'W1AAA', 'sort_order_provided': False, 'sort_order': 12345},
-                   message={'dx_call': 'W1AAA', 'sort_order_provided': False, 'sort_order': 12345})
+                            'tr_period_seconds': 15, 'rx_df_hz': 1800, 'dx_call': 'Q1AAA', 'dx_grid': 'FN42', 'generate_messages': True})
+        s.positive('16-annotation-info' + suffix, schema, 16, utf8('Q1AAA') + pack('BI', 0, 12345), 'control',
+                   {'operation': 'wsjtx.annotation_info', 'dx_call': 'Q1AAA', 'sort_order_provided': False, 'sort_order': 12345},
+                   message={'dx_call': 'Q1AAA', 'sort_order_provided': False, 'sort_order': 12345})
         # Historical minima in every supported schema.
         s.positive('tail-heartbeat-empty' + suffix, schema, 0, b'', 'lifecycle', {'state': 'heartbeat'}, message={})
         s.positive('tail-status-minimal' + suffix, schema, 1, b''.join(status_parts[:6]), 'radio_state',
@@ -242,8 +242,8 @@ def build():
         s.positive('tail-reply-minimal' + suffix, schema, 4, reply, 'control', reply_fields)
         s.positive('tail-qso-minimal' + suffix, schema, 5, qso_core, 'qso_logged', qso_fields)
         s.positive('tail-wspr-minimal' + suffix, schema, 10, wspr, 'decode', wspr_fields)
-        s.positive('tail-highlight-minimal' + suffix, schema, 13, utf8('W1AAA') + colors, 'control',
-                   {'operation': 'wsjtx.highlight_callsign', 'call': 'W1AAA'})
+        s.positive('tail-highlight-minimal' + suffix, schema, 13, utf8('Q1AAA') + colors, 'control',
+                   {'operation': 'wsjtx.highlight_callsign', 'call': 'Q1AAA'})
         s.positive('tail-configure-minimal' + suffix, schema, 15, configure, 'control', cfg_fields)
         # Invalid and unresolvable native times are successful messages with absent common times.
         for label, spec, ms, day, zone in [
@@ -275,7 +275,7 @@ def build():
                 (2, pack('I', 3) + utf8(None), {'state': 'heartbeat', 'max_schema': 3, 'version': None}),
             ]:
                 s.positive(f'tail-heartbeat-prefix-{count}', 3, 0, data, 'lifecycle', fields)
-            optional_status = [utf8('K1AAA'), utf8('FN31'), utf8('FN42'), b'\x00', utf8('sub-test'),
+            optional_status = [utf8('Q2AAA'), utf8('FN31'), utf8('FN42'), b'\x00', utf8('sub-test'),
                                b'\x01', b'\x03', pack('I', 50), pack('I', 15), utf8('test-config'), utf8('test-tx')]
             optional_names = ['station_call', 'station_grid', 'dx_grid', 'tx_watchdog', 'sub_mode', 'fast_mode',
                               None, 'frequency_tolerance_hz', 'tr_period_seconds', 'configuration_name', 'tx_message']
@@ -308,7 +308,7 @@ def build():
             minimal = {0: header(schema, 0), 1: header(schema, 1) + b''.join(status_parts[:6]),
                        2: header(schema, 2) + decode, 3: header(schema, 3), 4: header(schema, 4) + reply,
                        5: header(schema, 5) + qso_core, 10: header(schema, 10) + wspr,
-                       13: header(schema, 13) + utf8('W1AAA') + colors, 15: header(schema, 15) + configure}.get(typ, raw)
+                       13: header(schema, 13) + utf8('Q1AAA') + colors, 15: header(schema, 15) + configure}.get(typ, raw)
             s.negative(f'truncated-type-{typ:02}' + suffix, minimal[:-1], 'truncated')
     # Clear/Close ambiguity cannot be resolved by the presence of a Window.
     for direction in ['from_application', 'to_application', 'unknown']:
@@ -574,7 +574,7 @@ def commands(s):
         event = copy.deepcopy(baselines['reply'])
         event['fields']['dt_seconds'] = 'ieee754:7ff8000000001234' if label == 'nan' else -0.0
         raw = header(3, 4) + pack('IiQ', 45296123, -17, bits) + pack('I', 1234)
-        raw += utf8('~') + utf8('CQ W1AAA FN42') + b'\x01\x04'
+        raw += utf8('~') + utf8('CQ Q1AAA FN42') + b'\x01\x04'
         s.add('command-reply-' + label, {'class': 'command', 'input': {'event': event},
                                         'expected': {'data': b64(raw)}})
     default = copy.deepcopy(s.vectors['command-09-s3'])
@@ -815,7 +815,7 @@ def core_shapes():
     add('missing-result-status', event, False)
     publish = copy.deepcopy(observation)
     publish.update(family='pskreporter-mqtt', kind='spot', fields={
-        'receiver_call': 'K1AAA', 'receiver_locator': 'FN31', 'sender_call': 'W1AAA',
+        'receiver_call': 'Q2AAA', 'receiver_locator': 'FN31', 'sender_call': 'Q1AAA',
         'sender_locator': 'FN42', 'frequency_hz': 14074000, 'mode': 'FT8', 'snr_db': -17,
         'time': '2026-11-12T12:00:00Z', 'reporting_software': 'synthetic decoder'})
     publish['native'] = {'format': 'mqtt_publish', 'data': '', 'topic': 'example/spot', 'retained': False}
@@ -1304,11 +1304,11 @@ def n1mm_vectors():
 
     contact = [row('app', 'synthetic-logger'), row('contestname', 'SYNTHETIC', 'contest_name'),
         row('contestnr', '23'), row('timestamp', '2026-11-12 12:34:56', 'start', '2026-11-12T12:34:56Z'),
-        row('mycall', 'K1AAA', 'station_call'), row('band', '3,5', 'band'),
+        row('mycall', 'Q2AAA', 'station_call'), row('band', '3,5', 'band'),
         row('rxfreq', '352519', 'dial_frequency_hz', 3525190),
         row('txfreq', '352621', 'tx_frequency_hz', 3526210),
-        row('operator', 'K1BBB', 'operator_call'), row('mode', 'CW', 'mode'), row('call', 'W1AAA', 'call'),
-        row('countryprefix', 'K'), row('wpxprefix', 'W1'), row('stationprefix', 'K1AAA'),
+        row('operator', 'Q2BBB', 'operator_call'), row('mode', 'CW', 'mode'), row('call', 'Q1AAA', 'call'),
+        row('countryprefix', 'Q'), row('wpxprefix', 'Q1'), row('stationprefix', 'Q2AAA'),
         row('continent', 'NA'), row('snt', '599', 'report_sent'), row('sntnr', '005', 'serial_sent'),
         row('rcv', '579', 'report_received'), row('rcvnr', '009', 'serial_received'),
         row('gridsquare', 'FN42', 'grid'), row('exchangel', 'synthetic exchange', 'exchange_received'),
@@ -1322,28 +1322,28 @@ def n1mm_vectors():
         row('StationName', 'SYNTHETIC-PC', 'radio', {'instance': 'SYNTHETIC-PC'}),
         row('ID', '0123456789abcdef0123456789abcdef', 'record_id'), row('IsClaimedQso', '1'),
         row('oldtimestamp', '2026-11-12 12:30:00', 'previous_start', '2026-11-12T12:30:00Z'),
-        row('oldcall', 'W1BBB'), row('SentExchange', '# SYN')]
+        row('oldcall', 'Q1BBB'), row('SentExchange', '# SYN')]
     historical = [row('exchange1', 'historical exchange', 'exchange_received'), row('ismultiplier1', '1'),
                   row('Run1Run2', '2'), row('ContactType', 'synthetic')]
     radio = [row('app', 'synthetic-logger'), row('StationName', 'SYNTHETIC-PC', 'radio', {'instance': 'SYNTHETIC-PC'}),
         row('RadioNr', '2', 'radio', {'number': 2}), row('Freq', '1407123', 'dial_frequency_hz', 14071230),
-        row('TXFreq', '1407234'), row('Mode', 'USB', 'mode'), row('mycall', 'K1AAA', 'station_call'),
-        row('OpCall', 'K1BBB'), row('IsRunning', 'True', 'running', True), row('FocusEntry', '12345'),
+        row('TXFreq', '1407234'), row('Mode', 'USB', 'mode'), row('mycall', 'Q2AAA', 'station_call'),
+        row('OpCall', 'Q2BBB'), row('IsRunning', 'True', 'running', True), row('FocusEntry', '12345'),
         row('EntryWindowHwnd', '23456'), row('Antenna', '8'), row('Rotors', 'synthetic-rotor'),
         row('FocusRadioNr', '1', 'focus_radio', 1), row('IsStereo', 'True', 'stereo', True), row('IsSplit', 'False'),
         row('ActiveRadioNr', '2', 'active_radio', 2), row('IsTransmitting', 'False', 'transmitting', False),
         row('FunctionKeyCaption', 'synthetic-CQ'), row('RadioName', 'synthetic-radio'), row('AuxAntSelected', '-1'),
         row('AuxAntSelectedName', ''), row('IsConnected', '')]
-    spot = [row('app', 'synthetic-logger'), row('StationName', 'K1AAA', 'radio', {'instance': 'K1AAA'}),
-        row('dxcall', 'W1AAA', 'call'), row('frequency', '7061.2', 'frequency_hz', 7061200), row('spottercall', 'K1BBB', 'spotter_call'),
+    spot = [row('app', 'synthetic-logger'), row('StationName', 'Q2AAA', 'radio', {'instance': 'Q2AAA'}),
+        row('dxcall', 'Q1AAA', 'call'), row('frequency', '7061.2', 'frequency_hz', 7061200), row('spottercall', 'Q2BBB', 'spotter_call'),
         row('timestamp', '2026-11-12 12:34:56', 'time', '2026-11-12T12:34:56Z'),
         row('action', 'add'), row('mode', 'CW', 'mode'),
         row('comment', 'synthetic spot ', 'text'), row('status', 'single mult'), row('statuslist', 'single mult')]
     app = [row('app', 'synthetic-logger'), row('dbname', 'synthetic.s3db'), row('contestnr', '23'),
-        row('contestname', 'SYNTHETIC'), row('StationName', 'SYNTHETIC-PC'), row('mycall', 'K1AAA')]
+        row('contestname', 'SYNTHETIC'), row('StationName', 'SYNTHETIC-PC'), row('mycall', 'Q2AAA')]
     deletion = [r for r in contact if r[0] in ('app', 'timestamp', 'mycall', 'band', 'call', 'contestnr', 'StationName', 'ID')]
-    score = [row('contest', 'SYNTHETIC', 'contest_name'), row('call', 'K1AAA', 'station_call'),
-        row('ops', 'K1BBB'), row('class', ''), row('club', 'synthetic-club'), row('qth', ''),
+    score = [row('contest', 'SYNTHETIC', 'contest_name'), row('call', 'Q2AAA', 'station_call'),
+        row('ops', 'Q2BBB'), row('class', ''), row('club', 'synthetic-club'), row('qth', ''),
         row('breakdown', ''), row('score', '4321', 'total_score', 4321),
         row('timestamp', '2026-11-12 12:34:56', 'time', '2026-11-12T12:34:56Z')]
     qsy = [row('app', 'synthetic-client', 'app'), row('radionr', '2', 'radio', {'number': 2}),
@@ -1409,14 +1409,14 @@ def n1mm_vectors():
             positive(root + '-empty-' + name, xml(root, [(name, '', {})]), kind,
                      fields(root, [(name, '', empty_oracle)]), direction)
     # Score nested children and every optional category/selector attribute.
-    score_raw = (b'<dynamicresults><contest>SYNTHETIC</contest><call>K1AAA</call><ops>K1BBB</ops>'
+    score_raw = (b'<dynamicresults><contest>SYNTHETIC</contest><call>Q2AAA</call><ops>Q2BBB</ops>'
         b'<class power="HIGH" assisted="ASSISTED" transmitter="UNLIMITED" ops="MULTI-OP" bands="ALL" mode="MIXED" overlay="N/A"/>'
         b'<club>synthetic-club</club><qth><dxcccountry>K</dxcccountry><cqzone>5</cqzone><iaruzone>8</iaruzone>'
         b'<arrlsection>SYN</arrlsection><stprvoth>SYN</stprvoth><grid6>FN42AA</grid6></qth>'
         b'<breakdown><qso band="20" mode="CW">11</qso><point band="20" mode="CW">22</point>'
         b'<qso band="total" mode="ALL">33</qso><point band="total" mode="ALL">44</point></breakdown>'
         b'<score>55</score><timestamp>2026-11-12 12:34:56</timestamp></dynamicresults>')
-    positive('score-nested', score_raw, 'score', {'contest_name': 'SYNTHETIC', 'station_call': 'K1AAA',
+    positive('score-nested', score_raw, 'score', {'contest_name': 'SYNTHETIC', 'station_call': 'Q2AAA',
         'qso_count': 33, 'points': 44, 'total_score': 55, 'time': '2026-11-12T12:34:56Z'}, view=True)
     for attr in ('power', 'assisted', 'transmitter', 'ops', 'bands', 'mode', 'overlay'):
         positive('score-class-attribute-' + attr, f'<dynamicresults><class {attr}="synthetic"/></dynamicresults>'.encode(), 'score', {})
@@ -1505,7 +1505,7 @@ def n1mm_vectors():
     positive('aliases-prefer-digit', b'<contactinfo><exchangel>old</exchangel><exchange1>new</exchange1></contactinfo>', 'qso_logged', {'exchange_received': 'new'})
     positive('aliases-prefer-empty', b'<contactinfo><exchangel>old</exchangel><exchange1/></contactinfo>', 'qso_logged', {'exchange_received': ''})
     positive('aliases-no-fallback-on-duplicate', b'<contactinfo><exchangel>old</exchangel><exchange1>a</exchange1><exchange1>b</exchange1></contactinfo>', 'qso_logged', {})
-    positive('spot-delete', b'<spot><action>delete</action><dxcall>W1AAA</dxcall></spot>', 'spot', {'call': 'W1AAA'})
+    positive('spot-delete', b'<spot><action>delete</action><dxcall>Q1AAA</dxcall></spot>', 'spot', {'call': 'Q1AAA'})
     # Timestamp oracles are literal pairs, independent of the calendar checker.
     # Bad timestamp scalars still produce positive messages with native evidence.
     timestamp_cases = [

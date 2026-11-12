@@ -12,7 +12,7 @@ contains 120 decodes in seven cycles.
 ```sh
 qg-interop sim --wsjtx --to 127.0.0.1:2237
 qg-interop sim --wsjtx --to 127.0.0.1:2237 --file ALL.TXT --speed 60
-qg-interop sim --wsjtx --to '[::1]:2237' --call W1ZZZ --grid AA00 --loop
+qg-interop sim --wsjtx --to '[::1]:2237' --call Q1ZZZ --grid AA00 --loop
 ```
 
 Use `--from YYMMDD_HHMMSS` to start at a timestamp in the log. Playback follows file order,
@@ -52,7 +52,7 @@ Test a contest dashboard, logger bridge, or band map without running N1MM Logger
 
 ```sh
 qg-interop sim --n1mm --to 127.0.0.1:12060 --speed 60
-qg-interop sim --n1mm --to '[::1]:12060' --call W1ZZZ --station SYNTHETIC-02 --radios 2 --rate 240 --speed 60 --seed 42 --count 35
+qg-interop sim --n1mm --to '[::1]:12060' --call Q1ZZZ --station SYNTHETIC-02 --radios 2 --rate 240 --speed 60 --seed 42 --count 35
 qg-interop sim --n1mm --to 127.0.0.1:12060 --radios 2 --loop
 ```
 
@@ -147,7 +147,7 @@ If nothing playable remains, playback fails with `no received decodes` and the s
 ## Existing fixed QSO scripts
 
 `--dx-call`, `--mode`, or `--frequency` selects the original finite nine-message script. Its
-original defaults remain `N0CALL`, `FN31`, `W1AW`, `FT8`, and 14,074,000 Hz. It includes QSOLogged
+defaults are `N0CALL`, `FN31`, `Q1AW`, `FT8`, and 14,074,000 Hz. It includes QSOLogged
 and runs immediately. Use these options without `--file` or `--capture`.
 
 ```sh

@@ -5,7 +5,7 @@
   "mapping": 1,
   "class": "positive",
   "input": {
-    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48Y29udGFjdGRlbGV0ZT48YXBwPnN5bnRoZXRpYy1sb2dnZXI8L2FwcD48Y29udGVzdG5yPjIzPC9jb250ZXN0bnI+PHRpbWVzdGFtcD4yMDI2LTExLTEyIDEyOjM0OjU2PC90aW1lc3RhbXA+PG15Y2FsbD5LMUFBQTwvbXljYWxsPjxiYW5kPjMsNTwvYmFuZD48Y2FsbD5XMUFBQTwvY2FsbD48U3RhdGlvbk5hbWU+U1lOVEhFVElDLVBDPC9TdGF0aW9uTmFtZT48SUQ+MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY8L0lEPjwvY29udGFjdGRlbGV0ZT4=",
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48Y29udGFjdGRlbGV0ZT48YXBwPnN5bnRoZXRpYy1sb2dnZXI8L2FwcD48Y29udGVzdG5yPjIzPC9jb250ZXN0bnI+PHRpbWVzdGFtcD4yMDI2LTExLTEyIDEyOjM0OjU2PC90aW1lc3RhbXA+PG15Y2FsbD5RMkFBQTwvbXljYWxsPjxiYW5kPjMsNTwvYmFuZD48Y2FsbD5RMUFBQTwvY2FsbD48U3RhdGlvbk5hbWU+U1lOVEhFVElDLVBDPC9TdGF0aW9uTmFtZT48SUQ+MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY8L0lEPjwvY29udGFjdGRlbGV0ZT4=",
     "context": {
       "direction": "from_application",
       "exchange": "unknown"
@@ -23,9 +23,9 @@
       },
       "fields": {
         "start": "2026-11-12T12:34:56Z",
-        "station_call": "K1AAA",
+        "station_call": "Q2AAA",
         "band": "3,5",
-        "call": "W1AAA",
+        "call": "Q1AAA",
         "radio": {
           "instance": "SYNTHETIC-PC"
         },
@@ -33,15 +33,15 @@
       },
       "native": {
         "format": "n1mm_xml",
-        "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48Y29udGFjdGRlbGV0ZT48YXBwPnN5bnRoZXRpYy1sb2dnZXI8L2FwcD48Y29udGVzdG5yPjIzPC9jb250ZXN0bnI+PHRpbWVzdGFtcD4yMDI2LTExLTEyIDEyOjM0OjU2PC90aW1lc3RhbXA+PG15Y2FsbD5LMUFBQTwvbXljYWxsPjxiYW5kPjMsNTwvYmFuZD48Y2FsbD5XMUFBQTwvY2FsbD48U3RhdGlvbk5hbWU+U1lOVEhFVElDLVBDPC9TdGF0aW9uTmFtZT48SUQ+MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY8L0lEPjwvY29udGFjdGRlbGV0ZT4="
+        "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48Y29udGFjdGRlbGV0ZT48YXBwPnN5bnRoZXRpYy1sb2dnZXI8L2FwcD48Y29udGVzdG5yPjIzPC9jb250ZXN0bnI+PHRpbWVzdGFtcD4yMDI2LTExLTEyIDEyOjM0OjU2PC90aW1lc3RhbXA+PG15Y2FsbD5RMkFBQTwvbXljYWxsPjxiYW5kPjMsNTwvYmFuZD48Y2FsbD5RMUFBQTwvY2FsbD48U3RhdGlvbk5hbWU+U1lOVEhFVElDLVBDPC9TdGF0aW9uTmFtZT48SUQ+MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY8L0lEPjwvY29udGFjdGRlbGV0ZT4="
       }
     }
   },
   "reencode": {
-    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48Y29udGFjdGRlbGV0ZT48YXBwPnN5bnRoZXRpYy1sb2dnZXI8L2FwcD48Y29udGVzdG5yPjIzPC9jb250ZXN0bnI+PHRpbWVzdGFtcD4yMDI2LTExLTEyIDEyOjM0OjU2PC90aW1lc3RhbXA+PG15Y2FsbD5LMUFBQTwvbXljYWxsPjxiYW5kPjMsNTwvYmFuZD48Y2FsbD5XMUFBQTwvY2FsbD48U3RhdGlvbk5hbWU+U1lOVEhFVElDLVBDPC9TdGF0aW9uTmFtZT48SUQ+MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY8L0lEPjwvY29udGFjdGRlbGV0ZT4="
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48Y29udGFjdGRlbGV0ZT48YXBwPnN5bnRoZXRpYy1sb2dnZXI8L2FwcD48Y29udGVzdG5yPjIzPC9jb250ZXN0bnI+PHRpbWVzdGFtcD4yMDI2LTExLTEyIDEyOjM0OjU2PC90aW1lc3RhbXA+PG15Y2FsbD5RMkFBQTwvbXljYWxsPjxiYW5kPjMsNTwvYmFuZD48Y2FsbD5RMUFBQTwvY2FsbD48U3RhdGlvbk5hbWU+U1lOVEhFVElDLVBDPC9TdGF0aW9uTmFtZT48SUQ+MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY8L0lEPjwvY29udGFjdGRlbGV0ZT4="
   },
   "expected_message": {
     "root": "contactdelete",
-    "xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?><contactdelete><app>synthetic-logger</app><contestnr>23</contestnr><timestamp>2026-11-12 12:34:56</timestamp><mycall>K1AAA</mycall><band>3,5</band><call>W1AAA</call><StationName>SYNTHETIC-PC</StationName><ID>0123456789abcdef0123456789abcdef</ID></contactdelete>"
+    "xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?><contactdelete><app>synthetic-logger</app><contestnr>23</contestnr><timestamp>2026-11-12 12:34:56</timestamp><mycall>Q2AAA</mycall><band>3,5</band><call>Q1AAA</call><StationName>SYNTHETIC-PC</StationName><ID>0123456789abcdef0123456789abcdef</ID></contactdelete>"
   }
 }

@@ -10,6 +10,7 @@ use std::{
     process::Command,
 };
 
+mod synthetic_calls;
 pub mod verify;
 
 type Check = Result<(), String>;
@@ -825,6 +826,8 @@ pub fn policy(root: &Path) -> Check {
     println!("policy: crates.io only, no native code in shipped dependency graph: pass");
     fuzz_policy(root)?;
     println!("policy: isolated, pinned fuzz target: pass");
+    synthetic_calls::check(root)?;
+    println!("policy: Q-prefixed invented calls in sources, fixtures and vectors: pass");
     Ok(())
 }
 

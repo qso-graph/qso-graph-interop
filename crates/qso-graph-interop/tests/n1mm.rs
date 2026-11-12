@@ -182,7 +182,7 @@ fn future_mapping_checks_assigned_fields_without_guessing_new_native_versions() 
     let mut codec = N1mm::default();
     let mut value = codec
         .decode(
-            b"<spot><dxcall>K1AAA</dxcall></spot>",
+            b"<spot><dxcall>Q2AAA</dxcall></spot>",
             &DecodeOptions::default(),
         )
         .unwrap()
@@ -198,13 +198,13 @@ fn future_mapping_checks_assigned_fields_without_guessing_new_native_versions() 
             .unwrap(),
         Verification::Verified
     );
-    value["fields"]["call"] = "K1BBB".into();
+    value["fields"]["call"] = "Q2BBB".into();
     assert!(
         codec
             .verify(&Event::from_value(value.clone()).unwrap())
             .is_err()
     );
-    value["fields"]["call"] = "K1AAA".into();
+    value["fields"]["call"] = "Q2AAA".into();
     value["native_version"] = "future".into();
     let event = Event::from_value(value.clone()).unwrap();
     let read = event.recognized(Some(&codec)).unwrap();

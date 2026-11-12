@@ -6,7 +6,7 @@
   "class": "positive",
   "input": {
     "transport": "udp",
-    "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJ3c2p0eCIsIm1hcHBpbmciOjEsIm5hdGl2ZV92ZXJzaW9uIjoiMyIsImtpbmQiOiJkZWNvZGUiLCJ3aXJlX2lkIjoidGVzdC1pbnN0YW5jZSIsImNvbnRleHQiOnsiZGlyZWN0aW9uIjoidG9fYXBwbGljYXRpb24iLCJleGNoYW5nZSI6InJlcXVlc3QiLCJzb3VyY2VfaWQiOiJ1bnRydXN0ZWQtc2VyaWFsaXplZC1zb3VyY2UifSwiZmllbGRzIjp7ImlzX25ldyI6dHJ1ZSwidGltZV9vZl9kYXkiOiIxMjozNDo1Ni4xMjMiLCJzbnJfZGIiOi0xNywiZHRfc2Vjb25kcyI6MC4yNSwiYXVkaW9fb2Zmc2V0X2h6IjoxMjM0LCJtb2RlIjoifiIsInRleHQiOiJDUSBXMUFBQSBGTjQyIiwibG93X2NvbmZpZGVuY2UiOmZhbHNlLCJvZmZfYWlyIjp0cnVlLCJyYWRpbyI6eyJpbnN0YW5jZSI6InRlc3QtaW5zdGFuY2UifX0sIm5hdGl2ZSI6eyJmb3JtYXQiOiJ3c2p0eF9kYXRhZ3JhbSIsImRhdGEiOiJyYnpMMmdBQUFBTUFBQUFDQUFBQURYUmxjM1F0YVc1emRHRnVZMlVCQXJNcCsvLy8vKzgvMEFBQUFBQUFBQUFBQk5JQUFBQUJmZ0FBQUExRFVTQlhNVUZCUVNCR1RqUXlBQUU9In19",
+    "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJ3c2p0eCIsIm1hcHBpbmciOjEsIm5hdGl2ZV92ZXJzaW9uIjoiMyIsImtpbmQiOiJkZWNvZGUiLCJ3aXJlX2lkIjoidGVzdC1pbnN0YW5jZSIsImNvbnRleHQiOnsiZGlyZWN0aW9uIjoidG9fYXBwbGljYXRpb24iLCJleGNoYW5nZSI6InJlcXVlc3QiLCJzb3VyY2VfaWQiOiJ1bnRydXN0ZWQtc2VyaWFsaXplZC1zb3VyY2UifSwiZmllbGRzIjp7ImlzX25ldyI6dHJ1ZSwidGltZV9vZl9kYXkiOiIxMjozNDo1Ni4xMjMiLCJzbnJfZGIiOi0xNywiZHRfc2Vjb25kcyI6MC4yNSwiYXVkaW9fb2Zmc2V0X2h6IjoxMjM0LCJtb2RlIjoifiIsInRleHQiOiJDUSBRMUFBQSBGTjQyIiwibG93X2NvbmZpZGVuY2UiOmZhbHNlLCJvZmZfYWlyIjp0cnVlLCJyYWRpbyI6eyJpbnN0YW5jZSI6InRlc3QtaW5zdGFuY2UifX0sIm5hdGl2ZSI6eyJmb3JtYXQiOiJ3c2p0eF9kYXRhZ3JhbSIsImRhdGEiOiJyYnpMMmdBQUFBTUFBQUFDQUFBQURYUmxjM1F0YVc1emRHRnVZMlVCQXJNcCsvLy8vKzgvMEFBQUFBQUFBQUFBQk5JQUFBQUJmZ0FBQUExRFVTQlJNVUZCUVNCR1RqUXlBQUU9In19",
     "context": {
       "direction": "unknown",
       "exchange": "unknown"
@@ -32,7 +32,7 @@
         "dt_seconds": 0.25,
         "audio_offset_hz": 1234,
         "mode": "~",
-        "text": "CQ W1AAA FN42",
+        "text": "CQ Q1AAA FN42",
         "low_confidence": false,
         "off_air": true,
         "radio": {
@@ -41,7 +41,7 @@
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAMAAAACAAAADXRlc3QtaW5zdGFuY2UBArMp+////+8/0AAAAAAAAAAABNIAAAABfgAAAA1DUSBXMUFBQSBGTjQyAAE="
+        "data": "rbzL2gAAAAMAAAACAAAADXRlc3QtaW5zdGFuY2UBArMp+////+8/0AAAAAAAAAAABNIAAAABfgAAAA1DUSBRMUFBQSBGTjQyAAE="
       },
       "via": [
         {
@@ -74,7 +74,7 @@
         "dt_seconds": 0.25,
         "audio_offset_hz": 1234,
         "mode": "~",
-        "text": "CQ W1AAA FN42",
+        "text": "CQ Q1AAA FN42",
         "low_confidence": false,
         "off_air": true,
         "radio": {
@@ -83,7 +83,7 @@
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAMAAAACAAAADXRlc3QtaW5zdGFuY2UBArMp+////+8/0AAAAAAAAAAABNIAAAABfgAAAA1DUSBXMUFBQSBGTjQyAAE="
+        "data": "rbzL2gAAAAMAAAACAAAADXRlc3QtaW5zdGFuY2UBArMp+////+8/0AAAAAAAAAAABNIAAAABfgAAAA1DUSBRMUFBQSBGTjQyAAE="
       },
       "via": [
         {

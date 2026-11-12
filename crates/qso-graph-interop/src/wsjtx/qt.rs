@@ -546,7 +546,7 @@ mod presentation_tests {
         date.time_spec = 1;
         date.time = QTime(u32::MAX);
         assert_eq!(date.unix_milliseconds(3), None);
-        assert_eq!(Utf8::from("W1AW").as_str(), Some("W1AW"));
+        assert_eq!(Utf8::from("Q1AW").as_str(), Some("Q1AW"));
         assert_eq!(
             Utf8 {
                 bytes: Some(vec![255])

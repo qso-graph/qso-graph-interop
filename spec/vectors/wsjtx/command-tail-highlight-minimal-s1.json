@@ -17,7 +17,7 @@
       },
       "fields": {
         "operation": "wsjtx.highlight_callsign",
-        "call": "W1AAA",
+        "call": "Q1AAA",
         "background_color": {
           "spec": 1,
           "channels": [
@@ -45,6 +45,6 @@
     }
   },
   "expected": {
-    "data": "rbzL2gAAAAEAAAANAAAADXRlc3QtaW5zdGFuY2UAAAAFVzFBQUEB//8RESIiMzNERAAAAQACAAMABAAF"
+    "data": "rbzL2gAAAAEAAAANAAAADXRlc3QtaW5zdGFuY2UAAAAFUTFBQUEB//8RESIiMzNERAAAAQACAAMABAAF"
   }
 }

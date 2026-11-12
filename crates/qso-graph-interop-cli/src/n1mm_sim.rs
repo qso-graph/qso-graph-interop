@@ -271,7 +271,7 @@ impl Contest {
         let mut c = Contact {
             id: self.sent,
             call: format!(
-                "W{}{}{}{}",
+                "Q{}{}{}{}",
                 suffix % 10,
                 char::from(b'A' + (suffix / 10 % 26) as u8),
                 char::from(b'A' + (suffix / 260 % 26) as u8),
@@ -444,6 +444,52 @@ mod tests {
             panic!("sim");
         };
         Contest::new(&s)
+    }
+    fn synthetic_call(call: &str) -> bool {
+        let base = call.strip_suffix("/P").unwrap_or(call).as_bytes();
+        base.len() == 5
+            && base[0] == b'Q'
+            && base[1].is_ascii_digit()
+            && base[2..].iter().all(u8::is_ascii_uppercase)
+    }
+    #[test]
+    fn generated_calls_use_q_across_seeds_and_portable_edits() {
+        let template = contest("2");
+        let mut digits = [false; 10];
+        let mut portable = false;
+        for seed in (0..1024).chain([u64::MAX, 1 << 63]) {
+            let mut c = Contest {
+                random: seed,
+                ..contest("2")
+            };
+            for tick in 1..=7 {
+                for packet in c.play(tick * 1000).unwrap() {
+                    // Station/operator calls remain caller supplied. Inspect the
+                    // simple generated XML; loopback tests validate it with N1mm.
+                    let xml = std::str::from_utf8(&packet).unwrap();
+                    for tag in ["call", "dxcall", "oldcall"] {
+                        if let Some((_, tail)) = xml.split_once(&format!("<{tag}>")) {
+                            let call = tail.split_once(&format!("</{tag}>")).unwrap().0;
+                            if xml.contains("<dynamicresults>") {
+                                assert_eq!(call, template.call);
+                            } else {
+                                assert!(synthetic_call(call), "seed {seed}: {call}");
+                                assert_eq!(sim::call(call).unwrap(), call);
+                                digits[usize::from(call.as_bytes()[1] - b'0')] = true;
+                                portable |= call.ends_with("/P");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        assert!(digits.into_iter().all(|seen| seen));
+        assert!(portable);
+        // Plant the former generator's prefix in both shapes.
+        for call in ["Q8SAU", "Q8SAU/P"] {
+            assert!(synthetic_call(call));
+            assert!(!synthetic_call(&call.replacen('Q', "W", 1)));
+        }
     }
     #[test]
     fn utc_rollovers_calendar_and_frequency_units() {

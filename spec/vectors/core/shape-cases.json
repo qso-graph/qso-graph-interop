@@ -364,9 +364,9 @@
           "exchange": "unknown"
         },
         "fields": {
-          "receiver_call": "K1AAA",
+          "receiver_call": "Q2AAA",
           "receiver_locator": "FN31",
-          "sender_call": "W1AAA",
+          "sender_call": "Q1AAA",
           "sender_locator": "FN42",
           "frequency_hz": 14074000,
           "mode": "FT8",
@@ -395,9 +395,9 @@
           "exchange": "unknown"
         },
         "fields": {
-          "receiver_call": "K1AAA",
+          "receiver_call": "Q2AAA",
           "receiver_locator": "FN31",
-          "sender_call": "W1AAA",
+          "sender_call": "Q1AAA",
           "sender_locator": "FN42",
           "frequency_hz": 14074000,
           "mode": "FT8",
@@ -426,9 +426,9 @@
           "exchange": "unknown"
         },
         "fields": {
-          "receiver_call": "K1AAA",
+          "receiver_call": "Q2AAA",
           "receiver_locator": "FN31",
-          "sender_call": "W1AAA",
+          "sender_call": "Q1AAA",
           "sender_locator": "FN42",
           "frequency_hz": 14074000,
           "mode": "FT8",
@@ -457,9 +457,9 @@
           "exchange": "unknown"
         },
         "fields": {
-          "receiver_call": "K1AAA",
+          "receiver_call": "Q2AAA",
           "receiver_locator": "FN31",
-          "sender_call": "W1AAA",
+          "sender_call": "Q1AAA",
           "sender_locator": "FN42",
           "frequency_hz": 14074000,
           "mode": "FT8",
@@ -487,9 +487,9 @@
           "exchange": "unknown"
         },
         "fields": {
-          "receiver_call": "K1AAA",
+          "receiver_call": "Q2AAA",
           "receiver_locator": "FN31",
-          "sender_call": "W1AAA",
+          "sender_call": "Q1AAA",
           "sender_locator": "FN42",
           "frequency_hz": 14074000,
           "mode": "FT8",
@@ -517,9 +517,9 @@
           "exchange": "unknown"
         },
         "fields": {
-          "receiver_call": "K1AAA",
+          "receiver_call": "Q2AAA",
           "receiver_locator": "FN31",
-          "sender_call": "W1AAA",
+          "sender_call": "Q1AAA",
           "sender_locator": "FN42",
           "frequency_hz": 14074000,
           "mode": "FT8",
@@ -548,9 +548,9 @@
           "exchange": "unknown"
         },
         "fields": {
-          "receiver_call": "K1AAA",
+          "receiver_call": "Q2AAA",
           "receiver_locator": "FN31",
-          "sender_call": "W1AAA",
+          "sender_call": "Q1AAA",
           "sender_locator": "FN42",
           "frequency_hz": 14074000,
           "mode": "FT8",
@@ -579,9 +579,9 @@
           "exchange": "unknown"
         },
         "fields": {
-          "receiver_call": "K1AAA",
+          "receiver_call": "Q2AAA",
           "receiver_locator": "FN31",
-          "sender_call": "W1AAA",
+          "sender_call": "Q1AAA",
           "sender_locator": "FN42",
           "frequency_hz": 14074000,
           "mode": "FT8",

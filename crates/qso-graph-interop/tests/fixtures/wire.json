@@ -3,7 +3,7 @@
   "vectors": [
     {
       "name": "sample_000",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0000000003fd3333333333333000009f0000000017e00000010573141414120573141414220454e30340000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0000000003fd3333333333333000009f0000000017e00000010513141414120513141414220454e30340000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:30.000",
@@ -11,7 +11,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2544,
         "mode": "~",
-        "text": "W1AAA W1AAB EN04",
+        "text": "Q1AAA Q1AAB EN04",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -21,7 +21,7 @@
     },
     {
       "name": "sample_001",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffffc3fc999999999999a0000067e000000017e0000000d435120573141414320444e39310000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffffc3fc999999999999a0000067e000000017e0000000d435120513141414320444e39310000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:30.000",
@@ -29,7 +29,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 1662,
         "mode": "~",
-        "text": "CQ W1AAC DN91",
+        "text": "CQ Q1AAC DN91",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -39,7 +39,7 @@
     },
     {
       "name": "sample_002",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff93fd3333333333333000005da000000017e0000000d435120573141414420444d33330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff93fd3333333333333000005da000000017e0000000d435120513141414420444d33330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:30.000",
@@ -47,7 +47,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1498,
         "mode": "~",
-        "text": "CQ W1AAD DM33",
+        "text": "CQ Q1AAD DM33",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -57,7 +57,7 @@
     },
     {
       "name": "sample_003",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0000000013fc999999999999a00000794000000017e0000000e57314141452057314141462037330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0000000013fc999999999999a00000794000000017e0000000e51314141452051314141462037330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:30.000",
@@ -65,7 +65,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 1940,
         "mode": "~",
-        "text": "W1AAE W1AAF 73",
+        "text": "Q1AAE Q1AAF 73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -75,7 +75,7 @@
     },
     {
       "name": "sample_004",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff33fe0000000000000000008ad000000017e0000000d435120573141414720454e39300000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff33fe0000000000000000008ad000000017e0000000d435120513141414720454e39300000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:30.000",
@@ -83,7 +83,7 @@
         "dt_seconds": 0.5,
         "audio_offset_hz": 2221,
         "mode": "~",
-        "text": "CQ W1AAG EN90",
+        "text": "CQ Q1AAG EN90",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -93,7 +93,7 @@
     },
     {
       "name": "sample_005",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff53fd33333333333330000043d000000017e0000000f5731414148205731414149202b32310000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff53fd33333333333330000043d000000017e0000000f5131414148205131414149202b32310000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:30.000",
@@ -101,7 +101,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1085,
         "mode": "~",
-        "text": "W1AAH W1AAI +21",
+        "text": "Q1AAH Q1AAI +21",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -111,7 +111,7 @@
     },
     {
       "name": "sample_006",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0ffffffee3fd999999999999a0000073b000000017e0000000f573141414a20573141414b202d31370000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0ffffffee3fd999999999999a0000073b000000017e0000000f513141414a20513141414b202d31370000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:30.000",
@@ -119,7 +119,7 @@
         "dt_seconds": 0.4,
         "audio_offset_hz": 1851,
         "mode": "~",
-        "text": "W1AAJ W1AAK -17",
+        "text": "Q1AAJ Q1AAK -17",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -129,7 +129,7 @@
     },
     {
       "name": "sample_007",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff33fd333333333333300000391000000017e0000000d435120573141414c20454d37390000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff33fd333333333333300000391000000017e0000000d435120513141414c20454d37390000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:30.000",
@@ -137,7 +137,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 913,
         "mode": "~",
-        "text": "CQ W1AAL EM79",
+        "text": "CQ Q1AAL EM79",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -147,7 +147,7 @@
     },
     {
       "name": "sample_008",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff13fd33333333333330000047d000000017e0000000d435120573141414d20474836310000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff13fd33333333333330000047d000000017e0000000d435120513141414d20474836310000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:30.000",
@@ -155,7 +155,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1149,
         "mode": "~",
-        "text": "CQ W1AAM GH61",
+        "text": "CQ Q1AAM GH61",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -165,7 +165,7 @@
     },
     {
       "name": "sample_009",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff23fd3333333333333000001f4000000017e00000010573141414e20573141414f20454d38300000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff23fd3333333333333000001f4000000017e00000010513141414e20513141414f20454d38300000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:30.000",
@@ -173,7 +173,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 500,
         "mode": "~",
-        "text": "W1AAN W1AAO EM80",
+        "text": "Q1AAN Q1AAO EM80",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -183,7 +183,7 @@
     },
     {
       "name": "sample_010",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0ffffffea3fc999999999999a0000053f000000017e0000000e57314141502057314141512037330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0ffffffea3fc999999999999a0000053f000000017e0000000e51314141502051314141512037330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:30.000",
@@ -191,7 +191,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 1343,
         "mode": "~",
-        "text": "W1AAP W1AAQ 73",
+        "text": "Q1AAP Q1AAQ 73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -201,7 +201,7 @@
     },
     {
       "name": "sample_011",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff23fd3333333333333000008b6000000017e00000010573141415220573141415320525237330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff23fd3333333333333000008b6000000017e00000010513141415220513141415320525237330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:30.000",
@@ -209,7 +209,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2230,
         "mode": "~",
-        "text": "W1AAR W1AAS RR73",
+        "text": "Q1AAR Q1AAS RR73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -219,7 +219,7 @@
     },
     {
       "name": "sample_012",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0ffffffed3fd999999999999a000005e9000000017e00000010573141414120573141415420454d31350000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0ffffffed3fd999999999999a000005e9000000017e00000010513141414120513141415420454d31350000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:30.000",
@@ -227,7 +227,7 @@
         "dt_seconds": 0.4,
         "audio_offset_hz": 1513,
         "mode": "~",
-        "text": "W1AAA W1AAT EM15",
+        "text": "Q1AAA Q1AAT EM15",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -237,7 +237,7 @@
     },
     {
       "name": "sample_013",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff13fe000000000000000000381000000017e00000010573141415520573141415620444d31330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0fffffff13fe000000000000000000381000000017e00000010513141415520513141415620444d31330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:30.000",
@@ -245,7 +245,7 @@
         "dt_seconds": 0.5,
         "audio_offset_hz": 897,
         "mode": "~",
-        "text": "W1AAU W1AAV DM13",
+        "text": "Q1AAU Q1AAV DM13",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -255,7 +255,7 @@
     },
     {
       "name": "sample_014",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0ffffffef3fd3333333333333000009f6000000017e00000010573141414120573141415720454e39310000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512acf0ffffffef3fd3333333333333000009f6000000017e00000010513141414120513141415720454e39310000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:30.000",
@@ -263,7 +263,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2550,
         "mode": "~",
-        "text": "W1AAA W1AAW EN91",
+        "text": "Q1AAA Q1AAW EN91",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -273,7 +273,7 @@
     },
     {
       "name": "sample_015",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e7880000000a3ff199999999999a000003eb000000017e00000010573141415820573141415920444d31330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e7880000000a3ff199999999999a000003eb000000017e00000010513141415820513141415920444d31330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -281,7 +281,7 @@
         "dt_seconds": 1.1,
         "audio_offset_hz": 1003,
         "mode": "~",
-        "text": "W1AAX W1AAY DM13",
+        "text": "Q1AAX Q1AAY DM13",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -291,7 +291,7 @@
     },
     {
       "name": "sample_016",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788000000013fd3333333333333000008ad000000017e00000010573141414720573141415a20444d30340000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788000000013fd3333333333333000008ad000000017e00000010513141414720513141415a20444d30340000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -299,7 +299,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2221,
         "mode": "~",
-        "text": "W1AAG W1AAZ DM04",
+        "text": "Q1AAG Q1AAZ DM04",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -309,7 +309,7 @@
     },
     {
       "name": "sample_017",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788000000033fe3333333333333000001f1000000017e00000010573141424120573141424220444d33330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788000000033fe3333333333333000001f1000000017e00000010513141424120513141424220444d33330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -317,7 +317,7 @@
         "dt_seconds": 0.6,
         "audio_offset_hz": 497,
         "mode": "~",
-        "text": "W1ABA W1ABB DM33",
+        "text": "Q1ABA Q1ABB DM33",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -327,7 +327,7 @@
     },
     {
       "name": "sample_018",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788000000043ff3333333333333000004d5000000017e0000000d435120573141424320444d34320000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788000000043ff3333333333333000004d5000000017e0000000d435120513141424320444d34320000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -335,7 +335,7 @@
         "dt_seconds": 1.2,
         "audio_offset_hz": 1237,
         "mode": "~",
-        "text": "CQ W1ABC DM42",
+        "text": "CQ Q1ABC DM42",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -345,7 +345,7 @@
     },
     {
       "name": "sample_019",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788000000033fc999999999999a00000794000000017e00000010573141424420573141414620454e37340000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788000000033fc999999999999a00000794000000017e00000010513141424420513141414620454e37340000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -353,7 +353,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 1940,
         "mode": "~",
-        "text": "W1ABD W1AAF EN74",
+        "text": "Q1ABD Q1AAF EN74",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -363,7 +363,7 @@
     },
     {
       "name": "sample_020",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788000000013fe33333333333330000042f000000017e00000010573141424520573141424620454e39310000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788000000013fe33333333333330000042f000000017e00000010513141424520513141424620454e39310000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -371,7 +371,7 @@
         "dt_seconds": 0.6,
         "audio_offset_hz": 1071,
         "mode": "~",
-        "text": "W1ABE W1ABF EN91",
+        "text": "Q1ABE Q1ABF EN91",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -381,7 +381,7 @@
     },
     {
       "name": "sample_021",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff83fd3333333333333000000bf000000017e00000010573141424720573141424820454d37300000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff83fd3333333333333000000bf000000017e00000010513141424720513141424820454d37300000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -389,7 +389,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 191,
         "mode": "~",
-        "text": "W1ABG W1ABH EM70",
+        "text": "Q1ABG Q1ABH EM70",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -399,7 +399,7 @@
     },
     {
       "name": "sample_022",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff53fd3333333333333000007d6000000017e0000000d435120573141424920444d31330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff53fd3333333333333000007d6000000017e0000000d435120513141424920444d31330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -407,7 +407,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2006,
         "mode": "~",
-        "text": "CQ W1ABI DM13",
+        "text": "CQ Q1ABI DM13",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -417,7 +417,7 @@
     },
     {
       "name": "sample_023",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff63feccccccccccccd0000048e000000017e00000010573141424a20573141424b20522b31350000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff63feccccccccccccd0000048e000000017e00000010513141424a20513141424b20522b31350000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -425,7 +425,7 @@
         "dt_seconds": 0.9,
         "audio_offset_hz": 1166,
         "mode": "~",
-        "text": "W1ABJ W1ABK R+15",
+        "text": "Q1ABJ Q1ABK R+15",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -435,7 +435,7 @@
     },
     {
       "name": "sample_024",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff83fe000000000000000000767000000017e00000010573141424c20573141424d20522d31390000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff83fe000000000000000000767000000017e00000010513141424c20513141424d20522d31390000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -443,7 +443,7 @@
         "dt_seconds": 0.5,
         "audio_offset_hz": 1895,
         "mode": "~",
-        "text": "W1ABL W1ABM R-19",
+        "text": "Q1ABL Q1ABM R-19",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -453,7 +453,7 @@
     },
     {
       "name": "sample_025",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff73fc999999999999a0000029b000000017e00000010573141424e20573141424f20454e38320000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff73fc999999999999a0000029b000000017e00000010513141424e20513141424f20454e38320000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -461,7 +461,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 667,
         "mode": "~",
-        "text": "W1ABN W1ABO EN82",
+        "text": "Q1ABN Q1ABO EN82",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -471,7 +471,7 @@
     },
     {
       "name": "sample_026",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff03feccccccccccccd000000fe000000017e0000000f5731414250205731414251202d31350000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff03feccccccccccccd000000fe000000017e0000000f5131414250205131414251202d31350000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -479,7 +479,7 @@
         "dt_seconds": 0.9,
         "audio_offset_hz": 254,
         "mode": "~",
-        "text": "W1ABP W1ABQ -15",
+        "text": "Q1ABP Q1ABQ -15",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -489,7 +489,7 @@
     },
     {
       "name": "sample_027",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff03fe0000000000000000009ef000000017e00000010573141425220573141414120525237330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff03fe0000000000000000009ef000000017e00000010513141425220513141414120525237330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -497,7 +497,7 @@
         "dt_seconds": 0.5,
         "audio_offset_hz": 2543,
         "mode": "~",
-        "text": "W1ABR W1AAA RR73",
+        "text": "Q1ABR Q1AAA RR73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -507,7 +507,7 @@
     },
     {
       "name": "sample_028",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff33fe333333333333300000306000000017e00000010573141424720573141425320454d38390000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff33fe333333333333300000306000000017e00000010513141424720513141425320454d38390000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -515,7 +515,7 @@
         "dt_seconds": 0.6,
         "audio_offset_hz": 774,
         "mode": "~",
-        "text": "W1ABG W1ABS EM89",
+        "text": "Q1ABG Q1ABS EM89",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -525,7 +525,7 @@
     },
     {
       "name": "sample_029",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff43fc999999999999a00000190000000017e00000010573141425420573141425520454d36390000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff43fc999999999999a00000190000000017e00000010513141425420513141425520454d36390000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -533,7 +533,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 400,
         "mode": "~",
-        "text": "W1ABT W1ABU EM69",
+        "text": "Q1ABT Q1ABU EM69",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -543,7 +543,7 @@
     },
     {
       "name": "sample_030",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788ffffffed3fd333333333333300000654000000017e000000125731414256203c57314142573e20522b30350000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788ffffffed3fd333333333333300000654000000017e000000125131414256203c51314142573e20522b30350000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -551,7 +551,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1620,
         "mode": "~",
-        "text": "W1ABV <W1ABW> R+05",
+        "text": "Q1ABV <Q1ABW> R+05",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -561,7 +561,7 @@
     },
     {
       "name": "sample_031",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff03fe999999999999a000002f2000000017e0000000d435120573141425820454d37300000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff03fe999999999999a000002f2000000017e0000000d435120513141425820454d37300000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -569,7 +569,7 @@
         "dt_seconds": 0.8,
         "audio_offset_hz": 754,
         "mode": "~",
-        "text": "CQ W1ABX EM70",
+        "text": "CQ Q1ABX EM70",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -579,7 +579,7 @@
     },
     {
       "name": "sample_032",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff43fd3333333333333000001f2000000017e0000000f573141414f20573141414e202b30360000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788fffffff43fd3333333333333000001f2000000017e0000000f513141414f20513141414e202b30360000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -587,7 +587,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 498,
         "mode": "~",
-        "text": "W1AAO W1AAN +06",
+        "text": "Q1AAO Q1AAN +06",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -597,7 +597,7 @@
     },
     {
       "name": "sample_033",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788ffffffea3fd999999999999a000005d0000000017e00000010573141425920573141425a20454b35370000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788ffffffea3fd999999999999a000005d0000000017e00000010513141425920513141425a20454b35370000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -605,7 +605,7 @@
         "dt_seconds": 0.4,
         "audio_offset_hz": 1488,
         "mode": "~",
-        "text": "W1ABY W1ABZ EK57",
+        "text": "Q1ABY Q1ABZ EK57",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -615,7 +615,7 @@
     },
     {
       "name": "sample_034",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788ffffffeb3fd33333333333330000045e000000017e00000010573141434120573141434220522b32330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010512e788ffffffeb3fd33333333333330000045e000000017e00000010513141434120513141434220522b32330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:38:45.000",
@@ -623,7 +623,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1118,
         "mode": "~",
-        "text": "W1ACA W1ACB R+23",
+        "text": "Q1ACA Q1ACB R+23",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -633,7 +633,7 @@
     },
     {
       "name": "sample_035",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220000000053fd999999999999a00000a38000000017e00000010573141434320573141434420444d31320000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220000000053fd999999999999a00000a38000000017e00000010513141434320513141434420444d31320000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:00.000",
@@ -641,7 +641,7 @@
         "dt_seconds": 0.4,
         "audio_offset_hz": 2616,
         "mode": "~",
-        "text": "W1ACC W1ACD DM12",
+        "text": "Q1ACC Q1ACD DM12",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -651,7 +651,7 @@
     },
     {
       "name": "sample_036",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffffb3fc999999999999a0000067e000000017e0000000d435120573141414320444e39310000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffffb3fc999999999999a0000067e000000017e0000000d435120513141414320444e39310000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:00.000",
@@ -659,7 +659,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 1662,
         "mode": "~",
-        "text": "CQ W1AAC DN91",
+        "text": "CQ Q1AAC DN91",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -669,7 +669,7 @@
     },
     {
       "name": "sample_037",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffffb3fd3333333333333000007f4000000017e0000000f573141424d205731414345202d30310000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffffb3fd3333333333333000007f4000000017e0000000f513141424d205131414345202d30310000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:00.000",
@@ -677,7 +677,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2036,
         "mode": "~",
-        "text": "W1ABM W1ACE -01",
+        "text": "Q1ABM Q1ACE -01",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -687,7 +687,7 @@
     },
     {
       "name": "sample_038",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff53fd3333333333333000005d9000000017e0000000f5731414346205731414144202b30300000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff53fd3333333333333000005d9000000017e0000000f5131414346205131414144202b30300000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:00.000",
@@ -695,7 +695,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1497,
         "mode": "~",
-        "text": "W1ACF W1AAD +00",
+        "text": "Q1ACF Q1AAD +00",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -705,7 +705,7 @@
     },
     {
       "name": "sample_039",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff03fd33333333333330000061e000000017e0000000f573141434720573141414d202b30340000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff03fd33333333333330000061e000000017e0000000f513141434720513141414d202b30340000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:00.000",
@@ -713,7 +713,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1566,
         "mode": "~",
-        "text": "W1ACG W1AAM +04",
+        "text": "Q1ACG Q1AAM +04",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -723,7 +723,7 @@
     },
     {
       "name": "sample_040",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff13fd33333333333330000073b000000017e0000000d435120573141414b20454e38320000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff13fd33333333333330000073b000000017e0000000d435120513141414b20454e38320000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:00.000",
@@ -731,7 +731,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1851,
         "mode": "~",
-        "text": "CQ W1AAK EN82",
+        "text": "CQ Q1AAK EN82",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -741,7 +741,7 @@
     },
     {
       "name": "sample_041",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff93fd33333333333330000043e000000017e00000010573141434820573141414920522d31340000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff93fd33333333333330000043e000000017e00000010513141434820513141414920522d31340000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:00.000",
@@ -749,7 +749,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1086,
         "mode": "~",
-        "text": "W1ACH W1AAI R-14",
+        "text": "Q1ACH Q1AAI R-14",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -759,7 +759,7 @@
     },
     {
       "name": "sample_042",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220ffffffee3fd999999999999a000007a5000000017e0000000f5731414141205731414349202d31350000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220ffffffee3fd999999999999a000007a5000000017e0000000f5131414141205131414349202d31350000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:00.000",
@@ -767,7 +767,7 @@
         "dt_seconds": 0.4,
         "audio_offset_hz": 1957,
         "mode": "~",
-        "text": "W1AAA W1ACI -15",
+        "text": "Q1AAA Q1ACI -15",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -777,7 +777,7 @@
     },
     {
       "name": "sample_043",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff83fc999999999999a00000b46000000017e00000010573141434a20573141434b20454d31360000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff83fc999999999999a00000b46000000017e00000010513141434a20513141434b20454d31360000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:00.000",
@@ -785,7 +785,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 2886,
         "mode": "~",
-        "text": "W1ACJ W1ACK EM16",
+        "text": "Q1ACJ Q1ACK EM16",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -795,7 +795,7 @@
     },
     {
       "name": "sample_044",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff63fd333333333333300000390000000017e0000000d435120573141414c20454d37390000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff63fd333333333333300000390000000017e0000000d435120513141414c20454d37390000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:00.000",
@@ -803,7 +803,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 912,
         "mode": "~",
-        "text": "CQ W1AAL EM79",
+        "text": "CQ Q1AAL EM79",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -813,7 +813,7 @@
     },
     {
       "name": "sample_045",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff03fe0000000000000000008ad000000017e0000000d435120573141414720454e39300000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff03fe0000000000000000008ad000000017e0000000d435120513141414720454e39300000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:00.000",
@@ -821,7 +821,7 @@
         "dt_seconds": 0.5,
         "audio_offset_hz": 2221,
         "mode": "~",
-        "text": "CQ W1AAG EN90",
+        "text": "CQ Q1AAG EN90",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -831,7 +831,7 @@
     },
     {
       "name": "sample_046",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff23fd3333333333333000001f3000000017e00000010573141414e20573141414f20522d31310000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff23fd3333333333333000001f3000000017e00000010513141414e20513141414f20522d31310000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:00.000",
@@ -839,7 +839,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 499,
         "mode": "~",
-        "text": "W1AAN W1AAO R-11",
+        "text": "Q1AAN Q1AAO R-11",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -849,7 +849,7 @@
     },
     {
       "name": "sample_047",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220ffffffe93fd3333333333333000006bd000000017e00000010573141434c20573141434d20454d37350000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220ffffffe93fd3333333333333000006bd000000017e00000010513141434c20513141434d20454d37350000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:00.000",
@@ -857,7 +857,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1725,
         "mode": "~",
-        "text": "W1ACL W1ACM EM75",
+        "text": "Q1ACL Q1ACM EM75",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -867,7 +867,7 @@
     },
     {
       "name": "sample_048",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff03fe000000000000000000382000000017e00000010573141415520573141415620444d31330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105132220fffffff03fe000000000000000000382000000017e00000010513141415520513141415620444d31330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:00.000",
@@ -875,7 +875,7 @@
         "dt_seconds": 0.5,
         "audio_offset_hz": 898,
         "mode": "~",
-        "text": "W1AAU W1AAV DM13",
+        "text": "Q1AAU Q1AAV DM13",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -885,7 +885,7 @@
     },
     {
       "name": "sample_049",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8000000033ff199999999999a000003eb000000017e00000010573141415820573141415920444d31330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8000000033ff199999999999a000003eb000000017e00000010513141415820513141415920444d31330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -893,7 +893,7 @@
         "dt_seconds": 1.1,
         "audio_offset_hz": 1003,
         "mode": "~",
-        "text": "W1AAX W1AAY DM13",
+        "text": "Q1AAX Q1AAY DM13",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -903,7 +903,7 @@
     },
     {
       "name": "sample_050",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8000000053fd3333333333333000008ad000000017e00000010573141414720573141415a20444d30340000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8000000053fd3333333333333000008ad000000017e00000010513141414720513141415a20444d30340000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -911,7 +911,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2221,
         "mode": "~",
-        "text": "W1AAG W1AAZ DM04",
+        "text": "Q1AAG Q1AAZ DM04",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -921,7 +921,7 @@
     },
     {
       "name": "sample_051",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8000000043ff4cccccccccccd000004d5000000017e0000000f573141434e205731414243202b30300000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8000000043ff4cccccccccccd000004d5000000017e0000000f513141434e205131414243202b30300000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -929,7 +929,7 @@
         "dt_seconds": 1.3,
         "audio_offset_hz": 1237,
         "mode": "~",
-        "text": "W1ACN W1ABC +00",
+        "text": "Q1ACN Q1ABC +00",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -939,7 +939,7 @@
     },
     {
       "name": "sample_052",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffffe3fc999999999999a00000794000000017e00000010573141424420573141414620522d30310000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffffe3fc999999999999a00000794000000017e00000010513141424420513141414620522d30310000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -947,7 +947,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 1940,
         "mode": "~",
-        "text": "W1ABD W1AAF R-01",
+        "text": "Q1ABD Q1AAF R-01",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -957,7 +957,7 @@
     },
     {
       "name": "sample_053",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8000000003fe0000000000000000001f1000000017e00000010573141424120573141424220444d33330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8000000003fe0000000000000000001f1000000017e00000010513141424120513141424220444d33330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -965,7 +965,7 @@
         "dt_seconds": 0.5,
         "audio_offset_hz": 497,
         "mode": "~",
-        "text": "W1ABA W1ABB DM33",
+        "text": "Q1ABA Q1ABB DM33",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -975,7 +975,7 @@
     },
     {
       "name": "sample_054",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff83fd3333333333333000000c0000000017e00000010573141424720573141424820454d37300000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff83fd3333333333333000000c0000000017e00000010513141424720513141424820454d37300000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -983,7 +983,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 192,
         "mode": "~",
-        "text": "W1ABG W1ABH EM70",
+        "text": "Q1ABG Q1ABH EM70",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -993,7 +993,7 @@
     },
     {
       "name": "sample_055",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff23fd33333333333330000045e000000017e00000010573141434120573141434220522b32330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff23fd33333333333330000045e000000017e00000010513141434120513141434220522b32330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1001,7 +1001,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1118,
         "mode": "~",
-        "text": "W1ACA W1ACB R+23",
+        "text": "Q1ACA Q1ACB R+23",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1011,7 +1011,7 @@
     },
     {
       "name": "sample_056",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff23fd3333333333333000007d6000000017e0000000d435120573141424920444d31330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff23fd3333333333333000007d6000000017e0000000d435120513141424920444d31330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1019,7 +1019,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2006,
         "mode": "~",
-        "text": "CQ W1ABI DM13",
+        "text": "CQ Q1ABI DM13",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1029,7 +1029,7 @@
     },
     {
       "name": "sample_057",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff93fc999999999999a0000029b000000017e00000010573141424e20573141424f20522d31380000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff93fc999999999999a0000029b000000017e00000010513141424e20513141424f20522d31380000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1037,7 +1037,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 667,
         "mode": "~",
-        "text": "W1ABN W1ABO R-18",
+        "text": "Q1ABN Q1ABO R-18",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1047,7 +1047,7 @@
     },
     {
       "name": "sample_058",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffffb3fe33333333333330000042f000000017e00000010573141424520573141424620454e39310000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffffb3fe33333333333330000042f000000017e00000010513141424520513141424620454e39310000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1055,7 +1055,7 @@
         "dt_seconds": 0.6,
         "audio_offset_hz": 1071,
         "mode": "~",
-        "text": "W1ABE W1ABF EN91",
+        "text": "Q1ABE Q1ABF EN91",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1065,7 +1065,7 @@
     },
     {
       "name": "sample_059",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff63fd333333333333300000246000000017e0000000f573141424720573141434f202d31350000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff63fd333333333333300000246000000017e0000000f513141424720513141434f202d31350000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1073,7 +1073,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 582,
         "mode": "~",
-        "text": "W1ABG W1ACO -15",
+        "text": "Q1ABG Q1ACO -15",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1083,7 +1083,7 @@
     },
     {
       "name": "sample_060",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff53fc999999999999a00000578000000017e0000000d435120573141435020414f36330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff53fc999999999999a00000578000000017e0000000d435120513141435020414f36330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1091,7 +1091,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 1400,
         "mode": "~",
-        "text": "CQ W1ACP AO63",
+        "text": "CQ Q1ACP AO63",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1101,7 +1101,7 @@
     },
     {
       "name": "sample_061",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff2bfb999999999999a00000359000000017e0000000f5731414254205731414351202d31350000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff2bfb999999999999a00000359000000017e0000000f5131414254205131414351202d31350000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1109,7 +1109,7 @@
         "dt_seconds": -0.1,
         "audio_offset_hz": 857,
         "mode": "~",
-        "text": "W1ABT W1ACQ -15",
+        "text": "Q1ABT Q1ACQ -15",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1119,7 +1119,7 @@
     },
     {
       "name": "sample_062",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff13feccccccccccccd0000048e000000017e0000000e573141424a20573141424b2037330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff13feccccccccccccd0000048e000000017e0000000e513141424a20513141424b2037330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1127,7 +1127,7 @@
         "dt_seconds": 0.9,
         "audio_offset_hz": 1166,
         "mode": "~",
-        "text": "W1ABJ W1ABK 73",
+        "text": "Q1ABJ Q1ABK 73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1137,7 +1137,7 @@
     },
     {
       "name": "sample_063",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff23fc999999999999a00000a9b000000017e00000010573141424720573141435220454e33350000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff23fc999999999999a00000a9b000000017e00000010513141424720513141435220454e33350000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1145,7 +1145,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 2715,
         "mode": "~",
-        "text": "W1ABG W1ACR EN35",
+        "text": "Q1ABG Q1ACR EN35",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1155,7 +1155,7 @@
     },
     {
       "name": "sample_064",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8ffffffea3fd333333333333300000654000000017e0000000e3c2e2e2e3e2057314142572037330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8ffffffea3fd333333333333300000654000000017e0000000e3c2e2e2e3e2051314142572037330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1163,7 +1163,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1620,
         "mode": "~",
-        "text": "<...> W1ABW 73",
+        "text": "<...> Q1ABW 73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1173,7 +1173,7 @@
     },
     {
       "name": "sample_065",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8ffffffee3fe0000000000000000009f0000000017e0000000f5731414157205731414141202d30360000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8ffffffee3fe0000000000000000009f0000000017e0000000f5131414157205131414141202d30360000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1181,7 +1181,7 @@
         "dt_seconds": 0.5,
         "audio_offset_hz": 2544,
         "mode": "~",
-        "text": "W1AAW W1AAA -06",
+        "text": "Q1AAW Q1AAA -06",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1191,7 +1191,7 @@
     },
     {
       "name": "sample_066",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff13feccccccccccccd000000fe000000017e0000000f5731414250205731414251202d31350000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff13feccccccccccccd000000fe000000017e0000000f5131414250205131414251202d31350000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1199,7 +1199,7 @@
         "dt_seconds": 0.9,
         "audio_offset_hz": 254,
         "mode": "~",
-        "text": "W1ABP W1ABQ -15",
+        "text": "Q1ABP Q1ABQ -15",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1209,7 +1209,7 @@
     },
     {
       "name": "sample_067",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff03fd3333333333333000007fa000000017e00000010573141435320573141435420444d34320000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff03fd3333333333333000007fa000000017e00000010513141435320513141435420444d34320000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1217,7 +1217,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2042,
         "mode": "~",
-        "text": "W1ACS W1ACT DM42",
+        "text": "Q1ACS Q1ACT DM42",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1227,7 +1227,7 @@
     },
     {
       "name": "sample_068",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffffb3fd3333333333333000001d8000000017e00000010573141424720573141435520454d36350000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffffb3fd3333333333333000001d8000000017e00000010513141424720513141435520454d36350000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1235,7 +1235,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 472,
         "mode": "~",
-        "text": "W1ABG W1ACU EM65",
+        "text": "Q1ABG Q1ACU EM65",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1245,7 +1245,7 @@
     },
     {
       "name": "sample_069",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff33fd999999999999a000002a7000000017e0000000f5731414356205731414357202d30320000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff33fd999999999999a000002a7000000017e0000000f5131414356205131414357202d30320000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1253,7 +1253,7 @@
         "dt_seconds": 0.4,
         "audio_offset_hz": 679,
         "mode": "~",
-        "text": "W1ACV W1ACW -02",
+        "text": "Q1ACV Q1ACW -02",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1263,7 +1263,7 @@
     },
     {
       "name": "sample_070",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff03fd999999999999a0000057d000000017e00000010573141424720573141435820454e36330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff03fd999999999999a0000057d000000017e00000010513141424720513141435820454e36330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1271,7 +1271,7 @@
         "dt_seconds": 0.4,
         "audio_offset_hz": 1405,
         "mode": "~",
-        "text": "W1ABG W1ACX EN63",
+        "text": "Q1ABG Q1ACX EN63",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1281,7 +1281,7 @@
     },
     {
       "name": "sample_071",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8ffffffef3fc999999999999a0000033a000000017e00000010573141435920573141435a20454c30390000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8ffffffef3fc999999999999a0000033a000000017e00000010513141435920513141435a20454c30390000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1289,7 +1289,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 826,
         "mode": "~",
-        "text": "W1ACY W1ACZ EL09",
+        "text": "Q1ACY Q1ACZ EL09",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1299,7 +1299,7 @@
     },
     {
       "name": "sample_072",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8ffffffed3fe000000000000000000767000000017e00000010573141424c20573141424d20522d31390000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8ffffffed3fe000000000000000000767000000017e00000010513141424c20513141424d20522d31390000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1307,7 +1307,7 @@
         "dt_seconds": 0.5,
         "audio_offset_hz": 1895,
         "mode": "~",
-        "text": "W1ABL W1ABM R-19",
+        "text": "Q1ABL Q1ABM R-19",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1317,7 +1317,7 @@
     },
     {
       "name": "sample_073",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff43fd3333333333333000001f3000000017e00000010573141414f20573141414e20525237330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff43fd3333333333333000001f3000000017e00000010513141414f20513141414e20525237330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1325,7 +1325,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 499,
         "mode": "~",
-        "text": "W1AAO W1AAN RR73",
+        "text": "Q1AAO Q1AAN RR73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1335,7 +1335,7 @@
     },
     {
       "name": "sample_074",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff03fc999999999999a00000191000000017e00000010573141425420573141425520454d36390000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105135cb8fffffff03fc999999999999a00000191000000017e00000010513141425420513141425520454d36390000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:15.000",
@@ -1343,7 +1343,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 401,
         "mode": "~",
-        "text": "W1ABT W1ABU EM69",
+        "text": "Q1ABT Q1ABU EM69",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1353,7 +1353,7 @@
     },
     {
       "name": "sample_075",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8000000073ff199999999999a000003eb000000017e00000010573141444120573141415920444d31330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8000000073ff199999999999a000003eb000000017e00000010513141444120513141415920444d31330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1361,7 +1361,7 @@
         "dt_seconds": 1.1,
         "audio_offset_hz": 1003,
         "mode": "~",
-        "text": "W1ADA W1AAY DM13",
+        "text": "Q1ADA Q1AAY DM13",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1371,7 +1371,7 @@
     },
     {
       "name": "sample_076",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8000000053fd3333333333333000008ad000000017e00000010573141414720573141415a20522b30320000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8000000053fd3333333333333000008ad000000017e00000010513141414720513141415a20522b30320000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1379,7 +1379,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2221,
         "mode": "~",
-        "text": "W1AAG W1AAZ R+02",
+        "text": "Q1AAG Q1AAZ R+02",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1389,7 +1389,7 @@
     },
     {
       "name": "sample_077",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff73fd33333333333330000029a000000017e0000000e573141424e20573141424f2037330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff73fd33333333333330000029a000000017e0000000e513141424e20513141424f2037330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1397,7 +1397,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 666,
         "mode": "~",
-        "text": "W1ABN W1ABO 73",
+        "text": "Q1ABN Q1ABO 73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1407,7 +1407,7 @@
     },
     {
       "name": "sample_078",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffffd3ff8000000000000000004d5000000017e0000000f573141434e205731414243205252520000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffffd3ff8000000000000000004d5000000017e0000000f513141434e205131414243205252520000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1415,7 +1415,7 @@
         "dt_seconds": 1.5,
         "audio_offset_hz": 1237,
         "mode": "~",
-        "text": "W1ACN W1ABC RRR",
+        "text": "Q1ACN Q1ABC RRR",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1425,7 +1425,7 @@
     },
     {
       "name": "sample_079",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffed3fd3333333333333000007d7000000017e0000000d435120573141424920444d31330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffed3fd3333333333333000007d7000000017e0000000d435120513141424920444d31330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1433,7 +1433,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2007,
         "mode": "~",
-        "text": "CQ W1ABI DM13",
+        "text": "CQ Q1ABI DM13",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1443,7 +1443,7 @@
     },
     {
       "name": "sample_080",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff33fe0000000000000000009f0000000017e0000000f5731414157205731414141202d30360000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff33fe0000000000000000009f0000000017e0000000f5131414157205131414141202d30360000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1451,7 +1451,7 @@
         "dt_seconds": 0.5,
         "audio_offset_hz": 2544,
         "mode": "~",
-        "text": "W1AAW W1AAA -06",
+        "text": "Q1AAW Q1AAA -06",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1461,7 +1461,7 @@
     },
     {
       "name": "sample_081",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffee3fe000000000000000000767000000017e00000010573141424c20573141424d20522d31390000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffee3fe000000000000000000767000000017e00000010513141424c20513141424d20522d31390000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1469,7 +1469,7 @@
         "dt_seconds": 0.5,
         "audio_offset_hz": 1895,
         "mode": "~",
-        "text": "W1ABL W1ABM R-19",
+        "text": "Q1ABL Q1ABM R-19",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1479,7 +1479,7 @@
     },
     {
       "name": "sample_082",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff1bfb999999999999a00000358000000017e0000000f5731414441205731414351202b30370000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff1bfb999999999999a00000358000000017e0000000f5131414441205131414351202b30370000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1487,7 +1487,7 @@
         "dt_seconds": -0.1,
         "audio_offset_hz": 856,
         "mode": "~",
-        "text": "W1ADA W1ACQ +07",
+        "text": "Q1ADA Q1ACQ +07",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1497,7 +1497,7 @@
     },
     {
       "name": "sample_083",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff33fd3333333333333000001d8000000017e00000010573141424720573141435520454d36350000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff33fd3333333333333000001d8000000017e00000010513141424720513141435520454d36350000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1505,7 +1505,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 472,
         "mode": "~",
-        "text": "W1ABG W1ACU EM65",
+        "text": "Q1ABG Q1ACU EM65",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1515,7 +1515,7 @@
     },
     {
       "name": "sample_084",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff03fd33333333333330000012f000000017e00000010573141435320573141444220454e34310000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff03fd33333333333330000012f000000017e00000010513141435320513141444220454e34310000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1523,7 +1523,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 303,
         "mode": "~",
-        "text": "W1ACS W1ADB EN41",
+        "text": "Q1ACS Q1ADB EN41",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1533,7 +1533,7 @@
     },
     {
       "name": "sample_085",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffed3fd33333333333330000045e000000017e0000000e57314143412057314143422037330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffed3fd33333333333330000045e000000017e0000000e51314143412051314143422037330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1541,7 +1541,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1118,
         "mode": "~",
-        "text": "W1ACA W1ACB 73",
+        "text": "Q1ACA Q1ACB 73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1551,7 +1551,7 @@
     },
     {
       "name": "sample_086",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffef3fe333333333333300000306000000017e00000010573141424720573141425320454d38390000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffef3fe333333333333300000306000000017e00000010513141424720513141425320454d38390000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1559,7 +1559,7 @@
         "dt_seconds": 0.6,
         "audio_offset_hz": 774,
         "mode": "~",
-        "text": "W1ABG W1ABS EM89",
+        "text": "Q1ABG Q1ABS EM89",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1569,7 +1569,7 @@
     },
     {
       "name": "sample_087",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff23fd333333333333300000a5f000000017e00000010435120445820573141444320444d30330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff23fd333333333333300000a5f000000017e00000010435120445820513141444320444d30330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1577,7 +1577,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2655,
         "mode": "~",
-        "text": "CQ DX W1ADC DM03",
+        "text": "CQ DX Q1ADC DM03",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1587,7 +1587,7 @@
     },
     {
       "name": "sample_088",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffef3fe00000000000000000057d000000017e00000010573141424720573141435820454e36330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffef3fe00000000000000000057d000000017e00000010513141424720513141435820454e36330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1595,7 +1595,7 @@
         "dt_seconds": 0.5,
         "audio_offset_hz": 1405,
         "mode": "~",
-        "text": "W1ABG W1ACX EN63",
+        "text": "Q1ABG Q1ACX EN63",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1605,7 +1605,7 @@
     },
     {
       "name": "sample_089",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffee3fc999999999999a00000578000000017e0000000d435120573141435020414f36330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffee3fc999999999999a00000578000000017e0000000d435120513141435020414f36330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1613,7 +1613,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 1400,
         "mode": "~",
-        "text": "CQ W1ACP AO63",
+        "text": "CQ Q1ACP AO63",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1623,7 +1623,7 @@
     },
     {
       "name": "sample_090",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff23fd3333333333333000001f2000000017e00000010573141414f20573141414e20525237330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff23fd3333333333333000001f2000000017e00000010513141414f20513141414e20525237330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1631,7 +1631,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 498,
         "mode": "~",
-        "text": "W1AAO W1AAN RR73",
+        "text": "Q1AAO Q1AAN RR73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1641,7 +1641,7 @@
     },
     {
       "name": "sample_091",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffee3fc999999999999a0000033b000000017e00000010573141435920573141435a20522d32300000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffee3fc999999999999a0000033b000000017e00000010513141435920513141435a20522d32300000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1649,7 +1649,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 827,
         "mode": "~",
-        "text": "W1ACY W1ACZ R-20",
+        "text": "Q1ACY Q1ACZ R-20",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1659,7 +1659,7 @@
     },
     {
       "name": "sample_092",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff03fd3333333333333000000c0000000017e00000010573141424720573141424820454d37300000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8fffffff03fd3333333333333000000c0000000017e00000010513141424720513141424820454d37300000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1667,7 +1667,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 192,
         "mode": "~",
-        "text": "W1ABG W1ABH EM70",
+        "text": "Q1ABG Q1ABH EM70",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1677,7 +1677,7 @@
     },
     {
       "name": "sample_093",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffee3fd999999999999a00000a2a000000017e0000000d435120573141444420454d34340000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e6365010513d1e8ffffffee3fd999999999999a00000a2a000000017e0000000d435120513141444420454d34340000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:39:45.000",
@@ -1685,7 +1685,7 @@
         "dt_seconds": 0.4,
         "audio_offset_hz": 2602,
         "mode": "~",
-        "text": "CQ W1ADD EM44",
+        "text": "CQ Q1ADD EM44",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1695,7 +1695,7 @@
     },
     {
       "name": "sample_094",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80fffffffc3fd999999999999a00000a38000000017e0000000e57314143432057314143442037330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80fffffffc3fd999999999999a00000a38000000017e0000000e51314143432051314143442037330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:00.000",
@@ -1703,7 +1703,7 @@
         "dt_seconds": 0.4,
         "audio_offset_hz": 2616,
         "mode": "~",
-        "text": "W1ACC W1ACD 73",
+        "text": "Q1ACC Q1ACD 73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1713,7 +1713,7 @@
     },
     {
       "name": "sample_095",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80fffffff93fc999999999999a0000067e000000017e0000000d435120573141414320444e39310000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80fffffff93fc999999999999a0000067e000000017e0000000d435120513141414320444e39310000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:00.000",
@@ -1721,7 +1721,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 1662,
         "mode": "~",
-        "text": "CQ W1AAC DN91",
+        "text": "CQ Q1AAC DN91",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1731,7 +1731,7 @@
     },
     {
       "name": "sample_096",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80fffffff93fd333333333333300000390000000017e00000010573141444520573141414c20525237330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80fffffff93fd333333333333300000390000000017e00000010513141444520513141414c20525237330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:00.000",
@@ -1739,7 +1739,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 912,
         "mode": "~",
-        "text": "W1ADE W1AAL RR73",
+        "text": "Q1ADE Q1AAL RR73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1749,7 +1749,7 @@
     },
     {
       "name": "sample_097",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80fffffff73fd3333333333333000005da000000017e000000113c57314142573e205731414144202d31310000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80fffffff73fd3333333333333000005da000000017e000000113c51314142573e205131414144202d31310000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:00.000",
@@ -1757,7 +1757,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1498,
         "mode": "~",
-        "text": "<W1ABW> W1AAD -11",
+        "text": "<Q1ABW> Q1AAD -11",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1767,7 +1767,7 @@
     },
     {
       "name": "sample_098",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80fffffff73fd33333333333330000043e000000017e00000010573141414820573141414920525237330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80fffffff73fd33333333333330000043e000000017e00000010513141414820513141414920525237330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:00.000",
@@ -1775,7 +1775,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1086,
         "mode": "~",
-        "text": "W1AAH W1AAI RR73",
+        "text": "Q1AAH Q1AAI RR73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1785,7 +1785,7 @@
     },
     {
       "name": "sample_099",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80fffffff43fd3333333333333000007f4000000017e0000000f573141424d205731414345202d30310000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80fffffff43fd3333333333333000007f4000000017e0000000f513141424d205131414345202d30310000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:00.000",
@@ -1793,7 +1793,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2036,
         "mode": "~",
-        "text": "W1ABM W1ACE -01",
+        "text": "Q1ABM Q1ACE -01",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1803,7 +1803,7 @@
     },
     {
       "name": "sample_100",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80ffffffea3fd999999999999a0000073c000000017e0000000d435120573141414b20454e38320000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80ffffffea3fd999999999999a0000073c000000017e0000000d435120513141414b20454e38320000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:00.000",
@@ -1811,7 +1811,7 @@
         "dt_seconds": 0.4,
         "audio_offset_hz": 1852,
         "mode": "~",
-        "text": "CQ W1AAK EN82",
+        "text": "CQ Q1AAK EN82",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1821,7 +1821,7 @@
     },
     {
       "name": "sample_101",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80ffffffe83fd3333333333333000006bd000000017e0000000e573141434c20573141434d2037330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80ffffffe83fd3333333333333000006bd000000017e0000000e513141434c20513141434d2037330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:00.000",
@@ -1829,7 +1829,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1725,
         "mode": "~",
-        "text": "W1ACL W1ACM 73",
+        "text": "Q1ACL Q1ACM 73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1839,7 +1839,7 @@
     },
     {
       "name": "sample_102",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80ffffffeb3fd3333333333333000005ab000000017e0000000f5731414159205731414441202b31340000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105140c80ffffffeb3fd3333333333333000005ab000000017e0000000f5131414159205131414441202b31340000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:00.000",
@@ -1847,7 +1847,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1451,
         "mode": "~",
-        "text": "W1AAY W1ADA +14",
+        "text": "Q1AAY Q1ADA +14",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1857,7 +1857,7 @@
     },
     {
       "name": "sample_103",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e636501051447180000000a3ff199999999999a000003eb000000017e00000010573141444120573141415920522d30320000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e636501051447180000000a3ff199999999999a000003eb000000017e00000010513141444120513141415920522d30320000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -1865,7 +1865,7 @@
         "dt_seconds": 1.1,
         "audio_offset_hz": 1003,
         "mode": "~",
-        "text": "W1ADA W1AAY R-02",
+        "text": "Q1ADA Q1AAY R-02",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1875,7 +1875,7 @@
     },
     {
       "name": "sample_104",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718000000073fd3333333333333000008ad000000017e0000000e573141414720573141415a2037330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718000000073fd3333333333333000008ad000000017e0000000e513141414720513141415a2037330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -1883,7 +1883,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2221,
         "mode": "~",
-        "text": "W1AAG W1AAZ 73",
+        "text": "Q1AAG Q1AAZ 73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1893,7 +1893,7 @@
     },
     {
       "name": "sample_105",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff53fb999999999999a000006af000000017e00000010573141424720573141444620454e32320000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff53fb999999999999a000006af000000017e00000010513141424720513141444620454e32320000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -1901,7 +1901,7 @@
         "dt_seconds": 0.1,
         "audio_offset_hz": 1711,
         "mode": "~",
-        "text": "W1ABG W1ADF EN22",
+        "text": "Q1ABG Q1ADF EN22",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1911,7 +1911,7 @@
     },
     {
       "name": "sample_106",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718ffffffef3fd33333333333330000048d000000017e00000010573141444720573141425520454d36390000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718ffffffef3fd33333333333330000048d000000017e00000010513141444720513141425520454d36390000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -1919,7 +1919,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 1165,
         "mode": "~",
-        "text": "W1ADG W1ABU EM69",
+        "text": "Q1ADG Q1ABU EM69",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1929,7 +1929,7 @@
     },
     {
       "name": "sample_107",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff93feccccccccccccd000002ed000000017e0000000d435120573141424b20454d36340000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff93feccccccccccccd000002ed000000017e0000000d435120513141424b20454d36340000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -1937,7 +1937,7 @@
         "dt_seconds": 0.9,
         "audio_offset_hz": 749,
         "mode": "~",
-        "text": "CQ W1ABK EM64",
+        "text": "CQ Q1ABK EM64",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1947,7 +1947,7 @@
     },
     {
       "name": "sample_108",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff63fd999999999999a0000057d000000017e00000010573141424720573141435820454e36330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff63fd999999999999a0000057d000000017e00000010513141424720513141435820454e36330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -1955,7 +1955,7 @@
         "dt_seconds": 0.4,
         "audio_offset_hz": 1405,
         "mode": "~",
-        "text": "W1ABG W1ACX EN63",
+        "text": "Q1ABG Q1ACX EN63",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1965,7 +1965,7 @@
     },
     {
       "name": "sample_109",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff23fd3333333333333000007d6000000017e0000000d435120573141424920444d31330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff23fd3333333333333000007d6000000017e0000000d435120513141424920444d31330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -1973,7 +1973,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2006,
         "mode": "~",
-        "text": "CQ W1ABI DM13",
+        "text": "CQ Q1ABI DM13",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -1983,7 +1983,7 @@
     },
     {
       "name": "sample_110",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff53fd3333333333333000001f3000000017e00000010573141414f20573141414e20525237330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff53fd3333333333333000001f3000000017e00000010513141414f20513141414e20525237330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -1991,7 +1991,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 499,
         "mode": "~",
-        "text": "W1AAO W1AAN RR73",
+        "text": "Q1AAO Q1AAN RR73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -2001,7 +2001,7 @@
     },
     {
       "name": "sample_111",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718ffffffec3fc999999999999a00000794000000017e0000000e57314144482057314141462037330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718ffffffec3fc999999999999a00000794000000017e0000000e51314144482051314141462037330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -2009,7 +2009,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 1940,
         "mode": "~",
-        "text": "W1ADH W1AAF 73",
+        "text": "Q1ADH Q1AAF 73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -2019,7 +2019,7 @@
     },
     {
       "name": "sample_112",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff33fd333333333333300000a5f000000017e00000010435120445820573141444320444d30330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff33fd333333333333300000a5f000000017e00000010435120445820513141444320444d30330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -2027,7 +2027,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 2655,
         "mode": "~",
-        "text": "CQ DX W1ADC DM03",
+        "text": "CQ DX Q1ADC DM03",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -2037,7 +2037,7 @@
     },
     {
       "name": "sample_113",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff23fe000000000000000000a9a000000017e00000010573141424720573141435220522d31320000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff23fe000000000000000000a9a000000017e00000010513141424720513141435220522d31320000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -2045,7 +2045,7 @@
         "dt_seconds": 0.5,
         "audio_offset_hz": 2714,
         "mode": "~",
-        "text": "W1ABG W1ACR R-12",
+        "text": "Q1ABG Q1ACR R-12",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -2055,7 +2055,7 @@
     },
     {
       "name": "sample_114",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff03fd33333333333330000012f000000017e00000010573141435320573141444220522d30350000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff03fd33333333333330000012f000000017e00000010513141435320513141444220522d30350000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -2063,7 +2063,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 303,
         "mode": "~",
-        "text": "W1ACS W1ADB R-05",
+        "text": "Q1ACS Q1ADB R-05",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -2073,7 +2073,7 @@
     },
     {
       "name": "sample_115",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff03fe0000000000000000009ef000000017e00000010573141415720573141414120525237330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff03fe0000000000000000009ef000000017e00000010513141415720513141414120525237330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -2081,7 +2081,7 @@
         "dt_seconds": 0.5,
         "audio_offset_hz": 2543,
         "mode": "~",
-        "text": "W1AAW W1AAA RR73",
+        "text": "Q1AAW Q1AAA RR73",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -2091,7 +2091,7 @@
     },
     {
       "name": "sample_116",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718ffffffef3fe666666666666600000962000000017e00000010573141435620573141444920454d37390000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718ffffffef3fe666666666666600000962000000017e00000010513141435620513141444920454d37390000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -2099,7 +2099,7 @@
         "dt_seconds": 0.7,
         "audio_offset_hz": 2402,
         "mode": "~",
-        "text": "W1ACV W1ADI EM79",
+        "text": "Q1ACV Q1ADI EM79",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -2109,7 +2109,7 @@
     },
     {
       "name": "sample_117",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff53fd3333333333333000001d8000000017e00000010573141424720573141435520454d36350000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718fffffff53fd3333333333333000001d8000000017e00000010513141424720513141435520454d36350000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -2117,7 +2117,7 @@
         "dt_seconds": 0.3,
         "audio_offset_hz": 472,
         "mode": "~",
-        "text": "W1ABG W1ACU EM65",
+        "text": "Q1ABG Q1ACU EM65",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -2127,7 +2127,7 @@
     },
     {
       "name": "sample_118",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718ffffffef3fc999999999999a00000577000000017e0000000d435120573141435020414f36330000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718ffffffef3fc999999999999a00000577000000017e0000000d435120513141435020414f36330000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -2135,7 +2135,7 @@
         "dt_seconds": 0.2,
         "audio_offset_hz": 1399,
         "mode": "~",
-        "text": "CQ W1ACP AO63",
+        "text": "CQ Q1ACP AO63",
         "low_confidence": false,
         "off_air": false,
         "radio": {
@@ -2145,7 +2145,7 @@
     },
     {
       "name": "sample_119",
-      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718ffffffee3fe000000000000000000307000000017e00000010573141424720573141425320454d38390000",
+      "wire_hex": "adbccbda00000003000000020000001273796e7468657469632d696e7374616e63650105144718ffffffee3fe000000000000000000307000000017e00000010513141424720513141425320454d38390000",
       "fields": {
         "is_new": true,
         "time_of_day": "23:40:15.000",
@@ -2153,7 +2153,7 @@
         "dt_seconds": 0.5,
         "audio_offset_hz": 775,
         "mode": "~",
-        "text": "W1ABG W1ABS EM89",
+        "text": "Q1ABG Q1ABS EM89",
         "low_confidence": false,
         "off_air": false,
         "radio": {

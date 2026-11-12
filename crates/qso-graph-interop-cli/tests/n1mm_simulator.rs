@@ -346,14 +346,14 @@ fn seed_determinism_single_radio_and_option_effects() {
         "--seed",
         "0",
         "--call",
-        "w1zzz/p",
+        "q1zzz/p",
         "--station",
         "SYNTHETIC & <PC>",
     ];
     let first = run(&args);
     assert_eq!(first, run(&args));
     assert!(consistent(&first, 1));
-    assert_eq!(text(&first[0], "mycall"), "W1ZZZ/P");
+    assert_eq!(text(&first[0], "mycall"), "Q1ZZZ/P");
     for b in first.iter().filter(|b| root(b) == "contactinfo") {
         assert_eq!(fields(b)["radio"]["instance"], "SYNTHETIC & <PC>");
     }

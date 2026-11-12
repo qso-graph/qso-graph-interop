@@ -77,7 +77,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "482afee2cd5226fc77c0c5aa7790e098833c4627cdda69bfbe4d09f6a3e713c6"
+      "sha256": "9026caea4aded52000488152b525814c17e47ba7b88f40d789bd9072352d6042"
     },
     {
       "file": "AppInfo-only-StationName.json",
@@ -125,7 +125,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "e3b55c4c0823db7fb3275ea40f8012e8880fba760120f37b8604e9a1c3364da5"
+      "sha256": "edc7c4b4dcc932fd1f748b42feaec65a9d2d15342fd873556f0528457cc1a6d3"
     },
     {
       "file": "RadioInfo-absent.json",
@@ -325,7 +325,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "95b4db56a1a73113b85f55cfdd277495b9643dc438b91edbc499c25af50d3f50"
+      "sha256": "175003e5587606084b2351cf06be7794bb17094ab0f86ad6aa8b9ad368c34bf0"
     },
     {
       "file": "RadioInfo-only-ActiveRadioNr.json",
@@ -453,7 +453,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "b2642d70610f84593eaf2ba69708492f6ac5fb193b5609a4ec2cf6495da519c5"
+      "sha256": "fe0c724ba2d716c908fcce991e0253bb6e280a4f5fc582d418c349105fae2ecb"
     },
     {
       "file": "RadioInfo-only-RadioName.json",
@@ -509,7 +509,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "3e1055bc60d2fbf24226139d75883845549e5905166e0aed0b1c441054ac6153"
+      "sha256": "eb44be4717e214852c8831f142c6f2f2124ab45e6005ade878a2416b20a0a9fa"
     },
     {
       "file": "Spectrum-absent.json",
@@ -1509,7 +1509,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "4e7cdc533e91433fa828daf9d51cb643673a76633a607be8a0d287b945979392"
+      "sha256": "b2b2b57ddbf7a907cc46539a78a43127c17742417e8cd664b851bc2b4702336b"
     },
     {
       "file": "compat-major.json",
@@ -1517,7 +1517,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "b400b2ae8916df4d774d5cf519988fc77a7a3be0b4ed564ff004fe68e26cc5d9"
+      "sha256": "4d20f7ce257d25ba0996202f5a4fb9f6b385a624b2e57753d36c53069acdfbce"
     },
     {
       "file": "compat-new-reader-old-command.json",
@@ -1533,7 +1533,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "b6e801ff56d5f7774864c31a2697e8901b425b475c3008017e4335cd19853332"
+      "sha256": "8cd4571f8840801fed4a56e0ef9558efb2ec9b0ee3e69d41f1955c43a83686ff"
     },
     {
       "file": "compat-newer-program-label.json",
@@ -1541,7 +1541,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "e1d3bc963ccc49235d0264bc54415c0e6565ddc0cd0726cfcb56edc4a2d24b58"
+      "sha256": "18646ff51a8be403390616dcdb13191fa082897fa650157ec2556bd0004030c5"
     },
     {
       "file": "compat-old-reader-new-command.json",
@@ -1557,7 +1557,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "3d3857d47faf4b0d1d9566c0be6ff579d234c5c443856d13d265357c0feb08a5"
+      "sha256": "170ce80bcdce3102b99467aec2880a0f039b65b7b59a0f607777294b24379f88"
     },
     {
       "file": "compat-unknown-kind.json",
@@ -1565,7 +1565,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "4efafdb418d9c7018dab530ef76029dda8fc714e82c7b85fbde572daa6202a47"
+      "sha256": "250e140ed991f66df0b541fc34f0f41d7f387c8621ddea0de595b6603ff5ae1b"
     },
     {
       "file": "compat-unknown-root-known-kind.json",
@@ -1573,7 +1573,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "9b52060ec21538d8d2bde198b0082f983b5c883296e4e13d9425abc28431cbaa"
+      "sha256": "7ca605b7cccddfc5a2de8c35d849728b00b94cb5c7366ac81f724a11ecbaabb6"
     },
     {
       "file": "contactdelete-absent.json",
@@ -1653,7 +1653,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "f6d71cca19169524da7600937b006edeb3d4b15b06dfd7c35bf179606670debc"
+      "sha256": "6ff241a6457d244c16e9f7075460fcb94ece1cd0f4809c4fe601976005bec5b9"
     },
     {
       "file": "contactdelete-only-ID.json",
@@ -1693,7 +1693,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "84916d4f15e1efb679434ace14e78fdab899eda909eb266afd26605a0812f72c"
+      "sha256": "ab8bb25717aba00fbd0eb01563ae19c5d5b6e3b7bcc960a0be7042b5a1989cec"
     },
     {
       "file": "contactdelete-only-contestnr.json",
@@ -1709,7 +1709,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "b87c59c2924af634f7cf89f03760158600171553d844569f7384ab8abe0ccc82"
+      "sha256": "f4349bf54faa99222a0152b963369f4e6c0ef906b610195eb9b83bc0e41230bc"
     },
     {
       "file": "contactdelete-only-timestamp.json",
@@ -2149,7 +2149,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "0de26486d0bcc20d97d8b2c74ed47e6bc956bff3567c877bab3f51223f5888ca"
+      "sha256": "e9b23c0f76b75e28fb607cd15263b7672e1d0eafdeeec053010721752c8a7c2b"
     },
     {
       "file": "contactinfo-only-ContactType.json",
@@ -2269,7 +2269,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "b21cb4cac7ab1fba4cc9f14684d82528ec26cfbf330dc60ad05fac64992f8855"
+      "sha256": "c6565bec37ae5c10eda6558473d33657a3447fe7c90bcc14870b709744e66b6b"
     },
     {
       "file": "contactinfo-only-ck.json",
@@ -2317,7 +2317,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "a388a5d8ae08dd104aa170e94b55d4d8d8671455b877912d46bc4a61b83c7bbe"
+      "sha256": "7c185b23bcdc2edbf94b9f3b32752662088f440797fab28b20f15347df082f90"
     },
     {
       "file": "contactinfo-only-exchange1.json",
@@ -2397,7 +2397,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "81337376b94e475a597ae87f49671647e5c98701302ec5661653f9cf0515eea8"
+      "sha256": "5747cadcc816aebbcb1852b8c4db786dcf1539cf2cbb6662332e61902ab64b8e"
     },
     {
       "file": "contactinfo-only-name.json",
@@ -2413,7 +2413,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "ca52552c0bef2e985605f5a52816a8c58fde6ffc8741e2784584541543c5c936"
+      "sha256": "e315c591ef820e46f69232c59873921ce92123b984173e80ab9030fcdd5cfc36"
     },
     {
       "file": "contactinfo-only-oldtimestamp.json",
@@ -2429,7 +2429,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "72fba3d667260c0bb7408996004c1f7c5300759bafa30f5f4bc1f91a82400881"
+      "sha256": "8b2fea9bb492047dbc0828763931a12fefd903ebeaa64f04490f8a550c24cec2"
     },
     {
       "file": "contactinfo-only-points.json",
@@ -2533,7 +2533,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "a3dc705959187142f738df4a01a43faacfac3400a348bfd79f6e21f7368cd17d"
+      "sha256": "e4df363b084a4a85ef7069ae0bf9fcc2ac46d78d074a4143f92252cb9b10638c"
     },
     {
       "file": "contactinfo-only-timestamp.json",
@@ -2557,7 +2557,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "989c99fbed4e3659e163b2a841aaefb425a1ad04ff3ea958b63cc1d64b02e4b5"
+      "sha256": "def6c70fdc7daba2190354a2d65c67d4a1e90edb14eff3341cb89feffc523641"
     },
     {
       "file": "contactinfo-only-zone.json",
@@ -2997,7 +2997,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "8943f8ac9bfc31ba3e2a5f2d3815d7bd7c4b1b5c336cc6b2c58279802a51f0a5"
+      "sha256": "8cbd4d66b9991a54fcc00a728c3b4d6cbb51f3d90a5525fc20015b3d9719b0ba"
     },
     {
       "file": "contactreplace-only-ContactType.json",
@@ -3117,7 +3117,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "37971d232530f0d0f68c9e839aeb683f73a61ddbfae9b7350e3fc60bbf1b87dd"
+      "sha256": "a459502dac801067ede86f71e3a0c411723db147cfac83bc91d2c0a06e827dcb"
     },
     {
       "file": "contactreplace-only-ck.json",
@@ -3165,7 +3165,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "97c672412b0fad689d2bfd16b9043757275f99173a4519203a9241c8e968b138"
+      "sha256": "2b27f760dc428095b2e245e9101ea1824b5b8a39a697b9cdd059d09693fcadb0"
     },
     {
       "file": "contactreplace-only-exchange1.json",
@@ -3245,7 +3245,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "1f1ee631c4feb7b83fce14f929864c91374d1e46fa67d52a0ba52934f6182de8"
+      "sha256": "eff4c87d9e6b4cfa69e2c1ab1d9c9fa34e12706014ac72cdc9dbca2db0e96a75"
     },
     {
       "file": "contactreplace-only-name.json",
@@ -3261,7 +3261,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "9229afe8229018d7d71b173e3e4efbc7d6b02ca2af047df3c0915a2df1a6a2d8"
+      "sha256": "3498bb84189e525696af372c02c0e083c7a384a4bd53f6b6e8c9c07514f4068d"
     },
     {
       "file": "contactreplace-only-oldtimestamp.json",
@@ -3277,7 +3277,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "1eca049b117fea8cfabf41857117d7173e9f141a1de48398bc1119e095f09d6c"
+      "sha256": "cfa79c21526932f26c8ec96ccac141d6d6c40356ad5b0c6b9eecf05f418b376b"
     },
     {
       "file": "contactreplace-only-points.json",
@@ -3381,7 +3381,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "5c38a808227787fba2bcc30bf6dad4bd7bdbadd313b2facebff31b1ba4b842bf"
+      "sha256": "0ed4584b621c0697394f84f4044bb0e8b49e395efff1f7db08a86eedecfbb210"
     },
     {
       "file": "contactreplace-only-timestamp.json",
@@ -3405,7 +3405,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "348638be64a7c116931f6200cc889b14ac37091a40666bb2907564485641f7e7"
+      "sha256": "b5fa46d725e98490abff23cae41ae51ea06cca019c557ca6bae34d81f6314073"
     },
     {
       "file": "contactreplace-only-zone.json",
@@ -3517,7 +3517,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "c54f49fad194499c7d6d274550f107e07366d902873c025d96770f4109ab25ab"
+      "sha256": "3cebffbf353ad3483880434426338b24041e783ebeed7bceade76f826125ef95"
     },
     {
       "file": "dynamicresults-only-breakdown.json",
@@ -3533,7 +3533,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "8041bdc0b00a697b0291d97a03d48befcd97f372b1d7e375cdfa3fb22d2a13eb"
+      "sha256": "71f88e9d52051dc3ed7a7b4f95a4b31be1b4743386eb90e531b3000a340e9349"
     },
     {
       "file": "dynamicresults-only-class.json",
@@ -3565,7 +3565,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "4c7e5352cecd707b06fc95b7c8d8335aeda059a380d52c37191aa93a2b7c36fe"
+      "sha256": "82b4517d35f6a27faf0211ae1eaad055cb9088f74dd992987dc0dec1cd50768e"
     },
     {
       "file": "dynamicresults-only-qth.json",
@@ -3933,7 +3933,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "745cc5ec7beed532cd63bf6a301c73eeb5c5cf5daff8e543c83f844f7806b516"
+      "sha256": "937da136515c917de2220c69609594e628a5a1b695de226ce991624537c522ff"
     },
     {
       "file": "invalid-utf16-leaf.json",
@@ -5117,7 +5117,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "1fc8dece818ac71b2beabf4e1bb2a275e622cf3c1be2b1d8c210a3bff72b4f3b"
+      "sha256": "a390c9e9ab3cac27cda8daa302578180d9bf9d680c07496a1f7979ae934b82f4"
     },
     {
       "file": "lookup-only-ContactType.json",
@@ -5237,7 +5237,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "8f5a5b27fc8d58ffe97f6b56fdac9eec68aad811b051dc062d2e30f74495b6e1"
+      "sha256": "d9200757a796c77e11038f218af4bee7e10fa54883b2c819b637579438ae1cef"
     },
     {
       "file": "lookup-only-ck.json",
@@ -5285,7 +5285,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "4a8afd73d6c585cb35a1964a9ff88539099065ff013373b8b358f8eabedea6d5"
+      "sha256": "6c0d7c236506fca8ff52b0b067da6f38d5bc6afc4b58279ee5c7277b82a7bbdd"
     },
     {
       "file": "lookup-only-exchange1.json",
@@ -5365,7 +5365,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "005914016b578dd4d2c93e12ef50fb01e18a84d5aa226f5c80301a22d6fff65f"
+      "sha256": "1abe88380ea3b9f630e21ace18913d79e42c50a998177a4b036a5a827bc88fd7"
     },
     {
       "file": "lookup-only-name.json",
@@ -5381,7 +5381,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "51281abe90fce4618a1d63370fd867da6d87885649422923c70d0d0a04ace03f"
+      "sha256": "01ed6d1bdee4bb37cf69e412d798c03d9e8613e6526e6e4e641ca935dd6ea722"
     },
     {
       "file": "lookup-only-oldtimestamp.json",
@@ -5397,7 +5397,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "3a908c9f21d22e149404b1a23281825f40264f22af0bc31f6a9f7404badc679b"
+      "sha256": "2e1bbc94dfb8c760fadc97b24fb37ecf9759bd8c0cbcc2b752466fbe34d9d941"
     },
     {
       "file": "lookup-only-points.json",
@@ -5501,7 +5501,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "d9e5ecaedc2546652a9ed523b82e067aef4333de63f56785a9954c5587a91d0c"
+      "sha256": "6482a109ce5be5ddb4228f76e74baeb74bd8ede4b523795f8d677781ad288b4f"
     },
     {
       "file": "lookup-only-timestamp.json",
@@ -5525,7 +5525,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "cb8f1668f0efca69e95bb5fb268f0b52528048c1ef11c74499683657d3351653"
+      "sha256": "7d493d9659471cd2f6f64208540a26b8612aacd817f76daa113af89f3121425d"
     },
     {
       "file": "lookup-only-zone.json",
@@ -5965,7 +5965,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "c9d3be0f958428fcf93ff49d7f7d1aafda2ec8176f2580235d42d1286f726401"
+      "sha256": "00b047efb2b82c249bda7415782c5e667082d962389db0ed4cdd8b0884c6ea94"
     },
     {
       "file": "lookupinfo-only-ContactType.json",
@@ -6085,7 +6085,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "16f56fe8224e3bc195a5ab88a029a7de5b604274a6166899424048dc545b6f66"
+      "sha256": "eb1fafcbe986b811f839d3d47c3f94c36f9e3767937d4607d46542eff319f7a3"
     },
     {
       "file": "lookupinfo-only-ck.json",
@@ -6133,7 +6133,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "f3cab78cb99d0c37cf633f736f91e92a0bc456525d3d2a62a8cee1bd1fe4af8c"
+      "sha256": "8d95ad6d3349b586af7f62de901f8d3a2694981828c881a04fa67b3c4b31dd26"
     },
     {
       "file": "lookupinfo-only-exchange1.json",
@@ -6213,7 +6213,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "bb528e789c9df4abc0f83f52462c0e372297aa2ee449b86e260fab5b80d71d39"
+      "sha256": "9af76800b6c2512ca4a6865c159be9a93eef2e211529da5c6f78ef8e4ec210c4"
     },
     {
       "file": "lookupinfo-only-name.json",
@@ -6229,7 +6229,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "c8c171c769a1113bd55d685bc2dd1b3ea59334992114752b9f7d1eff3fbb0d48"
+      "sha256": "e01977695d58fb8e24cd181d8511d3c1a8173bd8c52070e8a28109b0f26283de"
     },
     {
       "file": "lookupinfo-only-oldtimestamp.json",
@@ -6245,7 +6245,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "b9dc29f711be2e6e1e36aee4eb4f3a1b3bb3e21edc7140103d2d6706d632b1f3"
+      "sha256": "3230df0a6456f2683b37194acd8bd9acea3dc8dfe291e1d7e3cdaf0204514a02"
     },
     {
       "file": "lookupinfo-only-points.json",
@@ -6349,7 +6349,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "93c1c449516b4381af5e25b3f1c40a5da979a36488bb31e9a0bca1861ab22dd2"
+      "sha256": "6509e1195f5412241e33d51b509e8d7890f187b16c37155933d5cfa8b51ccc73"
     },
     {
       "file": "lookupinfo-only-timestamp.json",
@@ -6373,7 +6373,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "834d0471107e91a176a11b94f10f147220cdf15f9e8ada678e36692262a68f80"
+      "sha256": "95bcea7bc10d89178966227032af3bbc073c436b62a32daf4f46453625d68e69"
     },
     {
       "file": "lookupinfo-only-zone.json",
@@ -7165,7 +7165,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "4732a598702ddeb39ad6159f2d0f9be0b8415eae54c5ccc9609d20464ce77895"
+      "sha256": "ee2a890954aeca9ed52d3a5c8313a1d7e5d44351131b6d08ecd61ab7e3573aed"
     },
     {
       "file": "score-point-empty-band.json",
@@ -7501,7 +7501,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "e9ea7c6131d52711ffb1457090df725001bb6fd7b31ec06e1ef7e63c90a146a7"
+      "sha256": "94e3b5786cf0c470aa5412f1b1b982f615dcceeedac1244f1d87892cf1e38ab5"
     },
     {
       "file": "spot-empty-StationName.json",
@@ -7597,7 +7597,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "c920421cb70cb61c1ab620fc7b3e2cea205804b92e84f3452ef14835d4c7ec1f"
+      "sha256": "a7d5aedceb1cdc5540a1fb74c215b757785266c2347e175eafbfc02d1e59eff4"
     },
     {
       "file": "spot-only-StationName.json",
@@ -7605,7 +7605,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "78084b1a12c67fea8ed6a9cc89436fe408a74be2ed3d3f763e7a8871ef72cb76"
+      "sha256": "778dddd8aef02feb9f529c2c756e8bfd260ea37b7a91332ff89515b026cbc293"
     },
     {
       "file": "spot-only-action.json",
@@ -7637,7 +7637,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "d786eeca333ccad60b4c909e6ac98d72bc0a69bce7220146b2d899328690c5ff"
+      "sha256": "dcc923d28ba95fc9bbd31abb2219807d94bb4b0e2926e6f9e5dbd988f3404141"
     },
     {
       "file": "spot-only-frequency.json",
@@ -7661,7 +7661,7 @@
       "spec": "0.1.0",
       "family": "n1mm",
       "mapping": 1,
-      "sha256": "f46f9460fa1f4ca67d603b1159fbab3014543418afc37b51b412bb01acc5f7bd"
+      "sha256": "9c4b86fa153724cb0c7fe899edb861d0b080221c4f5207e779fb4e4ec3aca29f"
     },
     {
       "file": "spot-only-status.json",

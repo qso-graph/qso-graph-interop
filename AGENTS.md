@@ -25,6 +25,7 @@
 The library implements the protocol; its caller chooses destinations and control policy.
 Public files describe this project only. Use American English and synthetic test QSOs.
 
+- Invented callsigns use the Q prefix.
 - Rust 1.99.1, edition 2024; compatible dependency ranges; keep both lockfiles current.
 - Every crate root, including tests and fuzz targets, says `#![forbid(unsafe_code)]`.
   Every workspace member inherits the workspace lints. Our own code has no unsafe Rust

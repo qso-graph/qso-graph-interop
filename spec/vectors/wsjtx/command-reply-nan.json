@@ -22,13 +22,13 @@
         "dt_seconds": "ieee754:7ff8000000001234",
         "audio_offset_hz": 1234,
         "mode": "~",
-        "text": "CQ W1AAA FN42",
+        "text": "CQ Q1AAA FN42",
         "low_confidence": true,
         "modifiers": 4
       }
     }
   },
   "expected": {
-    "data": "rbzL2gAAAAMAAAAEAAAADXRlc3QtaW5zdGFuY2UCsyn7////73/4AAAAABI0AAAE0gAAAAF+AAAADUNRIFcxQUFBIEZONDIBBA=="
+    "data": "rbzL2gAAAAMAAAAEAAAADXRlc3QtaW5zdGFuY2UCsyn7////73/4AAAAABI0AAAE0gAAAAF+AAAADUNRIFExQUFBIEZONDIBBA=="
   }
 }

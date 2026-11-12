@@ -5,7 +5,7 @@
   "mapping": 1,
   "class": "positive",
   "input": {
-    "data": "rbzL2gAAAAMAAAAKAAAADXRlc3QtaW5zdGFuY2UAArMp+////+W/4AAAAAAAAAAAAAAA1xTw/////gAAAAVXMUFBQQAAAARGTjQyAAAAJQ==",
+    "data": "rbzL2gAAAAMAAAAKAAAADXRlc3QtaW5zdGFuY2UAArMp+////+W/4AAAAAAAAAAAAAAA1xTw/////gAAAAVRMUFBQQAAAARGTjQyAAAAJQ==",
     "context": {
       "direction": "from_application",
       "exchange": "unknown"
@@ -30,7 +30,7 @@
         "dt_seconds": -0.5,
         "frequency_hz": 14095600,
         "drift_hz": -2,
-        "call": "W1AAA",
+        "call": "Q1AAA",
         "grid": "FN42",
         "power_dbm": 37,
         "radio": {
@@ -39,7 +39,7 @@
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAMAAAAKAAAADXRlc3QtaW5zdGFuY2UAArMp+////+W/4AAAAAAAAAAAAAAA1xTw/////gAAAAVXMUFBQQAAAARGTjQyAAAAJQ=="
+        "data": "rbzL2gAAAAMAAAAKAAAADXRlc3QtaW5zdGFuY2UAArMp+////+W/4AAAAAAAAAAAAAAA1xTw/////gAAAAVRMUFBQQAAAARGTjQyAAAAJQ=="
       }
     }
   }

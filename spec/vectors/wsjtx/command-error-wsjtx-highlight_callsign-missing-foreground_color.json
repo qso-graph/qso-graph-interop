@@ -17,7 +17,7 @@
       },
       "fields": {
         "operation": "wsjtx.highlight_callsign",
-        "call": "W1AAA",
+        "call": "Q1AAA",
         "highlight_last": true,
         "background_color": {
           "spec": 1,

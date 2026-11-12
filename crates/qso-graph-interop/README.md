@@ -18,7 +18,7 @@ Build a command from common fields and an explicit wire target:
 ```rust
 use qso_graph_interop::{Context, Event, Text};
 use serde_json::json;
-let fields = json!({"operation": "send_text", "text": "CQ W1AAA FN42", "transmit": false});
+let fields = json!({"operation": "send_text", "text": "CQ Q1AAA FN42", "transmit": false});
 let command = Event::command("wsjtx", 1, Context::default(),
     fields.as_object().unwrap().clone(), Some(Text::from("synthetic-instance")))?;
 assert!(command.is_command());

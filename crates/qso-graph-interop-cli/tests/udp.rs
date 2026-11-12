@@ -33,9 +33,9 @@ fn simulator_sends_only_to_the_named_loopback_socket() {
             "--to",
             &socket.local_addr().unwrap().to_string(),
             "--call",
-            "K7ABC",
+            "Q7ABC",
             "--dx-call",
-            "W1AW",
+            "Q1AW",
             "--mode",
             "FT4",
             "--frequency",
@@ -58,7 +58,7 @@ fn simulator_sends_only_to_the_named_loopback_socket() {
             transmitted_hz = s.dial_frequency_hz.checked_add(u64::from(s.tx_df_hz));
         }
         if let Body::QsoLogged(q) = p.body {
-            assert_eq!(q.dx_call.as_str(), Some("W1AW"));
+            assert_eq!(q.dx_call.as_str(), Some("Q1AW"));
             assert_eq!(q.frequency_hz, 7_075_500);
             assert_eq!(Some(q.frequency_hz), transmitted_hz);
             assert_eq!(q.mode.as_str(), Some("FT4"));

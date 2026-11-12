@@ -23,7 +23,7 @@
         "fast_mode": false,
         "tr_period_seconds": 15,
         "rx_offset_hz": 1800,
-        "dx_call": "W1AAA",
+        "dx_call": "Q1AAA",
         "dx_grid": "FN42",
         "generate_messages": true
       }
@@ -33,6 +33,6 @@
     }
   },
   "expected": {
-    "data": "rbzL2gAAAAMAAAAPAAAADXRlc3QtaW5zdGFuY2UAAAADRlQ4AAAAZAAAAAhzdWItdGVzdAAAAAAPAAAHCAAAAAVXMUFBQQAAAARGTjQyAQ=="
+    "data": "rbzL2gAAAAMAAAAPAAAADXRlc3QtaW5zdGFuY2UAAAADRlQ4AAAAZAAAAAhzdWItdGVzdAAAAAAPAAAHCAAAAAVRMUFBQQAAAARGTjQyAQ=="
   }
 }

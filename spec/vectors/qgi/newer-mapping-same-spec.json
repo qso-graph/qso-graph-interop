@@ -6,7 +6,7 @@
   "class": "positive",
   "input": {
     "transport": "udp",
-    "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJ3c2p0eCIsIm1hcHBpbmciOjIsIm5hdGl2ZV92ZXJzaW9uIjoiMyIsImtpbmQiOiJjb250cm9sIiwid2lyZV9pZCI6InRlc3QtaW5zdGFuY2UiLCJjb250ZXh0Ijp7ImRpcmVjdGlvbiI6InRvX2FwcGxpY2F0aW9uIiwiZXhjaGFuZ2UiOiJ1bmtub3duIn0sImZpZWxkcyI6eyJvcGVyYXRpb24iOiJ3c2p0eC5oaWdobGlnaHRfY2FsbHNpZ24iLCJjYWxsIjoiVzFBQUEiLCJoaWdobGlnaHRfbGFzdCI6dHJ1ZSwiYmFja2dyb3VuZF9jb2xvciI6eyJzcGVjIjoxLCJjaGFubmVscyI6WzY1NTM1LDQzNjksODczOCwxMzEwNywxNzQ3Nl0sImZ1dHVyZV9jb21wb25lbnQiOjd9LCJmb3JlZ3JvdW5kX2NvbG9yIjp7InNwZWMiOjAsImNoYW5uZWxzIjpbMSwyLDMsNCw1XX19LCJuYXRpdmUiOnsiZm9ybWF0Ijoid3NqdHhfZGF0YWdyYW0iLCJkYXRhIjoicmJ6TDJnQUFBQU1BQUFBTkFBQUFEWFJsYzNRdGFXNXpkR0Z1WTJVQUFBQUZWekZCUVVFQi8vOFJFU0lpTXpORVJBQUFBUUFDQUFNQUJBQUZBUT09In19",
+    "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJ3c2p0eCIsIm1hcHBpbmciOjIsIm5hdGl2ZV92ZXJzaW9uIjoiMyIsImtpbmQiOiJjb250cm9sIiwid2lyZV9pZCI6InRlc3QtaW5zdGFuY2UiLCJjb250ZXh0Ijp7ImRpcmVjdGlvbiI6InRvX2FwcGxpY2F0aW9uIiwiZXhjaGFuZ2UiOiJ1bmtub3duIn0sImZpZWxkcyI6eyJvcGVyYXRpb24iOiJ3c2p0eC5oaWdobGlnaHRfY2FsbHNpZ24iLCJjYWxsIjoiUTFBQUEiLCJoaWdobGlnaHRfbGFzdCI6dHJ1ZSwiYmFja2dyb3VuZF9jb2xvciI6eyJzcGVjIjoxLCJjaGFubmVscyI6WzY1NTM1LDQzNjksODczOCwxMzEwNywxNzQ3Nl0sImZ1dHVyZV9jb21wb25lbnQiOjd9LCJmb3JlZ3JvdW5kX2NvbG9yIjp7InNwZWMiOjAsImNoYW5uZWxzIjpbMSwyLDMsNCw1XX19LCJuYXRpdmUiOnsiZm9ybWF0Ijoid3NqdHhfZGF0YWdyYW0iLCJkYXRhIjoicmJ6TDJnQUFBQU1BQUFBTkFBQUFEWFJsYzNRdGFXNXpkR0Z1WTJVQUFBQUZVVEZCUVVFQi8vOFJFU0lpTXpORVJBQUFBUUFDQUFNQUJBQUZBUT09In19",
     "context": {
       "direction": "unknown",
       "exchange": "unknown"
@@ -26,7 +26,7 @@
       },
       "fields": {
         "operation": "wsjtx.highlight_callsign",
-        "call": "W1AAA",
+        "call": "Q1AAA",
         "highlight_last": true,
         "background_color": {
           "spec": 1,
@@ -52,7 +52,7 @@
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAMAAAANAAAADXRlc3QtaW5zdGFuY2UAAAAFVzFBQUEB//8RESIiMzNERAAAAQACAAMABAAFAQ=="
+        "data": "rbzL2gAAAAMAAAANAAAADXRlc3QtaW5zdGFuY2UAAAAFUTFBQUEB//8RESIiMzNERAAAAQACAAMABAAFAQ=="
       },
       "via": [
         {
@@ -68,7 +68,7 @@
       "kind": "control",
       "fields": {
         "operation": "wsjtx.highlight_callsign",
-        "call": "W1AAA",
+        "call": "Q1AAA",
         "highlight_last": true,
         "background_color": {
           "spec": 1,
@@ -97,7 +97,7 @@
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAMAAAANAAAADXRlc3QtaW5zdGFuY2UAAAAFVzFBQUEB//8RESIiMzNERAAAAQACAAMABAAFAQ=="
+        "data": "rbzL2gAAAAMAAAANAAAADXRlc3QtaW5zdGFuY2UAAAAFUTFBQUEB//8RESIiMzNERAAAAQACAAMABAAFAQ=="
       }
     }
   },
@@ -115,7 +115,7 @@
       },
       "fields": {
         "operation": "wsjtx.highlight_callsign",
-        "call": "W1AAA",
+        "call": "Q1AAA",
         "highlight_last": true,
         "background_color": {
           "spec": 1,
@@ -141,7 +141,7 @@
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAMAAAANAAAADXRlc3QtaW5zdGFuY2UAAAAFVzFBQUEB//8RESIiMzNERAAAAQACAAMABAAFAQ=="
+        "data": "rbzL2gAAAAMAAAANAAAADXRlc3QtaW5zdGFuY2UAAAAFUTFBQUEB//8RESIiMzNERAAAAQACAAMABAAFAQ=="
       },
       "via": [
         {

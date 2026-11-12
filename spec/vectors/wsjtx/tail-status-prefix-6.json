@@ -5,7 +5,7 @@
   "mapping": 1,
   "class": "positive",
   "input": {
-    "data": "rbzL2gAAAAMAAAABAAAADXRlc3QtaW5zdGFuY2UAAAAAANbAkAAAAANGVDgAAAAFVzFBQUEAAAADLTA5AAAAA0ZUNAEAAQAABLEAAAj+AAAABUsxQUFBAAAABEZOMzEAAAAERk40MgAAAAAIc3ViLXRlc3QB",
+    "data": "rbzL2gAAAAMAAAABAAAADXRlc3QtaW5zdGFuY2UAAAAAANbAkAAAAANGVDgAAAAFUTFBQUEAAAADLTA5AAAAA0ZUNAEAAQAABLEAAAj+AAAABVEyQUFBAAAABEZOMzEAAAAERk40MgAAAAAIc3ViLXRlc3QB",
     "context": {
       "direction": "from_application",
       "exchange": "unknown"
@@ -26,7 +26,7 @@
       "fields": {
         "dial_frequency_hz": 14074000,
         "mode": "FT8",
-        "dx_call": "W1AAA",
+        "dx_call": "Q1AAA",
         "report": "-09",
         "tx_mode": "FT4",
         "tx_enabled": true,
@@ -34,7 +34,7 @@
         "decoding": true,
         "rx_offset_hz": 1201,
         "tx_offset_hz": 2302,
-        "station_call": "K1AAA",
+        "station_call": "Q2AAA",
         "station_grid": "FN31",
         "dx_grid": "FN42",
         "tx_watchdog": false,
@@ -46,7 +46,7 @@
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAMAAAABAAAADXRlc3QtaW5zdGFuY2UAAAAAANbAkAAAAANGVDgAAAAFVzFBQUEAAAADLTA5AAAAA0ZUNAEAAQAABLEAAAj+AAAABUsxQUFBAAAABEZOMzEAAAAERk40MgAAAAAIc3ViLXRlc3QB"
+        "data": "rbzL2gAAAAMAAAABAAAADXRlc3QtaW5zdGFuY2UAAAAAANbAkAAAAANGVDgAAAAFUTFBQUEAAAADLTA5AAAAA0ZUNAEAAQAABLEAAAj+AAAABVEyQUFBAAAABEZOMzEAAAAERk40MgAAAAAIc3ViLXRlc3QB"
       }
     }
   }

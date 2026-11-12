@@ -5,7 +5,7 @@
   "mapping": 1,
   "class": "positive",
   "input": {
-    "data": "rbzL2gAAAAIAAAAEAAAADXRlc3QtaW5zdGFuY2UCsyn7////7z/QAAAAAAAAAAAE0gAAAAF+AAAADUNRIFcxQUFBIEZONDIBBA==",
+    "data": "rbzL2gAAAAIAAAAEAAAADXRlc3QtaW5zdGFuY2UCsyn7////7z/QAAAAAAAAAAAE0gAAAAF+AAAADUNRIFExQUFBIEZONDIBBA==",
     "context": {
       "direction": "to_application",
       "exchange": "unknown"
@@ -30,13 +30,13 @@
         "dt_seconds": 0.25,
         "audio_offset_hz": 1234,
         "mode": "~",
-        "text": "CQ W1AAA FN42",
+        "text": "CQ Q1AAA FN42",
         "low_confidence": true,
         "modifiers": 4
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAIAAAAEAAAADXRlc3QtaW5zdGFuY2UCsyn7////7z/QAAAAAAAAAAAE0gAAAAF+AAAADUNRIFcxQUFBIEZONDIBBA=="
+        "data": "rbzL2gAAAAIAAAAEAAAADXRlc3QtaW5zdGFuY2UCsyn7////7z/QAAAAAAAAAAAE0gAAAAF+AAAADUNRIFExQUFBIEZONDIBBA=="
       }
     }
   },
@@ -50,13 +50,13 @@
       "delta_time_seconds": 0.25,
       "delta_frequency_hz": 1234,
       "mode": "~",
-      "message": "CQ W1AAA FN42",
+      "message": "CQ Q1AAA FN42",
       "low_confidence": true,
       "modifiers": 4
     },
     "extensions": ""
   },
   "reencode": {
-    "data": "rbzL2gAAAAIAAAAEAAAADXRlc3QtaW5zdGFuY2UCsyn7////7z/QAAAAAAAAAAAE0gAAAAF+AAAADUNRIFcxQUFBIEZONDIBBA=="
+    "data": "rbzL2gAAAAIAAAAEAAAADXRlc3QtaW5zdGFuY2UCsyn7////7z/QAAAAAAAAAAAE0gAAAAF+AAAADUNRIFExQUFBIEZONDIBBA=="
   }
 }

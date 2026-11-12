@@ -17,7 +17,7 @@
       },
       "fields": {
         "operation": "wsjtx.annotation_info",
-        "dx_call": "W1AAA",
+        "dx_call": "Q1AAA",
         "sort_order_provided": false,
         "sort_order": 12345
       }
@@ -27,6 +27,6 @@
     }
   },
   "expected": {
-    "data": "rbzL2gAAAAEAAAAQAAAADXRlc3QtaW5zdGFuY2UAAAAFVzFBQUEAAAAwOQ=="
+    "data": "rbzL2gAAAAEAAAAQAAAADXRlc3QtaW5zdGFuY2UAAAAFUTFBQUEAAAAwOQ=="
   }
 }

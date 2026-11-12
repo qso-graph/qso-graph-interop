@@ -17,7 +17,7 @@
       },
       "fields": {
         "operation": "wsjtx.annotation_info",
-        "dx_call": "W1AAA",
+        "dx_call": "Q1AAA",
         "sort_order_provided": false,
         "sort_order": 4294967296
       }

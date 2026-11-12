@@ -254,13 +254,13 @@ mod tests {
     use super::*;
     #[test]
     fn python_reader_edges() {
-        let a = "260407_233915    14.074 Rx FT8    -12  -0.2 1234 CQ W1AAA DN13  ?   ";
+        let a = "260407_233915    14.074 Rx FT8    -12  -0.2 1234 CQ Q1AAA DN13  ?   ";
         let l = parse_line(a).unwrap();
         assert_eq!(
             (l.dial_hz, l.snr, l.dt, l.df),
             (14_074_000, -12, -0.2, 1234)
         );
-        assert_eq!(l.message, "CQ W1AAA DN13 ");
+        assert_eq!(l.message, "CQ Q1AAA DN13 ");
         assert!(l.low_confidence);
         for bad in [
             "260229_120000 14 Rx FT8 1 0 1 CQ",
@@ -331,7 +331,7 @@ mod tests {
         }
         // Separate native layouts must never be emitted as ordinary Decode messages.
         let log = parse(
-            b"260407_120000 14 Rx WSPR -1 0.1 1500 W1AAA AA00 30\n260407_120000 14 Rx Echo -1 0.1 1500 W1AAA\n",
+            b"260407_120000 14 Rx WSPR -1 0.1 1500 Q1AAA AA00 30\n260407_120000 14 Rx Echo -1 0.1 1500 Q1AAA\n",
             "",
         )
         .unwrap();

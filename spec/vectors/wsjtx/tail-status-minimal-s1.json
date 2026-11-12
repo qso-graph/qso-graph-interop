@@ -5,7 +5,7 @@
   "mapping": 1,
   "class": "positive",
   "input": {
-    "data": "rbzL2gAAAAEAAAABAAAADXRlc3QtaW5zdGFuY2UAAAAAANbAkAAAAANGVDgAAAAFVzFBQUEAAAADLTA5AAAAA0ZUNAEAAQAABLEAAAj+",
+    "data": "rbzL2gAAAAEAAAABAAAADXRlc3QtaW5zdGFuY2UAAAAAANbAkAAAAANGVDgAAAAFUTFBQUEAAAADLTA5AAAAA0ZUNAEAAQAABLEAAAj+",
     "context": {
       "direction": "from_application",
       "exchange": "unknown"
@@ -26,7 +26,7 @@
       "fields": {
         "dial_frequency_hz": 14074000,
         "mode": "FT8",
-        "dx_call": "W1AAA",
+        "dx_call": "Q1AAA",
         "report": "-09",
         "tx_mode": "FT4",
         "tx_enabled": true,
@@ -40,7 +40,7 @@
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAEAAAABAAAADXRlc3QtaW5zdGFuY2UAAAAAANbAkAAAAANGVDgAAAAFVzFBQUEAAAADLTA5AAAAA0ZUNAEAAQAABLEAAAj+"
+        "data": "rbzL2gAAAAEAAAABAAAADXRlc3QtaW5zdGFuY2UAAAAAANbAkAAAAANGVDgAAAAFUTFBQUEAAAADLTA5AAAAA0ZUNAEAAQAABLEAAAj+"
       }
     }
   }

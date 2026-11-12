@@ -39,7 +39,7 @@ enum Command {
     Listen(Listen),
     /// Simulate contest traffic, ALL.TXT, or native NDJSON captures over UDP.
     #[command(
-        after_help = "Examples:\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --n1mm --to 127.0.0.1:12060 --radios 2 --speed 60\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call W1AW --mode FT4 --frequency 7074000"
+        after_help = "Examples:\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --n1mm --to 127.0.0.1:12060 --radios 2 --speed 60\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call Q1AW --mode FT4 --frequency 7074000"
     )]
     Sim(Box<Sim>),
     /// Decode one complete native datagram from a file or standard input.
@@ -227,7 +227,7 @@ fn listen_address(options: &Listen) -> SocketAddr {
 fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
     let make = |body| Packet::new(s.id.as_str(), body);
     let mode = s.mode.as_deref().unwrap_or("FT8");
-    let dx_call = s.dx_call.as_deref().unwrap_or("W1AW");
+    let dx_call = s.dx_call.as_deref().unwrap_or("Q1AW");
     let frequency = s.frequency.unwrap_or(14_074_000);
     let call = if s.call.is_empty() { "N0CALL" } else { &s.call };
     let grid = if s.grid.is_empty() { "FN31" } else { &s.grid };
@@ -435,7 +435,7 @@ mod tests {
             "--frequency",
             "7074000",
             "--call",
-            "K7ABC",
+            "Q7ABC",
         ])
         .unwrap();
         let Command::Sim(s) = c.command else {
@@ -451,7 +451,7 @@ mod tests {
             match p.body {
                 Body::Status(v) => {
                     assert_eq!(v.dial_frequency_hz, 7_074_000);
-                    assert_eq!(v.de_call, Some(Utf8::from("K7ABC")));
+                    assert_eq!(v.de_call, Some(Utf8::from("Q7ABC")));
                 }
                 Body::Decode(v) => assert_eq!(v.mode, Utf8::from("+")),
                 Body::QsoLogged(v) => assert_eq!(v.mode, Utf8::from("FT4")),

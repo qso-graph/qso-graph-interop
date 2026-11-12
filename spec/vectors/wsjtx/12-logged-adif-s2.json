@@ -5,7 +5,7 @@
   "mapping": 1,
   "class": "positive",
   "input": {
-    "data": "rbzL2gAAAAIAAAAMAAAADXRlc3QtaW5zdGFuY2UAAAAoPEFESUZfVkVSOjU+My4xLjQ8RU9IPjxDQUxMOjU+VzFBQUE8RU9SPg==",
+    "data": "rbzL2gAAAAIAAAAMAAAADXRlc3QtaW5zdGFuY2UAAAAoPEFESUZfVkVSOjU+My4xLjQ8RU9IPjxDQUxMOjU+UTFBQUE8RU9SPg==",
     "context": {
       "direction": "from_application",
       "exchange": "unknown"
@@ -24,14 +24,14 @@
         "exchange": "unknown"
       },
       "fields": {
-        "adif": "<ADIF_VER:5>3.1.4<EOH><CALL:5>W1AAA<EOR>",
+        "adif": "<ADIF_VER:5>3.1.4<EOH><CALL:5>Q1AAA<EOR>",
         "radio": {
           "instance": "test-instance"
         }
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAIAAAAMAAAADXRlc3QtaW5zdGFuY2UAAAAoPEFESUZfVkVSOjU+My4xLjQ8RU9IPjxDQUxMOjU+VzFBQUE8RU9SPg=="
+        "data": "rbzL2gAAAAIAAAAMAAAADXRlc3QtaW5zdGFuY2UAAAAoPEFESUZfVkVSOjU+My4xLjQ8RU9IPjxDQUxMOjU+UTFBQUE8RU9SPg=="
       }
     }
   },
@@ -40,7 +40,7 @@
     "type": 12,
     "id": "test-instance",
     "body": {
-      "adif": "<ADIF_VER:5>3.1.4<EOH><CALL:5>W1AAA<EOR>"
+      "adif": "<ADIF_VER:5>3.1.4<EOH><CALL:5>Q1AAA<EOR>"
     },
     "extensions": ""
   }

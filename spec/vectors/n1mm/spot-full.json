@@ -5,7 +5,7 @@
   "mapping": 1,
   "class": "positive",
   "input": {
-    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3BvdD48YXBwPnN5bnRoZXRpYy1sb2dnZXI8L2FwcD48U3RhdGlvbk5hbWU+SzFBQUE8L1N0YXRpb25OYW1lPjxkeGNhbGw+VzFBQUE8L2R4Y2FsbD48ZnJlcXVlbmN5PjcwNjEuMjwvZnJlcXVlbmN5PjxzcG90dGVyY2FsbD5LMUJCQjwvc3BvdHRlcmNhbGw+PHRpbWVzdGFtcD4yMDI2LTExLTEyIDEyOjM0OjU2PC90aW1lc3RhbXA+PGFjdGlvbj5hZGQ8L2FjdGlvbj48bW9kZT5DVzwvbW9kZT48Y29tbWVudD5zeW50aGV0aWMgc3BvdCA8L2NvbW1lbnQ+PHN0YXR1cz5zaW5nbGUgbXVsdDwvc3RhdHVzPjxzdGF0dXNsaXN0PnNpbmdsZSBtdWx0PC9zdGF0dXNsaXN0Pjwvc3BvdD4=",
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3BvdD48YXBwPnN5bnRoZXRpYy1sb2dnZXI8L2FwcD48U3RhdGlvbk5hbWU+UTJBQUE8L1N0YXRpb25OYW1lPjxkeGNhbGw+UTFBQUE8L2R4Y2FsbD48ZnJlcXVlbmN5PjcwNjEuMjwvZnJlcXVlbmN5PjxzcG90dGVyY2FsbD5RMkJCQjwvc3BvdHRlcmNhbGw+PHRpbWVzdGFtcD4yMDI2LTExLTEyIDEyOjM0OjU2PC90aW1lc3RhbXA+PGFjdGlvbj5hZGQ8L2FjdGlvbj48bW9kZT5DVzwvbW9kZT48Y29tbWVudD5zeW50aGV0aWMgc3BvdCA8L2NvbW1lbnQ+PHN0YXR1cz5zaW5nbGUgbXVsdDwvc3RhdHVzPjxzdGF0dXNsaXN0PnNpbmdsZSBtdWx0PC9zdGF0dXNsaXN0Pjwvc3BvdD4=",
     "context": {
       "direction": "from_application",
       "exchange": "unknown"
@@ -23,26 +23,26 @@
       },
       "fields": {
         "radio": {
-          "instance": "K1AAA"
+          "instance": "Q2AAA"
         },
-        "call": "W1AAA",
+        "call": "Q1AAA",
         "frequency_hz": 7061200,
-        "spotter_call": "K1BBB",
+        "spotter_call": "Q2BBB",
         "time": "2026-11-12T12:34:56Z",
         "mode": "CW",
         "text": "synthetic spot "
       },
       "native": {
         "format": "n1mm_xml",
-        "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3BvdD48YXBwPnN5bnRoZXRpYy1sb2dnZXI8L2FwcD48U3RhdGlvbk5hbWU+SzFBQUE8L1N0YXRpb25OYW1lPjxkeGNhbGw+VzFBQUE8L2R4Y2FsbD48ZnJlcXVlbmN5PjcwNjEuMjwvZnJlcXVlbmN5PjxzcG90dGVyY2FsbD5LMUJCQjwvc3BvdHRlcmNhbGw+PHRpbWVzdGFtcD4yMDI2LTExLTEyIDEyOjM0OjU2PC90aW1lc3RhbXA+PGFjdGlvbj5hZGQ8L2FjdGlvbj48bW9kZT5DVzwvbW9kZT48Y29tbWVudD5zeW50aGV0aWMgc3BvdCA8L2NvbW1lbnQ+PHN0YXR1cz5zaW5nbGUgbXVsdDwvc3RhdHVzPjxzdGF0dXNsaXN0PnNpbmdsZSBtdWx0PC9zdGF0dXNsaXN0Pjwvc3BvdD4="
+        "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3BvdD48YXBwPnN5bnRoZXRpYy1sb2dnZXI8L2FwcD48U3RhdGlvbk5hbWU+UTJBQUE8L1N0YXRpb25OYW1lPjxkeGNhbGw+UTFBQUE8L2R4Y2FsbD48ZnJlcXVlbmN5PjcwNjEuMjwvZnJlcXVlbmN5PjxzcG90dGVyY2FsbD5RMkJCQjwvc3BvdHRlcmNhbGw+PHRpbWVzdGFtcD4yMDI2LTExLTEyIDEyOjM0OjU2PC90aW1lc3RhbXA+PGFjdGlvbj5hZGQ8L2FjdGlvbj48bW9kZT5DVzwvbW9kZT48Y29tbWVudD5zeW50aGV0aWMgc3BvdCA8L2NvbW1lbnQ+PHN0YXR1cz5zaW5nbGUgbXVsdDwvc3RhdHVzPjxzdGF0dXNsaXN0PnNpbmdsZSBtdWx0PC9zdGF0dXNsaXN0Pjwvc3BvdD4="
       }
     }
   },
   "reencode": {
-    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3BvdD48YXBwPnN5bnRoZXRpYy1sb2dnZXI8L2FwcD48U3RhdGlvbk5hbWU+SzFBQUE8L1N0YXRpb25OYW1lPjxkeGNhbGw+VzFBQUE8L2R4Y2FsbD48ZnJlcXVlbmN5PjcwNjEuMjwvZnJlcXVlbmN5PjxzcG90dGVyY2FsbD5LMUJCQjwvc3BvdHRlcmNhbGw+PHRpbWVzdGFtcD4yMDI2LTExLTEyIDEyOjM0OjU2PC90aW1lc3RhbXA+PGFjdGlvbj5hZGQ8L2FjdGlvbj48bW9kZT5DVzwvbW9kZT48Y29tbWVudD5zeW50aGV0aWMgc3BvdCA8L2NvbW1lbnQ+PHN0YXR1cz5zaW5nbGUgbXVsdDwvc3RhdHVzPjxzdGF0dXNsaXN0PnNpbmdsZSBtdWx0PC9zdGF0dXNsaXN0Pjwvc3BvdD4="
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3BvdD48YXBwPnN5bnRoZXRpYy1sb2dnZXI8L2FwcD48U3RhdGlvbk5hbWU+UTJBQUE8L1N0YXRpb25OYW1lPjxkeGNhbGw+UTFBQUE8L2R4Y2FsbD48ZnJlcXVlbmN5PjcwNjEuMjwvZnJlcXVlbmN5PjxzcG90dGVyY2FsbD5RMkJCQjwvc3BvdHRlcmNhbGw+PHRpbWVzdGFtcD4yMDI2LTExLTEyIDEyOjM0OjU2PC90aW1lc3RhbXA+PGFjdGlvbj5hZGQ8L2FjdGlvbj48bW9kZT5DVzwvbW9kZT48Y29tbWVudD5zeW50aGV0aWMgc3BvdCA8L2NvbW1lbnQ+PHN0YXR1cz5zaW5nbGUgbXVsdDwvc3RhdHVzPjxzdGF0dXNsaXN0PnNpbmdsZSBtdWx0PC9zdGF0dXNsaXN0Pjwvc3BvdD4="
   },
   "expected_message": {
     "root": "spot",
-    "xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?><spot><app>synthetic-logger</app><StationName>K1AAA</StationName><dxcall>W1AAA</dxcall><frequency>7061.2</frequency><spottercall>K1BBB</spottercall><timestamp>2026-11-12 12:34:56</timestamp><action>add</action><mode>CW</mode><comment>synthetic spot </comment><status>single mult</status><statuslist>single mult</statuslist></spot>"
+    "xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?><spot><app>synthetic-logger</app><StationName>Q2AAA</StationName><dxcall>Q1AAA</dxcall><frequency>7061.2</frequency><spottercall>Q2BBB</spottercall><timestamp>2026-11-12 12:34:56</timestamp><action>add</action><mode>CW</mode><comment>synthetic spot </comment><status>single mult</status><statuslist>single mult</statuslist></spot>"
   }
 }

@@ -87,7 +87,7 @@ fn sample_matches_python_capture_and_filters_foreign_commands() {
             "--to",
             &receiver.local_addr().unwrap().to_string(),
             "--call",
-            "W1ZZZ",
+            "Q1ZZZ",
             "--grid",
             "DN13",
             "--speed",
@@ -172,7 +172,7 @@ fn temp(name: &str) -> std::path::PathBuf {
 #[test]
 fn ft4_cycles_loop_timestamps_and_close_command() {
     let file = temp("ft4.txt");
-    std::fs::write(&file,"260407_120000 7.0475 Rx FT4 -2 0.1 500 CQ W1AAA AA00\n260407_120007 7.0475 Rx FT4 -1 0.2 600 W1AAA W1AAB 73\n").unwrap();
+    std::fs::write(&file,"260407_120000 7.0475 Rx FT4 -2 0.1 500 CQ Q1AAA AA00\n260407_120007 7.0475 Rx FT4 -1 0.2 600 Q1AAA Q1AAB 73\n").unwrap();
     let receiver = socket();
     let mut child = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
         .args(["sim", "--wsjtx", "--file"])
@@ -243,17 +243,17 @@ fn mixed_modes_play_known_periods_and_report_skips() {
         ("FT8", 15_000, "~", ""),
         ("FT8_SH", 15_000, "~", ""),
     ];
-    let mut text = String::from("header\n260407_120000 14 Tx FT8 -1 0 1500 CQ W1AAA AA00\n");
+    let mut text = String::from("header\n260407_120000 14 Tx FT8 -1 0 1500 CQ Q1AAA AA00\n");
     for (i, (mode, _, _, _)) in modes.iter().enumerate() {
         // Unknown periods between playable lines must not abort or create empty cycles.
         text.push_str(&format!(
-            "260407_12{i:02}00 14 Rx Q65 -1 0 1500 CQ W1AAA AA00\n\
-             260407_12{i:02}00 14 Rx {mode} -2 0.1 1500 CQ W1AAB AA01\n"
+            "260407_12{i:02}00 14 Rx Q65 -1 0 1500 CQ Q1AAA AA00\n\
+             260407_12{i:02}00 14 Rx {mode} -2 0.1 1500 CQ Q1AAB AA01\n"
         ));
     }
     for mode in ["JT9", "MSK144", "FST4", "FST4W", "UNKNOWN"] {
         text.push_str(&format!(
-            "260407_123000 14 Rx {mode} -1 0 1500 CQ W1AAA AA00\n"
+            "260407_123000 14 Rx {mode} -1 0 1500 CQ Q1AAA AA00\n"
         ));
     }
     std::fs::write(&file, text).unwrap();
@@ -303,7 +303,7 @@ fn mixed_modes_play_known_periods_and_report_skips() {
             elapsed
         );
         assert_eq!(d.mode.as_str(), Some(*wire_mode));
-        assert_eq!(d.message.as_str(), Some("CQ W1AAB AA01"));
+        assert_eq!(d.message.as_str(), Some("CQ Q1AAB AA01"));
         assert_eq!(
             s.mode.as_str(),
             Some(if !submode.is_empty() {
@@ -447,7 +447,7 @@ fn drop_in_validation_and_read_errors() {
     assert!(String::from_utf8_lossy(&output.stderr).contains("cannot read "));
     std::fs::write(
         &path,
-        "header\n260407_120000 14 Tx FT8 1 0 1 CQ W1AAA AA00\n",
+        "header\n260407_120000 14 Tx FT8 1 0 1 CQ Q1AAA AA00\n",
     )
     .unwrap();
     let output = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
