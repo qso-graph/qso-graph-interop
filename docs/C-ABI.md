@@ -280,6 +280,12 @@ checks include planted failures. CI runs the same steps; native consumer steps
 run on Linux, and Rust ABI tests run on Linux, macOS, and Windows.
 
 The full verifier retains the existing 60-second fuzz smoke for each native
-family. Miri and Rust sanitizer runs are not part of this delivery's verification;
-the shipped compiler remains Rust 1.99.1 and isolated fuzzing uses the pinned
-nightly-2026-10-30 toolchain.
+family. Miri checks every C entry point using minimal family inputs, invalid
+arguments, ownership and panic cases, stream decoding, and multiple fldigi
+requests. Vector sweeps and large stream frames run in the ordinary test suite.
+The linked C consumer also runs under Rust AddressSanitizer and C ASan/UBSan
+on Linux x86_64 GNU. Both memory tools must diagnose a planted heap overread.
+Install the system sanitizer runtimes (`libasan` and `libubsan` on Fedora/RHEL,
+or your distribution's equivalents) alongside a sanitizer-capable C compiler.
+The shipped compiler remains Rust 1.99.1; Miri, sanitizers, and isolated fuzzing
+use the pinned nightly-2026-10-30 toolchain.

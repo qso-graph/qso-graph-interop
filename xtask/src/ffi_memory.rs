@@ -5,6 +5,7 @@ use std::{path::Path, process::Command};
 
 const NIGHTLY: &str = "+nightly-2026-10-30";
 const TARGET: &str = "x86_64-unknown-linux-gnu";
+pub const SANITIZER_INSTALL: &str = "install a sanitizer-capable C compiler and its system runtimes: libasan and libubsan on Fedora/RHEL, or your distribution's equivalent packages";
 
 fn cargo(root: &Path, dir: &str) -> Command {
     let mut cmd = Command::new("cargo");
@@ -54,11 +55,9 @@ pub fn miri(root: &Path, planted: bool) -> Check {
         },
     );
     cmd.args(["miri", "test", "-p", "qso-graph-interop-ffi", "--locked"])
-        // The vector test reads repository files. All memory/aliasing checks stay on.
-        .env(
-            "MIRIFLAGS",
-            "-Zmiri-disable-isolation -Zmiri-strict-provenance",
-        );
+        // Tiny boundary cases need no filesystem access. Keep isolation and all
+        // memory/aliasing checks, including strict provenance, enabled.
+        .env("MIRIFLAGS", "-Zmiri-strict-provenance");
     if planted {
         cmd.env("RUSTFLAGS", "--cfg qgi_planted_read").args([
             "tests::planted_memory_read",
@@ -142,12 +141,12 @@ pub fn sanitize(root: &Path, planted: bool) -> Check {
         .arg(library)
         .args(["-ldl", "-lpthread", "-lm", "-o"])
         .arg(&binary);
-    success(&mut cc)?;
+    success(&mut cc).map_err(|e| format!("{e}\n{SANITIZER_INSTALL}"))?;
     let mut run = Command::new(binary);
     run.current_dir(root)
         .env("ASAN_OPTIONS", "detect_leaks=1:halt_on_error=1")
         .env("UBSAN_OPTIONS", "halt_on_error=1:print_stacktrace=1");
-    if planted {
+    let result = if planted {
         caught(
             &mut run,
             &root.join("target/verify/ffi-asan-planted.txt"),
@@ -158,5 +157,6 @@ pub fn sanitize(root: &Path, planted: bool) -> Check {
         )
     } else {
         success(&mut run)
-    }
+    };
+    result.map_err(|e| format!("{e}\n{SANITIZER_INSTALL}"))
 }

@@ -13,7 +13,7 @@ cargo xtask verify
 
 It runs the same checks as CI (formatting, Clippy, full and core-only tests, policy, fixtures,
 the generated C header, FFI build, linked C test and C++ header compilation,
-Miri for all Rust FFI tests, the C caller under ASan/UBSan, planted memory failures,
+Miri for the Rust FFI boundary tests, the C caller under ASan/UBSan, planted memory failures,
 the specification vectors with `uv`, cargo-vet, cargo-deny, cargo-audit, and a 60-second fuzz
 smoke on the pinned nightly), prints one pass/fail table, and exits non-zero if any check fails.
 `--fuzz-seconds 0` skips fuzzing, and `--fuzz-seconds N` fuzzes longer. Each check's output is in
@@ -45,12 +45,18 @@ cargo xtask ffi-sanitize
 cargo xtask ffi-sanitize-planted
 ```
 
-Miri runs every Rust FFI test, including threaded ownership, invalid arguments,
-and decode/encode round trips through the C entry points. No test is excluded.
-Isolation is disabled so the vector test can read repository files; memory,
-aliasing, and strict provenance checks remain enabled. The independently compiled
-C program runs outside Miri, under the sanitizers. ASan/UBSan requires Linux x86_64 GNU with a C compiler
-and its sanitizer runtimes; other hosts skip it with a reason. Rust uses
+Miri exercises every C entry point, including threaded ownership, invalid arguments,
+panic containment, stream consumption, and decode/encode paths for every family.
+The inputs are minimal: a WSJT-X heartbeat with an empty sender ID and no optional
+body, an empty N1MM root, and an empty fldigi response. The fldigi command test
+also retrieves both independently owned requests and rejects an out-of-range index.
+The vector sweep and large stream frame test run only in the ordinary suite;
+Miri covers oversized lengths and a small frame that exceeds the JSON depth limit.
+Isolation, memory, aliasing, and strict provenance checks remain enabled.
+The independently compiled C program runs outside Miri, under the sanitizers.
+ASan/UBSan requires Linux x86_64 GNU with a C compiler and its sanitizer runtimes;
+install the system packages `libasan` and `libubsan` on Fedora/RHEL, or your
+distribution's equivalents. Other hosts skip it with a reason. Rust uses
 `-Zsanitizer=address` and the C caller uses `-fsanitize=address,undefined` with
 recovery disabled. Each build has a separate directory under `target/`.
 

@@ -154,14 +154,14 @@ pub fn steps(fuzz_seconds: u64) -> Vec<Step> {
             ".",
             "cargo",
             &["xtask", "ffi-sanitize"],
-            RUSTUP,
+            crate::ffi_memory::SANITIZER_INSTALL,
         ),
         step(
             "ffi ASan planted",
             ".",
             "cargo",
             &["xtask", "ffi-sanitize-planted"],
-            RUSTUP,
+            crate::ffi_memory::SANITIZER_INSTALL,
         ),
         step(
             "ffi C++ header",

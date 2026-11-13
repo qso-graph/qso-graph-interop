@@ -5,7 +5,7 @@
 
 ### Added
 
-- Run all Rust FFI tests under pinned-nightly Miri and the linked C caller under
+- Run Rust FFI boundary tests under pinned-nightly Miri and the linked C caller under
   Rust AddressSanitizer plus C AddressSanitizer/UndefinedBehaviorSanitizer on
   Linux x86_64 GNU in verification and CI. Require both tools to catch isolated,
   cfg-gated heap overreads. Cover rejected lengths, stale handles, double frees,
@@ -87,6 +87,11 @@
 
 ### Changed
 
+- Keep Miri focused on tiny C ABI inputs for every entry point and family,
+  including multi-request fldigi output, ownership, invalid arguments, stream
+  errors, and panic containment. Run vector sweeps and large stream frames only
+  as ordinary tests; enable Miri isolation and retain strict provenance checks.
+  Include system sanitizer runtime packages in ASan/UBSan installation hints.
 - Use Q-prefixed invented callsigns in simulators, samples, fixtures, specification vectors,
   and examples. Preserve distinct identities and byte lengths, retain the `N0CALL` station
   default, and guard against legacy synthetic calls with planted generator and policy failures.

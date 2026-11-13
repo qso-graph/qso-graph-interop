@@ -127,7 +127,7 @@ jobs:
 
   ffi-memory:
     runs-on: ubuntu-latest
-    # Miri interprets the complete FFI test suite, including boundary vectors.
+    # Miri interprets tiny FFI boundary cases; native tests retain vectors and large inputs.
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

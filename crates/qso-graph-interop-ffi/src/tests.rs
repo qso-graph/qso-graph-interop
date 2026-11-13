@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Exercise exports exactly as foreign callers do, including invalid tokens.
 use super::*;
+#[cfg(not(miri))]
 use qso_graph_interop::base64;
 use std::ptr::{null, null_mut};
 
@@ -146,6 +147,10 @@ fn invalid_pointers_lengths_handles_buffers_and_text() {
         );
         assert_eq!(qgi_reset(id, null(), 1), QGI_NULL_POINTER);
         assert_eq!(qgi_reset(id, null(), usize::MAX), QGI_BUFFER_TOO_LARGE);
+        assert_eq!(
+            qgi_reset(id, std::ptr::without_provenance(usize::MAX), 2),
+            QGI_INVALID_POINTER
+        );
         assert_eq!(qgi_reset(0, null(), 0), QGI_BAD_HANDLE);
         assert_eq!(qgi_reset(id, null(), 0), QGI_OK);
         assert_eq!(
@@ -263,6 +268,9 @@ fn qgi_tcp_and_udp_round_trip() {
     }
 }
 
+// Full vector coverage belongs to native tests; Miri uses the tiny cases below
+// to exercise the same foreign-memory paths without interpreting codec sweeps.
+#[cfg(not(miri))]
 #[test]
 fn vector_decode_command_and_reencode_for_each_family() {
     let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../spec/vectors");
@@ -373,6 +381,90 @@ fn vector_decode_command_and_reencode_for_each_family() {
 }
 
 #[test]
+fn minimal_decode_reencode_and_command_for_each_native_family() {
+    for (family, wire, fields) in [
+        (
+            "wsjtx",
+            // 12-byte header plus the required empty sender-ID length; no body.
+            b"\xad\xbc\xcb\xda\0\0\0\x03\0\0\0\0\0\0\0\0".as_slice(),
+            json!({"operation":"wsjtx.heartbeat"}),
+        ),
+        (
+            "n1mm",
+            b"<AppInfo/>".as_slice(),
+            json!({"operation":"set_frequency","app":"","radio":{"number":1},"frequency_hz":1}),
+        ),
+        (
+            "fldigi",
+            b"<methodResponse><params><param><value/></param></params></methodResponse>".as_slice(),
+            json!({"operation":"send_text","text":"","transmit":true}),
+        ),
+    ] {
+        let id = new(family);
+        let observed = decode(id, wire, &json!({}));
+        assert_eq!(observed["events"].as_array().unwrap().len(), 1);
+        assert_eq!(observed["events"][0]["family"], family);
+        assert_eq!(observed["skips"], json!([]));
+        let event = serde_json::to_vec(&observed["events"][0]).unwrap();
+        let mut out = QgiBuffer::default();
+        assert_eq!(
+            // SAFETY: event and disjoint output are live; NULL/0 options are allowed.
+            unsafe { qgi_reencode(id, event.as_ptr(), event.len(), null(), 0, &mut out) },
+            QGI_OK,
+            "{family}: {}",
+            error()
+        );
+        assert_eq!(take(out), wire);
+
+        let mut command = json!({"spec":"0.1.0","family":family,"mapping":1,"kind":"control",
+            "context":{"direction":"to_application","exchange":"unknown"},"fields":fields});
+        if family == "wsjtx" {
+            command["wire_id"] = json!("");
+        }
+        let command = serde_json::to_vec(&command).unwrap();
+        let total = if family == "fldigi" { 2 } else { 1 };
+        let mut buffers = Vec::new();
+        // Only fldigi needs a second request and an out-of-range probe. Keep
+        // both allocations alive together, then read/free after codec teardown.
+        let attempts = if family == "fldigi" { total + 1 } else { total };
+        for index in 0..attempts {
+            let mut count = 99;
+            let status =
+                // SAFETY: command and disjoint aligned output slots remain live.
+                unsafe {
+                    qgi_encode_command(id, command.as_ptr(), command.len(), null(), 0,
+                        index, &mut count, &mut out)
+                };
+            if index == total {
+                assert_eq!(status, QGI_INVALID_VALUE);
+                assert_eq!(count, 0);
+                assert_eq!(out.token, 0);
+            } else {
+                assert_eq!(status, QGI_OK, "{family}: {}", error());
+                assert_eq!(count, total);
+                buffers.push(out);
+            }
+        }
+        assert_eq!(qgi_codec_free(id), QGI_OK);
+        for (index, buffer) in buffers.into_iter().enumerate() {
+            let bytes = take(buffer);
+            if family == "fldigi" {
+                let method = if index == 0 { "text.add_tx" } else { "main.tx" };
+                assert!(std::str::from_utf8(&bytes).unwrap().contains(method));
+            } else if family == "wsjtx" {
+                assert_eq!(bytes, wire);
+            } else {
+                assert!(
+                    std::str::from_utf8(&bytes)
+                        .unwrap()
+                        .contains("<radio_setfrequency>")
+                );
+            }
+        }
+    }
+}
+
+#[test]
 fn caller_buffer_stream_partial_multiple_eof_and_recovery() {
     let id = new("qgi");
     let event = br#"{"spec":"0.1.0","family":"x-synthetic","mapping":1,"kind":"native","context":{"direction":"unknown","exchange":"unknown"},"fields":{},"native":{"format":"synthetic","data":""}}"#;
@@ -447,7 +539,44 @@ fn caller_buffer_stream_partial_multiple_eof_and_recovery() {
             QGI_TRUNCATED
         );
         assert_eq!(used, event.len());
-        let large = vec![b'x'; QGI_MAX_BUFFER];
+        // The same codec-error/consumption path as a huge frame, using only 68
+        // bytes: one container beyond the JSON depth limit, plus its delimiter.
+        let deep = format!(
+            "{}0{}\n",
+            "[".repeat(json::MAX_DEPTH + 1),
+            "]".repeat(json::MAX_DEPTH + 1)
+        );
+        assert_eq!(
+            qgi_decode_stream(
+                id,
+                deep.as_ptr(),
+                deep.len(),
+                0,
+                null(),
+                0,
+                &mut used,
+                &mut out
+            ),
+            QGI_OVERSIZED
+        );
+        assert_eq!(used, deep.len());
+        assert_eq!(out.token, 0);
+        assert_eq!(qgi_reset(id, null(), 0), QGI_OK);
+    }
+    assert_eq!(qgi_codec_free(id), QGI_OK);
+}
+
+// Scanning a MiB is safe codec work, not a foreign-memory boundary check. Keep
+// the real stream size/discard recovery regression in the ordinary suite.
+#[cfg(not(miri))]
+#[test]
+fn caller_buffer_stream_large_frame_and_recovery() {
+    let id = new("qgi");
+    let mut out = QgiBuffer::default();
+    let mut used = 0;
+    let large = vec![b'x'; QGI_MAX_BUFFER];
+    // SAFETY: live input and disjoint aligned output slots for each call.
+    unsafe {
         assert_eq!(
             qgi_decode_stream(
                 id,
