@@ -343,3 +343,67 @@ The default XML-RPC port is documented in the same archive's `doc/fldigi.1.txt`
 39c9cfd99077a86c7b91b5d09f25ed2ce9332573be2cec14e67a74808d9de3b9  doc/fldigi.1.txt
 9e2e0efd5d315527d58361c7621154b1caf299df0cebc20c0c6923c3d108d5ef  src/include/data_io.h
 ```
+
+## fldigi simulator
+
+`sim --fldigi` is a caller-side stand-in for the 50 mapped methods in
+[Annex E.4](../spec/annex-e-fldigi.md#e4-complete-mapping-catalog). It uses Annex E's
+canonical XML-RPC response envelope and scalar forms. The library only constructs
+requests, so the simulator builds response bodies directly. The independent Annex E
+catalog drives a test of every response type, including a planted string where a
+frequency double is required. The shipped poller and fields-built commands also run
+against the shipped server in serialized loopback tests.
+
+The source is the same pinned [fldigi 4.2.13 release archive](https://www.w1hkj.org/files/fldigi/fldigi-4.2.13.tar.gz)
+as Annex E, retrieved on 2026-11-12. Archive
+member paths below identify files inside that exact archive; their hashes cover the
+complete files. S2, S3, S6, S12, S13, and S17 retain Annex E's identifiers and hashes.
+
+| Reaction | Released source / derivation |
+|---|---|
+| RF and carrier setters return old values; modem selection returns the old name or `No such modem` | S2 `Rig_set_frequency`, `Main_set_freq`, `Modem_set_carrier`, `Modem_set_by_name`. RF zero keeps the current value; positive fractional RF is truncated. The simulator refuses values outside its safe unsigned integer range. |
+| Modem names, ADIF mode, and ADIF submode are separate | S2 `Modem_get_name`, `Modem_get_mode`, `Modem_get_submode`; all 169 S13 mode-table name/export tuples are represented. |
+| TX, RX, abort, and tune change state; tune has uppercase `TX` state and lowercase `tune` status | S2 `Main_tx`, `Main_rx`, `Main_abort`, `Main_tune`, `Main_get_trx_state`, `Main_get_trx_status`. S6 `abort_tx` stops the engine or tune. |
+| Empty logbook reads return `NONE` for the last record and the released ADIF header for all records; band follows RF | S2 `Logbook_last_record`, `Logbook_all_records`, `Log_get_band`; `src/logbook/logsupport.cxx` `last_adif_record` / `all_adif_records`; S13 `band` / `band_name`. The empty all-records output includes both released `<EOH>` markers. |
+| Appending text does not start TX | S2 `Text_add_tx` calls `FTextTX::add_text`; `Main_tx` separately requests the TX button. Text consumption, elapsed time, and automatic RX on queue completion are simulator policy. An empty `main.tx` sends no bytes and waits for text or a stop command. |
+| Nominal-nil methods return an empty string, observed as `native` | S2's `value_nil` aliases default `XmlRpcValue`; S12 `executeMethod` normalizes invalid results to an empty string; S3 `stringToXml` emits `<value></value>`. See Annex E.1.2. No mapped nil acknowledgment is invented. |
+| Unknown/unmapped method: HTTP 200, faultCode `-1`, faultString `<method>: unknown method name` | S12 `executeRequest`, `generateFaultResponse`, `generateHeader`; `XmlRpcServer.h` defaults the fault code to `-1`. Even methods registered by fldigi but outside the mapped stand-in receive this fault. |
+| Missing or unfinished methodName: HTTP 200 with the same fault for the empty method name | S12 `parseRequest` returns an empty method string when S17 `parseTag` fails. It doesn't use the standard XML-RPC `-32600`/`-32700` errors. A recognizable methodName can dispatch even when the surrounding XML is incomplete; argument-free handlers ignore parameters. |
+| Wrong scalar argument type: fault `-1`, `type error`; missing argument array: `type error: expected an array` | S3 `assertType`/`assertArray`, S2 bundled `paramList`, and `XmlRpcException.h`'s default code. The stand-in bounds scalar parsing and argument count; it doesn't reproduce undefined numeric conversions or every permissive malformed spelling. The five named entities decode once; numeric references remain literal, as in S17. |
+| Missing/invalid Content-Length or EOF before a complete header/body: close without XML-RPC response | `XmlRpcServerConnection.cpp` `readHeader`/`readRequest`. The stand-in additionally rejects duplicate framing, transfer encoding, unsupported content encoding, and resource-limit violations. |
+| RX length/ranges use byte offsets; range reads do not drain the widget | S2 `Text_get_rx_length`, `Text_get_rx`, `Text_clear_rx`; S4 `length`/`text_range`. Bundled `paramList::getInt` clamps start and length. `(0,-1)` returns all available bytes; the stand-in returns only defined available bytes for nonzero starts with length `-1`, and an empty range for an empty widget. |
+| Raw RX reads drain a separate buffer; widget clear leaves raw RX intact | S2 `RX_get_data`, `Text_clear_rx`; S6 `get_rx_data` and `add_rx_char`. The raw buffer resets before adding a byte after 4,096 bytes, matching `RAW_BUFF_LEN`. |
+
+Additional complete archive-member hashes:
+
+```text
+b0e5604ea32f6fa670facd07a44fa52d1ccee14e7e51ba53550222742a21f56c  src/xmlrpcpp/XmlRpcServerConnection.cpp
+3e9d2eec5b622272cf95c2ac060846d8a8abdedeceb01badc4435f3c1381e6c7  src/xmlrpcpp/XmlRpcException.h
+71d817e38cf8a7ffa6d8c0f254b60c7ef84e5a977db02731c5df17642aaf8df7  src/logbook/logsupport.cxx
+```
+
+Logbook reads represent an empty synthetic logbook. Other read-only log fields use
+fixed synthetic defaults (2026-01-01, 0000, reports 599, empty descriptive fields).
+The script and initial contact call/locator use `--call` and `--grid`; those options
+do not add station identity to codec fields. The seed chooses a synthetic Q-prefixed
+peer. The finite RX script pauses during TX/tune. Changing contact getters does not
+rewrite already scripted text.
+
+Approximate throughput in bytes per simulated second is BPSK/QPSK31 3.125,
+BPSK/QPSK63 6.25, BPSK/QPSK125 12.5, BPSK250 25, RTTY 6, CW 2,
+MFSK16 3.9, MFSK32 7.8, and 3 for the remaining modes. `--speed` scales these
+rates. These are text pacing choices, not source-derived DSP timings or macro
+execution. Tests advance a logical clock to check exact consumption and planted
+empty-queue failures without sleeping. Stop commands preserve the unsent widget
+text; `text.clear_tx` removes it.
+
+The audited TCP adapter takes numeric `SocketAddr` values, rejects non-loopback
+and zero-port binds before opening a listener, and checks accepted peers. The server
+uses one nonblocking event loop, at most 16 active streams, five seconds per exchange
+(including idle keep-alive), 16,384 header bytes, and 262,144 body bytes. Headers require
+positive Content-Length. Responses use HTTP 200, explicit length, and XML-RPC bodies;
+sequential keep-alive is supported. RX and TX text buffers have 65,536-byte caps so
+base64 replies fit the codec's observation budget. A full TX queue or oversized
+response produces a simulator-limit fault. No socket or process capability enters
+the library. Policy tests mutate the listener bind, loopback guards, DNS spelling,
+nonblocking setting, and deadline; each mutation fails the audited token check.

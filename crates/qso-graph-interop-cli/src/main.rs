@@ -5,6 +5,7 @@
 use qso_graph_interop_cli::alltxt;
 mod capture;
 mod fldigi_poll;
+mod fldigi_sim;
 mod loopback_tcp;
 mod n1mm_sim;
 mod numeric_udp;
@@ -39,9 +40,9 @@ enum Command {
         after_help = "Examples:\n  qg-interop listen --wsjtx\n  qg-interop listen --n1mm\n  qg-interop listen --n1mm 127.0.0.1:12060 --json"
     )]
     Listen(Listen),
-    /// Simulate contest traffic, ALL.TXT, or native NDJSON captures over UDP.
+    /// Simulate UDP traffic or serve fldigi XML-RPC on loopback.
     #[command(
-        after_help = "Examples:\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --n1mm --to 127.0.0.1:12060 --radios 2 --speed 60\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call Q1AW --mode FT4 --frequency 7074000"
+        after_help = "Examples:\n  qg-interop sim --fldigi\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --n1mm --to 127.0.0.1:12060 --radios 2 --speed 60\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call Q1AW --mode FT4 --frequency 7074000"
     )]
     Sim(Box<Sim>),
     /// Decode one complete native body from a file or standard input.
@@ -120,8 +121,14 @@ fn loopback_address(s: &str) -> Result<SocketAddr, String> {
 }
 #[derive(Args)]
 struct Sim {
-    #[arg(long, required_unless_present_any = ["capture", "n1mm"], conflicts_with_all = ["qgi", "n1mm"])]
+    #[arg(long, required_unless_present_any = ["capture", "n1mm", "fldigi"], conflicts_with_all = ["qgi", "n1mm", "fldigi"])]
     wsjtx: bool,
+    /// Serve fldigi 4.2.13 XML-RPC (default 127.0.0.1:7362).
+    #[arg(long, conflicts_with_all = ["n1mm", "capture", "qgi", "to", "file", "from", "id", "dx_call", "mode", "frequency", "repeat", "count", "station", "radios", "rate"])]
+    fldigi: bool,
+    /// Numeric loopback listener address for --fldigi; no DNS.
+    #[arg(requires = "fldigi", value_parser = loopback_address)]
+    address: Option<SocketAddr>,
     /// Simulate N1MM Logger+ contest broadcasts and QSY input.
     #[arg(long, conflicts_with_all = ["capture", "qgi", "file", "from", "grid", "id", "dx_call", "mode", "frequency"])]
     n1mm: bool,
@@ -134,8 +141,8 @@ struct Sim {
     /// New N1MM contacts per simulated hour (1–3600).
     #[arg(long, requires = "n1mm", conflicts_with_all = ["wsjtx", "capture"], default_value = "120", value_parser = clap::value_parser!(u32).range(1..=3600))]
     rate: u32,
-    /// Deterministic N1MM traffic seed.
-    #[arg(long, requires = "n1mm", conflicts_with_all = ["wsjtx", "capture"], default_value = "1")]
+    /// Deterministic N1MM or fldigi traffic seed.
+    #[arg(long, conflicts_with_all = ["wsjtx", "capture"], default_value = "1")]
     seed: u64,
     /// Stop after N new N1MM contacts (1–100000), including with --loop.
     #[arg(long, requires = "n1mm", conflicts_with_all = ["wsjtx", "capture"], value_parser = clap::value_parser!(u64).range(1..=100_000))]
@@ -147,8 +154,8 @@ struct Sim {
     #[arg(long, requires = "capture")]
     qgi: bool,
     /// Numeric destination; no implicit broadcast or discovery.
-    #[arg(long, value_parser = sim::target)]
-    to: SocketAddr,
+    #[arg(long, required_unless_present = "fldigi", value_parser = sim::target)]
+    to: Option<SocketAddr>,
     /// ALL.TXT to play; the built-in synthetic sample is the default.
     #[arg(long, conflicts_with_all = ["dx_call", "mode", "frequency"])]
     file: Option<PathBuf>,

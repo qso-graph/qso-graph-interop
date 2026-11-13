@@ -151,7 +151,7 @@ pub fn run(s: &Sim) -> Result<(), Box<dyn std::error::Error>> {
     let frames = parse(&bytes, s.qgi)?;
     sim::delay(frames.last().map_or(0, |f| f.at_ms), s.speed)?;
     sim::install_stop()?;
-    let socket = NumericUdp::sender(s.to)?;
+    let socket = NumericUdp::sender(s.to.ok_or("--to is required")?)?;
     loop {
         let begun = Instant::now();
         for frame in &frames {

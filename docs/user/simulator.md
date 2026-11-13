@@ -100,6 +100,64 @@ Ctrl+C or a termination signal stops playback and sends final radio reports with
 cleared. There is no N1MM Close message. Use N1MM options without WSJT-X or capture selection.
 See [validation and precision policy](../simulator-validation.md#n1mm-contest-simulator).
 
+## Test fldigi controllers
+
+Test an app that controls fldigi without starting fldigi. Start the stand-in in one
+terminal, then run the poller in another:
+
+```sh
+qg-interop sim --fldigi
+qg-interop poll --fldigi --count 3
+```
+
+The server uses HTTP/1.1 XML-RPC at `127.0.0.1:7362`. Point your controller's fldigi XML-RPC
+connection at that address. Choose another numeric loopback address when needed:
+
+```sh
+qg-interop sim --fldigi 127.0.0.1:17362 --speed 10 --seed 42 --call Q7ABC --grid EM10
+qg-interop poll --fldigi 127.0.0.1:17362 --count 3
+```
+
+`--speed` scales received text and queued transmission together, from more than zero through
+1,000. `--seed` chooses a reproducible Q-prefixed peer call. `--call` and `--grid` customize the
+synthetic script and initialize the contact call and locator fields. Defaults are `Q1AAA`,
+`FN31`, BPSK31, 14,070,000 Hz, and a 1,500 Hz audio carrier. Changing contact fields through
+XML-RPC changes their getters; it doesn't rewrite the script. Ctrl+C stops the server.
+
+All 50 methods in [Annex E's mapping table](../../spec/annex-e-fldigi.md#e4-complete-mapping-catalog)
+are served. RF and audio setters return their old values. Modem names and ADIF mode/submode
+remain distinct. Unknown modem names return `No such modem`. Unmapped XML-RPC methods receive
+a fault with code `-1` and text `<method>: unknown method name`.
+
+Append text with `text.add_tx`, then call `main.tx`. Transmission consumes the queue at an
+approximate rate for the mode and returns to receive when the queued text finishes.
+BPSK31 uses about 3.1 bytes per second; BPSK63 and BPSK125 use twice and four times that rate.
+RTTY uses about 6 bytes per second, CW 2, and MFSK16 3.9. Other modes use an approximate
+3 bytes per second unless listed in the [implementation policy](../PROTOCOL.md#fldigi-simulator).
+The text simulation returns to receive automatically. It produces no audio and uses no rig hardware.
+Calling `main.tx` with an empty queue sends no text and waits for text, `main.rx`, or `main.abort`.
+`main.rx` and `main.abort` stop consumption; unsent text remains until resumed or cleared with
+`text.clear_tx`. `main.tune` reports tune until stopped.
+
+The finite received script accumulates while receiving. `text.get_rx_length` reports its byte
+length, and `text.get_rx(start, length)` reads zero-based byte ranges without consuming them.
+Use `(0, -1)` to read all available text. `rx.get_data` returns bytes since its previous query
+and drains that separate raw buffer. `text.clear_rx` clears the visible buffer; it doesn't drain
+raw data or restart the script. Handle buffer shrinking when maintaining a cursor.
+
+The bundled fldigi 4.2.13 server returns an empty string for nominal-nil methods, including
+`text.add_tx`, `main.tx`, and `main.abort`. The stand-in preserves that response. The codec
+observes it as `native`; a client that requires a mapped nil acknowledgment can't advance
+its multi-request sequence from that reply. The stand-in accepts the ordered requests from
+`Codec::encode_commands` so controllers can test the bundled behavior explicitly.
+
+For the empty logbook, `logbook.last_record` returns `NONE` and `logbook.all_records` returns
+the released ADIF header. `log.get_band` follows rig frequency. Other log fields use
+fixed synthetic defaults. Received data pauses during transmission or tune. Timing approximates
+text throughput and doesn't reproduce modem DSP, GUI scheduling, macros, or hardware effects.
+See [source evidence and bounds](../PROTOCOL.md#fldigi-simulator) for malformed requests,
+transport limits, and range boundaries. Use fldigi options without UDP or capture options.
+
 ## Play an NDJSON capture
 
 Capture the native messages with `listen` or `decode`, then play each event's `native.data`:

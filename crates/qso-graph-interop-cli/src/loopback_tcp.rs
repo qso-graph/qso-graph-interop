@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! Audited numeric, loopback-only adapter for fldigi's plain HTTP XML-RPC client.
+//! Audited numeric, loopback-only adapter for fldigi HTTP clients and listeners.
 #![forbid(unsafe_code)]
 use std::io::{self, Read, Write};
-use std::net::{SocketAddr, TcpStream};
+use std::net::{SocketAddr, TcpListener, TcpStream};
 use std::time::{Duration, Instant};
 pub struct LoopbackTcp {
     stream: TcpStream,
@@ -21,6 +21,9 @@ impl LoopbackTcp {
         let stream = TcpStream::connect_timeout(&address, timeout)?;
         Ok(Self { stream, deadline })
     }
+    pub fn restart_deadline(&mut self) {
+        self.deadline = Instant::now() + Duration::from_secs(5);
+    }
     fn remaining(&self) -> io::Result<Duration> {
         self.deadline
             .checked_duration_since(Instant::now())
@@ -31,6 +34,34 @@ impl LoopbackTcp {
                     "fldigi HTTP request exceeded five seconds",
                 )
             })
+    }
+}
+pub struct LoopbackListener(TcpListener);
+impl LoopbackListener {
+    pub fn bind(address: SocketAddr) -> io::Result<Self> {
+        if !address.ip().is_loopback() || address.port() == 0 {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "fldigi XML-RPC uses plain HTTP; only numeric loopback listeners with a nonzero port are allowed",
+            ));
+        }
+        let listener = TcpListener::bind(address)?;
+        listener.set_nonblocking(true)?;
+        Ok(Self(listener))
+    }
+    pub fn accept(&self) -> io::Result<LoopbackTcp> {
+        let (stream, peer) = self.0.accept()?;
+        if !peer.ip().is_loopback() {
+            return Err(io::Error::new(
+                io::ErrorKind::PermissionDenied,
+                "non-loopback peer",
+            ));
+        }
+        stream.set_nonblocking(true)?;
+        Ok(LoopbackTcp {
+            stream,
+            deadline: Instant::now() + Duration::from_secs(5),
+        })
     }
 }
 impl Read for LoopbackTcp {

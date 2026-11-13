@@ -35,9 +35,9 @@ The direct dependency API set is also fixed: serde for the library, serde_json f
 and clap, serde_json, and the codec for the CLI. Package renames, target-specific additions,
 and new direct dependencies fail until this policy is updated after API review, so a wrapper
 crate cannot silently introduce process or resolver APIs under an arbitrary name.
-The fldigi client's TCP operations are confined to `loopback_tcp.rs`, whose complete tokens
-must match a separate audited policy template. Its only connection entry point takes
-`SocketAddr`, checks `ip().is_loopback()` and rejects port zero before opening a socket.
+The fldigi client's and simulator's TCP operations are confined to `loopback_tcp.rs`, whose complete tokens
+must match a separate audited policy template. Its connection and listener entry points take
+`SocketAddr`, checks `ip().is_loopback()` and rejects port zero before opening a socket. The listener also checks that accepted peers are loopback.
 Only IPv4's 127.0.0.0/8 range and IPv6's ::1 are accepted. Names, DNS resolution, redirects,
 proxies, and non-loopback connections are unsupported. fldigi XML-RPC uses plain HTTP;
 restricting it to loopback keeps unencrypted application state and received text off outside
@@ -47,8 +47,17 @@ a 16,384-byte header budget, and a 262,144-byte decoded body limit. Chunked repl
 at most 1,024 chunks, 128-byte chunk lines and 16,384 bytes of trailers. Conflicting framing,
 unsupported content encodings, and incomplete bodies fail before publication.
 
+The fldigi simulator accepts at most 16 concurrent streams in one nonblocking loop. A slow
+peer cannot block other clients. Every exchange, including idle keep-alive, has a five-second
+total read/write deadline. Requests require a positive Content-Length, at most 16,384 header
+bytes and 262,144 body bytes; ambiguous framing, compressed bodies, and transfer encoding
+close the stream without dispatch. Connections over capacity are closed. RX and queued TX
+buffers are capped at 65,536 bytes each, with a separate 4,096-byte raw RX buffer. Oversized
+responses and TX appends return simulator-limit faults. It binds numeric loopback only, has
+no DNS or discovery, and never contacts a rig, fldigi, or an outside service.
+
 Policy self-tests plant an external binary, a build script, aliases, implicit DNS, adapter changes, unreviewed dependency APIs,
-non-loopback TCP, loopback-guard removal,
+non-loopback TCP, external/wildcard listener binds, listener DNS, loopback-guard removal,
 and native/first-party violations.
 Policy tooling itself may invoke build tools. Fuzzing is an isolated workspace; libFuzzer's C++
 runtime and its build dependencies never enter the shipped dependency graph.

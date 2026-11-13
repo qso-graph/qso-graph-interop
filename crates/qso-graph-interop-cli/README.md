@@ -3,7 +3,7 @@
 
 Test amateur radio applications without a radio. `qg-interop` listens to WSJT-X and N1MM Logger+ UDP messages,
 polls local fldigi state and received text, decodes captured bodies as QGI-SPEC-001 NDJSON events, simulates WSJT-X from ALL.TXT logs,
-and generates N1MM contest traffic for dashboards, logger bridges, and band maps.
+generates N1MM contest traffic, and serves a local fldigi XML-RPC stand-in for controller developers.
 The single binary runs without Python or other runtime packages.
 
 Install from a checkout with `cargo install --path crates/qso-graph-interop-cli --locked`.
@@ -15,6 +15,7 @@ qg-interop decode --n1mm capture.xml
 qg-interop decode --wsjtx capture.bin
 qg-interop decode --fldigi response.xml --request-method rig.get_frequency
 qg-interop poll --fldigi --count 3
+qg-interop sim --fldigi
 qg-interop sim --wsjtx --to 127.0.0.1:2237
 qg-interop sim --wsjtx --to 127.0.0.1:2237 --file ALL.TXT --speed 60
 qg-interop sim --n1mm --to 127.0.0.1:12060 --radios 2 --rate 120 --speed 60
@@ -39,5 +40,11 @@ errors and skip notices go to standard error. Each subcommand's `--help` include
 The fldigi poller defaults to `127.0.0.1:7362` and accepts numeric loopback addresses.
 Use `--interval` for the delay between cycles and `--count` for the number of cycles.
 See the [fldigi guide](../../docs/user/fldigi.md) for XML-RPC setup and response association.
+
+Run `qg-interop sim --fldigi` to test loggers, contest tools, macros, and the poller without
+running fldigi. It serves all 50 mapped Annex E methods at `127.0.0.1:7362`, with settable
+frequency, carrier, mode, contact call and locator, queued transmission, and synthetic received
+text. Use `--speed`, `--seed`, `--call`, and `--grid` to choose the script settings.
+See the [fldigi simulator guide](../../docs/user/simulator.md#test-fldigi-controllers) for first use.
 
 Licensed under GPL-3.0-or-later.

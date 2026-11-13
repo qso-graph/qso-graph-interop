@@ -5,6 +5,12 @@
 
 ### Added
 
+- `sim --fldigi [ADDRESS]`: loopback-only fldigi 4.2.13 XML-RPC stand-in serving all
+  50 Annex E mappings, bundled empty-string results and unknown-method faults,
+  mutable radio/contact state, timed queued transmission, and seeded synthetic RX text.
+  Includes bounded concurrent HTTP connections, policy mutation checks, deterministic
+  state tests, and serialized CLI poll/controller tests over loopback.
+
 - Default-feature fldigi codec for Annex E revision 1, with all 50 mapped methods,
   typed XML-RPC values and faults, caller-supplied request association and correlation,
   ordered canonical command requests, and exact observed re-encoding.

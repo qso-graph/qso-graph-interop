@@ -345,6 +345,9 @@ pub fn wait_capture(socket: &NumericUdp, until: Instant) -> Result<()> {
 }
 
 pub fn run(s: Sim) -> Result<()> {
+    if s.fldigi {
+        return crate::fldigi_sim::run(&s);
+    }
     if s.n1mm {
         return crate::n1mm_sim::run(&s);
     }
@@ -355,7 +358,7 @@ pub fn run(s: Sim) -> Result<()> {
         let seconds = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
         let packets = crate::script(&s, seconds)?;
         install_stop()?;
-        let socket = NumericUdp::sender(s.to)?;
+        let socket = NumericUdp::sender(s.to.ok_or("--to is required")?)?;
         return send(&socket, packets);
     }
     let name = s
@@ -413,7 +416,7 @@ pub fn run(s: Sim) -> Result<()> {
         }
     );
     install_stop()?;
-    let socket = NumericUdp::sender(s.to)?;
+    let socket = NumericUdp::sender(s.to.ok_or("--to is required")?)?;
     let mut player = Player::new(&s);
     let period = alltxt::period_ms(&log.cycles[0].mode)?;
     let now = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis() as u64;

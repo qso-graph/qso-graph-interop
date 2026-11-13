@@ -345,10 +345,10 @@ fn numeric_udp_tokens(tokens: TokenStream) -> Check {
 
 // Exact tokens keep TCP inside the loopback guard and five-second deadline adapter.
 const AUDITED_LOOPBACK_TCP: &str = r#"// SPDX-License-Identifier: GPL-3.0-or-later
-//! Audited numeric, loopback-only adapter for fldigi's plain HTTP XML-RPC client.
+//! Audited numeric, loopback-only adapter for fldigi HTTP clients and listeners.
 #![forbid(unsafe_code)]
 use std::io::{self, Read, Write};
-use std::net::{SocketAddr, TcpStream};
+use std::net::{SocketAddr, TcpListener, TcpStream};
 use std::time::{Duration, Instant};
 pub struct LoopbackTcp {
     stream: TcpStream,
@@ -367,6 +367,9 @@ impl LoopbackTcp {
         let stream = TcpStream::connect_timeout(&address, timeout)?;
         Ok(Self { stream, deadline })
     }
+    pub fn restart_deadline(&mut self) {
+        self.deadline = Instant::now() + Duration::from_secs(5);
+    }
     fn remaining(&self) -> io::Result<Duration> {
         self.deadline
             .checked_duration_since(Instant::now())
@@ -377,6 +380,34 @@ impl LoopbackTcp {
                     "fldigi HTTP request exceeded five seconds",
                 )
             })
+    }
+}
+pub struct LoopbackListener(TcpListener);
+impl LoopbackListener {
+    pub fn bind(address: SocketAddr) -> io::Result<Self> {
+        if !address.ip().is_loopback() || address.port() == 0 {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "fldigi XML-RPC uses plain HTTP; only numeric loopback listeners with a nonzero port are allowed",
+            ));
+        }
+        let listener = TcpListener::bind(address)?;
+        listener.set_nonblocking(true)?;
+        Ok(Self(listener))
+    }
+    pub fn accept(&self) -> io::Result<LoopbackTcp> {
+        let (stream, peer) = self.0.accept()?;
+        if !peer.ip().is_loopback() {
+            return Err(io::Error::new(
+                io::ErrorKind::PermissionDenied,
+                "non-loopback peer",
+            ));
+        }
+        stream.set_nonblocking(true)?;
+        Ok(LoopbackTcp {
+            stream,
+            deadline: Instant::now() + Duration::from_secs(5),
+        })
     }
 }
 impl Read for LoopbackTcp {
@@ -1072,6 +1103,7 @@ fn main() {}
         }
         for s in [
             "std::net::TcpStream::connect(\"example.com\");",
+            "std::net::TcpListener::bind(\"127.0.0.1:7362\");",
             "use std::net::ToSocketAddrs;",
             "std::process::Command::new(\"curl\");",
         ] {
@@ -1151,6 +1183,19 @@ fn main() {}
                 "TcpStream::connect(\"localhost:7362\")",
             ),
             AUDITED_LOOPBACK_TCP.replace("Duration::from_secs(5)", "Duration::from_secs(500)"),
+            AUDITED_LOOPBACK_TCP.replace(
+                "TcpListener::bind(address)",
+                "TcpListener::bind(\"0.0.0.0:7362\")",
+            ),
+            AUDITED_LOOPBACK_TCP.replace(
+                "TcpListener::bind(address)",
+                "TcpListener::bind(\"localhost:7362\")",
+            ),
+            AUDITED_LOOPBACK_TCP.replace("!peer.ip().is_loopback()", "false"),
+            AUDITED_LOOPBACK_TCP.replace(
+                "listener.set_nonblocking(true)",
+                "listener.set_nonblocking(false)",
+            ),
         ] {
             assert!(loopback_tcp_tokens(mutant.parse().unwrap()).is_err());
         }
