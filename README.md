@@ -11,6 +11,29 @@ N1MM Logger+ XML, fldigi XML-RPC, and QGI event carriage over UDP and TCP.
 Events preserve native evidence and distinguish observations from
 commands. Applications supply observer context and own transport and control policy.
 
+## What it covers
+
+| Application | Protocol and transport | Decode | Commands | Exact re-encode | Simulator | CLI | Status |
+|---|---|:-:|:-:|:-:|---|---|---|
+| WSJT-X | Binary messages, schemas 1–3, all 17 types; UDP | ✓ | ✓ | ✓ | `sim --wsjtx` | `listen`, `decode` | Supported |
+| N1MM Logger+ | XML broadcasts; UDP | ✓ | ✓ | ✓ | `sim --n1mm` | `listen`, `decode` | Supported |
+| fldigi 4.2.13 | XML-RPC; HTTP on loopback | ✓ | ✓ | ✓ | `sim --fldigi` | `poll`, `decode` | Supported |
+| Any of the above | QGI event carriage; UDP or TCP | ✓ | Forwards events | — | `sim --capture --qgi` | — | Supported |
+| JS8Call | JSON API; TCP or UDP | | | | | | Planned |
+| PSK Reporter | Spots; MQTT | | | | | | Planned |
+| PSK Reporter | Spot submission; IPFIX over UDP | | | | | | Planned |
+| rigctld, DX cluster, ADIF over UDP, KISS | Various | | | | | | Designed for, not yet mapped |
+
+- **Decode:** native messages become specification events, with the original bytes kept as evidence.
+- **Commands:** events become native requests to the application: WSJT-X replies and controls,
+  N1MM frequency and spectrum requests, and fldigi XML-RPC calls.
+- **Exact re-encode:** an event rebuilds the native message, checked against the original bytes.
+- **Simulator:** `qg-interop sim` produces the application's traffic, so you can develop and test
+  without the application running. Every callsign it uses is invented, with a Q prefix.
+
+Every row marked Supported is checked by the specification's test vectors, and also works through
+the C ABI (`qso-graph-interop-ffi`).
+
 ## Install
 
 From this checkout with Rust 1.99.1 installed:
