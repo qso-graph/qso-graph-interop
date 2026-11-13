@@ -183,7 +183,8 @@ mod tests {
         ] {
             let path = root.join(file);
             std::fs::write(&path, r#"{"call":"W1AAA"}"#).unwrap();
-            let error = check(&root).unwrap_err();
+            // Windows prints the walked path with backslashes.
+            let error = check(&root).unwrap_err().replace('\\', "/");
             assert!(error.contains(file) && error.contains("W1AAA"), "{error}");
             std::fs::remove_file(path).unwrap();
             assert!(check(&root).is_ok());
