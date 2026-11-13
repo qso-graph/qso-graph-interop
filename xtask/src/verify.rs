@@ -24,12 +24,15 @@ pub struct Step {
     /// A cargo subcommand's binary that must be on `PATH`. Cargo runs it, because tools such
     /// as cargo-vet need the environment cargo sets for them.
     pub requires: Option<&'static str>,
+    /// An unsupported platform is visible in the table, rather than counted as a pass.
+    pub skip: Option<&'static str>,
 }
 
 /// The result of one step.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Outcome {
     Pass,
+    Skip(String),
     Fail(String),
 }
 
@@ -47,6 +50,7 @@ fn step(
         args: args.iter().map(|a| (*a).to_owned()).collect(),
         install,
         requires: None,
+        skip: None,
     }
 }
 
@@ -137,6 +141,28 @@ pub fn steps(fuzz_seconds: u64) -> Vec<Step> {
             "install a system C compiler (cc)",
         ),
         step("ffi C run", ".", "cargo", &["xtask", "ffi-c-run"], RUSTUP),
+        step("ffi Miri", ".", "cargo", &["xtask", "ffi-miri"], RUSTUP),
+        step(
+            "ffi Miri planted",
+            ".",
+            "cargo",
+            &["xtask", "ffi-miri-planted"],
+            RUSTUP,
+        ),
+        step(
+            "ffi ASan UBSan",
+            ".",
+            "cargo",
+            &["xtask", "ffi-sanitize"],
+            RUSTUP,
+        ),
+        step(
+            "ffi ASan planted",
+            ".",
+            "cargo",
+            &["xtask", "ffi-sanitize-planted"],
+            RUSTUP,
+        ),
         step(
             "ffi C++ header",
             ".",
@@ -232,6 +258,7 @@ pub fn steps(fuzz_seconds: u64) -> Vec<Step> {
                 .collect(),
                 install: NIGHTLY,
                 requires: Some("cargo-fuzz"),
+                skip: None,
             },
         ]);
         let mut n1mm = list.last().expect("WSJT-X fuzz step").clone();
@@ -247,6 +274,17 @@ pub fn steps(fuzz_seconds: u64) -> Vec<Step> {
             }
         }
         list.push(fldigi);
+    }
+    if !cfg!(all(
+        target_os = "linux",
+        target_arch = "x86_64",
+        target_env = "gnu"
+    )) {
+        for check in &mut list {
+            if check.name.starts_with("ffi ASan") {
+                check.skip = Some("ASan/UBSan C ABI checks require Linux x86_64 GNU");
+            }
+        }
     }
     list
 }
@@ -286,6 +324,10 @@ fn clean_env(command: &mut Command) {
 
 /// Run one step, writing its combined output to `log`.
 pub fn run_step(root: &Path, s: &Step, log: &Path) -> Outcome {
+    if let Some(reason) = s.skip {
+        let _ = fs::write(log, format!("SKIP: {reason}\n"));
+        return Outcome::Skip(reason.to_owned());
+    }
     let file = match fs::File::create(log) {
         Ok(f) => f,
         Err(e) => return Outcome::Fail(format!("cannot write {}: {e}", log.display())),
@@ -356,10 +398,10 @@ pub fn verify(root: &Path, fuzz_seconds: u64) -> bool {
         let took = begun.elapsed();
         println!(
             "{} {}",
-            if outcome == Outcome::Pass {
-                "pass"
-            } else {
-                "FAIL"
+            match outcome {
+                Outcome::Pass => "pass",
+                Outcome::Skip(_) => "skip",
+                Outcome::Fail(_) => "FAIL",
             },
             seconds(took)
         );
@@ -392,7 +434,7 @@ pub fn verify(root: &Path, fuzz_seconds: u64) -> bool {
     let failed: Vec<_> = results
         .iter()
         .enumerate()
-        .filter(|(_, (_, o, _))| *o != Outcome::Pass)
+        .filter(|(_, (_, o, _))| matches!(o, Outcome::Fail(_)))
         .collect();
     for (i, (name, outcome, _)) in &failed {
         let log = logs.join(log_name(*i, name));
@@ -407,13 +449,18 @@ pub fn verify(root: &Path, fuzz_seconds: u64) -> bool {
     for (name, outcome, took) in &results {
         let result = match outcome {
             Outcome::Pass => "pass".to_owned(),
+            Outcome::Skip(why) => format!("skip ({why})"),
             Outcome::Fail(why) => format!("FAIL ({why})"),
         };
         println!("| {name} | {result} | {} |", seconds(*took));
     }
-    let passed = results.len() - failed.len();
+    let skipped = results
+        .iter()
+        .filter(|(_, o, _)| matches!(o, Outcome::Skip(_)))
+        .count();
+    let passed = results.len() - failed.len() - skipped;
     println!(
-        "\nverify: {passed}/{} passed in {}; logs in {}\nverify: {}",
+        "\nverify: {passed}/{} passed, {skipped} skipped in {}; logs in {}\nverify: {}",
         results.len(),
         seconds(started.elapsed()),
         logs.display(),
@@ -555,7 +602,7 @@ mod tests {
                 why.contains("not found") && why.contains("install it"),
                 "{why}"
             ),
-            Outcome::Pass => panic!("a missing tool passed"),
+            _ => panic!("a missing tool passed or skipped"),
         }
         let missing_subcommand = subcommand(
             "missing subcommand",
@@ -565,7 +612,7 @@ mod tests {
         );
         match run_step(&dir, &missing_subcommand, &dir.join("sub.log")) {
             Outcome::Fail(why) => assert!(why.contains("install the subcommand"), "{why}"),
-            Outcome::Pass => panic!("a missing cargo subcommand passed"),
+            _ => panic!("a missing cargo subcommand passed or skipped"),
         }
         let good = step("good", ".", "cargo", &["--version"], "n/a");
         assert_eq!(run_step(&dir, &good, &dir.join("good.log")), Outcome::Pass);
@@ -573,6 +620,19 @@ mod tests {
             fs::read_to_string(dir.join("good.log"))
                 .unwrap()
                 .starts_with("cargo ")
+        );
+        let skipped = Step {
+            skip: Some("planted unsupported platform"),
+            ..missing
+        };
+        assert_eq!(
+            run_step(&dir, &skipped, &dir.join("skip.log")),
+            Outcome::Skip("planted unsupported platform".into())
+        );
+        assert!(
+            fs::read_to_string(dir.join("skip.log"))
+                .unwrap()
+                .contains("SKIP:")
         );
         let _ = fs::remove_dir_all(dir);
     }
@@ -585,6 +645,10 @@ mod tests {
             "clippy",
             "test",
             "test core only",
+            "ffi Miri",
+            "ffi Miri planted",
+            "ffi ASan UBSan",
+            "ffi ASan planted",
             "policy",
             "spec vectors",
             "cargo vet",

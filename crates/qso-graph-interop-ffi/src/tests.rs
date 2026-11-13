@@ -20,6 +20,31 @@ fn take(buffer: QgiBuffer) -> Vec<u8> {
     assert_eq!(qgi_buffer_free(buffer), QGI_OK);
     bytes
 }
+
+#[test]
+fn exported_buffer_survives_registry_moves_and_other_frees() {
+    let mut buffers = Vec::new();
+    for _ in 0..40 {
+        let mut out = QgiBuffer::default();
+        assert_eq!(
+            // SAFETY: out is live aligned writable storage.
+            unsafe { qgi_version(&mut out) },
+            QGI_OK
+        );
+        buffers.push(out);
+        // Read every older pointer after insertions, including B-tree splits.
+        for buffer in &buffers {
+            // SAFETY: each descriptor still owns a live immutable ABI buffer.
+            let bytes = unsafe { std::slice::from_raw_parts(buffer.data, buffer.len) };
+            assert_eq!(bytes, env!("CARGO_PKG_VERSION").as_bytes());
+        }
+    }
+    // Removal can move other entries, too; remaining readers stay valid.
+    while let Some(buffer) = buffers.pop() {
+        assert_eq!(take(buffer), env!("CARGO_PKG_VERSION").as_bytes());
+        assert_eq!(qgi_buffer_free(buffer), QGI_BAD_BUFFER);
+    }
+}
 fn decode(id: QgiCodec, bytes: &[u8], options: &Value) -> Value {
     let mut out = QgiBuffer::default();
     let options = serde_json::to_vec(options).unwrap();
@@ -151,6 +176,12 @@ fn invalid_pointers_lengths_handles_buffers_and_text() {
     assert_eq!(qgi_buffer_free(QgiBuffer::default()), QGI_OK);
     assert!(error().is_empty());
     assert_eq!(qgi_codec_free(id), QGI_OK);
+    // A stale token must be checked without accessing the freed codec.
+    assert_eq!(
+        // SAFETY: empty inputs are allowed; out is live writable storage.
+        unsafe { qgi_decode(id, null(), 0, null(), 0, &mut out) },
+        QGI_BAD_HANDLE
+    );
     assert_eq!(qgi_codec_free(id), QGI_BAD_HANDLE);
     assert_eq!(qgi_codec_free(u64::MAX), QGI_BAD_HANDLE);
     // Deliberately misaligned output must be rejected without dereferencing it.
@@ -162,12 +193,74 @@ fn invalid_pointers_lengths_handles_buffers_and_text() {
         .cast::<QgiBuffer>();
     // SAFETY: the misaligned pointer is rejected before access; backing memory is live.
     assert_eq!(unsafe { qgi_version(ptr) }, QGI_INVALID_POINTER);
-    let wrapping = (usize::MAX & !(std::mem::align_of::<QgiBuffer>() - 1)) as *mut QgiBuffer;
+    let wrapping =
+        std::ptr::without_provenance_mut(usize::MAX & !(std::mem::align_of::<QgiBuffer>() - 1));
     assert_eq!(
         // SAFETY: the overflowing range is rejected numerically before access.
         unsafe { qgi_version(wrapping) },
         QGI_INVALID_POINTER
     );
+}
+
+#[cfg(qgi_planted_read)]
+#[test]
+fn planted_memory_read() {
+    // Same C entry point used by the sanitizer's independent C caller.
+    qgi_abi_version();
+}
+
+#[test]
+fn qgi_tcp_and_udp_round_trip() {
+    let event = br#"{"spec":"0.1.0","family":"x-synthetic","mapping":1,"kind":"native","context":{"direction":"unknown","exchange":"unknown"},"fields":{},"native":{"format":"synthetic","data":""}}"#;
+    for family in ["qgi", "qgi-udp"] {
+        let id = new(family);
+        let mut count = 0;
+        let mut out = QgiBuffer::default();
+        assert_eq!(
+            // SAFETY: event and disjoint output slots are live for this call.
+            unsafe {
+                qgi_encode_command(
+                    id,
+                    event.as_ptr(),
+                    event.len(),
+                    null(),
+                    0,
+                    0,
+                    &mut count,
+                    &mut out,
+                )
+            },
+            QGI_OK
+        );
+        assert_eq!(count, 1);
+        let wire = take(out);
+        let observed = if family == "qgi-udp" {
+            decode(id, &wire, &json!({}))
+        } else {
+            let mut consumed = 0;
+            assert_eq!(
+                // SAFETY: live wire bytes and disjoint aligned output slots.
+                unsafe {
+                    qgi_decode_stream(
+                        id,
+                        wire.as_ptr(),
+                        wire.len(),
+                        0,
+                        null(),
+                        0,
+                        &mut consumed,
+                        &mut out,
+                    )
+                },
+                QGI_OK
+            );
+            assert_eq!(consumed, wire.len());
+            serde_json::from_slice::<Value>(&take(out)).unwrap()
+        };
+        assert_eq!(observed["events"][0]["family"], "x-synthetic");
+        assert_eq!(observed["events"][0]["native"]["data"], "");
+        assert_eq!(qgi_codec_free(id), QGI_OK);
+    }
 }
 
 #[test]
@@ -398,27 +491,33 @@ fn thread_local_errors_shared_handles_and_buffer_lifetime() {
                 assert!(!error().is_empty());
                 // SAFETY: live aligned disjoint output.
                 assert_eq!(unsafe { qgi_version(&mut out) }, QGI_OK);
-                // Raw pointers are not Send: move the descriptor as integers to test cross-thread free.
-                (out.data as usize, out.len, out.token)
+                TransferredBuffer(out)
             })
         })
         .collect();
     assert_eq!(error(), parent_error);
     for thread in threads {
-        let (ptr, len, token) = thread.join().unwrap();
-        assert_eq!(
-            take(QgiBuffer {
-                data: ptr as *const u8,
-                len,
-                token
-            }),
-            env!("CARGO_PKG_VERSION").as_bytes()
-        );
+        let buffer = thread.join().unwrap();
+        assert_eq!(take(buffer.0), env!("CARGO_PKG_VERSION").as_bytes());
     }
     assert_eq!(qgi_codec_free(id), QGI_OK);
 }
 
-struct PanicCodec;
+// Preserve pointer provenance while exercising the documented cross-thread free.
+struct TransferredBuffer(QgiBuffer);
+// SAFETY: the ABI buffer is immutable and uniquely owned by this test wrapper;
+// the spawning thread stops reading before transferring it through join.
+unsafe impl Send for TransferredBuffer {}
+
+struct PanicCodec(Option<Arc<std::sync::atomic::AtomicUsize>>);
+
+struct PanicPayload(Arc<std::sync::atomic::AtomicUsize>);
+impl Drop for PanicPayload {
+    fn drop(&mut self) {
+        self.0.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        panic!("planted payload destructor panic");
+    }
+}
 impl qso_graph_interop::codec::Profile for PanicCodec {
     fn family(&self) -> &str {
         "wsjtx"
@@ -445,6 +544,9 @@ impl Codec for PanicCodec {
         _: &[u8],
         _: &DecodeOptions<'_>,
     ) -> Result<Outcome, qso_graph_interop::Error> {
+        if let Some(count) = &self.0 {
+            std::panic::panic_any(PanicPayload(Arc::clone(count)));
+        }
         panic!("planted decode panic")
     }
     fn encode_command(
@@ -469,7 +571,7 @@ impl Codec for PanicCodec {
 fn panic_is_contained_and_handle_invalidated() {
     let healthy = new("wsjtx");
     let id = new("wsjtx");
-    state().codecs.insert(id, Box::new(PanicCodec));
+    state().codecs.insert(id, Box::new(PanicCodec(None)));
     let mut out = QgiBuffer::default();
     assert_eq!(
         // SAFETY: NULL/0 input is allowed and out is live aligned writable storage.
@@ -486,6 +588,25 @@ fn panic_is_contained_and_handle_invalidated() {
         QGI_OK
     );
     assert_eq!(qgi_codec_free(healthy), QGI_OK);
+}
+
+#[test]
+fn panic_payload_is_dropped_and_its_destructor_panic_contained() {
+    let dropped = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+    let id = new("wsjtx");
+    state()
+        .codecs
+        .insert(id, Box::new(PanicCodec(Some(Arc::clone(&dropped)))));
+    let mut out = QgiBuffer::default();
+    assert_eq!(
+        // SAFETY: empty inputs are allowed; out is live aligned storage.
+        unsafe { qgi_decode(id, null(), 0, null(), 0, &mut out) },
+        QGI_PANIC
+    );
+    assert_eq!(dropped.load(std::sync::atomic::Ordering::SeqCst), 1);
+    assert_eq!(out.token, 0);
+    assert!(error().contains("panic contained"));
+    assert_eq!(qgi_codec_free(id), QGI_BAD_HANDLE);
 }
 
 #[test]

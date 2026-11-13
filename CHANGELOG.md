@@ -5,6 +5,12 @@
 
 ### Added
 
+- Run all Rust FFI tests under pinned-nightly Miri and the linked C caller under
+  Rust AddressSanitizer plus C AddressSanitizer/UndefinedBehaviorSanitizer on
+  Linux x86_64 GNU in verification and CI. Require both tools to catch isolated,
+  cfg-gated heap overreads. Cover rejected lengths, stale handles, double frees,
+  and round trips for every supported ABI family/transport.
+
 - `qso-graph-interop-ffi` C ABI as shared and static libraries for WSJT-X, N1MM,
   fldigi, and QGI. Includes JSON outcomes, native command requests, re-encoding,
   caller-buffered stream decoding, owned buffers, thread-safe opaque handles,
@@ -119,6 +125,12 @@
   old names, so there is no alias.
 
 ### Fixed
+
+- Preserve exported buffer pointer validity across registry insertion and removal
+  by storing immutable shared allocations instead of moving unique `Box` owners
+  after exporting their pointers. Add a registry-growth regression checked by Miri.
+- Release contained panic payloads instead of leaking them, contain payload
+  destructor panics, and test cleanup and handle invalidation under Miri.
 
 - Skip and summarize ALL.TXT modes without established periods instead of aborting mixed-mode
   playback; retain skipped modes in the empty-selection error. Play released Q65 labels with

@@ -13,7 +13,7 @@ use std::{
     cell::RefCell,
     collections::BTreeMap,
     panic::{AssertUnwindSafe, catch_unwind},
-    sync::{Mutex, MutexGuard, OnceLock},
+    sync::{Arc, Mutex, MutexGuard, OnceLock},
 };
 
 /// ABI 1. Call qgi_abi_version before any other operation; require equality.
@@ -84,7 +84,9 @@ pub struct QgiError {
 struct State {
     next: u64,
     codecs: BTreeMap<u64, Box<dyn Codec + Send>>,
-    buffers: BTreeMap<u64, Box<[u8]>>,
+    // Moving a Box after exporting its pointer retags its unique allocation and
+    // invalidates foreign readers. Arc keeps shared provenance across map moves.
+    buffers: BTreeMap<u64, Arc<[u8]>>,
 }
 impl Default for State {
     fn default() -> Self {
@@ -113,7 +115,7 @@ impl State {
             return Err(fail(QGI_BUFFER_TOO_LARGE, "too many outstanding buffers"));
         }
         let token = self.token()?;
-        let bytes = bytes.into_boxed_slice();
+        let bytes: Arc<[u8]> = bytes.into();
         let result = QgiBuffer {
             data: bytes.as_ptr(),
             len: bytes.len(),
@@ -169,8 +171,18 @@ fn boundary(handle: Option<QgiCodec>, f: impl FnOnce() -> Result<(), Failure>) -
             status
         }
         Err(payload) => {
-            // A foreign panic payload can itself panic on drop.
-            std::mem::forget(payload);
+            // Release ordinary payloads instead of leaking on every contained panic.
+            // A custom payload's destructor can panic; contain that unwind too.
+            if let Err(nested) = catch_unwind(AssertUnwindSafe(|| drop(payload))) {
+                if nested.is::<String>() || nested.is::<&'static str>() {
+                    // These standard payloads have nonpanicking destructors.
+                    drop(nested);
+                } else {
+                    // An adversarial destructor can panic with another adversarial
+                    // destructor. Do not allow unbounded unwinding across the C ABI.
+                    std::mem::forget(nested);
+                }
+            }
             if let Some(id) = handle {
                 state().codecs.remove(&id);
             }
@@ -314,6 +326,8 @@ fn outcome(outcome: Outcome) -> Result<Vec<u8>, Failure> {
 /// Returns 1 for this ABI, or 0 on a contained panic. Does not change last-error.
 #[unsafe(no_mangle)]
 pub extern "C" fn qgi_abi_version() -> u32 {
+    #[cfg(qgi_planted_read)]
+    planted::read();
     catch_unwind(|| QGI_ABI_VERSION).unwrap_or(0)
 }
 /// Returns borrowed thread-local error text; this call does not change it.
@@ -651,3 +665,17 @@ pub unsafe extern "C" fn qgi_decode_stream(
 
 #[cfg(test)]
 mod tests;
+
+// Compiled only by the verifier's isolated negative-control builds. Never enabled
+// by a Cargo feature, including --all-features, or in ordinary library artifacts.
+#[cfg(qgi_planted_read)]
+mod planted {
+    #[inline(never)]
+    pub(super) fn read() {
+        let bytes = Box::new([7_u8]);
+        let past = bytes.as_ptr().wrapping_add(1);
+        // SAFETY: intentionally violated ONLY in the planted tool check: a one-byte
+        // heap overread. Volatile keeps the read observable to both memory tools.
+        std::hint::black_box(unsafe { past.read_volatile() });
+    }
+}

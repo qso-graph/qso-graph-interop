@@ -50,6 +50,26 @@ fn main() -> ExitCode {
                 .map_err(|e| eprintln!("{e}"))
                 .is_ok(),
         ),
+        ["ffi-miri"] => finish(
+            xtask::ffi_memory::miri(root, false)
+                .map_err(|e| eprintln!("{e}"))
+                .is_ok(),
+        ),
+        ["ffi-miri-planted"] => finish(
+            xtask::ffi_memory::miri(root, true)
+                .map_err(|e| eprintln!("{e}"))
+                .is_ok(),
+        ),
+        ["ffi-sanitize"] => finish(
+            xtask::ffi_memory::sanitize(root, false)
+                .map_err(|e| eprintln!("{e}"))
+                .is_ok(),
+        ),
+        ["ffi-sanitize-planted"] => finish(
+            xtask::ffi_memory::sanitize(root, true)
+                .map_err(|e| eprintln!("{e}"))
+                .is_ok(),
+        ),
         ["verify"] => finish(xtask::verify::verify(root, 60)),
         ["verify", "--fuzz-seconds", n] => match n.parse() {
             Ok(n) => finish(xtask::verify::verify(root, n)),

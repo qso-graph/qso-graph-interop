@@ -33,7 +33,17 @@ int main(void) {
     QgiBuffer out = {0};
     assert(qgi_version(&out) == QGI_OK);
     assert(out.len > 0);
+    QgiBuffer wrong = out;
+    wrong.len = 0;
+    assert(qgi_buffer_free(wrong) == QGI_BAD_BUFFER);
+    wrong.len = SIZE_MAX;
+    assert(qgi_buffer_free(wrong) == QGI_BAD_BUFFER);
+    wrong = out;
+    wrong.len += 1;
+    assert(qgi_buffer_free(wrong) == QGI_BAD_BUFFER);
     assert(qgi_buffer_free(out) == QGI_OK);
+    /* Stale descriptors must be rejected by token, without reading freed bytes. */
+    assert(qgi_buffer_free(out) == QGI_BAD_BUFFER);
     assert(qgi_version(NULL) == QGI_NULL_POINTER);
     QgiError err = qgi_last_error();
     assert(err.data != NULL && err.len != 0);
@@ -43,6 +53,11 @@ int main(void) {
     /* WSJT-X schema 3 HaltTx, empty wire ID, auto_tx_only=true. */
     const uint8_t datagram[] = {0xad,0xbc,0xcb,0xda,0,0,0,3,0,0,0,8,0,0,0,0,1};
     observe(w, datagram, sizeof datagram, "{}", "\"family\":\"wsjtx\"");
+    assert(qgi_decode(w, datagram, sizeof datagram - 1, NULL, 0, &out) == QGI_TRUNCATED);
+    /* Rejected lengths do not claim an unmapped allocation is readable. */
+    assert(qgi_decode(w, datagram, QGI_MAX_BUFFER + 1, NULL, 0, &out) == QGI_BUFFER_TOO_LARGE);
+    assert(qgi_decode(w, datagram, sizeof datagram, NULL, 1, &out) == QGI_NULL_POINTER);
+    assert(qgi_decode(w, datagram, sizeof datagram, NULL, SIZE_MAX, &out) == QGI_BUFFER_TOO_LARGE);
     assert(qgi_decode(w, NULL, 0, NULL, 0, &out) == QGI_TRUNCATED);
     assert(qgi_decode(w, NULL, 1, NULL, 0, &out) == QGI_NULL_POINTER);
     assert(qgi_decode(w, NULL, SIZE_MAX, NULL, 0, &out) == QGI_BUFFER_TOO_LARGE);
@@ -55,6 +70,9 @@ int main(void) {
     assert(qgi_codec_free(w) == QGI_OK);
     /* Output lifetime is independent of the handle. */
     assert(qgi_buffer_free(out) == QGI_OK);
+    assert(qgi_buffer_free(out) == QGI_BAD_BUFFER);
+    assert(qgi_decode(w, datagram, sizeof datagram, NULL, 0, &out) == QGI_BAD_HANDLE);
+    assert(qgi_reset(w, NULL, 0) == QGI_BAD_HANDLE);
     assert(qgi_codec_free(w) == QGI_BAD_HANDLE);
 
     QgiCodec n = codec("n1mm");

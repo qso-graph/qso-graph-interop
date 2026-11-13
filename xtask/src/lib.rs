@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Policy adapted from QSO Graph's token-based Rust checks. Fail closed on unreadable input.
 #![forbid(unsafe_code)]
+pub mod ffi_memory;
 
 use proc_macro2::{Delimiter, TokenStream, TokenTree};
 use serde_json::Value;
