@@ -964,12 +964,58 @@ pub fn policy(root: &Path) -> Check {
     println!("policy: isolated, pinned fuzz target: pass");
     synthetic_calls::check(root)?;
     println!("policy: Q-prefixed invented calls in sources, fixtures and vectors: pass");
+    portable_names(&tracked_files(root)?)?;
+    println!("policy: no tracked paths that differ only by case: pass");
+    Ok(())
+}
+
+fn tracked_files(root: &Path) -> Result<Vec<String>, String> {
+    let out = std::process::Command::new("git")
+        .arg("-C")
+        .arg(root)
+        .args(["ls-files", "-z"])
+        .output()
+        .map_err(|e| format!("git ls-files: {e}"))?;
+    require(out.status.success(), "git ls-files failed")?;
+    Ok(String::from_utf8_lossy(&out.stdout)
+        .split('\0')
+        .filter(|s| !s.is_empty())
+        .map(str::to_owned)
+        .collect())
+}
+
+/// macOS and Windows file systems ignore case: two tracked paths that differ only by case
+/// are one file there, and a checkout silently keeps one of them.
+fn portable_names(paths: &[String]) -> Check {
+    let mut seen = std::collections::BTreeMap::<String, &str>::new();
+    for path in paths {
+        if let Some(other) = seen.insert(path.to_lowercase(), path) {
+            return Err(format!(
+                "{other} and {path} differ only by case: one file on macOS and Windows"
+            ));
+        }
+    }
     Ok(())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn planted_case_only_path_clash_is_caught() {
+        let ok = [
+            "spec/a-true.json".to_owned(),
+            "spec/a-true-capitalized.json".to_owned(),
+        ];
+        assert!(portable_names(&ok).is_ok());
+        let planted = ["spec/a-True.json".to_owned(), "spec/a-true.json".to_owned()];
+        assert!(
+            portable_names(&planted)
+                .unwrap_err()
+                .contains("differ only by case")
+        );
+    }
 
     #[test]
     fn planted_closed_types_family_imports_and_feature_bypasses() {

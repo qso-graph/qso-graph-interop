@@ -143,7 +143,8 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ needs.check.outputs.sha }}
+          # The run's own commit; the check job proved it is the one to publish.
+          ref: ${{ github.sha }}
           persist-credentials: false
       - name: Only KI7MT's manual main Release publishes
         env:
@@ -229,7 +230,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          ref: ${{ needs.check.outputs.sha }}
+          # The run's own commit; the check job proved it is the one to publish.
+          ref: ${{ github.sha }}
       - name: Only KI7MT's manual main Release publishes
         env:
           REF: ${{ github.ref }}

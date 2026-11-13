@@ -81,7 +81,15 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          ref: ${{ inputs.sha }}
+          # The run's own commit, never a ref taken from an input (CodeQL cache poisoning):
+          # inputs.sha only has to agree with it, checked in the next step.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: The commit asked for is the commit checked out
+        shell: bash
+        env:
+          WANT: ${{ inputs.sha }}
+        run: |
+          [ "$(git rev-parse HEAD)" = "$WANT" ] || { echo "::error::Asked to build ${WANT}, but this run is $(git rev-parse HEAD)."; exit 1; }
       - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
       # rust-toolchain.toml names the version; rustup installs it, and the target, here.
       - name: Rust
@@ -203,7 +211,15 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          ref: ${{ inputs.sha }}
+          # The run's own commit, never a ref taken from an input (CodeQL cache poisoning):
+          # inputs.sha only has to agree with it, checked in the next step.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: The commit asked for is the commit checked out
+        shell: bash
+        env:
+          WANT: ${{ inputs.sha }}
+        run: |
+          [ "$(git rev-parse HEAD)" = "$WANT" ] || { echo "::error::Asked to build ${WANT}, but this run is $(git rev-parse HEAD)."; exit 1; }
       - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:

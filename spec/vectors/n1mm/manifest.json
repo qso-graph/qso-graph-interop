@@ -696,7 +696,7 @@
       "sha256": "45b28c4b0172603707e3c37f633ed09724a652ce403b7819378e3026ec337c2e"
     },
     {
-      "file": "bool-IsRunning-False.json",
+      "file": "bool-IsRunning-False-capitalized.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "n1mm",
@@ -704,7 +704,7 @@
       "sha256": "fe82918057c362411a3f8a806ea8fec7bbbac56740a6c5c0b6f9f3ca0c8a8ae6"
     },
     {
-      "file": "bool-IsRunning-True.json",
+      "file": "bool-IsRunning-True-capitalized.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "n1mm",
@@ -744,7 +744,7 @@
       "sha256": "98e8e2b8f30435c2ed07e533ae2f01529f877c5452b1f1d7c5aaea6a220b34b6"
     },
     {
-      "file": "bool-IsStereo-False.json",
+      "file": "bool-IsStereo-False-capitalized.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "n1mm",
@@ -752,7 +752,7 @@
       "sha256": "9e63609ad76068f232afae754d3725643df7560baa4b8ca1cfed621693a5d04f"
     },
     {
-      "file": "bool-IsStereo-True.json",
+      "file": "bool-IsStereo-True-capitalized.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "n1mm",
@@ -792,7 +792,7 @@
       "sha256": "4b9c1ad58a7e97bd4c25c040f5ed2fc4091a7151efa480fe21988ba01b5c9ce1"
     },
     {
-      "file": "bool-IsTransmitting-False.json",
+      "file": "bool-IsTransmitting-False-capitalized.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "n1mm",
@@ -800,7 +800,7 @@
       "sha256": "82645072ebd0e99bc847c3cbe2548e508d4f01b47effedbd40d3661dde90e452"
     },
     {
-      "file": "bool-IsTransmitting-True.json",
+      "file": "bool-IsTransmitting-True-capitalized.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "n1mm",
@@ -1800,7 +1800,7 @@
       "sha256": "4e6936ba3215dc213b90ecb1a6d306140a96b80966bd51d7a812bea305a95796"
     },
     {
-      "file": "contactinfo-empty-Run1Run2.json",
+      "file": "contactinfo-empty-Run1Run2-cased.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "n1mm",
@@ -2224,7 +2224,7 @@
       "sha256": "f54675610d83b4a3e01b83a5a52bc73a47486159c98e0c2c1fcef8b7be4c9bec"
     },
     {
-      "file": "contactinfo-only-Run1Run2.json",
+      "file": "contactinfo-only-Run1Run2-cased.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "n1mm",
@@ -2648,7 +2648,7 @@
       "sha256": "090f6a9a45d5ac9988ed4c78336573fbc7d01f5791ad281e2e660a32a7010883"
     },
     {
-      "file": "contactreplace-empty-Run1Run2.json",
+      "file": "contactreplace-empty-Run1Run2-cased.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "n1mm",
@@ -3072,7 +3072,7 @@
       "sha256": "4c2ce7c71bb944c8ac73bc24d511680d57c7c23a445b7685a009f9691f73fc7d"
     },
     {
-      "file": "contactreplace-only-Run1Run2.json",
+      "file": "contactreplace-only-Run1Run2-cased.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "n1mm",
@@ -4768,7 +4768,7 @@
       "sha256": "aa627c2d9f1b3a452747d6723c8ed8da555cf06ed55aa4e32db7699439b6d994"
     },
     {
-      "file": "lookup-empty-Run1Run2.json",
+      "file": "lookup-empty-Run1Run2-cased.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "n1mm",
@@ -5192,7 +5192,7 @@
       "sha256": "947e3f509ecd3220a62380fbc9d80411e9323152766f7e996a512d609a0305bd"
     },
     {
-      "file": "lookup-only-Run1Run2.json",
+      "file": "lookup-only-Run1Run2-cased.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "n1mm",
@@ -5616,7 +5616,7 @@
       "sha256": "5a2227e93fc00652282764b04d19cdff1bca4be17dedcee5590f3203360b42b6"
     },
     {
-      "file": "lookupinfo-empty-Run1Run2.json",
+      "file": "lookupinfo-empty-Run1Run2-cased.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "n1mm",
@@ -6040,7 +6040,7 @@
       "sha256": "f8bf2d3bf5f32a20f0aafd864a2030c6618d907589230c9e2605e9e0314d7232"
     },
     {
-      "file": "lookupinfo-only-Run1Run2.json",
+      "file": "lookupinfo-only-Run1Run2-cased.json",
       "class": "positive",
       "spec": "0.1.0",
       "family": "n1mm",

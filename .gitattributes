@@ -1,3 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Keep the generated header byte-identical on Windows checkouts.
+# Every checkout gets the bytes that were committed. Spec vectors, annexes and fixtures are
+# checked by SHA-256, so a Windows checkout converting LF to CRLF would fail them.
+* text=auto eol=lf
 crates/qso-graph-interop-ffi/include/qso_graph_interop.h text eol=lf

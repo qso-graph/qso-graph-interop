@@ -97,6 +97,9 @@ class Suite:
 
     def add(self, name, value):
         assert name not in self.vectors, name
+        # macOS and Windows file systems ignore case: two names that differ only by case
+        # are one file there, and a checkout keeps whichever was written last.
+        assert all(n.lower() != name.lower() for n in self.vectors), f'{name} differs from another vector only by case'
         self.vectors[name] = {'$comment': 'SPDX-License-Identifier: GPL-3.0-or-later', 'spec': SPEC, 'family': self.family, 'mapping': 1, **value}
 
     def positive(self, name, schema, typ, body, kind, fields, *, direction=None,
@@ -1407,14 +1410,18 @@ def n1mm_vectors():
         positive(root + '-absent', ('<' + root + '/>').encode(), kind, fields(root, []), direction)
         # Each documented leaf has separate presence and empty oracles; absence is
         # the minimal case above, without a required-field assumption from examples.
+        lowered = [n.lower() for n, _, _ in rows]
         for name, value, oracle in rows:
-            positive(root + '-only-' + name, xml(root, [(name, value, oracle)]), kind,
+            # N1MM spells some elements two ways (run1run2, historical Run1Run2): name the
+            # capitalized one apart so the two vectors are distinct files on every system.
+            label = name + '-cased' if lowered.count(name.lower()) > 1 and name != name.lower() else name
+            positive(root + '-only-' + label, xml(root, [(name, value, oracle)]), kind,
                      fields(root, [(name, value, oracle)]), direction)
             empty_oracle = {k: ({'instance': ''} if k == 'radio' and 'instance' in v else '')
                             for k, v in oracle.items()
                             if k not in ('start', 'previous_start', 'time')
                             and (isinstance(v, str) or k == 'radio' and 'instance' in v)}
-            positive(root + '-empty-' + name, xml(root, [(name, '', {})]), kind,
+            positive(root + '-empty-' + label, xml(root, [(name, '', {})]), kind,
                      fields(root, [(name, '', empty_oracle)]), direction)
     # Score nested children and every optional category/selector attribute.
     score_raw = (b'<dynamicresults><contest>SYNTHETIC</contest><call>Q2AAA</call><ops>Q2BBB</ops>'
@@ -1453,7 +1460,7 @@ def n1mm_vectors():
         positive('score-' + name, raw, 'score', {})
     for spelling, value in [('True', True), ('true', True), ('1', True), ('False', False), ('false', False), ('0', False)]:
         for tag, key in [('IsRunning', 'running'), ('IsStereo', 'stereo'), ('IsTransmitting', 'transmitting')]:
-            positive('bool-' + tag + '-' + spelling, f'<RadioInfo><{tag}>{spelling}</{tag}></RadioInfo>'.encode(),
+            positive('bool-' + tag + '-' + spelling + ('-capitalized' if spelling[:1].isupper() else ''), f'<RadioInfo><{tag}>{spelling}</{tag}></RadioInfo>'.encode(),
                      'radio_state', {key: value})
     for spelling in ('yes', 'no', 'TRUE', 'FALSE', '2', ''):
         positive('bool-unmapped-' + (spelling or 'empty'), f'<RadioInfo><IsRunning>{spelling}</IsRunning></RadioInfo>'.encode(), 'radio_state', {})
@@ -3548,6 +3555,13 @@ def main():
     outputs.update({'n1mm/' + name: data for name, data in n1mm_outputs.items()})
     outputs.update(fldigi_manifest(fldigi_suite, dump, ROOT))
     vector_root = DEST.parent
+    folded = {}
+    for name in outputs:
+        folded.setdefault(name.lower(), []).append(name)
+    clashes = [names for names in folded.values() if len(names) > 1]
+    if clashes:
+        print('Vector names differ only by case (one file on macOS and Windows): ' + '; '.join(', '.join(c) for c in clashes), file=sys.stderr)
+        return 1
     if args.check:
         missing_or_different = [name for name, data in outputs.items()
                                 if not (vector_root / name).is_file() or (vector_root / name).read_bytes() != data]
