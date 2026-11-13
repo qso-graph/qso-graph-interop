@@ -44,7 +44,7 @@ fn bounded_json_preserves_unknown_values_and_rejects_duplicates() {
         assert_eq!(
             json::parse(raw.as_bytes(), MAX_RECORD)
                 .unwrap_err()
-                .category,
+                .category(),
             Category::Malformed
         );
         #[cfg(feature = "serde")]
@@ -53,15 +53,15 @@ fn bounded_json_preserves_unknown_values_and_rejects_duplicates() {
     assert_eq!(
         json::parse(&vec![b' '; MAX_RECORD + 1], MAX_RECORD)
             .unwrap_err()
-            .category,
+            .category(),
         Category::Oversized
     );
 }
 #[test]
 fn neutral_values_keep_null_empty_absent_precision_and_invalid_text() {
     let mut context = Context::default();
-    context.source_id = Some(Text::Null);
-    context.target_id = Some(Text::from(""));
+    context = context.with_source_id(Text::Null);
+    context = context.with_target_id(Text::from(""));
     assert_eq!(context.value()["source_id"], Value::Null);
     assert_eq!(context.value()["target_id"], "");
     assert!(context.value().get("correlation_id").is_none());
@@ -71,9 +71,9 @@ fn neutral_values_keep_null_empty_absent_precision_and_invalid_text() {
             json!({"direction":"unknown","exchange":"unknown","source_id":null,"target_id":""}),
         )
         .unwrap();
-        assert_eq!(context.source_id, Some(Text::Null));
-        assert_eq!(context.target_id, Some(Text::from("")));
-        assert_eq!(context.correlation_id, None);
+        assert_eq!(context.as_ref().source_id(), Some(Text::Null));
+        assert_eq!(context.as_ref().target_id(), Some(Text::from("")));
+        assert_eq!(context.as_ref().correlation_id(), None);
         assert!(
             serde_json::to_value(context)
                 .unwrap()
@@ -114,12 +114,35 @@ fn neutral_values_keep_null_empty_absent_precision_and_invalid_text() {
 fn recursive_reader_and_producer_profiles() {
     let mut native = json!({"spec":"0.1.0","family":"qgi","mapping":1,"kind":"decode","context":{"direction":"unknown","exchange":"unknown"},"fields":{"radio":{"instance":"synthetic-instance"}},"native":{"format":"datagram","data":""}});
     let base = Event::from_value(native.clone()).unwrap();
-    assert!(json::write(&base, true, None).is_ok());
+    assert!(
+        json::write(
+            &base,
+            &qso_graph_interop::PublicationOptions::new(
+                qso_graph_interop::PublicationMode::Authored
+            )
+        )
+        .is_ok()
+    );
     native["fields"]["radio"]["addition"] = true.into();
     let future = Event::from_value(native).unwrap();
-    assert!(json::write(&future, false, None).is_ok());
+    assert!(
+        json::write(
+            &future,
+            &qso_graph_interop::PublicationOptions::new(
+                qso_graph_interop::PublicationMode::Preserved
+            )
+        )
+        .is_ok()
+    );
     assert_eq!(
-        json::write(&future, true, None).unwrap_err().category,
+        json::write(
+            &future,
+            &qso_graph_interop::PublicationOptions::new(
+                qso_graph_interop::PublicationMode::Authored
+            )
+        )
+        .unwrap_err()
+        .category(),
         Category::InvalidValue
     );
     let mut v = command();
@@ -127,9 +150,25 @@ fn recursive_reader_and_producer_profiles() {
     v["fields"]["addition"] = true.into();
     let event = Event::from_value(v).unwrap();
     let view = event.recognized(None).unwrap();
-    assert_eq!(view.context["direction"], "unknown");
-    assert!(view.fields.get("addition").is_none());
-    assert!(json::write(&event, true, None).is_err());
+    assert_eq!(view.context().as_value()["direction"], "unknown");
+    assert_eq!(
+        event.context().direction(),
+        qso_graph_interop::model::DirectionRef::Other("future")
+    );
+    assert_eq!(
+        view.context().direction(),
+        qso_graph_interop::model::DirectionRef::Unknown
+    );
+    assert!(view.fields().as_value().get("addition").is_none());
+    assert!(
+        json::write(
+            &event,
+            &qso_graph_interop::PublicationOptions::new(
+                qso_graph_interop::PublicationMode::Authored
+            )
+        )
+        .is_err()
+    );
     for native in [
         json!({"format":"mqtt_publish","data":"","topic":null,"retained":false}),
         json!({"format":"ipfix_record","data":"","template":"","message_data":"","header":{"version":10,"length":16,"export_time":0,"sequence_number":0,"observation_domain_id":0},"set_id":256,"set_index":0,"record_index":0}),
@@ -137,7 +176,15 @@ fn recursive_reader_and_producer_profiles() {
         let mut v = command();
         v["native"] = native;
         let event = Event::from_value(v.clone()).unwrap();
-        assert!(json::write(&event, true, None).is_ok());
+        assert!(
+            json::write(
+                &event,
+                &qso_graph_interop::PublicationOptions::new(
+                    qso_graph_interop::PublicationMode::Authored
+                )
+            )
+            .is_ok()
+        );
         v["native"]["header"] = json!({"version":65536,"length":16,"export_time":0,"sequence_number":0,"observation_domain_id":0});
         assert!(Event::from_value(v).is_err());
     }
@@ -150,13 +197,41 @@ struct External {
     messages: u64,
 }
 impl Profile for External {
+    fn native_version_supported(&self, _: &Event) -> bool {
+        true
+    }
+    fn validate_authored(
+        &self,
+        _: &Event,
+        _: &qso_graph_interop::VerifyOptions,
+    ) -> Result<(), qso_graph_interop::Error> {
+        Ok(())
+    }
+    fn recognize(
+        &self,
+        _: &Event,
+        _: &qso_graph_interop::VerifyOptions,
+    ) -> Result<qso_graph_interop::model::ProfileView, qso_graph_interop::Error> {
+        qso_graph_interop::model::ProfileView::new(
+            qso_graph_interop::Kind::Decode,
+            json!({"text":"external interpretation"})
+                .as_object()
+                .unwrap()
+                .clone(),
+            Verification::Unavailable,
+        )
+    }
     fn family(&self) -> &str {
         "x-org.example.test"
     }
     fn mapping(&self) -> u32 {
         1
     }
-    fn verify(&self, _: &Event) -> Result<Verification, qso_graph_interop::Error> {
+    fn verify(
+        &self,
+        _: &Event,
+        _: &qso_graph_interop::VerifyOptions,
+    ) -> Result<Verification, qso_graph_interop::Error> {
         Ok(Verification::Unavailable)
     }
 }
@@ -184,8 +259,8 @@ impl Codec for External {
         options: &DecodeOptions<'_>,
     ) -> Result<Outcome, qso_graph_interop::Error> {
         if input.len() > 8
-            || options.session.len() > 8
-            || !self.session.is_empty() && self.session != options.session
+            || options.session().len() > 8
+            || !self.session.is_empty() && self.session != options.session()
         {
             return Err(qso_graph_interop::Error::new(
                 Category::Oversized,
@@ -198,22 +273,27 @@ impl Codec for External {
                 "planted failure after staging",
             ));
         }
-        let staged = (options.session.to_vec(), self.messages + 1);
+        let staged = (options.session().to_vec(), self.messages + 1);
         self.session = staged.0;
         self.messages = staged.1;
         Ok(Outcome::default())
     }
-    fn encode_command(
+    fn encode_commands(
         &self,
         _: &Event,
         _: &EncodeOptions,
-    ) -> Result<Vec<u8>, qso_graph_interop::Error> {
+    ) -> Result<qso_graph_interop::codec::EncodedCommands, qso_graph_interop::Error> {
         Err(qso_graph_interop::Error::new(
             Category::InvalidValue,
             "no commands",
         ))
     }
-    fn reencode(&self, _: &Event, _: &EncodeOptions) -> Result<Vec<u8>, qso_graph_interop::Error> {
+    fn reencode(
+        &self,
+        _: &Event,
+        _: &EncodeOptions,
+        _: &qso_graph_interop::VerifyOptions,
+    ) -> Result<Vec<u8>, qso_graph_interop::Error> {
         Err(qso_graph_interop::Error::new(
             Category::InvalidValue,
             "no evidence",
@@ -224,8 +304,8 @@ impl Codec for External {
 fn external_implementation_session_bounds_reset_and_atomic_errors() {
     let mut codec = External::default();
     let mut options = DecodeOptions::default();
-    options.session = b"session";
-    options.expiry = Some(42);
+    options = options.with_session(b"session");
+    options = options.with_expiry(Some(42));
     assert!(
         codec
             .decode(b"template", &options)
@@ -236,9 +316,9 @@ fn external_implementation_session_bounds_reset_and_atomic_errors() {
     assert_eq!(codec.messages, 1);
     assert!(codec.decode(b"bad", &options).is_err());
     assert_eq!(codec.messages, 1);
-    options.session = b"other";
+    options = options.with_session(b"other");
     assert_eq!(
-        codec.decode(b"template", &options).unwrap_err().category,
+        codec.decode(b"template", &options).unwrap_err().category(),
         Category::Oversized
     );
     codec.reset(Some(b"unrelated"));
@@ -252,14 +332,6 @@ fn external_implementation_session_bounds_reset_and_atomic_errors() {
 
 #[test]
 fn canonical_base64_and_exact_semantic_numbers() {
-    use qso_graph_interop::base64;
-    for n in 0..257 {
-        let bytes = (0..n).map(|i| i as u8).collect::<Vec<_>>();
-        assert_eq!(base64::decode(&base64::encode(&bytes)).unwrap(), bytes);
-    }
-    for bad in ["Zg=", "Zg===", "Zh==", "Zm9=", "====", "Zg==\n", "Zm=8"] {
-        assert!(base64::decode(bad).is_err(), "{bad}");
-    }
     let number = |s: &str| Value::Number(s.parse().unwrap());
     for (a, b) in [
         ("1", "1.0"),
@@ -297,19 +369,22 @@ fn canonical_base64_and_exact_semantic_numbers() {
 
 #[test]
 fn request_response_context_and_application_faults_need_no_family_dependency() {
-    use qso_graph_interop::model::{Direction, Exchange, Native};
+    use qso_graph_interop::model::{Direction, Exchange, NativeEvidence};
     let mut context = Context::new(Direction::FromApplication, Exchange::Response);
-    context.correlation_id = Some(Text::from("synthetic-request"));
+    context = context.with_correlation_id(Text::from("synthetic-request"));
     let bytes = b"<methodResponse><fault>synthetic rejection</fault></methodResponse>";
-    let native = Native::new("xmlrpc_response", bytes);
-    let event=Event::from_value(json!({"spec":"0.1.0","family":"fldigi","mapping":1,"kind":"result","context":context.value(),"fields":{"status":"error","text":"synthetic rejection"},"native":{"format":native.format,"data":native.data}})).unwrap();
+    let native = NativeEvidence::new("xmlrpc_response", bytes).unwrap();
+    let event=Event::from_value(json!({"spec":"0.1.0","family":"fldigi","mapping":1,"kind":"result","context":context.value(),"fields":{"status":"error","text":"synthetic rejection"},"native":native.into_value()})).unwrap();
     assert_eq!(event.native_bytes().unwrap(), bytes);
     assert!(event.value().get("wire_id").is_none());
     assert!(event.value()["context"].get("source_id").is_none());
     let read = event.recognized(None).unwrap();
-    assert_eq!(read.fields["status"], "error");
-    assert_eq!(read.context["correlation_id"], "synthetic-request");
-    assert_eq!(read.verification, Verification::Unavailable);
+    assert_eq!(read.fields().as_value()["status"], "error");
+    assert_eq!(
+        read.context().as_value()["correlation_id"],
+        "synthetic-request"
+    );
+    assert_eq!(read.verification(), Verification::Unavailable);
 }
 
 #[test]
@@ -318,8 +393,15 @@ fn n1mm_profile_shapes_work_without_loading_a_family() {
     value["family"] = "n1mm".into();
     value["fields"] = json!({"operation":"n1mm.spectrum","spectrum_data":[0,65535],"app":"","scaling_factor":"001.00"});
     let event = Event::from_value(value.clone()).unwrap();
-    json::write(&event, true, None).unwrap();
-    assert_eq!(event.recognized(None).unwrap().fields, value["fields"]);
+    json::write(
+        &event,
+        &qso_graph_interop::PublicationOptions::new(qso_graph_interop::PublicationMode::Authored),
+    )
+    .unwrap();
+    assert_eq!(
+        event.recognized(None).unwrap().fields().as_value().clone(),
+        value["fields"]
+    );
     for bad in [
         json!([-1]),
         json!([65536]),
@@ -336,8 +418,192 @@ fn n1mm_profile_shapes_work_without_loading_a_family() {
     value["family"] = "wsjtx".into();
     let other = Event::from_value(value).unwrap();
     assert_eq!(
-        other.recognized(None).unwrap().fields,
+        other.recognized(None).unwrap().fields().as_value().clone(),
         json!({"operation":"n1mm.spectrum"})
     );
-    assert!(json::write(&other, true, None).is_err());
+    assert!(
+        json::write(
+            &other,
+            &qso_graph_interop::PublicationOptions::new(
+                qso_graph_interop::PublicationMode::Authored
+            )
+        )
+        .is_err()
+    );
+}
+
+#[test]
+fn matching_external_profile_reaches_recognition() {
+    let mut value = command();
+    value["family"] = "x-org.example.test".into();
+    let event = Event::from_value(value).unwrap();
+    assert_eq!(
+        event
+            .recognized(Some(&External::default()))
+            .unwrap()
+            .fields()
+            .as_value()
+            .clone(),
+        json!({"text":"external interpretation"})
+    );
+}
+
+#[test]
+fn typed_views_preserve_text_bits_family_additions_and_original_event() {
+    use qso_graph_interop::model::{FamilyRef, FieldsRef, Kind};
+    let mut value = command();
+    value["family"] = "wsjtx".into();
+    value["kind"] = "decode".into();
+    value["native"] = json!({"format":"test","data":"AA==","addition":true});
+    value["fields"] = json!({"text":{"utf8_bytes":[255]},"mode":null,"call":"",
+        "dt_seconds":"ieee754:7ff80123456789ab","addition":true});
+    value["wire_id"] = json!(null);
+    let event = Event::from_value(value.clone()).unwrap();
+    assert_eq!(event.family(), FamilyRef::Wsjtx);
+    assert_eq!(event.kind_token(), "decode");
+    assert_eq!(event.mapping(), 1);
+    assert_eq!(event.wire_id(), Some(Text::Null));
+    assert_eq!(event.native().unwrap().format(), "test");
+    assert_eq!(event.native().unwrap().data().unwrap(), [0]);
+    let recognized = event.recognized(None).unwrap();
+    assert_eq!(recognized.kind(), Kind::Decode);
+    assert!(std::ptr::eq(recognized.event(), &event));
+    let FieldsRef::Decode(fields) = recognized.fields() else {
+        panic!("decode view")
+    };
+    assert_eq!(
+        fields.text(),
+        Some(Text::Utf8 {
+            utf8_bytes: vec![255]
+        })
+    );
+    assert_eq!(fields.mode(), Some(Text::Null));
+    assert_eq!(fields.call(), Some(Text::from("")));
+    assert_eq!(fields.grid(), None);
+    assert_eq!(
+        fields.dt_seconds().unwrap().to_bits(),
+        0x7ff8_0123_4567_89ab
+    );
+    assert!(fields.as_value().get("addition").is_none());
+    assert_eq!(event.value(), &value);
+    value["fields"]["dt_seconds"] = serde_json::from_str("-0.0").unwrap();
+    let negative_zero = Event::from_value(value.clone()).unwrap();
+    let recognized = negative_zero.recognized(None).unwrap();
+    let FieldsRef::Decode(fields) = recognized.fields() else {
+        panic!("decode view")
+    };
+    assert_eq!(fields.dt_seconds().unwrap().to_bits(), (-0.0_f64).to_bits());
+    value["fields"]["dt_seconds"] = serde_json::from_str("0.0").unwrap();
+    let positive_zero = Event::from_value(value).unwrap();
+    assert_ne!(negative_zero, positive_zero);
+    assert!(negative_zero.semantic_eq(&positive_zero));
+
+    let mut value = command();
+    value["family"] = "n1mm".into();
+    value["kind"] = "qso_changed".into();
+    value["native"] = json!({"format":"test","data":""});
+    value["fields"] =
+        json!({"call":null,"start":"2000-01-01T00:00:00Z","previous_start":"1999-12-31T23:59:59Z"});
+    let event = Event::from_value(value).unwrap();
+    assert_eq!(event.family(), FamilyRef::N1mm);
+    let recognized = event.recognized(None).unwrap();
+    let FieldsRef::QsoChanged(fields) = recognized.fields() else {
+        panic!("QSO view")
+    };
+    assert_eq!(fields.call(), Some(Text::Null));
+    assert_eq!(fields.start().unwrap().as_str(), "2000-01-01T00:00:00Z");
+    assert_eq!(
+        fields.previous_start().unwrap().as_str(),
+        "1999-12-31T23:59:59Z"
+    );
+    let mut value = command();
+    value["family"] = "fldigi".into();
+    value["fields"] = json!({"operation":"fldigi.text_get_rx","rx_start":0,"rx_length":-1});
+    let event = Event::from_value(value).unwrap();
+    assert_eq!(event.family(), FamilyRef::Fldigi);
+    let recognized = event.recognized(None).unwrap();
+    let FieldsRef::Control(fields) = recognized.fields() else {
+        panic!("control view")
+    };
+    assert_eq!(fields.operation(), "fldigi.text_get_rx");
+    assert_eq!(fields.rx_start().unwrap().get(), 0);
+    assert_eq!(fields.rx_length().unwrap().get(), -1);
+}
+
+#[test]
+fn interpretation_and_opaque_evidence_constructors_reject_planted_invalid_values() {
+    use qso_graph_interop::model::{Kind, NativeEvidence, ProfileView};
+    for fields in [
+        json!({"dt_seconds":"ieee754:3ff0000000000000"}),
+        json!({"snr_db":0.5}),
+        json!({"text":{"utf8_bytes":[256]}}),
+    ] {
+        assert!(
+            ProfileView::new(
+                Kind::Decode,
+                fields.as_object().unwrap().clone(),
+                Verification::Verified
+            )
+            .is_err()
+        );
+    }
+    assert!(
+        ProfileView::new(
+            Kind::Control,
+            json!({"operation":"read","rx_start":0.5})
+                .as_object()
+                .unwrap()
+                .clone(),
+            Verification::Unavailable
+        )
+        .is_err()
+    );
+    assert!(
+        ProfileView::new(
+            Kind::Result,
+            json!({"status":"future"}).as_object().unwrap().clone(),
+            Verification::Unavailable
+        )
+        .is_err()
+    );
+    for native in [
+        json!({"format":"","data":""}),
+        json!({"format":"test","data":"Zh=="}),
+        json!({"format":"test","data":"","retained":false}),
+        json!({"format":"mqtt_publish","data":""}),
+        json!({"format":"ipfix_record","data":""}),
+    ] {
+        assert!(NativeEvidence::from_value(native).is_err());
+    }
+    let value = json!({"format":"mqtt_publish","data":"","topic":null,"retained":false,"future":{"nested":true}});
+    let evidence = NativeEvidence::from_value(value.clone()).unwrap();
+    assert_eq!(evidence.as_value(), &value);
+    assert_eq!(evidence.into_value(), value);
+    assert!(qso_graph_interop::codec::EncodedCommands::new(Vec::new()).is_err());
+}
+
+#[test]
+fn value_construction_enforces_general_record_admission() {
+    let mut value = command();
+    value["future"] = Value::String("x".repeat(MAX_RECORD));
+    assert_eq!(
+        Event::from_value(value).unwrap_err().category(),
+        Category::Oversized
+    );
+    let mut value = command();
+    let mut nested = json!({});
+    for _ in 0..33 {
+        nested = json!([nested]);
+    }
+    value["future"] = nested;
+    assert_eq!(
+        Event::from_value(value).unwrap_err().category(),
+        Category::Oversized
+    );
+    let mut value = command();
+    value["future"] = Value::Number("1".repeat(129).parse().unwrap());
+    assert_eq!(
+        Event::from_value(value).unwrap_err().category(),
+        Category::Oversized
+    );
 }

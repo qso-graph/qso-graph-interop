@@ -28,7 +28,11 @@ fuzz_target!(|data: &[u8]| {
         for event in out.events {
             assert_eq!(event.native_bytes().unwrap(), data);
             let bytes = Wsjtx::default()
-                .reencode(&event, &EncodeOptions::default())
+                .reencode(
+                    &event,
+                    &EncodeOptions::default(),
+                    &qso_graph_interop::VerifyOptions::default(),
+                )
                 .unwrap();
             assert!(bytes.len() <= 65_507);
             let again = Wsjtx::default()
@@ -38,12 +42,22 @@ fuzz_target!(|data: &[u8]| {
                 .remove(0);
             assert_eq!(
                 Wsjtx::default()
-                    .reencode(&again, &EncodeOptions::default())
+                    .reencode(
+                        &again,
+                        &EncodeOptions::default(),
+                        &qso_graph_interop::VerifyOptions::default()
+                    )
                     .unwrap(),
                 bytes
             );
-            let json =
-                qso_graph_interop::json::write(&event, true, Some(&Wsjtx::default())).unwrap();
+            let json = qso_graph_interop::json::write(
+                &event,
+                &qso_graph_interop::PublicationOptions::new(
+                    qso_graph_interop::PublicationMode::Authored,
+                )
+                .with_profile(&Wsjtx::default()),
+            )
+            .unwrap();
             let read = qso_graph_interop::json::parse(&json, MAX_RECORD).unwrap();
             assert!(qso_graph_interop::json::semantic_eq(
                 event.value(),

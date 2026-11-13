@@ -6,7 +6,7 @@ use qso_graph_interop::{
     Category, Codec,
     codec::{DecodeOptions, EncodeOptions, Outcome},
     json,
-    model::{MAX_CONTEXT, MAX_RECORD},
+    model::MAX_RECORD,
 };
 use serde_json::{Value, json};
 use std::{
@@ -142,7 +142,7 @@ fn fail(status: i32, message: &str) -> Failure {
 }
 impl From<qso_graph_interop::Error> for Failure {
     fn from(e: qso_graph_interop::Error) -> Self {
-        let status = match e.category {
+        let status = match e.category() {
             Category::Truncated => QGI_TRUNCATED,
             Category::Oversized => QGI_OVERSIZED,
             Category::Malformed => QGI_MALFORMED,
@@ -240,73 +240,28 @@ fn object(bytes: &[u8]) -> Result<Value, Failure> {
     if !value.is_object() {
         return Err(fail(QGI_INVALID_VALUE, "options must be a JSON object"));
     }
-    json::bounds(&value, MAX_RECORD)?;
+    // The typed options parser performs bounded admission.
+    EncodeOptions::from_value(&value)?;
     Ok(value)
 }
 fn decode_options(value: &Value) -> Result<DecodeOptions<'static>, Failure> {
-    let mut options = DecodeOptions::default();
-    let map = value
-        .as_object()
-        .ok_or(fail(QGI_INVALID_VALUE, "options must be object"))?;
-    if map
-        .keys()
-        .any(|k| !["context", "native", "session", "expiry", "structured"].contains(&k.as_str()))
-    {
-        return Err(fail(QGI_INVALID_VALUE, "unknown decode option"));
-    }
-    if let Some(context) = value.get("context") {
-        if serde_json::to_vec(context)
-            .map_err(|_| fail(QGI_INVALID_VALUE, "context JSON"))?
-            .len()
-            > MAX_CONTEXT
-        {
-            return Err(fail(QGI_OVERSIZED, "context exceeds 4096 bytes"));
-        }
-        // Validate context using the public event validator, preserving unknown additions.
-        let test = json!({"spec":"0.1.0","family":"qgi","mapping":1,"kind":"native","context":context,"fields":{},"native":{"format":"datagram","data":""}});
-        json::validate(&test, true)?;
-        options.context = context.clone();
-    }
-    if let Some(native) = value.get("native") {
-        options.native = native
-            .as_object()
-            .ok_or(fail(QGI_INVALID_VALUE, "native options must be object"))?
-            .clone();
-    }
-    // Session bytes are supplied separately by reset today; official codecs do not
-    // retain session references. Reject this reserved option rather than guessing.
-    if value.get("session").is_some() {
-        return Err(fail(QGI_INVALID_VALUE, "session option is reserved"));
-    }
-    if let Some(expiry) = value.get("expiry") {
-        options.expiry = Some(
-            expiry
-                .as_u64()
-                .ok_or(fail(QGI_INVALID_VALUE, "expiry must be u64"))?,
-        );
-    }
-    if let Some(structured) = value.get("structured") {
-        options.structured = structured
-            .as_bool()
-            .ok_or(fail(QGI_INVALID_VALUE, "structured must be boolean"))?;
-    }
-    Ok(options)
+    DecodeOptions::from_value(value).map_err(Into::into)
 }
 fn encode_options(value: &Value) -> Result<EncodeOptions, Failure> {
-    let mut options = EncodeOptions::default();
-    options.native = value
-        .as_object()
-        .ok_or(fail(QGI_INVALID_VALUE, "encoding options must be object"))?
-        .clone();
-    Ok(options)
+    EncodeOptions::from_value(value).map_err(Into::into)
 }
 fn outcome(outcome: Outcome) -> Result<Vec<u8>, Failure> {
     let mut events = Vec::new();
     for event in outcome.events {
         // Use the specification writer before embedding an event in the ABI outcome.
         events.push(
-            serde_json::from_slice::<Value>(&json::write(&event, false, None)?)
-                .map_err(|_| fail(QGI_MALFORMED, "event serialization"))?,
+            serde_json::from_slice::<Value>(&json::write(
+                &event,
+                &qso_graph_interop::PublicationOptions::new(
+                    qso_graph_interop::PublicationMode::Preserved,
+                ),
+            )?)
+            .map_err(|_| fail(QGI_MALFORMED, "event serialization"))?,
         );
     }
     let skips: Vec<_> = outcome
@@ -528,12 +483,23 @@ pub unsafe extern "C" fn qgi_encode_command(
         let event = json::parse(event, MAX_RECORD)?;
         let options = encode_options(&object(options)?)?;
         let mut state = state();
-        let mut requests = state.codec(handle)?.encode_commands(&event, &options)?;
-        let total = requests.len();
+        let codec = state.codec(handle)?;
+        let requests = if let Some(carriage) = codec.carriage() {
+            qso_graph_interop::codec::EncodedCommands::new(vec![
+                qso_graph_interop::codec::EncodedRequest::new(
+                    carriage
+                        .encode_event(&event, &qso_graph_interop::PublicationOptions::default())?,
+                    None,
+                ),
+            ])?
+        } else {
+            codec.encode_commands(&event, &options)?
+        };
+        let total = requests.requests().len();
         if index >= total {
             return Err(fail(QGI_INVALID_VALUE, "request index out of range"));
         }
-        let buffer = state.buffer(requests.remove(index))?;
+        let buffer = state.buffer(requests.requests()[index].bytes().to_vec())?;
         // SAFETY: validated, disjoint writable outputs.
         unsafe {
             put(count, total);
@@ -580,9 +546,81 @@ pub unsafe extern "C" fn qgi_reencode(
         let encode = encode_options(value.get("encode").unwrap_or(&empty))?;
         let decode = decode_options(value.get("decode").unwrap_or(&empty))?;
         let mut state = state();
-        let bytes = state
-            .codec(handle)?
-            .reencode_with(&event, &encode, &decode)?;
+        let codec = state.codec(handle)?;
+        let bytes = if let Some(carriage) = codec.carriage() {
+            carriage.encode_event(
+                &event,
+                &qso_graph_interop::PublicationOptions::default()
+                    .with_verification(decode.verification()),
+            )?
+        } else {
+            codec.reencode(&event, &encode, &decode.verification())?
+        };
+        let buffer = state.buffer(bytes)?;
+        // SAFETY: checked live output following caller contract.
+        unsafe { put(out, buffer) };
+        Ok(())
+    })
+}
+/// Encodes an event through the QGI carriage capability. options has optional "encode"
+/// (family-native encoding options) and "decode" (qgi_decode options, including
+/// fldigi response association). Empty means defaults. Exact native evidence and
+/// extensions are preserved by the family codec.
+/// # Safety
+/// Follow qgi_version's pointer contract; out is required.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn qgi_encode_event(
+    handle: QgiCodec,
+    event: *const u8,
+    event_len: usize,
+    options: *const u8,
+    options_len: usize,
+    out: *mut QgiBuffer,
+) -> i32 {
+    boundary(Some(handle), || {
+        check_out(out)?;
+        // SAFETY: checked live output following caller contract.
+        unsafe { put(out, QgiBuffer::default()) };
+        // SAFETY: helper checks input lengths/null; caller provides live storage.
+        let (event, options) = unsafe {
+            (
+                input(event, event_len, MAX_RECORD)?,
+                input(options, options_len, MAX_RECORD)?,
+            )
+        };
+        let event = json::parse(event, MAX_RECORD)?;
+        let value = object(options)?;
+        if value
+            .as_object()
+            .is_some_and(|m| m.keys().any(|k| k != "encode" && k != "decode"))
+        {
+            return Err(fail(QGI_INVALID_VALUE, "unknown reencode option"));
+        }
+        let empty = json!({});
+        let encode = encode_options(value.get("encode").unwrap_or(&empty))?;
+        let decode = decode_options(value.get("decode").unwrap_or(&empty))?;
+        let mut state = state();
+        let codec = state.codec(handle)?;
+        let carriage = codec.carriage().ok_or(fail(
+            QGI_INVALID_VALUE,
+            "codec has no event carriage capability",
+        ))?;
+        let _ = encode;
+        let family_profile: Option<Box<dyn qso_graph_interop::Profile>> =
+            match event.value()["family"].as_str() {
+                Some("wsjtx") => Some(Box::new(qso_graph_interop::wsjtx::Wsjtx::default())),
+                Some("n1mm") => Some(Box::new(qso_graph_interop::n1mm::N1mm::default())),
+                Some("fldigi") => Some(Box::new(qso_graph_interop::fldigi::Fldigi::default())),
+                _ => None,
+            };
+        let publication = qso_graph_interop::PublicationOptions::default()
+            .with_verification(decode.verification());
+        let publication = if let Some(profile) = family_profile.as_deref() {
+            publication.with_profile(profile)
+        } else {
+            publication
+        };
+        let bytes = carriage.encode_event(&event, &publication)?;
         let buffer = state.buffer(bytes)?;
         // SAFETY: checked live output following caller contract.
         unsafe { put(out, buffer) };
@@ -608,7 +646,7 @@ pub unsafe extern "C" fn qgi_reset(
         Ok(())
     })
 }
-/// Decodes at most one frame from the caller's QGI TCP buffer. Copies input only
+/// Decodes at most one frame from the caller's QGI TCP buffer. Borrows input only
 /// during this call; never retains it. consumed reports bytes to remove, even on a
 /// native framing error (documented recovery boundary). Zero consumed means append
 /// more input and retry. out is empty when no complete event is available.
@@ -647,14 +685,18 @@ pub unsafe extern "C" fn qgi_decode_stream(
             return Err(fail(QGI_INVALID_VALUE, "eof must be 0 or 1"));
         }
         let options = decode_options(&object(options)?)?;
-        let mut bytes = bytes.to_vec();
         let mut state = state();
         let result = state
             .codec(handle)?
-            .decode_stream(&mut bytes, eof == 1, &options);
+            .stream()
+            .ok_or(fail(
+                QGI_INVALID_VALUE,
+                "this codec does not use stream framing",
+            ))?
+            .decode_stream(bytes, eof == 1, &options);
         // SAFETY: output checked; consumption must be returned even on framing error.
-        unsafe { put(consumed, len - bytes.len()) };
-        if let Some(result) = result? {
+        unsafe { put(consumed, result.consumed()) };
+        if let qso_graph_interop::codec::StreamStatus::Frame(result) = result.into_result()? {
             let buffer = state.buffer(outcome(result)?)?;
             // SAFETY: checked output remains live for call.
             unsafe { put(out, buffer) };

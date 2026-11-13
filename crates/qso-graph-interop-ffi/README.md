@@ -5,8 +5,8 @@
 
 Use WSJT-X, N1MM Logger+, fldigi, and QGI protocol codecs from C, C++, Python,
 .NET, or Node through a C ABI. The library provides shared and static libraries,
-JSON events, native command encoding, byte-preserving re-encoding, and
-caller-buffered QGI TCP framing. Your app controls transport and policy.
+JSON events, native command encoding, evidence re-encoding, explicit event carriage,
+and caller-buffered QGI TCP framing. Your app controls transport and policy.
 
 ## Installation
 
@@ -27,6 +27,7 @@ Check `qgi_abi_version() == QGI_ABI_VERSION`, create a codec with
 `qgi_codec_new`, then call `qgi_decode` with native bytes and caller context JSON.
 Read the returned JSON outcome using its explicit byte length. Release every
 returned buffer with `qgi_buffer_free` and each handle with `qgi_codec_free`.
+Use `qgi_encode_command` for native requests and `qgi_encode_event` for QGI carriage.
 Handles can be shared across threads; operations are serialized internally.
 
 See the [C ABI guide](../../docs/C-ABI.md) for a complete C example, platform

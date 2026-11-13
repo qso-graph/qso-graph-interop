@@ -18,9 +18,7 @@ pub const MAX_BODY: usize = 262_144;
 /// Stateless codec. An optional association is caller-owned verification metadata.
 #[derive(Clone, Debug, Default)]
 #[non_exhaustive]
-pub struct Fldigi {
-    request: Option<Value>,
-}
+pub struct Fldigi;
 /// fldigi failure retained as a typed source without copying input payloads.
 #[derive(Debug)]
 #[non_exhaustive]
@@ -34,29 +32,73 @@ impl std::fmt::Display for FldigiError {
     }
 }
 impl std::error::Error for FldigiError {}
+impl FldigiError {
+    pub fn category(&self) -> Category {
+        self.category
+    }
+}
 fn family_failure(error: Error) -> Error {
     use std::error::Error as _;
     if error.source().is_some_and(|e| e.is::<FldigiError>()) {
         return error;
     }
     Error::family(
-        error.category,
+        error.category(),
         FldigiError {
-            category: error.category,
+            category: error.category(),
             message: error.to_string(),
         },
     )
 }
-impl Fldigi {
-    /// Supply association for Profile verification, which otherwise cannot interpret responses.
-    /// Validation occurs after XML/scalar admission, as Annex E requires.
-    pub fn with_request(request: Value) -> Self {
-        Self {
-            request: Some(request),
-        }
+/// Validated association for a single XML-RPC request. It implies no execution.
+#[derive(Clone, Debug)]
+#[non_exhaustive]
+pub struct RequestAssociation {
+    value: Value,
+}
+impl RequestAssociation {
+    pub fn for_method(method: &str) -> Result<Self, Error> {
+        Self::from_value(json!({"method":method}))
     }
-    fn request<'a>(&'a self, options: &'a DecodeOptions<'_>) -> Option<&'a Value> {
-        options.native.get("request").or(self.request.as_ref())
+    pub fn from_value(value: Value) -> Result<Self, Error> {
+        association(Some(&value))?;
+        Ok(Self { value })
+    }
+    pub fn from_request_body(body: &[u8]) -> Result<Self, Error> {
+        let doc = parse(body)?;
+        let message = rpc::parse(&doc.root)?;
+        let method = message
+            .method
+            .ok_or_else(|| invalid("association requires a methodCall"))?;
+        let method = rpc::method(&method.text)?;
+        let mut arguments = message
+            .values
+            .iter()
+            .map(|node| match rpc::scalar(node)? {
+                Scalar::Int(n) => Ok(Value::from(n)),
+                Scalar::String(v) => Ok(v),
+                Scalar::Double(n) => Ok(Value::from(n)),
+                _ => Ok(Value::Null),
+            })
+            .collect::<Result<Vec<_>, Error>>()?;
+        // API-2: a double spelled as an integer cannot establish an XML-RPC int RX range.
+        if method == "text.get_rx"
+            && (message.values.len() != 2
+                || message.values.iter().any(|node| rpc::typ(node) != "int"))
+        {
+            arguments = vec![Value::Null, Value::Null];
+        }
+        Self::from_value(json!({"method":method,"arguments":arguments}))
+    }
+    pub fn as_value(&self) -> &Value {
+        &self.value
+    }
+}
+impl From<RequestAssociation> for crate::codec::DecodeMetadata {
+    fn from(request: RequestAssociation) -> Self {
+        let mut native = serde_json::Map::new();
+        native.insert("request".into(), request.value);
+        Self::extension_metadata(native)
     }
 }
 fn parse(bytes: &[u8]) -> Result<Document, Error> {
@@ -133,7 +175,7 @@ fn mapped_scalar(s: Scalar) -> Option<Value> {
 }
 fn budget_context(options: &DecodeOptions<'_>) -> Result<(), Error> {
     let mut contexts = vec![&options.context];
-    if let Some(hops) = options.native.get("via").and_then(Value::as_array) {
+    if let Some(hops) = options.via.as_ref().and_then(Value::as_array) {
         contexts.extend(hops.iter().map(|h| &h["context"]));
     }
     for c in contexts {
@@ -146,8 +188,8 @@ fn budget_context(options: &DecodeOptions<'_>) -> Result<(), Error> {
         }
     }
     if options
-        .native
-        .get("via")
+        .via
+        .as_ref()
         .and_then(Value::as_array)
         .is_some_and(|h| h.len() > 8)
     {
@@ -172,7 +214,7 @@ fn observe(
     let method = call.or(associated);
     budget_context(options)?;
     let mut v = json!({"spec":crate::model::SPEC,"family":"fldigi","mapping":1,"kind":"native","context":options.context,"fields":{},"native":{"format":"fldigi_xmlrpc","data":""}});
-    if let Some(via) = options.native.get("via") {
+    if let Some(via) = options.via.as_ref() {
         v["via"] = via.clone();
     }
     Event::from_value(v.clone())?;
@@ -281,23 +323,38 @@ fn observe(
         v["native"]["message"] = view;
     }
     let event = Event::from_value(v)?;
-    crate::json::write(&event, false, None)?;
+    crate::json::write(
+        &event,
+        &crate::PublicationOptions::new(crate::PublicationMode::Preserved),
+    )?;
     Ok((event, verifiable))
 }
 impl Profile for Fldigi {
+    fn recognize(
+        &self,
+        event: &Event,
+        options: &crate::codec::VerifyOptions,
+    ) -> Result<crate::model::ProfileView, crate::Error> {
+        crate::json::compatible_view(
+            event,
+            self.native_version_supported(event),
+            self.verify(event, options)?,
+        )
+    }
+
+    fn native_version_supported(&self, _: &Event) -> bool {
+        true
+    }
     fn family(&self) -> &str {
         "fldigi"
     }
     fn mapping(&self) -> u32 {
         1
     }
-    fn verify(&self, event: &Event) -> Result<Verification, Error> {
-        self.verify_with(event, &DecodeOptions::default())
-    }
-    fn verify_with(
+    fn verify(
         &self,
         event: &Event,
-        options: &DecodeOptions<'_>,
+        verify: &crate::codec::VerifyOptions,
     ) -> Result<Verification, Error> {
         (|| {
             let v = event.value();
@@ -307,14 +364,17 @@ impl Profile for Fldigi {
             {
                 return Ok(Verification::Unavailable);
             }
-            let mut options = options.clone();
+            let mut options = verify.decode_options();
             options.context = v["context"].clone();
             options.structured = v["native"].get("message").is_some();
             if let Some(via) = v.get("via") {
-                options.native.insert("via".into(), via.clone());
+                options.via = Some(via.clone());
             }
-            let (expected, available) =
-                observe(&event.native_bytes()?, &options, self.request(&options))?;
+            let (expected, available) = observe(
+                &event.native_bytes()?,
+                &options,
+                options.native.get("request"),
+            )?;
             if v["native"]["format"] != "fldigi_xmlrpc" || v.get("wire_id").is_some() {
                 return Err(invalid("invalid fldigi evidence envelope"));
             }
@@ -365,7 +425,7 @@ impl Profile for Fldigi {
             // A stored fault operation or view method cannot supply missing caller metadata.
             // Its required error content is still checked; dependent content is unavailable.
             let mut partial = false;
-            if self.request(&options).is_none() && wanted["fields"]["status"] == "error" {
+            if options.native.get("request").is_none() && wanted["fields"]["status"] == "error" {
                 partial |= actual["fields"]
                     .as_object_mut()
                     .expect("fields")
@@ -391,13 +451,10 @@ impl Profile for Fldigi {
         })()
         .map_err(family_failure)
     }
-    fn validate_authored(&self, event: &Event) -> Result<(), Error> {
-        self.validate_authored_with(event, &DecodeOptions::default())
-    }
-    fn validate_authored_with(
+    fn validate_authored(
         &self,
         event: &Event,
-        options: &DecodeOptions<'_>,
+        options: &crate::codec::VerifyOptions,
     ) -> Result<(), Error> {
         (|| {
             if event.value()["mapping"] != 1 {
@@ -409,7 +466,7 @@ impl Profile for Fldigi {
             if event.is_command() {
                 self.encode_commands(event, &EncodeOptions::default())?;
             } else {
-                self.verify_with(event, options)?;
+                self.verify(event, options)?;
             }
             Ok(())
         })()
@@ -433,7 +490,7 @@ impl Codec for Fldigi {
     }
     fn reset(&mut self, _: Option<&[u8]>) {}
     fn decode(&mut self, bytes: &[u8], options: &DecodeOptions<'_>) -> Result<Outcome, Error> {
-        observe(bytes, options, self.request(options))
+        observe(bytes, options, options.native.get("request"))
             .map(|(e, _)| Outcome::event(e))
             .map_err(family_failure)
     }
@@ -441,37 +498,34 @@ impl Codec for Fldigi {
         &self,
         event: &Event,
         options: &EncodeOptions,
-    ) -> Result<Vec<Vec<u8>>, Error> {
-        command::encode(event, options).map_err(family_failure)
-    }
-    fn encode_command(&self, event: &Event, options: &EncodeOptions) -> Result<Vec<u8>, Error> {
+    ) -> Result<crate::codec::EncodedCommands, Error> {
         (|| {
-            let mut bodies = self.encode_commands(event, options)?;
-            if bodies.len() != 1 {
-                return Err(invalid(
-                    "operation requires encode_commands for separate ordered requests",
-                ));
-            }
-            Ok(bodies.remove(0))
+            let requests = command::encode(event, options)?
+                .into_iter()
+                .map(|bytes| {
+                    let metadata = RequestAssociation::from_request_body(&bytes)?.into();
+                    Ok(crate::codec::EncodedRequest::new(bytes, Some(metadata)))
+                })
+                .collect::<Result<Vec<_>, Error>>()?;
+            crate::codec::EncodedCommands::new(requests)
         })()
         .map_err(family_failure)
     }
-
-    fn reencode(&self, event: &Event, options: &EncodeOptions) -> Result<Vec<u8>, Error> {
-        self.reencode_with(event, options, &DecodeOptions::default())
-    }
-    fn reencode_with(
+    fn reencode(
         &self,
         event: &Event,
         options: &EncodeOptions,
-        decode: &DecodeOptions<'_>,
+        decode: &crate::codec::VerifyOptions,
     ) -> Result<Vec<u8>, Error> {
         (|| {
             if !options.native.is_empty() {
                 return Err(invalid("fldigi re-encoding takes no encoding options"));
             }
-            self.verify_with(event, decode)?;
-            crate::json::write(event, false, None)?;
+            self.verify(event, decode)?;
+            crate::json::write(
+                event,
+                &crate::PublicationOptions::new(crate::PublicationMode::Preserved),
+            )?;
             event.native_bytes()
         })()
         .map_err(family_failure)

@@ -56,3 +56,18 @@ pub fn decode(text: &str) -> Result<Vec<u8>, Error> {
     }
     Ok(out)
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn canonical_roundtrips_and_planted_invalid_padding() {
+        use super::{decode, encode};
+        for n in 0..257 {
+            let bytes = (0..n).map(|i| i as u8).collect::<Vec<_>>();
+            assert_eq!(decode(&encode(&bytes)).unwrap(), bytes);
+        }
+        for bad in ["Zg=", "Zg===", "Zh==", "Zm9=", "====", "Zg==\n", "Zm=8"] {
+            assert!(decode(bad).is_err(), "{bad}");
+        }
+    }
+}

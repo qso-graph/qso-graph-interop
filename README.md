@@ -63,7 +63,9 @@ See the [event JSON guide](docs/user/listen-json.md). Each command's `--help` in
 Install with `cargo add qso-graph-interop`. Default features select `wsjtx`, `n1mm`, `fldigi`, `qgi`, and `serde`.
 Use `default-features = false` for the core without protocol families or enable `conformance` to test a
 third-party codec. The public `Codec` trait decodes observations, encodes commands from common
-fields, and separately re-encodes native evidence. Stream input uses caller-owned buffers.
+fields into ordered requests with response metadata, and separately re-encodes native evidence.
+Typed views expose common fields while preserving the complete event JSON. Stream input uses
+caller-owned buffers with explicit progress; QGI event carriage has a separate encoding capability.
 
 C and C++ applications can use the [C ABI](docs/C-ABI.md) as shared or static libraries.
 Consumers need no Rust toolchain. The ABI also supports Python, .NET, and Node bindings.

@@ -34,15 +34,20 @@ impl std::fmt::Display for N1mmError {
     }
 }
 impl std::error::Error for N1mmError {}
+impl N1mmError {
+    pub fn category(&self) -> Category {
+        self.category
+    }
+}
 fn family_failure(error: Error) -> Error {
     use std::error::Error as _;
     if error.source().is_some_and(|e| e.is::<N1mmError>()) {
         return error;
     }
     Error::family(
-        error.category,
+        error.category(),
         N1mmError {
-            category: error.category,
+            category: error.category(),
             message: error.to_string(),
         },
     )
@@ -386,10 +391,25 @@ fn mapped(
         value["native"]["message"] = json!({"root":doc.root.name,"xml":doc.xml});
     }
     let event = Event::from_value(value)?;
-    crate::json::write(&event, false, None)?;
+    crate::json::write(
+        &event,
+        &crate::PublicationOptions::new(crate::PublicationMode::Preserved),
+    )?;
     Ok(Some(event))
 }
 impl Profile for N1mm {
+    fn recognize(
+        &self,
+        event: &Event,
+        options: &crate::codec::VerifyOptions,
+    ) -> Result<crate::model::ProfileView, crate::Error> {
+        crate::json::compatible_view(
+            event,
+            self.native_version_supported(event),
+            self.verify(event, options)?,
+        )
+    }
+
     fn family(&self) -> &str {
         "n1mm"
     }
@@ -399,10 +419,11 @@ impl Profile for N1mm {
     fn native_version_supported(&self, event: &Event) -> bool {
         event.value().get("native_version").is_none()
     }
-    fn fields(&self, event: &Event) -> Value {
-        crate::json::known_fields(event.value())
-    }
-    fn verify(&self, event: &Event) -> Result<Verification, Error> {
+    fn verify(
+        &self,
+        event: &Event,
+        _options: &crate::codec::VerifyOptions,
+    ) -> Result<Verification, Error> {
         (|| {
             let v = event.value();
             if event.is_command()
@@ -471,7 +492,11 @@ impl Profile for N1mm {
         })()
         .map_err(family_failure)
     }
-    fn validate_authored(&self, event: &Event) -> Result<(), Error> {
+    fn validate_authored(
+        &self,
+        event: &Event,
+        options: &crate::codec::VerifyOptions,
+    ) -> Result<(), Error> {
         (|| {
             if event.value()["mapping"] != 1 {
                 return Err(Error::new(
@@ -489,7 +514,7 @@ impl Profile for N1mm {
                         "N1MM observations carry no native version or wire ID",
                     ));
                 }
-                self.verify(event)?;
+                self.verify(event, options)?;
                 if let Some(view) = event.value()["native"].get("message") {
                     let bytes = event.native_bytes()?;
                     let doc = xml::parse(&bytes)?;
@@ -536,15 +561,27 @@ impl Codec for N1mm {
         })()
         .map_err(family_failure)
     }
-    fn encode_command(&self, event: &Event, options: &EncodeOptions) -> Result<Vec<u8>, Error> {
-        command(event, options).map_err(family_failure)
+    fn encode_commands(
+        &self,
+        event: &Event,
+        options: &EncodeOptions,
+    ) -> Result<crate::codec::EncodedCommands, crate::Error> {
+        crate::codec::EncodedCommands::new(vec![crate::codec::EncodedRequest::new(
+            self.encode_native_command(event, options)?,
+            None,
+        )])
     }
-    fn reencode(&self, event: &Event, options: &EncodeOptions) -> Result<Vec<u8>, Error> {
+    fn reencode(
+        &self,
+        event: &Event,
+        options: &EncodeOptions,
+        verify: &crate::codec::VerifyOptions,
+    ) -> Result<Vec<u8>, Error> {
         (|| {
             if !options.native.is_empty() {
                 return Err(invalid("N1MM takes no encoding options"));
             }
-            if self.verify(event)? != Verification::Verified {
+            if self.verify(event, verify)? != Verification::Verified {
                 return Err(invalid("N1MM evidence cannot be verified"));
             }
             event.native_bytes()
@@ -710,4 +747,14 @@ fn command(event: &Event, options: &EncodeOptions) -> Result<Vec<u8>, Error> {
     // The same bounded reader checks all result budgets before publication.
     xml::parse(out.as_bytes())?;
     Ok(out.into_bytes())
+}
+
+impl N1mm {
+    fn encode_native_command(
+        &self,
+        event: &Event,
+        options: &EncodeOptions,
+    ) -> Result<Vec<u8>, Error> {
+        command(event, options).map_err(family_failure)
+    }
 }

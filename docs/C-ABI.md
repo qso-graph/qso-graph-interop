@@ -37,6 +37,7 @@ null, alignment, byte-size, and address-overflow conditions before access.
 | `qgi_codec_free` | Release the handle. Zero, invented, and stale tokens return `QGI_BAD_HANDLE`. |
 | `qgi_decode` | Native bytes and decode-options JSON; required owned JSON outcome output. |
 | `qgi_encode_command` | Event JSON, family encoding-options JSON, request index, required request-count and native-buffer outputs. |
+| `qgi_encode_event` | Event JSON and re-encoding-shaped options; required QGI carriage-buffer output. |
 | `qgi_reencode` | Observed event JSON and re-encoding options; required native-buffer output. |
 | `qgi_reset` | Handle and optional raw session bytes. NULL/0 resets all sessions; a non-NULL pointer with zero length selects an empty session. |
 | `qgi_decode_stream` | Caller buffer, EOF flag, decode options, required consumed-byte and outcome-buffer outputs. |
@@ -129,7 +130,12 @@ call creates a separately owned buffer. An index outside the count returns
 Re-encoding options have optional `encode` and `decode` objects. `encode` contains
 family encoding options; `decode` uses the decode-options shape above. This allows
 fldigi response re-encoding with the same explicit request association. Re-encoding
-uses the public family verification and native-evidence preservation paths.
+uses the public family verification and native-evidence preservation paths. The existing QGI
+encoding entry points retain their forwarding behavior. New callers can select carriage explicitly
+with `qgi_encode_event`, which requires a QGI handle. It uses the original family's profile and the
+per-call association in `decode` for authored evidence checks. Its event JSON and framing bytes
+match the Rust carriage API. Native command encoding and evidence re-encoding remain distinct
+operations in the Rust interface.
 
 For `qgi_decode_stream`, retain your own receive buffer. Pass its current contents
 and EOF as 0 or 1. Remove exactly `consumed` bytes after each call, including a

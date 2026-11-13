@@ -22,7 +22,13 @@ fn independent_radio_evidence_and_planted_swaps() {
         json!({"radio":{"instance":"SYNTHETIC-PC","number":2},"dial_frequency_hz":137500,"focus_radio":1,"active_radio":2,"running":false,"stereo":true,"transmitting":false})
     );
     assert_eq!(
-        codec.reencode(&event, &EncodeOptions::default()).unwrap(),
+        codec
+            .reencode(
+                &event,
+                &EncodeOptions::default(),
+                &qso_graph_interop::VerifyOptions::default()
+            )
+            .unwrap(),
         bytes
     );
     assert!(event.value()["context"].get("source_id").is_none());
@@ -37,22 +43,34 @@ fn independent_radio_evidence_and_planted_swaps() {
         value["fields"][b] = x;
         assert_eq!(
             codec
-                .verify(&Event::from_value(value).unwrap())
+                .verify(
+                    &Event::from_value(value).unwrap(),
+                    &qso_graph_interop::VerifyOptions::default()
+                )
                 .unwrap_err()
-                .category,
+                .category(),
             Category::InvalidValue
         );
     }
     let mut value = event.into_value();
     value["fields"]["radio"]["future"] = true.into();
     let added = Event::from_value(value).unwrap();
-    assert!(qso_graph_interop::json::write(&added, true, Some(&codec)).is_err());
+    assert!(
+        qso_graph_interop::json::write(
+            &added,
+            &qso_graph_interop::PublicationOptions::new(
+                qso_graph_interop::PublicationMode::Authored
+            )
+            .with_profile(&codec)
+        )
+        .is_err()
+    );
 }
 
 #[test]
 fn profile_capacity_and_structured_view_are_closed_recursively() {
     let mut options = DecodeOptions::default();
-    options.structured = true;
+    options = options.with_structured(true);
     let codec = N1mm::default();
     let event = N1mm::default()
         .decode(
@@ -63,22 +81,44 @@ fn profile_capacity_and_structured_view_are_closed_recursively() {
         .events
         .remove(0);
     assert_eq!(
-        event.recognized(Some(&codec)).unwrap().fields,
+        event
+            .recognized(Some(&codec))
+            .unwrap()
+            .fields()
+            .as_value()
+            .clone(),
         json!({"start":"0001-01-01T00:00:00Z"})
     );
-    qso_graph_interop::json::write(&event, true, Some(&codec)).unwrap();
+    qso_graph_interop::json::write(
+        &event,
+        &qso_graph_interop::PublicationOptions::new(qso_graph_interop::PublicationMode::Authored)
+            .with_profile(&codec),
+    )
+    .unwrap();
     for key in ["extra", "xml"] {
         let mut value = event.value().clone();
         value["native"]["message"][key] = "planted".into();
         assert!(
-            qso_graph_interop::json::write(&Event::from_value(value).unwrap(), true, Some(&codec))
-                .is_err()
+            qso_graph_interop::json::write(
+                &Event::from_value(value).unwrap(),
+                &qso_graph_interop::PublicationOptions::new(
+                    qso_graph_interop::PublicationMode::Authored
+                )
+                .with_profile(&codec)
+            )
+            .is_err()
         );
     }
     let mut value = event.into_value();
     value["family"] = "wsjtx".into();
     assert!(
-        qso_graph_interop::json::write(&Event::from_value(value).unwrap(), true, None).is_err()
+        qso_graph_interop::json::write(
+            &Event::from_value(value).unwrap(),
+            &qso_graph_interop::PublicationOptions::new(
+                qso_graph_interop::PublicationMode::Authored
+            )
+        )
+        .is_err()
     );
 }
 
@@ -109,7 +149,7 @@ fn tokenizer_fault_order_and_original_unit_budgets() {
                     .is_empty()
             );
         } else {
-            assert_eq!(result.unwrap_err().category, category);
+            assert_eq!(result.unwrap_err().category(), category);
         }
     }
 }
@@ -126,14 +166,14 @@ fn text_admission_precedes_later_reference_faults_and_errors_keep_family_causes(
             bytes.extend(unit.to_le_bytes());
         }
         let error = codec.decode(&bytes, &DecodeOptions::default()).unwrap_err();
-        assert_eq!(error.category, Category::Oversized);
+        assert_eq!(error.category(), Category::Oversized);
         assert_eq!(
             error
                 .source()
                 .unwrap()
                 .downcast_ref::<qso_graph_interop::n1mm::N1mmError>()
                 .unwrap()
-                .category,
+                .category(),
             Category::Oversized
         );
     }
@@ -148,7 +188,7 @@ fn text_admission_precedes_later_reference_faults_and_errors_keep_family_causes(
             codec
                 .decode(input, &DecodeOptions::default())
                 .unwrap_err()
-                .category,
+                .category(),
             category
         );
     }
@@ -170,7 +210,7 @@ fn xml_names_and_closed_attribute_references_are_validated_before_resources() {
             codec
                 .decode(input, &DecodeOptions::default())
                 .unwrap_err()
-                .category,
+                .category(),
             Category::Malformed
         );
     }
@@ -194,23 +234,29 @@ fn future_mapping_checks_assigned_fields_without_guessing_new_native_versions() 
     value["fields"]["radio"] = json!({"number":2}); // a future assignment, not a carried StationName
     assert_eq!(
         codec
-            .verify(&Event::from_value(value.clone()).unwrap())
+            .verify(
+                &Event::from_value(value.clone()).unwrap(),
+                &qso_graph_interop::VerifyOptions::default()
+            )
             .unwrap(),
         Verification::Verified
     );
     value["fields"]["call"] = "Q2BBB".into();
     assert!(
         codec
-            .verify(&Event::from_value(value.clone()).unwrap())
+            .verify(
+                &Event::from_value(value.clone()).unwrap(),
+                &qso_graph_interop::VerifyOptions::default()
+            )
             .is_err()
     );
     value["fields"]["call"] = "Q2AAA".into();
     value["native_version"] = "future".into();
     let event = Event::from_value(value.clone()).unwrap();
     let read = event.recognized(Some(&codec)).unwrap();
-    assert_eq!(read.verification, Verification::Unavailable);
-    assert_eq!(read.kind, "native");
-    assert_eq!(read.fields, json!({}));
+    assert_eq!(read.verification(), Verification::Unavailable);
+    assert_eq!(read.kind().as_str(), "native");
+    assert_eq!(read.fields().as_value().clone(), json!({}));
     for key in ["native_version", "wire_id"] {
         let mut authored = value.clone();
         authored["mapping"] = 1.into();
@@ -218,7 +264,10 @@ fn future_mapping_checks_assigned_fields_without_guessing_new_native_versions() 
         authored[key] = "planted".into();
         assert!(
             codec
-                .validate_authored(&Event::from_value(authored).unwrap())
+                .validate_authored(
+                    &Event::from_value(authored).unwrap(),
+                    &qso_graph_interop::VerifyOptions::default()
+                )
                 .is_err()
         );
     }
@@ -237,7 +286,7 @@ fn every_proper_prefix_of_complete_xml_is_unfinished() {
                 codec
                     .decode(&xml[..end], &DecodeOptions::default())
                     .unwrap_err()
-                    .category,
+                    .category(),
                 Category::Truncated,
                 "prefix {end}"
             );
@@ -247,7 +296,7 @@ fn every_proper_prefix_of_complete_xml_is_unfinished() {
         codec
             .decode(b"<RadioInfo/ x>", &DecodeOptions::default())
             .unwrap_err()
-            .category,
+            .category(),
         Category::Malformed
     );
 }

@@ -209,6 +209,21 @@ int32_t qgi_reencode(QgiCodec handle,
                      struct QgiBuffer *out);
 
 /**
+ * Encodes an event through the QGI carriage capability. options has optional "encode"
+ * (family-native encoding options) and "decode" (qgi_decode options, including
+ * fldigi response association). Empty means defaults. Exact native evidence and
+ * extensions are preserved by the family codec.
+ * # Safety
+ * Follow qgi_version's pointer contract; out is required.
+ */
+int32_t qgi_encode_event(QgiCodec handle,
+                         const uint8_t *event,
+                         size_t event_len,
+                         const uint8_t *options,
+                         size_t options_len,
+                         struct QgiBuffer *out);
+
+/**
  * Resets all codec state if session is NULL/0, or the specified raw session bytes
  * otherwise (a non-NULL pointer with length 0 selects an empty session).
  * # Safety
@@ -217,7 +232,7 @@ int32_t qgi_reencode(QgiCodec handle,
 int32_t qgi_reset(QgiCodec handle, const uint8_t *session, size_t session_len);
 
 /**
- * Decodes at most one frame from the caller's QGI TCP buffer. Copies input only
+ * Decodes at most one frame from the caller's QGI TCP buffer. Borrows input only
  * during this call; never retains it. consumed reports bytes to remove, even on a
  * native framing error (documented recovery boundary). Zero consumed means append
  * more input and retry. out is empty when no complete event is available.

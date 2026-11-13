@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Exercise exports exactly as foreign callers do, including invalid tokens.
 use super::*;
-#[cfg(not(miri))]
-use qso_graph_interop::base64;
 use std::ptr::{null, null_mut};
 
 fn new(family: &str) -> QgiCodec {
@@ -296,7 +294,7 @@ fn vector_decode_command_and_reencode_for_each_family() {
                 .unwrap();
                 let input = &vector["input"];
                 if class == "positive" {
-                    let bytes = base64::decode(input["data"].as_str().unwrap()).unwrap();
+                    let bytes = evidence_bytes(input["data"].as_str().unwrap()).unwrap();
                     let mut options = json!({"context":input["context"],"structured": false});
                     if let Some(request) = input.get("request") {
                         options["native"] = json!({"request":request});
@@ -363,7 +361,7 @@ fn vector_decode_command_and_reencode_for_each_family() {
                         let bytes = take(out);
                         assert_eq!(
                             bytes,
-                            base64::decode(request.as_str().unwrap()).unwrap(),
+                            evidence_bytes(request.as_str().unwrap()).unwrap(),
                             "{}",
                             entry["file"]
                         );
@@ -541,11 +539,7 @@ fn caller_buffer_stream_partial_multiple_eof_and_recovery() {
         assert_eq!(used, event.len());
         // The same codec-error/consumption path as a huge frame, using only 68
         // bytes: one container beyond the JSON depth limit, plus its delimiter.
-        let deep = format!(
-            "{}0{}\n",
-            "[".repeat(json::MAX_DEPTH + 1),
-            "]".repeat(json::MAX_DEPTH + 1)
-        );
+        let deep = format!("{}0{}\n", "[".repeat(32 + 1), "]".repeat(32 + 1));
         assert_eq!(
             qgi_decode_stream(
                 id,
@@ -648,6 +642,24 @@ impl Drop for PanicPayload {
     }
 }
 impl qso_graph_interop::codec::Profile for PanicCodec {
+    fn native_version_supported(&self, _: &qso_graph_interop::Event) -> bool {
+        true
+    }
+    fn validate_authored(
+        &self,
+        _: &qso_graph_interop::Event,
+        _: &qso_graph_interop::VerifyOptions,
+    ) -> Result<(), qso_graph_interop::Error> {
+        panic!("planted authored panic")
+    }
+    fn recognize(
+        &self,
+        _: &qso_graph_interop::Event,
+        _: &qso_graph_interop::VerifyOptions,
+    ) -> Result<qso_graph_interop::model::ProfileView, qso_graph_interop::Error> {
+        panic!("planted recognition panic")
+    }
+
     fn family(&self) -> &str {
         "wsjtx"
     }
@@ -657,6 +669,7 @@ impl qso_graph_interop::codec::Profile for PanicCodec {
     fn verify(
         &self,
         _: &qso_graph_interop::Event,
+        _: &qso_graph_interop::VerifyOptions,
     ) -> Result<qso_graph_interop::model::Verification, qso_graph_interop::Error> {
         panic!("planted verify panic")
     }
@@ -678,17 +691,18 @@ impl Codec for PanicCodec {
         }
         panic!("planted decode panic")
     }
-    fn encode_command(
+    fn encode_commands(
         &self,
         _: &qso_graph_interop::Event,
         _: &EncodeOptions,
-    ) -> Result<Vec<u8>, qso_graph_interop::Error> {
+    ) -> Result<qso_graph_interop::codec::EncodedCommands, qso_graph_interop::Error> {
         panic!("planted encode panic")
     }
     fn reencode(
         &self,
         _: &qso_graph_interop::Event,
         _: &EncodeOptions,
+        _: &qso_graph_interop::VerifyOptions,
     ) -> Result<Vec<u8>, qso_graph_interop::Error> {
         panic!("planted reencode panic")
     }
@@ -765,4 +779,75 @@ fn stable_categories_and_altered_buffer_descriptor() {
     altered.data = null();
     assert_eq!(qgi_buffer_free(altered), QGI_BAD_BUFFER);
     assert_eq!(take(out), env!("CARGO_PKG_VERSION").as_bytes());
+}
+
+#[cfg(not(miri))]
+fn evidence_bytes(data: &str) -> Result<Vec<u8>, qso_graph_interop::Error> {
+    qso_graph_interop::model::NativeEvidence::from_value(
+        serde_json::json!({"format":"test","data":data}),
+    )?
+    .data()
+}
+
+#[test]
+fn explicit_carriage_uses_original_family_and_per_call_association() {
+    use qso_graph_interop::{
+        Profile,
+        fldigi::{Fldigi, RequestAssociation},
+    };
+    let body = b"<methodResponse><params><param><value><double>137500.0</double></value></param></params></methodResponse>";
+    let options = DecodeOptions::default().with_metadata(
+        RequestAssociation::for_method("rig.set_frequency")
+            .unwrap()
+            .into(),
+    );
+    let mut codec = Fldigi::default();
+    let event = codec.decode(body, &options).unwrap().events.remove(0);
+    assert_eq!(
+        codec.verify(&event, &options.verification()).unwrap(),
+        qso_graph_interop::Verification::Verified
+    );
+    let bytes = serde_json::to_vec(&event).unwrap();
+    let association = br#"{"decode":{"native":{"request":{"method":"rig.set_frequency"}}}}"#;
+    let id = new("qgi");
+    let mut out = QgiBuffer::default();
+    assert_eq!(
+        // SAFETY: all inputs are live byte slices; out is disjoint aligned writable storage.
+        unsafe {
+            qgi_encode_event(
+                id,
+                bytes.as_ptr(),
+                bytes.len(),
+                association.as_ptr(),
+                association.len(),
+                &mut out,
+            )
+        },
+        QGI_OK
+    );
+    let framed = take(out);
+    assert_eq!(framed.last(), Some(&b'\n'));
+    assert_eq!(
+        qso_graph_interop::parse(&framed[..framed.len() - 1], MAX_RECORD).unwrap(),
+        event
+    );
+    let mut wrong = event.into_value();
+    wrong["fields"]["frequency_hz"] = 137501.into();
+    let bytes = serde_json::to_vec(&wrong).unwrap();
+    assert_eq!(
+        // SAFETY: live input slices and aligned disjoint writable output.
+        unsafe {
+            qgi_encode_event(
+                id,
+                bytes.as_ptr(),
+                bytes.len(),
+                association.as_ptr(),
+                association.len(),
+                &mut out,
+            )
+        },
+        QGI_INVALID_VALUE
+    );
+    assert_eq!(out.token, 0);
+    assert_eq!(qgi_codec_free(id), QGI_OK);
 }

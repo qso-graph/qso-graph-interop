@@ -9,11 +9,11 @@ use crate::{
 };
 use serde_json::{Map, Value};
 
-pub const MAX_DEPTH: usize = 32;
-pub const MAX_ELEMENTS: usize = 65_536;
+pub(crate) const MAX_DEPTH: usize = 32;
+pub(crate) const MAX_ELEMENTS: usize = 65_536;
 /// A general event cannot have more members/elements than its bounded UTF-8 byte count.
-pub const MAX_RECORD_ELEMENTS: usize = MAX_RECORD;
-pub const MAX_NUMBER: usize = 128;
+pub(crate) const MAX_RECORD_ELEMENTS: usize = MAX_RECORD;
+pub(crate) const MAX_NUMBER: usize = 128;
 
 /// A bounded recursive JSON parser. Scalars delegate Unicode and number syntax to serde_json;
 /// objects are assembled here so reserved serde implementation keys remain ordinary event data.
@@ -226,7 +226,8 @@ pub fn parse(bytes: &[u8], limit: usize) -> Result<Event, Error> {
     parse_limited(bytes, limit, MAX_RECORD_ELEMENTS)
 }
 /// Read the event-carriage parser profile (Annex I) before appending its receiving hop.
-pub fn parse_carriage(bytes: &[u8], limit: usize) -> Result<Event, Error> {
+#[cfg(any(feature = "qgi", all(test, feature = "wsjtx")))]
+pub(crate) fn parse_carriage(bytes: &[u8], limit: usize) -> Result<Event, Error> {
     parse_limited(bytes, limit, MAX_ELEMENTS)
 }
 fn parse_limited(bytes: &[u8], limit: usize, max_elements: usize) -> Result<Event, Error> {
@@ -250,7 +251,7 @@ fn parse_limited(bytes: &[u8], limit: usize, max_elements: usize) -> Result<Even
     Event::from_value(v)
 }
 /// Enforce all parser limits against a resulting value (including newly appended hops).
-pub fn bounds(v: &Value, string_limit: usize) -> Result<(), Error> {
+pub(crate) fn bounds(v: &Value, string_limit: usize) -> Result<(), Error> {
     bounds_with_elements(v, string_limit, MAX_ELEMENTS)
 }
 fn bounds_with_elements(v: &Value, string_limit: usize, max_elements: usize) -> Result<(), Error> {
@@ -303,39 +304,29 @@ fn bounds_with_elements(v: &Value, string_limit: usize, max_elements: usize) -> 
     }
     walk(v, 1, &mut 0, string_limit, max_elements)
 }
-/// Compact, UTF-8 output, with exact record admission before publication.
+/// Publish compact UTF-8 JSON. Authored admission and native evidence verification are distinct.
+/// A family profile is required for structured authored evidence; without a verifier this
+/// operation does not establish Verification::Verified. Preserved publication retains additions.
 pub fn write(
     event: &Event,
-    producer_strict: bool,
-    profile: Option<&dyn Profile>,
+    options: &crate::codec::PublicationOptions<'_>,
 ) -> Result<Vec<u8>, Error> {
-    write_with(
-        event,
-        producer_strict,
-        profile,
-        &crate::codec::DecodeOptions::default(),
-    )
-}
-/// Compact publication with caller-owned class metadata for producer consistency checks.
-pub fn write_with(
-    event: &Event,
-    producer_strict: bool,
-    profile: Option<&dyn Profile>,
-    options: &crate::codec::DecodeOptions<'_>,
-) -> Result<Vec<u8>, Error> {
+    let producer_strict = matches!(options.mode(), crate::codec::PublicationMode::Authored);
     validate(event.value(), producer_strict)?;
     if producer_strict
         && event.value()["native"].get("message").is_some()
-        && !profile.is_some_and(|p| event.value()["family"] == p.family())
+        && !options
+            .profile()
+            .is_some_and(|p| event.value()["family"] == p.family())
     {
         return Err(invalid(
             "strict structured-view publication requires its family profile",
         ));
     }
-    if producer_strict && let Some(p) = profile {
-        p.validate_authored_with(event, options)?;
+    if producer_strict && let Some(p) = options.profile() {
+        p.validate_authored(event, options.verification())?;
     }
-    bounds_with_elements(event.value(), MAX_RECORD, MAX_RECORD_ELEMENTS)?;
+    admit_record(event.value())?;
     let mut output = RecordBuffer {
         data: Vec::new(),
         limit: MAX_RECORD,
@@ -343,6 +334,92 @@ pub fn write_with(
     serde_json::to_writer(&mut output, event.value())
         .map_err(|_| oversized("event exceeds the 1 MiB compact record bound"))?;
     Ok(output.data)
+}
+pub(crate) fn admit_record(value: &Value) -> Result<(), Error> {
+    bounds_with_elements(value, MAX_RECORD, MAX_RECORD_ELEMENTS)?;
+    let mut output = RecordBuffer {
+        data: Vec::new(),
+        limit: MAX_RECORD,
+    };
+    serde_json::to_writer(&mut output, value)
+        .map_err(|_| oversized("event exceeds the 1 MiB compact record bound"))?;
+    Ok(())
+}
+pub(crate) fn validate_context(value: &Value, strict: bool) -> Result<(), Error> {
+    shape(value, "context", strict)
+}
+pub(crate) fn validate_native(value: &Value) -> Result<(), Error> {
+    validate_native_profile(value, false)
+}
+fn validate_native_profile(n: &Value, strict: bool) -> Result<(), Error> {
+    shape(n, "native_payload", strict)?;
+    let forbidden: &[&str] = match n["format"].as_str() {
+        Some("mqtt_publish") => {
+            if !n
+                .as_object()
+                .is_some_and(|m| m.contains_key("topic") && m.contains_key("retained"))
+            {
+                return Err(invalid("PUBLISH lacks topic or retain flag"));
+            }
+            &[
+                "template",
+                "header",
+                "message_data",
+                "set_id",
+                "set_index",
+                "record_index",
+                "dependencies",
+            ]
+        }
+        Some("ipfix_record") => {
+            for k in [
+                "template",
+                "header",
+                "message_data",
+                "set_id",
+                "set_index",
+                "record_index",
+            ] {
+                if n.get(k).is_none() {
+                    return Err(invalid("IPFIX record lacks evidence"));
+                }
+            }
+            &["topic", "retained"]
+        }
+        _ => &[
+            "topic",
+            "retained",
+            "template",
+            "header",
+            "message_data",
+            "set_id",
+            "set_index",
+            "record_index",
+            "dependencies",
+        ],
+    };
+    if forbidden.iter().any(|k| n.get(*k).is_some()) {
+        return Err(invalid("native member belongs to a different class"));
+    }
+    Ok(())
+}
+pub(crate) fn validate_profile_fields(
+    kind: crate::model::Kind,
+    value: &Value,
+) -> Result<(), Error> {
+    admit_record(value)?;
+    shape(value, kind.as_str(), false)?;
+    // API-4: family additions exposed by typed views need admission even for external profiles.
+    let extra: &[&str] = match kind {
+        crate::Kind::QsoLogged | crate::Kind::QsoChanged | crate::Kind::QsoDeleted => &["n1mm_qso"],
+        crate::Kind::Native => &["n1mm_native"],
+        crate::Kind::Control => &["fldigi_control", "n1mm_control"],
+        _ => &[],
+    };
+    for name in extra {
+        shape(value, name, false)?;
+    }
+    Ok(())
 }
 /// A serde output sink that never grows beyond the record budget.
 struct RecordBuffer {
@@ -383,7 +460,7 @@ fn operation(s: &str) -> bool {
         token(s)
     }
 }
-pub fn valid_clock(s: &str) -> bool {
+pub(crate) fn valid_clock(s: &str) -> bool {
     let b = s.as_bytes();
     if b.len() < 8 || b[2] != b':' || b[5] != b':' {
         return false;
@@ -399,7 +476,7 @@ pub fn valid_clock(s: &str) -> bool {
         && n(6) <= 60
         && (b.len() == 8 || b.len() > 9 && b[8] == b'.' && b[9..].iter().all(u8::is_ascii_digit))
 }
-pub fn valid_instant(s: &str) -> bool {
+pub(crate) fn valid_instant(s: &str) -> bool {
     let b = s.as_bytes();
     if b.len() < 20 || b[4] != b'-' || b[7] != b'-' || b[10] != b'T' || !s.ends_with('Z') {
         return false;
@@ -706,7 +783,7 @@ fn shape(v: &Value, name: &str, strict: bool) -> Result<(), Error> {
     }
     Ok(())
 }
-pub fn known_kind(kind: &str) -> bool {
+pub(crate) fn known_kind(kind: &str) -> bool {
     crate::catalog::catalog(kind).is_some()
         && matches!(
             kind,
@@ -725,13 +802,13 @@ pub fn known_kind(kind: &str) -> bool {
                 | "native"
         )
 }
-pub fn official(family: &str) -> bool {
+pub(crate) fn official(family: &str) -> bool {
     matches!(
         family,
         "wsjtx" | "qgi" | "n1mm" | "js8call" | "fldigi" | "pskreporter-mqtt" | "pskreporter-ipfix"
     )
 }
-pub fn validate(v: &Value, strict: bool) -> Result<(), Error> {
+pub(crate) fn validate(v: &Value, strict: bool) -> Result<(), Error> {
     let m = object(v)?;
     let version = string(&v["spec"])?;
     let parts: Vec<_> = version.split('.').collect();
@@ -781,55 +858,7 @@ pub fn validate(v: &Value, strict: bool) -> Result<(), Error> {
         string(nv)?;
     }
     if let Some(n) = m.get("native") {
-        shape(n, "native_payload", strict)?;
-        let forbidden: &[&str] = match n["format"].as_str() {
-            Some("mqtt_publish") => {
-                if !n
-                    .as_object()
-                    .is_some_and(|m| m.contains_key("topic") && m.contains_key("retained"))
-                {
-                    return Err(invalid("PUBLISH lacks topic or retain flag"));
-                }
-                &[
-                    "template",
-                    "header",
-                    "message_data",
-                    "set_id",
-                    "set_index",
-                    "record_index",
-                    "dependencies",
-                ]
-            }
-            Some("ipfix_record") => {
-                for k in [
-                    "template",
-                    "header",
-                    "message_data",
-                    "set_id",
-                    "set_index",
-                    "record_index",
-                ] {
-                    if n.get(k).is_none() {
-                        return Err(invalid("IPFIX record lacks evidence"));
-                    }
-                }
-                &["topic", "retained"]
-            }
-            _ => &[
-                "topic",
-                "retained",
-                "template",
-                "header",
-                "message_data",
-                "set_id",
-                "set_index",
-                "record_index",
-                "dependencies",
-            ],
-        };
-        if forbidden.iter().any(|k| n.get(*k).is_some()) {
-            return Err(invalid("native member belongs to a different class"));
-        }
+        validate_native_profile(n, strict)?;
     } else if kind != "control"
         || m.contains_key("native_version")
         || v["fields"].get("operation").is_none()
@@ -917,7 +946,7 @@ fn project(v: &Value, name: &str) -> Value {
     }
     Value::Object(result)
 }
-pub fn known_fields(v: &Value) -> Value {
+pub(crate) fn known_fields(v: &Value) -> Value {
     let mut fields = project(&v["fields"], v["kind"].as_str().unwrap_or("native"));
     if let Some(extra) = family_fields(v) {
         fields.as_object_mut().expect("fields").extend(
@@ -943,18 +972,19 @@ fn family_fields(v: &Value) -> Option<&'static str> {
         _ => None,
     }
 }
-pub fn recognized(event: &Event, profile: Option<&dyn Profile>) -> Result<Recognized, Error> {
-    recognized_with(event, profile, &crate::codec::DecodeOptions::default())
-}
-/// Read known content and verify it with caller-supplied class association.
-pub fn recognized_with(
-    event: &Event,
+pub(crate) fn recognized<'a>(
+    event: &'a Event,
     profile: Option<&dyn Profile>,
-    options: &crate::codec::DecodeOptions<'_>,
-) -> Result<Recognized, Error> {
+) -> Result<Recognized<'a>, Error> {
+    recognized_with(event, profile, &crate::codec::VerifyOptions::default())
+}
+pub(crate) fn recognized_with<'a>(
+    event: &'a Event,
+    profile: Option<&dyn Profile>,
+    options: &crate::codec::VerifyOptions,
+) -> Result<Recognized<'a>, Error> {
     let v = event.value();
     let family = v["family"].as_str().unwrap_or("");
-    let kind = v["kind"].as_str().unwrap_or("native");
     let mut context = project(&v["context"], "context");
     if !matches!(
         context["direction"].as_str(),
@@ -968,34 +998,34 @@ pub fn recognized_with(
     ) {
         context["exchange"] = "unknown".into();
     }
-    let profile = profile.filter(|p| p.family() == family);
-    let verification = if let Some(p) = profile {
-        p.verify_with(event, options)?
+    // API-4: an explicitly supplied matching profile interprets third-party families too.
+    let view = if let Some(profile) = profile.filter(|p| p.family() == family) {
+        profile.recognize(event, options)?
     } else {
-        Verification::Unavailable
-    };
-    let native_version_supported = profile.is_none_or(|p| p.native_version_supported(event));
-    let recognized_kind = if !official(family) || !known_kind(kind) || !native_version_supported {
-        "native"
-    } else {
-        kind
-    };
-    let fields = if recognized_kind == "native"
-        && (kind != "native" || !native_version_supported || !official(family))
-    {
-        serde_json::json!({})
-    } else if let Some(p) = profile {
-        p.fields(event)
-    } else {
-        known_fields(v)
+        compatible_view(event, official(family), Verification::Unavailable)?
     };
     Ok(Recognized {
-        kind: recognized_kind.into(),
-        fields,
+        event,
+        view,
         context,
-        native: v.get("native").cloned(),
-        verification,
     })
+}
+pub(crate) fn compatible_view(
+    event: &Event,
+    supported: bool,
+    verification: Verification,
+) -> Result<crate::model::ProfileView, Error> {
+    let kind = crate::model::Kind::from_token(event.kind_token()).filter(|_| supported);
+    let fields = if kind.is_some() {
+        known_fields(event.value())
+    } else {
+        serde_json::json!({})
+    };
+    crate::model::ProfileView::new(
+        kind.unwrap_or(crate::model::Kind::Native),
+        fields.as_object().expect("projected fields").clone(),
+        verification,
+    )
 }
 /// Parsed-value equality; floating fields compare correctly rounded binary64, including signed zero.
 pub fn semantic_eq(a: &Value, b: &Value) -> bool {

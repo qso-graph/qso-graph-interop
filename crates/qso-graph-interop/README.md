@@ -12,6 +12,8 @@ Install with `cargo add qso-graph-interop`. Add `serde_json` with its `float_rou
 for the JSON construction in the example below. The default features are `wsjtx`, `n1mm`, `fldigi`, `qgi`, and `serde`.
 Use `default-features = false` for the core without protocol families. Enable `conformance` to use the
 vector runner, manifest hashing, round-trip, prefix, and fuzz helpers for another codec.
+The `serde` feature adds trait integration; `serde_json` remains available for preserved values.
+Every current family feature enables `serde`.
 
 Build a command from common fields and an explicit wire target:
 
@@ -25,10 +27,12 @@ assert!(command.is_command());
 # Ok::<(), qso_graph_interop::Error>(())
 ```
 
-With `wsjtx`, pass the command to `Codec::encode_command` on `wsjtx::Wsjtx`.
+With `wsjtx`, pass the command to `Codec::encode_commands` on `wsjtx::Wsjtx`.
+The nonempty result contains ordered requests; `encode_command` retrieves a single request.
+Select a schema with `wsjtx::Schema::try_from(3)?.into()`; the default is schema 3.
 Use `Codec::decode` for observations and `Codec::reencode` to encode their native evidence.
 `Event::native_bytes` retrieves original bytes. These preserve noncanonical booleans and extensions.
-`json::parse` reads bounded event JSON; `json::write` admits compact records before publication.
+`parse` reads bounded event JSON; `write` uses `PublicationOptions` to admit compact records before publication.
 `Event::recognized` returns a compatible view and a separate native verification status.
 
 With `n1mm`, use `n1mm::N1mm` through the same traits. For example, build a frequency command
@@ -56,20 +60,22 @@ With `fldigi`, decode XML-RPC bodies with caller-supplied request association:
 ```rust
 # #[cfg(feature = "fldigi")] {
 use qso_graph_interop::{Codec, codec::DecodeOptions, fldigi::Fldigi};
-use serde_json::json;
-let mut codec = Fldigi::with_request(json!({"method":"rig.get_frequency"}));
+let mut codec = Fldigi::default();
+let options = DecodeOptions::default().with_metadata(
+    qso_graph_interop::fldigi::RequestAssociation::for_method("rig.get_frequency")?.into());
 let body = b"<methodResponse><params><param><value><double>14071000.0</double></value></param></params></methodResponse>";
-let event = codec.decode(body, &DecodeOptions::default())?.events.remove(0);
+let event = codec.decode(body, &options)?.events.remove(0);
 assert_eq!(event.value()["fields"]["dial_frequency_hz"], 14071000);
 # }
 # Ok::<(), qso_graph_interop::Error>(())
 ```
 
-Use `Codec::encode_commands` for ordered, separate request bodies and `Codec::verify_with`
-or `reencode_with` for per-call association. See the [fldigi guide](../../docs/user/fldigi.md).
+Use `Codec::encode_commands` for an ordered request plan with per-response metadata.
+Pass `VerifyOptions` to `Profile::verify` and `Codec::reencode` for per-call association. See the [fldigi guide](../../docs/user/fldigi.md).
 
-The public `Codec` and `Profile` traits support third-party families without a fork. Stream codecs
-consume a caller-owned buffer; stateful codecs receive a caller session key and expiry input and
+The public `Codec` and `Profile` traits support third-party families without a fork.
+`Codec::stream` exposes borrowed stream decoding and explicit progress. `Codec::carriage`
+exposes QGI event encoding through `PublicationOptions`; Stateful codecs receive a caller session key and expiry input and
 support resetting one session or all sessions. No codec opens a socket or reads a clock.
 
 See [the user guides](../../docs/user/) and [protocol documentation](../../docs/PROTOCOL.md).

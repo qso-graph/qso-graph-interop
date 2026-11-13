@@ -17,15 +17,19 @@ pub enum Category {
     InvalidValue,
 }
 
+/// Display strings are diagnostic, not stable values to parse.
 /// An atomic message failure. A family cause can be recovered with `source().downcast_ref()`.
 #[derive(Debug)]
 #[non_exhaustive]
 pub struct Error {
-    pub category: Category,
+    category: Category,
     message: String,
     source: Option<Box<dyn StdError + Send + Sync>>,
 }
 impl Error {
+    pub fn category(&self) -> Category {
+        self.category
+    }
     pub fn new(category: Category, message: impl Into<String>) -> Self {
         Self {
             category,
@@ -53,9 +57,9 @@ impl StdError for Error {
             .map(|e| e as &(dyn StdError + 'static))
     }
 }
-pub fn invalid(message: &str) -> Error {
+pub(crate) fn invalid(message: &str) -> Error {
     Error::new(Category::InvalidValue, message)
 }
-pub fn oversized(message: &str) -> Error {
+pub(crate) fn oversized(message: &str) -> Error {
     Error::new(Category::Oversized, message)
 }

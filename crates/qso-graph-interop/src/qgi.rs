@@ -22,7 +22,7 @@ pub enum Delimiter {
 }
 #[derive(Debug)]
 #[non_exhaustive]
-pub struct Error {
+struct Error {
     cause: CoreError,
 }
 impl std::fmt::Display for Error {
@@ -36,7 +36,7 @@ impl std::error::Error for Error {
     }
 }
 fn family(e: CoreError) -> CoreError {
-    CoreError::family(e.category, Error { cause: e })
+    CoreError::family(e.category(), Error { cause: e })
 }
 #[derive(Clone, Debug)]
 #[non_exhaustive]
@@ -84,15 +84,20 @@ impl Qgi {
         hops.push(hop);
         crate::json::bounds(&v, self.limit())?;
         let event = Event::from_value(v)?;
-        crate::json::write(&event, false, None)?;
+        crate::json::write(
+            &event,
+            &crate::PublicationOptions::new(crate::PublicationMode::Preserved),
+        )?;
         Ok(Outcome::event(event))
     }
-    /// Write or forward an event without adding a hop; receiving is the only hop-appending operation.
+    /// Forward without adding a hop. Current revisions use authored admission; newer revisions
+    /// use preserved admission. PublicationOptions supplies the original profile and association.
     pub fn encode_event(
         &self,
         event: &Event,
-        profile: Option<&dyn Profile>,
+        options: &PublicationOptions<'_>,
     ) -> Result<Vec<u8>, CoreError> {
+        let profile = options.profile();
         let v = event.value();
         let newer = v["spec"] != "0.1.0"
             || v["mapping"].as_u64().is_some_and(|r| r > 1)
@@ -102,7 +107,20 @@ impl Qgi {
                         .as_u64()
                         .is_some_and(|r| r > u64::from(p.mapping()))
             });
-        let mut bytes = crate::json::write(event, !newer, profile).map_err(family)?;
+        let mut bytes = crate::json::write(event, &{
+            let publication = PublicationOptions::new(if newer {
+                PublicationMode::Preserved
+            } else {
+                PublicationMode::Authored
+            })
+            .with_verification(options.verification().clone());
+            if let Some(profile) = profile {
+                publication.with_profile(profile)
+            } else {
+                publication
+            }
+        })
+        .map_err(family)?;
         if bytes.len() > self.limit() {
             return Err(family(oversized(
                 "qgi output exceeds transport frame limit",
@@ -119,13 +137,27 @@ impl Qgi {
     }
 }
 impl Profile for Qgi {
+    fn native_version_supported(&self, _: &Event) -> bool {
+        true
+    }
+    fn validate_authored(&self, _: &Event, _: &VerifyOptions) -> Result<(), CoreError> {
+        Ok(())
+    }
+    fn recognize(
+        &self,
+        event: &Event,
+        options: &VerifyOptions,
+    ) -> Result<crate::model::ProfileView, CoreError> {
+        crate::json::compatible_view(event, true, self.verify(event, options)?)
+    }
+
     fn family(&self) -> &str {
         "qgi"
     }
     fn mapping(&self) -> u32 {
         1
     }
-    fn verify(&self, _: &Event) -> Result<Verification, CoreError> {
+    fn verify(&self, _: &Event, _: &VerifyOptions) -> Result<Verification, CoreError> {
         Ok(Verification::Unavailable)
     }
 }
@@ -172,55 +204,93 @@ impl Codec for Qgi {
         }
         self.receive(&input[..size], options).map_err(family)
     }
+
+    fn stream(&mut self) -> Option<&mut dyn StreamCodec> {
+        if self.transport == Transport::Tcp {
+            Some(self)
+        } else {
+            None
+        }
+    }
+    fn carriage(&self) -> Option<&dyn EventCarriage> {
+        Some(self)
+    }
+    fn encode_commands(&self, _: &Event, _: &EncodeOptions) -> Result<EncodedCommands, CoreError> {
+        Err(family(invalid("QGI requires event carriage encoding")))
+    }
+    fn reencode(
+        &self,
+        _: &Event,
+        _: &EncodeOptions,
+        _: &VerifyOptions,
+    ) -> Result<Vec<u8>, CoreError> {
+        Err(family(invalid("QGI requires event carriage encoding")))
+    }
+}
+impl EventCarriage for Qgi {
+    fn encode_event(
+        &self,
+        event: &Event,
+        options: &PublicationOptions<'_>,
+    ) -> Result<Vec<u8>, CoreError> {
+        Qgi::encode_event(self, event, options)
+    }
+}
+impl StreamCodec for Qgi {
     fn decode_stream(
         &mut self,
-        buffer: &mut Vec<u8>,
+        input: &[u8],
         eof: bool,
         options: &DecodeOptions<'_>,
-    ) -> Result<Option<Outcome>, CoreError> {
+    ) -> StreamStep {
         if self.transport != Transport::Tcp {
-            return Err(family(invalid("UDP codec has no stream frames")));
+            return StreamStep::new(0, Err(family(invalid("UDP codec has no stream frames"))));
         }
-        if let Some(lf) = buffer.iter().position(|b| *b == b'\n') {
-            let end = if lf > 0 && buffer[lf - 1] == b'\r' {
+        if let Some(lf) = input.iter().position(|b| *b == b'\n') {
+            let end = if lf > 0 && input[lf - 1] == b'\r' {
                 lf - 1
             } else {
                 lf
             };
             let result = if self.discarding {
                 self.discarding = false;
-                Ok(None)
+                // API-5: recovery made progress; a complete frame may follow in this input.
+                Ok(StreamStatus::Discarded)
             } else {
-                self.receive(&buffer[..end], options).map(Some)
+                self.receive(&input[..end], options)
+                    .map(StreamStatus::Frame)
             };
-            buffer.drain(..=lf);
-            return result.map_err(family);
+            return StreamStep::new(lf + 1, result.map_err(family));
         }
         if self.discarding {
-            buffer.clear();
             if eof {
                 self.discarding = false;
             }
-            return Ok(None);
+            return StreamStep::new(
+                input.len(),
+                Ok(if input.is_empty() {
+                    StreamStatus::NeedMore
+                } else {
+                    StreamStatus::Discarded
+                }),
+            );
         }
-        if buffer.len() > MAX_RECORD + usize::from(buffer.last() == Some(&b'\r')) {
-            buffer.clear();
+        if input.len() > MAX_RECORD + usize::from(input.last() == Some(&b'\r')) {
             self.discarding = !eof;
-            return Err(family(oversized("qgi TCP frame exceeds 1 MiB")));
+            return StreamStep::new(
+                input.len(),
+                Err(family(oversized("qgi TCP frame exceeds 1 MiB"))),
+            );
         }
-        if eof && !buffer.is_empty() {
-            buffer.clear();
-            return Err(family(CoreError::new(
-                Category::Truncated,
-                "unfinished qgi TCP record",
-            )));
+        if eof && !input.is_empty() {
+            return StreamStep::new(
+                input.len(),
+                Err(family(CoreError::new(
+                    Category::Truncated,
+                    "unfinished qgi TCP record",
+                ))),
+            );
         }
-        Ok(None)
-    }
-    fn encode_command(&self, event: &Event, _: &EncodeOptions) -> Result<Vec<u8>, CoreError> {
-        self.encode_event(event, None)
-    }
-    fn reencode(&self, event: &Event, _: &EncodeOptions) -> Result<Vec<u8>, CoreError> {
-        self.encode_event(event, None)
+        StreamStep::new(0, Ok(StreamStatus::NeedMore))
     }
 }

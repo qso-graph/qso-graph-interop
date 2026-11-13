@@ -5,6 +5,16 @@
 
 ### Added
 
+- Complete the pre-publish public API review (API-1 through API-12): immutable typed
+  event views; private typed options and per-call fldigi request association;
+  canonical open, object-safe traits and validated external profile recognition;
+  explicit stream progress and QGI carriage; bounded publication options and opaque
+  native evidence; ordered nonempty command plans with response metadata;
+  extensible payloads, immutable error categories, and value/equality contracts.
+  Update CLI, FFI, fuzzing, conformance, tests, and documentation. Add the explicit
+  `qgi_encode_event` C entry point while preserving existing ABI behavior and JSON.
+
+
 - Run Rust FFI boundary tests under pinned-nightly Miri and the linked C caller under
   Rust AddressSanitizer plus C AddressSanitizer/UndefinedBehaviorSanitizer on
   Linux x86_64 GNU in verification and CI. Require both tools to catch isolated,

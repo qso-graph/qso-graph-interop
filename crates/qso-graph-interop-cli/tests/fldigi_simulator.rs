@@ -73,8 +73,9 @@ impl Server {
         Fldigi::default()
             .encode_commands(&event, &EncodeOptions::default())
             .unwrap()
+            .requests()
             .iter()
-            .map(|b| self.request(b))
+            .map(|b| self.request(b.bytes()))
             .collect()
     }
     fn get(&self, method: &str) -> Value {
@@ -124,8 +125,17 @@ fn read_response(socket: &mut TcpStream) -> Vec<u8> {
     body
 }
 fn observed(method: &str, body: &[u8]) -> Value {
-    Fldigi::with_request(json!({"method":method,"arguments":[0,-1]}))
-        .decode(body, &DecodeOptions::default())
+    Fldigi::default()
+        .decode(
+            body,
+            &DecodeOptions::default().with_metadata(
+                qso_graph_interop::fldigi::RequestAssociation::from_value(
+                    json!({"method":method,"arguments":[0,-1]}),
+                )
+                .unwrap()
+                .into(),
+            ),
+        )
         .unwrap()
         .events
         .remove(0)

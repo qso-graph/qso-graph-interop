@@ -79,27 +79,29 @@ Enable the default `fldigi` feature. Supply one body and caller context through 
 public codec traits. To associate a response and retain correlation:
 
 ```rust
-use qso_graph_interop::{Codec, codec::DecodeOptions, fldigi::Fldigi};
-use serde_json::json;
+use qso_graph_interop::{Codec, Context, Direction, Exchange, Text, DecodeOptions,
+    fldigi::{Fldigi, RequestAssociation}};
 
-let mut codec = Fldigi::with_request(json!({"method":"rx.get_data"}));
-let mut options = DecodeOptions::default();
-options.context = json!({"direction":"from_application", "exchange":"response",
-    "correlation_id":"synthetic-Q1AAA-1"});
+let mut codec = Fldigi::default();
+let options = DecodeOptions::new(Context::new(Direction::FromApplication, Exchange::Response)
+    .with_correlation_id(Text::from("synthetic-Q1AAA-1")))
+    .with_metadata(RequestAssociation::for_method("rx.get_data")?.into());
 let body = b"<methodResponse><params><param><value><base64>Q1EgUTFBQUE=</base64></value></param></params></methodResponse>";
 let event = codec.decode(body, &options)?.events.remove(0);
 assert_eq!(event.value()["fields"]["text"], "CQ Q1AAA");
 ```
 
-Alternatively, set `options.native["request"]` to an object with `method` and optional
-`arguments`. Use `verify_with` and `reencode_with` to supply that association for
-per-call consistency checking. `Event::recognized_with` and `json::write_with`
-use the same options for compatible reading and strict publication. A `text.get_rx` response needs its request's two
-integer arguments, for example `{"method":"text.get_rx","arguments":[0,64]}`.
+Use `RequestAssociation::from_request_body` when you have the original request.
+It retains the two integer arguments needed to interpret a `text.get_rx` response.
+Pass `options.verification()` to `Profile::verify`, `Codec::reencode`, or
+`Event::recognized_with`. For authored publication, pass it through
+`PublicationOptions::with_verification` to `write`.
 Without association, method-dependent verification is unavailable. The structured
 view never substitutes for caller association.
 
-Use `Codec::encode_commands` to construct commands from fields. `send_text` requires
+Use `Codec::encode_commands` to construct an ordered request plan from fields.
+Each `EncodedRequest` provides `bytes()` and `response_metadata()`. Apply that metadata
+to the response decode options. Planning does not send requests or imply atomic execution. `send_text` requires
 string `text` and boolean `transmit`; it returns `text.add_tx` first, then `main.tx`
 only for true. `set_frequency` requires integer `frequency_hz` and optionally
 `rx_offset_hz`; it returns `rig.set_frequency` first, then `modem.set_carrier` if

@@ -518,7 +518,7 @@ impl Parser {
             self.ws();
             let raw = self.quoted()?;
             let value = self.processed(&raw, true, true).map_err(|e| {
-                if e.category == Category::Truncated {
+                if e.category() == Category::Truncated {
                     malformed()
                 } else {
                     e
@@ -734,7 +734,7 @@ pub(crate) fn parse_with(bytes: &[u8], limits: XmlLimits) -> Result<Document, Er
         limits,
     };
     p.declaration().map_err(|e| {
-        if limits.declaration_eof_malformed && e.category == Category::Truncated {
+        if limits.declaration_eof_malformed && e.category() == Category::Truncated {
             malformed()
         } else {
             e

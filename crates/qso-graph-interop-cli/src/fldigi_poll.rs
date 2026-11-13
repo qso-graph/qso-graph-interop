@@ -163,19 +163,39 @@ pub fn run(options: Poll) -> Result<(), Box<dyn std::error::Error>> {
     let mut cycle = 0_u64;
     loop {
         for method in METHODS {
-            let association = json!({"method":method});
-            let mut codec = Fldigi::with_request(association);
+            let mut codec = Fldigi::default();
             let op = format!("fldigi.{}", method.replace('.', "_"));
             let command = Event::from_value(
                 json!({"spec":"0.1.0","family":"fldigi","mapping":1,"kind":"control","context":{"direction":"to_application","exchange":"request"},"fields":{"operation":op}}),
             )?;
-            let bytes = codec.encode_command(&command, &EncodeOptions::default())?;
-            let body = request(options.address, &bytes)?;
-            let mut decode = DecodeOptions::default();
-            decode.structured = true;
-            decode.context = json!({"direction":"from_application","exchange":"response","correlation_id":format!("poll-{cycle}-{method}")});
+            let commands = codec.encode_commands(&command, &EncodeOptions::default())?;
+            let planned = &commands.requests()[0];
+            let body = request(options.address, planned.bytes())?;
+            let decode = DecodeOptions::new(
+                qso_graph_interop::Context::new(
+                    qso_graph_interop::Direction::FromApplication,
+                    qso_graph_interop::Exchange::Response,
+                )
+                .with_correlation_id(qso_graph_interop::Text::String(format!(
+                    "poll-{cycle}-{method}"
+                ))),
+            )
+            .with_structured(true)
+            .with_metadata(
+                planned
+                    .response_metadata()
+                    .expect("fldigi request metadata")
+                    .clone(),
+            );
             for event in codec.decode(&body, &decode)?.events {
-                output.write_all(&qso_graph_interop::json::write(&event, true, Some(&codec))?)?;
+                output.write_all(&qso_graph_interop::json::write(
+                    &event,
+                    &qso_graph_interop::PublicationOptions::new(
+                        qso_graph_interop::PublicationMode::Authored,
+                    )
+                    .with_profile(&codec)
+                    .with_verification(decode.verification()),
+                )?)?;
                 writeln!(output)?;
             }
             output.flush()?;

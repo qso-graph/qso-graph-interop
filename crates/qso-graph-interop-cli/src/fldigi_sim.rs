@@ -462,16 +462,25 @@ mod tests {
         State::new(&s)
     }
     fn command(fields: Value) -> Vec<Vec<u8>> {
-        Fldigi::default().encode_commands(&Event::from_value(json!({"spec":"0.1.0","family":"fldigi","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"fields":fields})).unwrap(), &EncodeOptions::default()).unwrap()
+        Fldigi::default().encode_commands(&Event::from_value(json!({"spec":"0.1.0","family":"fldigi","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"fields":fields})).unwrap(), &EncodeOptions::default()).unwrap().requests().iter().map(|r| r.bytes().to_vec()).collect()
     }
     fn request(method: &str, args: &str) -> Vec<u8> {
         format!("<methodCall><methodName>{method}</methodName><params>{args}</params></methodCall>")
             .into_bytes()
     }
     fn checked(method: &str, body: &[u8], expected_kind: &str) -> bool {
-        let mut codec = Fldigi::with_request(json!({"method":method,"arguments":[0,-1]}));
+        let mut codec = Fldigi::default();
         let e = codec
-            .decode(body, &DecodeOptions::default())
+            .decode(
+                body,
+                &DecodeOptions::default().with_metadata(
+                    qso_graph_interop::fldigi::RequestAssociation::from_value(
+                        json!({"method":method,"arguments":[0,-1]}),
+                    )
+                    .unwrap()
+                    .into(),
+                ),
+            )
             .unwrap()
             .events
             .remove(0);

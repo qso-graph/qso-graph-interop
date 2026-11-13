@@ -12,16 +12,29 @@ use qso_graph_interop::{
 fn observation(bytes: &[u8]) {
     let mut codec = N1mm::default();
     let mut options = DecodeOptions::default();
-    options.structured = true;
+    options = options.with_structured(true);
     if let Ok(out) = codec.decode(bytes, &options) {
         assert!(out.events.len() + out.skips.len() == 1);
         for event in out.events {
             assert_eq!(event.native_bytes().unwrap(), bytes);
             assert_eq!(
-                codec.reencode(&event, &EncodeOptions::default()).unwrap(),
+                codec
+                    .reencode(
+                        &event,
+                        &EncodeOptions::default(),
+                        &qso_graph_interop::VerifyOptions::default()
+                    )
+                    .unwrap(),
                 bytes
             );
-            let json = qso_graph_interop::json::write(&event, true, Some(&codec)).unwrap();
+            let json = qso_graph_interop::json::write(
+                &event,
+                &qso_graph_interop::PublicationOptions::new(
+                    qso_graph_interop::PublicationMode::Authored,
+                )
+                .with_profile(&codec),
+            )
+            .unwrap();
             let read = qso_graph_interop::json::parse(&json, MAX_RECORD).unwrap();
             assert!(qso_graph_interop::json::semantic_eq(
                 event.value(),

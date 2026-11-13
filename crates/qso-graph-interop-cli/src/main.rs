@@ -230,11 +230,18 @@ fn emit(
     output: &mut impl Write,
     direction: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let mut options = DecodeOptions::default();
-    options.context = serde_json::json!({"direction": direction, "exchange": "unknown"});
+    let options = DecodeOptions::new(qso_graph_interop::Context::from_value(
+        serde_json::json!({"direction": direction, "exchange": "unknown"}),
+    )?);
     let outcome = codec.decode(bytes, &options)?;
     for event in outcome.events {
-        output.write_all(&qso_graph_interop::json::write(&event, true, Some(codec))?)?;
+        output.write_all(&qso_graph_interop::json::write(
+            &event,
+            &qso_graph_interop::PublicationOptions::new(
+                qso_graph_interop::PublicationMode::Authored,
+            )
+            .with_profile(codec),
+        )?)?;
         writeln!(output)?;
     }
     for skip in outcome.skips {
@@ -252,36 +259,31 @@ fn decode_file(options: Decode) -> Result<(), Box<dyn std::error::Error>> {
         selected_codec(options.n1mm)
     };
     let mut decode = DecodeOptions::default();
-    decode.structured = true;
+    decode = decode.with_structured(true);
     if let Some(method) = options.request_method {
-        decode
-            .native
-            .insert("request".into(), serde_json::json!({"method":method}));
+        let metadata = match qso_graph_interop::fldigi::RequestAssociation::for_method(&method) {
+            Ok(association) => association.into(),
+            // API-2: malformed boundary metadata must retain native-parser error precedence.
+            Err(_) => DecodeOptions::from_value(
+                &serde_json::json!({"native":{"request":{"method":method}}}),
+            )?
+            .metadata(),
+        };
+        decode = decode.with_metadata(metadata);
     }
     if let Some(file) = options.request_file {
         let mut request = Vec::new();
         std::fs::File::open(file)?
             .take((qso_graph_interop::fldigi::MAX_BODY + 1) as u64)
             .read_to_end(&mut request)?;
-        let mut view_options = DecodeOptions::default();
-        view_options.structured = true;
-        let out = codec.decode(&request, &view_options)?;
-        let event = &out.events[0];
-        let view = &event.value()["native"]["message"];
-        if view["root"] != "methodCall" {
+        let request_view =
+            codec.decode(&request, &DecodeOptions::default().with_structured(true))?;
+        if request_view.events[0].value()["native"]["message"]["root"] != "methodCall" {
             return Err("--request-file must contain a request".into());
         }
-        let method = view["method"]
-            .as_str()
-            .ok_or("request file has no method")?;
-        let mut association = serde_json::json!({"method":method});
-        if method == "text.get_rx" {
-            association["arguments"] = serde_json::json!([
-                event.value()["fields"]["rx_start"],
-                event.value()["fields"]["rx_length"]
-            ]);
-        }
-        decode.native.insert("request".into(), association);
+        decode = decode.with_metadata(
+            qso_graph_interop::fldigi::RequestAssociation::from_request_body(&request)?.into(),
+        );
     }
     let input: Box<dyn Read> = if options.file.as_os_str() == "-" {
         Box::new(io::stdin().lock())
@@ -296,7 +298,7 @@ fn decode_file(options: Decode) -> Result<(), Box<dyn std::error::Error>> {
         return emit(codec.as_mut(), &bytes, &mut io::stdout().lock(), "unknown");
     }
     let out = codec.decode(&bytes, &decode)?;
-    if !decode.native.contains_key("request")
+    if !decode.metadata().extensions().contains_key("request")
         && out.events[0].value()["native"]["message"]["root"] == "methodResponse"
     {
         return Err("fldigi responses require --request-method NAME or --request-file FILE".into());
@@ -304,7 +306,12 @@ fn decode_file(options: Decode) -> Result<(), Box<dyn std::error::Error>> {
     for event in out.events {
         io::stdout()
             .lock()
-            .write_all(&qso_graph_interop::json::write(&event, false, None)?)?;
+            .write_all(&qso_graph_interop::json::write(
+                &event,
+                &qso_graph_interop::PublicationOptions::new(
+                    qso_graph_interop::PublicationMode::Preserved,
+                ),
+            )?)?;
         println!();
     }
     Ok(())

@@ -58,8 +58,11 @@ fn received(e: &Event) -> io::Result<Option<i64>> {
         .transpose()
 }
 fn qgi_bytes(event: &Event) -> io::Result<Vec<u8>> {
-    let bytes =
-        qso_graph_interop::json::write(event, false, None).map_err(|e| invalid(&e.to_string()))?;
+    let bytes = qso_graph_interop::json::write(
+        event,
+        &qso_graph_interop::PublicationOptions::new(qso_graph_interop::PublicationMode::Preserved),
+    )
+    .map_err(|e| invalid(&e.to_string()))?;
     Qgi::new(Transport::Udp)
         .decode(&bytes, &Default::default())
         .map_err(|e| invalid(&e.to_string()))?;

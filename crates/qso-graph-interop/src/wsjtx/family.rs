@@ -200,10 +200,25 @@ fn mapped(
         v["native"]["message"] = json!({"schema":packet.schema,"type":n,"id":text_value(&packet.id),"body":structured,"extensions":crate::base64::encode(&packet.extensions)});
     }
     let event = Event::from_value(v)?;
-    crate::json::write(&event, false, None)?;
+    crate::json::write(
+        &event,
+        &crate::PublicationOptions::new(crate::PublicationMode::Preserved),
+    )?;
     Ok(event)
 }
 impl Profile for Wsjtx {
+    fn recognize(
+        &self,
+        event: &Event,
+        options: &crate::codec::VerifyOptions,
+    ) -> Result<crate::model::ProfileView, crate::Error> {
+        crate::json::compatible_view(
+            event,
+            self.native_version_supported(event),
+            self.verify(event, options)?,
+        )
+    }
+
     fn family(&self) -> &str {
         "wsjtx"
     }
@@ -217,10 +232,11 @@ impl Profile for Wsjtx {
                 Some("1" | "2" | "3")
             )
     }
-    fn fields(&self, event: &Event) -> Value {
-        crate::json::known_fields(event.value())
-    }
-    fn verify(&self, event: &Event) -> Result<Verification, crate::Error> {
+    fn verify(
+        &self,
+        event: &Event,
+        _options: &crate::codec::VerifyOptions,
+    ) -> Result<Verification, crate::Error> {
         (|| {
             let v = event.value();
             if v["family"] != "wsjtx" || event.is_command() {
@@ -294,7 +310,11 @@ impl Profile for Wsjtx {
         })()
         .map_err(family_failure)
     }
-    fn validate_authored(&self, event: &Event) -> Result<(), crate::Error> {
+    fn validate_authored(
+        &self,
+        event: &Event,
+        options: &crate::codec::VerifyOptions,
+    ) -> Result<(), crate::Error> {
         (|| {
             if crate::json::integer_u64(&event.value()["mapping"]) != Some(1) {
                 return Err(crate::Error::new(
@@ -303,7 +323,7 @@ impl Profile for Wsjtx {
                 ));
             }
             if !event.is_command() {
-                self.verify(event)?;
+                self.verify(event, options)?;
             }
             if event.value()["native"].get("message").is_some() {
                 let bytes = event.native_bytes()?;
@@ -363,7 +383,123 @@ impl Codec for Wsjtx {
         })()
         .map_err(family_failure)
     }
-    fn encode_command(
+    fn encode_commands(
+        &self,
+        event: &Event,
+        options: &EncodeOptions,
+    ) -> Result<crate::codec::EncodedCommands, crate::Error> {
+        crate::codec::EncodedCommands::new(vec![crate::codec::EncodedRequest::new(
+            self.encode_native_command(event, options)?,
+            None,
+        )])
+    }
+    fn reencode(
+        &self,
+        event: &Event,
+        _: &EncodeOptions,
+        verify: &crate::codec::VerifyOptions,
+    ) -> Result<Vec<u8>, crate::Error> {
+        (|| {
+            if self.verify(event, verify)? != Verification::Verified {
+                return Err(invalid("native evidence cannot be verified"));
+            }
+            let Outcome::Message(p) = super::decode(&event.native_bytes()?)? else {
+                return Err(invalid("native evidence is unavailable"));
+            };
+            super::encode(&p).map_err(Into::into)
+        })()
+        .map_err(family_failure)
+    }
+}
+fn unsigned(v: &Value) -> Result<u64, crate::Error> {
+    crate::json::integer_u64(v).ok_or_else(|| invalid("command requires an unsigned integer"))
+}
+fn utf8(v: &Value, limit: usize) -> Result<Utf8, crate::Error> {
+    if v.is_null() {
+        return Ok(Utf8::default());
+    }
+    if let Some(s) = v.as_str() {
+        if s.len() > limit {
+            return Err(Error::Length.into());
+        }
+        return Ok(s.into());
+    }
+    let b = v
+        .get("utf8_bytes")
+        .and_then(Value::as_array)
+        .ok_or_else(|| invalid("command requires UTF-8 text"))?;
+    if b.len() > limit {
+        return Err(Error::Length.into());
+    }
+    let bytes: Vec<u8> = b
+        .iter()
+        .map(|v| {
+            unsigned(v)
+                .and_then(|n| u8::try_from(n).map_err(|_| invalid("UTF-8 byte out of range")))
+        })
+        .collect::<Result<_, _>>()?;
+    if std::str::from_utf8(&bytes).is_ok() {
+        return Err(invalid("valid UTF-8 must use a string"));
+    }
+    Ok(Utf8 { bytes: Some(bytes) })
+}
+fn binary64(v: &Value) -> Result<f64, crate::Error> {
+    if let Some(n) = v.as_f64().filter(|f| f.is_finite()) {
+        return Ok(n);
+    }
+    let s = v
+        .as_str()
+        .and_then(|s| s.strip_prefix("ieee754:"))
+        .filter(|s| {
+            s.len() == 16
+                && s.bytes()
+                    .all(|b| b.is_ascii_digit() || matches!(b, b'a'..=b'f'))
+        })
+        .ok_or_else(|| invalid("invalid binary64 argument"))?;
+    let f =
+        f64::from_bits(u64::from_str_radix(s, 16).map_err(|_| invalid("invalid binary64 bits"))?);
+    if f.is_finite() {
+        return Err(invalid("finite binary64 must be a number"));
+    }
+    Ok(f)
+}
+fn milliseconds(v: &Value) -> Result<u32, crate::Error> {
+    let s = v
+        .as_str()
+        .filter(|s| crate::json::valid_clock(s))
+        .ok_or_else(|| invalid("invalid reply time"))?;
+    let h: u32 = s[0..2].parse().map_err(|_| invalid("invalid hour"))?;
+    let m: u32 = s[3..5].parse().map_err(|_| invalid("invalid minute"))?;
+    let sec: u32 = s[6..8].parse().map_err(|_| invalid("invalid second"))?;
+    let frac = s.get(9..).unwrap_or("");
+    if sec >= 60 || frac.get(3..).is_some_and(|s| s.bytes().any(|b| b != b'0')) {
+        return Err(invalid("reply time is not representable as milliseconds"));
+    }
+    let mut f = frac.chars().take(3).collect::<String>();
+    while f.len() < 3 {
+        f.push('0');
+    }
+    Ok(h * 3_600_000
+        + m * 60_000
+        + sec * 1000
+        + f.parse::<u32>().map_err(|_| invalid("invalid fraction"))?)
+}
+
+fn family_failure(e: crate::Error) -> crate::Error {
+    use std::error::Error as _;
+    if e.source().is_some_and(|s| s.is::<Error>()) {
+        e
+    } else {
+        Error::Event {
+            category: e.category(),
+            message: e.to_string(),
+        }
+        .into()
+    }
+}
+
+impl Wsjtx {
+    fn encode_native_command(
         &self,
         event: &Event,
         options: &EncodeOptions,
@@ -379,6 +515,9 @@ impl Codec for Wsjtx {
                     Category::UnsupportedVersion,
                     "unsupported WSJT-X command mapping or specification",
                 ));
+            }
+            if options.native.keys().any(|key| key != "schema") {
+                return Err(invalid("unknown WSJT-X encoding option"));
             }
             let schema = match options.native.get("schema") {
                 None => 3,
@@ -481,102 +620,52 @@ impl Codec for Wsjtx {
         })()
         .map_err(family_failure)
     }
-    fn reencode(&self, event: &Event, _: &EncodeOptions) -> Result<Vec<u8>, crate::Error> {
-        (|| {
-            if self.verify(event)? != Verification::Verified {
-                return Err(invalid("native evidence cannot be verified"));
-            }
-            let Outcome::Message(p) = super::decode(&event.native_bytes()?)? else {
-                return Err(invalid("native evidence is unavailable"));
-            };
-            super::encode(&p).map_err(Into::into)
-        })()
-        .map_err(family_failure)
-    }
-}
-fn unsigned(v: &Value) -> Result<u64, crate::Error> {
-    crate::json::integer_u64(v).ok_or_else(|| invalid("command requires an unsigned integer"))
-}
-fn utf8(v: &Value, limit: usize) -> Result<Utf8, crate::Error> {
-    if v.is_null() {
-        return Ok(Utf8::default());
-    }
-    if let Some(s) = v.as_str() {
-        if s.len() > limit {
-            return Err(Error::Length.into());
-        }
-        return Ok(s.into());
-    }
-    let b = v
-        .get("utf8_bytes")
-        .and_then(Value::as_array)
-        .ok_or_else(|| invalid("command requires UTF-8 text"))?;
-    if b.len() > limit {
-        return Err(Error::Length.into());
-    }
-    let bytes: Vec<u8> = b
-        .iter()
-        .map(|v| {
-            unsigned(v)
-                .and_then(|n| u8::try_from(n).map_err(|_| invalid("UTF-8 byte out of range")))
-        })
-        .collect::<Result<_, _>>()?;
-    if std::str::from_utf8(&bytes).is_ok() {
-        return Err(invalid("valid UTF-8 must use a string"));
-    }
-    Ok(Utf8 { bytes: Some(bytes) })
-}
-fn binary64(v: &Value) -> Result<f64, crate::Error> {
-    if let Some(n) = v.as_f64().filter(|f| f.is_finite()) {
-        return Ok(n);
-    }
-    let s = v
-        .as_str()
-        .and_then(|s| s.strip_prefix("ieee754:"))
-        .filter(|s| {
-            s.len() == 16
-                && s.bytes()
-                    .all(|b| b.is_ascii_digit() || matches!(b, b'a'..=b'f'))
-        })
-        .ok_or_else(|| invalid("invalid binary64 argument"))?;
-    let f =
-        f64::from_bits(u64::from_str_radix(s, 16).map_err(|_| invalid("invalid binary64 bits"))?);
-    if f.is_finite() {
-        return Err(invalid("finite binary64 must be a number"));
-    }
-    Ok(f)
-}
-fn milliseconds(v: &Value) -> Result<u32, crate::Error> {
-    let s = v
-        .as_str()
-        .filter(|s| crate::json::valid_clock(s))
-        .ok_or_else(|| invalid("invalid reply time"))?;
-    let h: u32 = s[0..2].parse().map_err(|_| invalid("invalid hour"))?;
-    let m: u32 = s[3..5].parse().map_err(|_| invalid("invalid minute"))?;
-    let sec: u32 = s[6..8].parse().map_err(|_| invalid("invalid second"))?;
-    let frac = s.get(9..).unwrap_or("");
-    if sec >= 60 || frac.get(3..).is_some_and(|s| s.bytes().any(|b| b != b'0')) {
-        return Err(invalid("reply time is not representable as milliseconds"));
-    }
-    let mut f = frac.chars().take(3).collect::<String>();
-    while f.len() < 3 {
-        f.push('0');
-    }
-    Ok(h * 3_600_000
-        + m * 60_000
-        + sec * 1000
-        + f.parse::<u32>().map_err(|_| invalid("invalid fraction"))?)
 }
 
-fn family_failure(e: crate::Error) -> crate::Error {
-    use std::error::Error as _;
-    if e.source().is_some_and(|s| s.is::<Error>()) {
-        e
-    } else {
-        Error::Event {
-            category: e.category,
-            message: e.to_string(),
+#[cfg(test)]
+mod admission_tests {
+    use super::*;
+    use crate::wsjtx;
+    // API-7: keep carriage-admission assertions beside the codec now that its parser is internal.
+    #[test]
+    fn maximum_invalid_text_observation_fits_annex_b_budget_with_structured_view() {
+        let mut bytes = Vec::new();
+        for word in [wsjtx::MAGIC, 3, 9, 0] {
+            bytes.extend_from_slice(&word.to_be_bytes());
         }
-        .into()
+        let text_len = wsjtx::MAX_DATAGRAM - bytes.len() - 5;
+        bytes.extend_from_slice(&(text_len as u32).to_be_bytes());
+        bytes.resize(bytes.len() + text_len, 255);
+        bytes.push(0);
+        let mut options = DecodeOptions::default();
+        options = options.with_structured(true);
+        let event = Wsjtx::default()
+            .decode(&bytes, &options)
+            .unwrap()
+            .events
+            .remove(0);
+        let record = crate::json::write(
+            &event,
+            &crate::PublicationOptions::new(crate::PublicationMode::Authored)
+                .with_profile(&Wsjtx::default()),
+        )
+        .unwrap();
+        assert!(record.len() <= crate::model::MAX_RECORD);
+        let restored = crate::json::parse(&record, crate::model::MAX_RECORD).unwrap();
+        assert_eq!(restored.native_bytes().unwrap(), bytes);
+        assert_eq!(
+            crate::json::parse_carriage(&record, crate::model::MAX_RECORD)
+                .unwrap_err()
+                .category(),
+            crate::Category::Oversized
+        );
+        bytes.push(0);
+        assert_eq!(
+            Wsjtx::default()
+                .decode(&bytes, &options)
+                .unwrap_err()
+                .category(),
+            crate::Category::Oversized
+        );
     }
 }

@@ -37,7 +37,11 @@ fn all_120_synthetic_sample_decodes_and_every_prefix() {
         ));
         assert_eq!(
             Wsjtx::default()
-                .reencode(&event, &EncodeOptions::default())
+                .reencode(
+                    &event,
+                    &EncodeOptions::default(),
+                    &qso_graph_interop::VerifyOptions::default()
+                )
                 .unwrap(),
             bytes
         );
@@ -46,7 +50,11 @@ fn all_120_synthetic_sample_decodes_and_every_prefix() {
                 assert_eq!(out.events.len(), 1);
                 assert_eq!(
                     Wsjtx::default()
-                        .reencode(&out.events[0], &EncodeOptions::default())
+                        .reencode(
+                            &out.events[0],
+                            &EncodeOptions::default(),
+                            &qso_graph_interop::VerifyOptions::default()
+                        )
                         .unwrap(),
                     bytes[..n]
                 );
@@ -86,8 +94,14 @@ fn finite_float_json_preserves_boundary_and_10000_random_bits() {
                 .unwrap()
                 .events
                 .remove(0);
-            let json =
-                qso_graph_interop::json::write(&event, true, Some(&Wsjtx::default())).unwrap();
+            let json = qso_graph_interop::json::write(
+                &event,
+                &qso_graph_interop::PublicationOptions::new(
+                    qso_graph_interop::PublicationMode::Authored,
+                )
+                .with_profile(&Wsjtx::default()),
+            )
+            .unwrap();
             let again = qso_graph_interop::json::parse(&json, qso_graph_interop::model::MAX_RECORD)
                 .unwrap();
             assert_eq!(
@@ -99,12 +113,18 @@ fn finite_float_json_preserves_boundary_and_10000_random_bits() {
             );
             assert_eq!(
                 Wsjtx::default()
-                    .reencode(&again, &EncodeOptions::default())
+                    .reencode(
+                        &again,
+                        &EncodeOptions::default(),
+                        &qso_graph_interop::VerifyOptions::default()
+                    )
                     .unwrap(),
                 bytes
             );
             assert_eq!(
-                Wsjtx::default().verify(&again).unwrap(),
+                Wsjtx::default()
+                    .verify(&again, &qso_graph_interop::VerifyOptions::default())
+                    .unwrap(),
                 qso_graph_interop::model::Verification::Verified
             );
         }
@@ -165,17 +185,35 @@ fn strict_structured_output_and_typed_family_causes() {
     let fixture = &fixtures()["vectors"][0];
     let bytes = unhex(fixture["wire_hex"].as_str().unwrap());
     let mut options = DecodeOptions::default();
-    options.structured = true;
+    options = options.with_structured(true);
     let event = Wsjtx::default()
         .decode(&bytes, &options)
         .unwrap()
         .events
         .remove(0);
-    assert!(qso_graph_interop::json::write(&event, true, Some(&Wsjtx::default())).is_ok());
+    assert!(
+        qso_graph_interop::json::write(
+            &event,
+            &qso_graph_interop::PublicationOptions::new(
+                qso_graph_interop::PublicationMode::Authored
+            )
+            .with_profile(&Wsjtx::default())
+        )
+        .is_ok()
+    );
     let mut v = event.into_value();
     v["native"]["message"]["body"]["addition"] = true.into();
     let event = Event::from_value(v).unwrap();
-    assert!(qso_graph_interop::json::write(&event, true, Some(&Wsjtx::default())).is_err());
+    assert!(
+        qso_graph_interop::json::write(
+            &event,
+            &qso_graph_interop::PublicationOptions::new(
+                qso_graph_interop::PublicationMode::Authored
+            )
+            .with_profile(&Wsjtx::default())
+        )
+        .is_err()
+    );
     let err = Wsjtx::default()
         .decode(b"bad", &DecodeOptions::default())
         .unwrap_err();
@@ -186,44 +224,6 @@ fn strict_structured_output_and_typed_family_causes() {
         .encode_command(&command, &EncodeOptions::default())
         .unwrap_err();
     assert!(err.source().unwrap().is::<wsjtx::Error>());
-}
-
-#[test]
-fn maximum_invalid_text_observation_fits_annex_b_budget_with_structured_view() {
-    let mut bytes = Vec::new();
-    for word in [wsjtx::MAGIC, 3, 9, 0] {
-        bytes.extend_from_slice(&word.to_be_bytes());
-    }
-    let text_len = wsjtx::MAX_DATAGRAM - bytes.len() - 5;
-    bytes.extend_from_slice(&(text_len as u32).to_be_bytes());
-    bytes.resize(bytes.len() + text_len, 255);
-    bytes.push(0);
-    let mut options = DecodeOptions::default();
-    options.structured = true;
-    let event = Wsjtx::default()
-        .decode(&bytes, &options)
-        .unwrap()
-        .events
-        .remove(0);
-    let record = qso_graph_interop::json::write(&event, true, Some(&Wsjtx::default())).unwrap();
-    assert!(record.len() <= qso_graph_interop::model::MAX_RECORD);
-    let restored =
-        qso_graph_interop::json::parse(&record, qso_graph_interop::model::MAX_RECORD).unwrap();
-    assert_eq!(restored.native_bytes().unwrap(), bytes);
-    assert_eq!(
-        qso_graph_interop::json::parse_carriage(&record, qso_graph_interop::model::MAX_RECORD)
-            .unwrap_err()
-            .category,
-        qso_graph_interop::Category::Oversized
-    );
-    bytes.push(0);
-    assert_eq!(
-        Wsjtx::default()
-            .decode(&bytes, &options)
-            .unwrap_err()
-            .category,
-        qso_graph_interop::Category::Oversized
-    );
 }
 
 #[test]
@@ -246,13 +246,18 @@ fn additive_mapping_checks_only_revision_one_mapped_content() {
     v["native"]["new_evidence"] = true.into();
     let event = Event::from_value(v.clone()).unwrap();
     assert_eq!(
-        Wsjtx::default().verify(&event).unwrap(),
+        Wsjtx::default()
+            .verify(&event, &qso_graph_interop::VerifyOptions::default())
+            .unwrap(),
         qso_graph_interop::model::Verification::Verified
     );
     v["fields"]["auto_tx_only"] = false.into();
     let invalid = Event::from_value(v).unwrap();
     assert_eq!(
-        Wsjtx::default().verify(&invalid).unwrap_err().category,
+        Wsjtx::default()
+            .verify(&invalid, &qso_graph_interop::VerifyOptions::default())
+            .unwrap_err()
+            .category(),
         qso_graph_interop::Category::InvalidValue
     );
 }

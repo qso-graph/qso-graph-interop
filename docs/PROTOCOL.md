@@ -42,15 +42,24 @@ for the preserved JSON value model and bounded JSON format, including with serde
 `Codec::decode` returns an ordered collection of events and skip notices or one atomic error.
 The caller supplies a session key, observer context and optional expiry input. `Limits` declares
 message, field, event, session, template and dependency budgets. WSJT-X, N1MM, and qgi have no semantic
-session state. `reset` resets one session or all sessions. Stream decoding consumes a caller-owned
-buffer without an async runtime. The external implementation in `tests/core.rs` proves the open
+session state. `reset` resets one session or all sessions. The optional `Codec::stream` capability decodes borrowed input without an async runtime.
+Each `StreamStep` retains its consumed count even on errors. Continue draining after `Frame`
+or `Discarded`; only `NeedMore` requires additional input. QGI TCP exposes this capability;
+UDP and native datagram codecs do not. The external implementation in `tests/core.rs` proves the open
 trait with bounded session state and planted atomic failures.
 
-`encode_command` constructs bytes from common fields, operation, target `wire_id` and encoding
-options. `reencode` separately validates observed native evidence; WSJT-X canonicalizes booleans, and N1MM returns exact original XML bytes.
+`encode_commands` constructs a nonempty ordered request plan from common fields, operation,
+target `wire_id`, and typed encoding options. Each request carries optional response metadata;
+planning implies neither transmission nor atomic execution. The single-request convenience
+`encode_command` rejects batches longer than one. QGI uses the separate `EventCarriage::encode_event`
+capability with `PublicationOptions`; native encoding methods reject QGI events. `reencode` separately validates observed native evidence; WSJT-X canonicalizes booleans, and N1MM returns exact original XML bytes.
 `Event::native_bytes` retrieves exact original bytes. Decoding and encoding never perform I/O.
 `Profile` supplies family interpretation and producer validation through public core APIs.
-Family errors remain typed sources of the non-exhaustive core error. Display messages are prose.
+Both traits stay open and object-safe. Each operation has one required metadata-aware method.
+`VerifyOptions` carries association only; decoding context, session, expiry, and structured output
+remain in `DecodeOptions`. `DecodeMetadata::extension_metadata` and the corresponding encoding
+escape hatch support external codecs. Family errors remain typed sources of the non-exhaustive
+core error. Use `Error::category()` for inspection; display strings are diagnostic and unstable.
 
 ## WSJT-X mapping
 
@@ -72,13 +81,20 @@ callsigns, locators, observer identity or a WSPR mode from text or IDs.
 
 ## Event JSON and carriage
 
-`json::parse` checks the frame limit before allocating. Its bounded container parser delegates
+`parse` checks the frame limit before allocating. Its bounded container parser delegates
 string/Unicode and numeric scalar syntax to serde_json. Building maps explicitly rejects duplicate
 members at every depth and preserves ordinary event keys that coincide with serde_json's private
 arbitrary-precision-number marker. This small framing layer is needed for those two guarantees and
 for resource admission before map/array growth; it does not replace serde's scalar encoding.
-`json::parse` is the byte-bounded reader entry point. Serde deserialization of `Event` also delegates
-to it after acquiring the raw JSON record from the deserializer.
+`parse` is the byte-bounded reader entry point. Serde deserialization of `Event` also delegates
+to it after acquiring the raw JSON record from the deserializer. `Event::from_value` enforces
+general-record depth, numeric-token, compact-size, and reader semantic admission. Derived
+`Serialize` preserves that value; it does not establish authored publication or verified evidence.
+`Event::PartialEq` compares representation, and `Event::semantic_eq` applies specification equality.
+`write` takes `PublicationOptions` with `PublicationMode::Preserved` or `Authored`, an optional
+original-family profile, and `VerifyOptions`. Strict authored validation without a family verifier
+does not establish verified evidence. Parser, catalog, and validation internals are private.
+`integer_i64`, `integer_u64`, and `semantic_eq` remain public support utilities for external codecs.
 
 Carriage containers have depth at most 32, with at most 65,536 total object members and array
 elements. The general event reader uses the same depth and number bounds and a 1,048,576-element
@@ -93,8 +109,17 @@ Common integers are exact within ±(2^53−1), and unknown numeric additions ret
 Absent, null, empty and invalid text remain distinct. Neutral time values validate UTC spelling
 and Gregorian dates. Qt values stay in the WSJT-X module.
 
-Reader validation accepts additions and preserves the complete event; `recognized` projects known
-members recursively without rewriting the stored content. Producer validation rejects unknown
+Reader validation accepts additions and preserves the complete event; `recognized` returns an immutable `Recognized` borrowing the preserved event. `kind()` returns
+`Kind`; `fields()` returns a non-exhaustive `FieldsRef` with typed payloads for every current kind.
+Text accessors use `Option<Text>` for absent, null, empty, and raw distinctions, while `Binary64`
+retains negative zero and nonfinite payloads. Family additions include N1MM `previous_start` and
+fldigi RX ranges. `Event` exposes family, kind token, mapping, context, wire ID, and native views
+without family features. Unknown additions remain available through `Event::value()`.
+A matching supplied profile's `recognize` hook runs before unknown-family fallback. Its
+`ProfileView::new` result validates common fields before exposing typed accessors. Without a
+matching profile, external families retain the native/uninterpreted fallback.
+`NativeEvidence` is opaque and preserves unknown JSON members, including MQTT and IPFIX evidence;
+class-specific owned models are deferred until those codecs ship. Producer validation rejects unknown
 members recursively, including contexts, hops, fields, radio, colors, native headers, dependencies
 and family-supplied structured views. Native consistency requires an explicit supported family
 profile; carriage itself never verifies the original native protocol.
@@ -296,10 +321,10 @@ lengths, scalar conversion, method/association, context, dispatch, and output si
 An unfinished declaration is malformed under Annex E; other unfinished XML is truncated.
 Arrays, structs, faults, nil and unknown types need no new XML dependency.
 
-`Fldigi` implements the public `Codec` and `Profile` traits. Supply `request` in
-`DecodeOptions.native` as an object with `method` and optional `arguments`, or use
-`Fldigi::with_request` to associate Profile verification as well. `text.get_rx`
-responses need the request's two integer arguments. Context and correlation remain
+`Fldigi` implements the public `Codec` and `Profile` traits without association state.
+Construct per-call metadata with `RequestAssociation::for_method` or
+`RequestAssociation::from_request_body`, then pass it to `DecodeOptions::with_metadata`.
+`text.get_rx` responses need the request's two integer arguments. Context and correlation remain
 caller-owned; structured evidence never supplies association. A compatible but wrong
 caller method cannot be detected from a response that does not name its method.
 Faults always produce error results; unmatched valid values and unassociated responses
@@ -319,9 +344,8 @@ the next request, stopping on a fault, wrong type, transport error, or lost asso
 In particular, bundled empty-string replies are native, not nil acknowledgments, and
 cannot advance text transmission. Encoding opens no connections and changes no RF state.
 
-`verify_with` and `reencode_with` accept per-call association through DecodeOptions;
-`with_request` makes that same metadata available to Profile and JSON producer checks.
-`Event::recognized_with` and `json::write_with` accept those per-call options as well.
+`Profile::verify` and `Codec::reencode` accept per-call `VerifyOptions`.
+`Event::recognized_with` and `PublicationOptions::with_verification` use the same association.
 Re-encoding compares recognized content and any supplied evidence view; it never adds
 an absent view. Unknown or unassociated content can be retrieved unchanged with
 unavailable verification, which is not a verified mapped interpretation. Output admission

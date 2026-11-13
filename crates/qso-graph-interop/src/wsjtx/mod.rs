@@ -20,6 +20,7 @@ pub const PULSE_SECONDS: u32 = 15;
 pub const MAX_DATAGRAM: usize = 65_507;
 pub const MAX_ID: usize = 256;
 pub const WSJTX_TAG: &str = "v3.0.2";
+/// Raw construction does not establish encodability; encode validates native limits.
 /// The original family payload and all unrecognized trailing bytes remain available.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[non_exhaustive]
@@ -44,6 +45,7 @@ impl Packet {
 #[non_exhaustive]
 pub enum Outcome {
     Message(Box<Packet>),
+    #[non_exhaustive]
     Skipped {
         schema: u32,
         message_type: Option<u32>,
@@ -60,11 +62,13 @@ pub enum SkipReason {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum Error {
+    #[non_exhaustive]
     Truncated {
         offset: usize,
     },
     WrongMagic,
     Length,
+    #[non_exhaustive]
     Event {
         category: crate::Category,
         message: String,
@@ -74,6 +78,11 @@ pub enum Error {
     InvalidTimeSpec(u8),
     InconsistentDateTime,
     NonContiguousTail,
+}
+impl Error {
+    pub fn truncated(offset: usize) -> Self {
+        Self::Truncated { offset }
+    }
 }
 impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -212,5 +221,32 @@ mod encoder_guards {
         let mut packet = Packet::new("synthetic-instance", Body::Heartbeat(Heartbeat::default()));
         packet.extensions = vec![1, 2, 3];
         assert_eq!(encode(&packet), Err(Error::NonContiguousTail));
+    }
+}
+
+/// Native schema selection. The default encoding schema is 3.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[non_exhaustive]
+pub struct Schema(u32);
+impl TryFrom<u32> for Schema {
+    type Error = crate::Error;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        if (1..=3).contains(&value) {
+            Ok(Self(value))
+        } else {
+            Err(Error::UnsupportedSchema(value).into())
+        }
+    }
+}
+impl Schema {
+    pub fn get(self) -> u32 {
+        self.0
+    }
+}
+impl From<Schema> for crate::codec::EncodeOptions {
+    fn from(schema: Schema) -> Self {
+        let mut native = serde_json::Map::new();
+        native.insert("schema".into(), schema.0.into());
+        Self::extension_metadata(native)
     }
 }
