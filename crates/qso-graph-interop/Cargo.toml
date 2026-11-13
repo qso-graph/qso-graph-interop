@@ -8,6 +8,10 @@ rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 readme = "README.md"
+keywords = ["ham-radio", "wsjt-x", "n1mm", "fldigi", "protocol"]
+categories = ["parser-implementations", "network-programming"]
+# Repository conformance vectors and integration tests stay in the repository.
+include = ["src/**/*.rs", "README.md", "LICENSE", "tests/core.rs", "tests/carriage.rs", "tests/protocol.rs", "tests/n1mm.rs", "tests/fldigi.rs", "tests/fixtures/**"]
 
 [features]
 default = ["wsjtx", "n1mm", "fldigi", "qgi", "serde"]

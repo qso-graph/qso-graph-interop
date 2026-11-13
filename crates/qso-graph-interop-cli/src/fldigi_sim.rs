@@ -489,7 +489,7 @@ mod tests {
     #[test]
     fn every_annex_e_method_has_the_released_response_type_and_wrong_type_is_detected() {
         // Independent catalog: specification rows, not the private library or server dispatch.
-        let annex = include_str!("../../../spec/annex-e-fldigi.md");
+        let annex = include_str!("../data/annex-e-fldigi.md");
         let table = annex
             .split("## E.4 Complete mapping catalog")
             .nth(1)

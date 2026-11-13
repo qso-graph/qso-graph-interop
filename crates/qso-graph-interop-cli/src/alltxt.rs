@@ -294,11 +294,7 @@ mod tests {
     }
     #[test]
     fn embedded_sample() {
-        let l = parse(
-            include_bytes!("../../qso-graph-interop/tests/fixtures/ALL-sample.TXT"),
-            "",
-        )
-        .unwrap();
+        let l = parse(include_bytes!("../data/ALL-sample.TXT"), "").unwrap();
         assert_eq!((l.cycles.len(), l.decodes), (7, 120));
         assert!(period_ms("Q65").is_err());
         assert_eq!(period_ms("FT4").unwrap(), 7500);

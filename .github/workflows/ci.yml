@@ -67,6 +67,12 @@ jobs:
       - run: python3 scripts/generate-fixtures.py --check
       - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
       - run: uv run --no-project --with 'jsonschema[format-nongpl]==4.26.0' python scripts/gen_vectors.py --check --producer-strict
+      - run: uv run --no-project --python 3.11 python scripts/test_release_check.py
+      - run: uv run --no-project python scripts/package-files.py --check
+      # allow-dirty also lets the identical local verifier check uncommitted review work.
+      - run: cargo package --locked --allow-dirty -p qso-graph-interop -p qso-graph-interop-cli
+      # Hosted Ubuntu includes Go; the script fetches actionlint at exactly v1.7.11.
+      - run: uv run --no-project python scripts/lint-workflows.py
       - name: cargo vet
         run: |
           cargo install cargo-vet --version 0.10.3 --locked --quiet
@@ -152,9 +158,20 @@ jobs:
           path: target/verify/*planted.txt
           if-no-files-found: ignore
 
+  # Exercise unsigned assembly on every release platform before merging.
+  binaries:
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    uses: ./.github/workflows/binaries.yml
+    with:
+      sha: ${{ github.event.pull_request.head.sha || github.sha }}
+      sign: false
+
   ci-all-green:
     name: ci-all-green
-    needs: [check, policy, fuzz, ffi-memory]
+    needs: [check, policy, fuzz, ffi-memory, binaries]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5

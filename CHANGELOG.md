@@ -5,6 +5,12 @@
 
 ### Added
 
+- Manual main-only release checks, signed CLI archives and C library bundles for
+  four platforms, Linux packages, crates.io publication, provenance, and release
+  setup instructions. Add local and CI release tests, package-content checks,
+  Cargo packaging, and pinned workflow linting; keep embedded CLI inputs inside
+  its package and distribute the FFI crate only as C library bundles.
+
 - Complete the pre-publish public API review (API-1 through API-12): immutable typed
   event views; private typed options and per-call fldigi request association;
   canonical open, object-safe traits and validated external profile recognition;

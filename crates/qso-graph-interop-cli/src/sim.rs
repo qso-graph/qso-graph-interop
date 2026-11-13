@@ -376,7 +376,7 @@ pub fn run(s: Sim) -> Result<()> {
                     .unwrap_or("read failed")
             )
         })?,
-        None => include_bytes!("../../qso-graph-interop/tests/fixtures/ALL-sample.TXT").to_vec(),
+        None => include_bytes!("../data/ALL-sample.TXT").to_vec(),
     };
     let log = alltxt::parse(&bytes, &s.from)?;
     if log.cycles.is_empty() {

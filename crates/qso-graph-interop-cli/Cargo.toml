@@ -8,6 +8,10 @@ rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 readme = "README.md"
+keywords = ["ham-radio", "wsjt-x", "n1mm", "fldigi", "protocol"]
+categories = ["parser-implementations", "network-programming"]
+# Repository conformance vectors and integration tests stay in the repository.
+include = ["src/**/*.rs", "README.md", "LICENSE", "data/**"]
 
 [[bin]]
 name = "qg-interop"
