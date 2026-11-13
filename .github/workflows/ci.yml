@@ -66,6 +66,9 @@ jobs:
       - run: cargo xtask policy
       - run: python3 scripts/generate-fixtures.py --check
       - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        # No cache: nothing to key it on, and no build should restore one.
+        with:
+          enable-cache: false
       - run: uv run --no-project --with 'jsonschema[format-nongpl]==4.26.0' python scripts/gen_vectors.py --check --producer-strict
       - run: uv run --no-project --python 3.11 python scripts/test_release_check.py
       - run: uv run --no-project python scripts/package-files.py --check
