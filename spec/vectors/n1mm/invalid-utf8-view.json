@@ -1,0 +1,104 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PFJhZGlvSW5mbz48U3RhdGlvbk5hbWU+Qf9CPC9TdGF0aW9uTmFtZT48L1JhZGlvSW5mbz4=",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "radio_state",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "radio": {
+          "instance": {
+            "utf8_bytes": [
+              65,
+              255,
+              66
+            ]
+          }
+        }
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PFJhZGlvSW5mbz48U3RhdGlvbk5hbWU+Qf9CPC9TdGF0aW9uTmFtZT48L1JhZGlvSW5mbz4="
+      }
+    }
+  },
+  "reencode": {
+    "data": "PFJhZGlvSW5mbz48U3RhdGlvbk5hbWU+Qf9CPC9TdGF0aW9uTmFtZT48L1JhZGlvSW5mbz4="
+  },
+  "expected_message": {
+    "root": "RadioInfo",
+    "xml": {
+      "utf8_bytes": [
+        60,
+        82,
+        97,
+        100,
+        105,
+        111,
+        73,
+        110,
+        102,
+        111,
+        62,
+        60,
+        83,
+        116,
+        97,
+        116,
+        105,
+        111,
+        110,
+        78,
+        97,
+        109,
+        101,
+        62,
+        65,
+        255,
+        66,
+        60,
+        47,
+        83,
+        116,
+        97,
+        116,
+        105,
+        111,
+        110,
+        78,
+        97,
+        109,
+        101,
+        62,
+        60,
+        47,
+        82,
+        97,
+        100,
+        105,
+        111,
+        73,
+        110,
+        102,
+        111,
+        62
+      ]
+    }
+  }
+}

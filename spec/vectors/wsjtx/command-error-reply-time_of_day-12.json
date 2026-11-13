@@ -1,0 +1,36 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "command_negative",
+  "input": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "kind": "control",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "reply",
+        "time_of_day": "24:00:00",
+        "snr_db": -17,
+        "dt_seconds": 0.25,
+        "audio_offset_hz": 1234,
+        "mode": "~",
+        "text": "CQ Q1AAA FN42",
+        "low_confidence": true,
+        "modifiers": 4
+      }
+    }
+  },
+  "expected": {
+    "error": {
+      "category": "invalid_value"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "negative",
+  "input": {
+    "data": "PCFET0NUWVBFIFJhZGlvSW5mbyBbPCFFTlRJVFkgeCBTWVNURU0gImh0dHBzOi8vZXhhbXBsZS5pbnZhbGlkL3N5bnRoZXRpYyI+XT48UmFkaW9JbmZvPiZ4OzwvUmFkaW9JbmZvPg==",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "error": {
+      "category": "malformed"
+    }
+  }
+}

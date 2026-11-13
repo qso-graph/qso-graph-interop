@@ -1,0 +1,50 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "//48AFIAYQBkAGkAbwBJAG4AZgBvAD4APABTAHQAYQB0AGkAbwBuAE4AYQBtAGUAPgBBACYAYQBtAHAAOwAA2DwAIQBbAEMARABBAFQAQQBbADwAANwNAAoAXQBdAD4AWgANACYAIwAxADMAOwA8AC8AUwB0AGEAdABpAG8AbgBOAGEAbQBlAD4APAAvAFIAYQBkAGkAbwBJAG4AZgBvAD4A",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "radio_state",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "radio": {
+          "instance": {
+            "utf16_units": [
+              65,
+              38,
+              55296,
+              60,
+              56320,
+              10,
+              90,
+              10,
+              13
+            ]
+          }
+        }
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "//48AFIAYQBkAGkAbwBJAG4AZgBvAD4APABTAHQAYQB0AGkAbwBuAE4AYQBtAGUAPgBBACYAYQBtAHAAOwAA2DwAIQBbAEMARABBAFQAQQBbADwAANwNAAoAXQBdAD4AWgANACYAIwAxADMAOwA8AC8AUwB0AGEAdABpAG8AbgBOAGEAbQBlAD4APAAvAFIAYQBkAGkAbwBJAG4AZgBvAD4A"
+      }
+    }
+  },
+  "reencode": {
+    "data": "//48AFIAYQBkAGkAbwBJAG4AZgBvAD4APABTAHQAYQB0AGkAbwBuAE4AYQBtAGUAPgBBACYAYQBtAHAAOwAA2DwAIQBbAEMARABBAFQAQQBbADwAANwNAAoAXQBdAD4AWgANACYAIwAxADMAOwA8AC8AUwB0AGEAdABpAG8AbgBOAGEAbQBlAD4APAAvAFIAYQBkAGkAbwBJAG4AZgBvAD4A"
+  }
+}

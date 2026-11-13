@@ -1,0 +1,36 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PHJhZGlvX3NldGZyZXF1ZW5jeT48ZnJlcXVlbmN5PjcwMDA8L2ZyZXF1ZW5jeT48ZnJlcXVlbmN5PjcwMDE8L2ZyZXF1ZW5jeT48L3JhZGlvX3NldGZyZXF1ZW5jeT4=",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "control",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "set_frequency"
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PHJhZGlvX3NldGZyZXF1ZW5jeT48ZnJlcXVlbmN5PjcwMDA8L2ZyZXF1ZW5jeT48ZnJlcXVlbmN5PjcwMDE8L2ZyZXF1ZW5jeT48L3JhZGlvX3NldGZyZXF1ZW5jeT4="
+      }
+    }
+  },
+  "reencode": {
+    "data": "PHJhZGlvX3NldGZyZXF1ZW5jeT48ZnJlcXVlbmN5PjcwMDA8L2ZyZXF1ZW5jeT48ZnJlcXVlbmN5PjcwMDE8L2ZyZXF1ZW5jeT48L3JhZGlvX3NldGZyZXF1ZW5jeT4="
+  }
+}

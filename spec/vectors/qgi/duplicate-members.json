@@ -1,0 +1,20 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "qgi",
+  "mapping": 1,
+  "class": "negative",
+  "input": {
+    "transport": "udp",
+    "data": "eyJzcGVjIjoiMC4xLjAiLCJmYW1pbHkiOiJxZ2kiLCJtYXBwaW5nIjoxLCJraW5kIjoiY29udHJvbCIsImNvbnRleHQiOnsiZGlyZWN0aW9uIjoidG9fYXBwbGljYXRpb24iLCJleGNoYW5nZSI6InVua25vd24ifSwiZmllbGRzIjp7Im9wZXJhdGlvbiI6InNlbmRfdGV4dCIsInRleHQiOiJzeW50aGV0aWNcbm1lc3NhZ2UiLCJ0cmFuc21pdCI6ZmFsc2V9LCJraW5kIjoiY29udHJvbCJ9",
+    "context": {
+      "direction": "unknown",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "error": {
+      "category": "malformed"
+    }
+  }
+}

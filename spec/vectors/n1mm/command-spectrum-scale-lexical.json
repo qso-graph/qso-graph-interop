@@ -1,0 +1,36 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "command",
+  "input": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "control",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "n1mm.spectrum",
+        "app": "synthetic-client",
+        "spectrum_name": "synthetic-spectrum",
+        "low_scope_frequency": 14000000,
+        "high_scope_frequency": 14055000,
+        "scaling_factor": "000.5000",
+        "spectrum_data": [
+          0,
+          1,
+          160,
+          65535
+        ]
+      }
+    }
+  },
+  "expected": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48U3BlY3RydW0+PGFwcD5zeW50aGV0aWMtY2xpZW50PC9hcHA+PE5hbWU+c3ludGhldGljLXNwZWN0cnVtPC9OYW1lPjxMb3dTY29wZUZyZXF1ZW5jeT4xNDAwMDwvTG93U2NvcGVGcmVxdWVuY3k+PEhpZ2hTY29wZUZyZXF1ZW5jeT4xNDA1NTwvSGlnaFNjb3BlRnJlcXVlbmN5PjxTY2FsaW5nRmFjdG9yPjAwMC41MDAwPC9TY2FsaW5nRmFjdG9yPjxEYXRhQ291bnQ+NDwvRGF0YUNvdW50PjxTcGVjdHJ1bURhdGE+MCwxLDE2MCw2NTUzNTwvU3BlY3RydW1EYXRhPjwvU3BlY3RydW0+"
+  }
+}

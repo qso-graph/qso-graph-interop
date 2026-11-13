@@ -1,0 +1,50 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "command_negative",
+  "input": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "kind": "control",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "wsjtx.highlight_callsign",
+        "call": "Q1AAA",
+        "highlight_last": true,
+        "background_color": {
+          "spec": 1,
+          "channels": [
+            65535,
+            4369,
+            8738,
+            13107,
+            17476
+          ]
+        },
+        "foreground_color": {
+          "spec": 0,
+          "channels": [
+            0,
+            0,
+            0,
+            0,
+            65536
+          ]
+        }
+      }
+    }
+  },
+  "expected": {
+    "error": {
+      "category": "invalid_value"
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "rbzL2gAAAAMAAAAFAAAADXRlc3QtaW5zdGFuY2UAAAAAACU9jAA27vsDAAAABgBB2AAA6QAAAAVRMUFBQQAAAARGTjQyAAAAAADWxmwAAAADRlQ4AAAAAy0xMQAAAAMtMTIAAAADNSBXAAAACXN5bnRoZXRpYwAAAARUZXN0",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "native_version": "3",
+      "kind": "qso_logged",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "call": "Q1AAA",
+        "grid": "FN42",
+        "tx_frequency_hz": 14075500,
+        "mode": "FT8",
+        "report_sent": "-11",
+        "report_received": "-12",
+        "tx_power": "5 W",
+        "comments": "synthetic",
+        "name": "Test",
+        "radio": {
+          "instance": "test-instance"
+        }
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAAFAAAADXRlc3QtaW5zdGFuY2UAAAAAACU9jAA27vsDAAAABgBB2AAA6QAAAAVRMUFBQQAAAARGTjQyAAAAAADWxmwAAAADRlQ4AAAAAy0xMQAAAAMtMTIAAAADNSBXAAAACXN5bnRoZXRpYwAAAARUZXN0"
+      }
+    }
+  },
+  "expected_message": {
+    "schema": 3,
+    "type": 5,
+    "id": "test-instance",
+    "body": {
+      "time_off": {
+        "julian_day": "2440588",
+        "milliseconds": 3600123,
+        "time_spec": 3,
+        "zone": {
+          "key": {
+            "utf16_units": [
+              65,
+              55296,
+              233
+            ]
+          }
+        }
+      },
+      "dx_call": "Q1AAA",
+      "dx_grid": "FN42",
+      "frequency_hz": "14075500",
+      "mode": "FT8",
+      "report_sent": "-11",
+      "report_received": "-12",
+      "tx_power": "5 W",
+      "comments": "synthetic",
+      "name": "Test"
+    },
+    "extensions": ""
+  }
+}

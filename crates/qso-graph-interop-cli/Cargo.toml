@@ -1,22 +1,27 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 [package]
 name = "qso-graph-interop-cli"
-description = "Listen to and simulate WSJT-X UDP messages"
+description = "Decode, poll, and simulate amateur radio application protocols"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 readme = "README.md"
+keywords = ["ham-radio", "wsjt-x", "n1mm", "fldigi", "protocol"]
+categories = ["parser-implementations", "network-programming"]
+# Repository conformance vectors and integration tests stay in the repository.
+include = ["src/**/*.rs", "README.md", "LICENSE", "data/**"]
 
 [[bin]]
 name = "qg-interop"
 path = "src/main.rs"
 
 [dependencies]
-qso-graph-interop = { version = "=0.1.0", path = "../qso-graph-interop" }
-clap = { version = "=4.6.7", default-features = false, features = ["std", "derive", "help", "usage", "error-context", "suggestions"] }
-serde_json = { version = "=1.0.145", features = ["float_roundtrip"] }
+qso-graph-interop = { version = "0.1.0", path = "../qso-graph-interop" }
+clap = { version = "4.6.7", default-features = false, features = ["std", "derive", "help", "usage", "error-context", "suggestions"] }
+serde_json = { version = "1.0.145", features = ["float_roundtrip"] }
+signal-hook = { version = "~0.1.17", default-features = false }
 
 [lints]
 workspace = true

@@ -1,0 +1,45 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PGR5bmFtaWNyZXN1bHRzPjxjb250ZXN0PlNZTlRIRVRJQzwvY29udGVzdD48Y2FsbD5RMkFBQTwvY2FsbD48b3BzPlEyQkJCPC9vcHM+PGNsYXNzIHBvd2VyPSJISUdIIiBhc3Npc3RlZD0iQVNTSVNURUQiIHRyYW5zbWl0dGVyPSJVTkxJTUlURUQiIG9wcz0iTVVMVEktT1AiIGJhbmRzPSJBTEwiIG1vZGU9Ik1JWEVEIiBvdmVybGF5PSJOL0EiLz48Y2x1Yj5zeW50aGV0aWMtY2x1YjwvY2x1Yj48cXRoPjxkeGNjY291bnRyeT5LPC9keGNjY291bnRyeT48Y3F6b25lPjU8L2Nxem9uZT48aWFydXpvbmU+ODwvaWFydXpvbmU+PGFycmxzZWN0aW9uPlNZTjwvYXJybHNlY3Rpb24+PHN0cHJ2b3RoPlNZTjwvc3RwcnZvdGg+PGdyaWQ2PkZONDJBQTwvZ3JpZDY+PC9xdGg+PGJyZWFrZG93bj48cXNvIGJhbmQ9IjIwIiBtb2RlPSJDVyI+MTE8L3Fzbz48cG9pbnQgYmFuZD0iMjAiIG1vZGU9IkNXIj4yMjwvcG9pbnQ+PHFzbyBiYW5kPSJ0b3RhbCIgbW9kZT0iQUxMIj4zMzwvcXNvPjxwb2ludCBiYW5kPSJ0b3RhbCIgbW9kZT0iQUxMIj40NDwvcG9pbnQ+PC9icmVha2Rvd24+PHNjb3JlPjU1PC9zY29yZT48dGltZXN0YW1wPjIwMjYtMTEtMTIgMTI6MzQ6NTY8L3RpbWVzdGFtcD48L2R5bmFtaWNyZXN1bHRzPg==",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "score",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "contest_name": "SYNTHETIC",
+        "station_call": "Q2AAA",
+        "qso_count": 33,
+        "points": 44,
+        "total_score": 55,
+        "time": "2026-11-12T12:34:56Z"
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PGR5bmFtaWNyZXN1bHRzPjxjb250ZXN0PlNZTlRIRVRJQzwvY29udGVzdD48Y2FsbD5RMkFBQTwvY2FsbD48b3BzPlEyQkJCPC9vcHM+PGNsYXNzIHBvd2VyPSJISUdIIiBhc3Npc3RlZD0iQVNTSVNURUQiIHRyYW5zbWl0dGVyPSJVTkxJTUlURUQiIG9wcz0iTVVMVEktT1AiIGJhbmRzPSJBTEwiIG1vZGU9Ik1JWEVEIiBvdmVybGF5PSJOL0EiLz48Y2x1Yj5zeW50aGV0aWMtY2x1YjwvY2x1Yj48cXRoPjxkeGNjY291bnRyeT5LPC9keGNjY291bnRyeT48Y3F6b25lPjU8L2Nxem9uZT48aWFydXpvbmU+ODwvaWFydXpvbmU+PGFycmxzZWN0aW9uPlNZTjwvYXJybHNlY3Rpb24+PHN0cHJ2b3RoPlNZTjwvc3RwcnZvdGg+PGdyaWQ2PkZONDJBQTwvZ3JpZDY+PC9xdGg+PGJyZWFrZG93bj48cXNvIGJhbmQ9IjIwIiBtb2RlPSJDVyI+MTE8L3Fzbz48cG9pbnQgYmFuZD0iMjAiIG1vZGU9IkNXIj4yMjwvcG9pbnQ+PHFzbyBiYW5kPSJ0b3RhbCIgbW9kZT0iQUxMIj4zMzwvcXNvPjxwb2ludCBiYW5kPSJ0b3RhbCIgbW9kZT0iQUxMIj40NDwvcG9pbnQ+PC9icmVha2Rvd24+PHNjb3JlPjU1PC9zY29yZT48dGltZXN0YW1wPjIwMjYtMTEtMTIgMTI6MzQ6NTY8L3RpbWVzdGFtcD48L2R5bmFtaWNyZXN1bHRzPg=="
+      }
+    }
+  },
+  "reencode": {
+    "data": "PGR5bmFtaWNyZXN1bHRzPjxjb250ZXN0PlNZTlRIRVRJQzwvY29udGVzdD48Y2FsbD5RMkFBQTwvY2FsbD48b3BzPlEyQkJCPC9vcHM+PGNsYXNzIHBvd2VyPSJISUdIIiBhc3Npc3RlZD0iQVNTSVNURUQiIHRyYW5zbWl0dGVyPSJVTkxJTUlURUQiIG9wcz0iTVVMVEktT1AiIGJhbmRzPSJBTEwiIG1vZGU9Ik1JWEVEIiBvdmVybGF5PSJOL0EiLz48Y2x1Yj5zeW50aGV0aWMtY2x1YjwvY2x1Yj48cXRoPjxkeGNjY291bnRyeT5LPC9keGNjY291bnRyeT48Y3F6b25lPjU8L2Nxem9uZT48aWFydXpvbmU+ODwvaWFydXpvbmU+PGFycmxzZWN0aW9uPlNZTjwvYXJybHNlY3Rpb24+PHN0cHJ2b3RoPlNZTjwvc3RwcnZvdGg+PGdyaWQ2PkZONDJBQTwvZ3JpZDY+PC9xdGg+PGJyZWFrZG93bj48cXNvIGJhbmQ9IjIwIiBtb2RlPSJDVyI+MTE8L3Fzbz48cG9pbnQgYmFuZD0iMjAiIG1vZGU9IkNXIj4yMjwvcG9pbnQ+PHFzbyBiYW5kPSJ0b3RhbCIgbW9kZT0iQUxMIj4zMzwvcXNvPjxwb2ludCBiYW5kPSJ0b3RhbCIgbW9kZT0iQUxMIj40NDwvcG9pbnQ+PC9icmVha2Rvd24+PHNjb3JlPjU1PC9zY29yZT48dGltZXN0YW1wPjIwMjYtMTEtMTIgMTI6MzQ6NTY8L3RpbWVzdGFtcD48L2R5bmFtaWNyZXN1bHRzPg=="
+  },
+  "expected_message": {
+    "root": "dynamicresults",
+    "xml": "<dynamicresults><contest>SYNTHETIC</contest><call>Q2AAA</call><ops>Q2BBB</ops><class power=\"HIGH\" assisted=\"ASSISTED\" transmitter=\"UNLIMITED\" ops=\"MULTI-OP\" bands=\"ALL\" mode=\"MIXED\" overlay=\"N/A\"/><club>synthetic-club</club><qth><dxcccountry>K</dxcccountry><cqzone>5</cqzone><iaruzone>8</iaruzone><arrlsection>SYN</arrlsection><stprvoth>SYN</stprvoth><grid6>FN42AA</grid6></qth><breakdown><qso band=\"20\" mode=\"CW\">11</qso><point band=\"20\" mode=\"CW\">22</point><qso band=\"total\" mode=\"ALL\">33</qso><point band=\"total\" mode=\"ALL\">44</point></breakdown><score>55</score><timestamp>2026-11-12 12:34:56</timestamp></dynamicresults>"
+  }
+}

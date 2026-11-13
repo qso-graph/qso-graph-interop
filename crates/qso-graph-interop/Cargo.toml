@@ -1,19 +1,47 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 [package]
 name = "qso-graph-interop"
-description = "Bounded, bidirectional WSJT-X UDP protocol codecs"
+description = "Bounded sans-I/O amateur radio protocol codecs"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 readme = "README.md"
+keywords = ["ham-radio", "wsjt-x", "n1mm", "fldigi", "protocol"]
+categories = ["parser-implementations", "network-programming"]
+# Repository conformance vectors and integration tests stay in the repository.
+include = ["src/**/*.rs", "README.md", "LICENSE", "tests/core.rs", "tests/carriage.rs", "tests/protocol.rs", "tests/n1mm.rs", "tests/fldigi.rs", "tests/fixtures/**"]
+
+[features]
+default = ["wsjtx", "n1mm", "fldigi", "qgi", "serde"]
+wsjtx = ["serde"]
+n1mm = ["serde"]
+fldigi = ["serde"]
+qgi = ["serde"]
+serde = ["dep:serde"]
+conformance = ["serde", "dep:sha2-const-stable"]
 
 [dependencies]
-serde = { version = "=1.0.229", features = ["derive"] }
+serde = { version = "1.0.229", features = ["derive"], optional = true }
+serde_json = { version = "1.0.145", features = ["float_roundtrip", "arbitrary_precision", "raw_value"] }
+sha2-const-stable = { version = "0.1.0", optional = true }
 
 [lints]
 workspace = true
 
-[dev-dependencies]
-serde_json = { version = "=1.0.145", features = ["float_roundtrip"] }
+[[test]]
+name = "protocol"
+required-features = ["wsjtx"]
+
+[[test]]
+name = "n1mm"
+required-features = ["n1mm"]
+
+[[test]]
+name = "conformance"
+required-features = ["conformance", "wsjtx", "n1mm", "fldigi", "qgi"]
+
+[[test]]
+name = "fldigi"
+required-features = ["fldigi"]

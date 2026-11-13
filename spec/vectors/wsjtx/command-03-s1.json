@@ -1,0 +1,30 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "command",
+  "input": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "kind": "control",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "clear",
+        "window": 2
+      }
+    },
+    "options": {
+      "schema": 1
+    }
+  },
+  "expected": {
+    "data": "rbzL2gAAAAEAAAADAAAADXRlc3QtaW5zdGFuY2UC"
+  }
+}

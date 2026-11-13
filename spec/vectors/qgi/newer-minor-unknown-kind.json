@@ -1,0 +1,82 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "qgi",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "transport": "udp",
+    "data": "eyJzcGVjIjoiMC4yLjAiLCJmYW1pbHkiOiJ3c2p0eCIsIm1hcHBpbmciOjEsIm5hdGl2ZV92ZXJzaW9uIjoiMyIsImtpbmQiOiJmdXR1cmVfa2luZCIsIndpcmVfaWQiOiJ0ZXN0LWluc3RhbmNlIiwiY29udGV4dCI6eyJkaXJlY3Rpb24iOiJ0b19hcHBsaWNhdGlvbiIsImV4Y2hhbmdlIjoicmVxdWVzdCIsInNvdXJjZV9pZCI6InVudHJ1c3RlZC1zZXJpYWxpemVkLXNvdXJjZSJ9LCJmaWVsZHMiOnsiZnV0dXJlX2ZpZWxkIjoxN30sIm5hdGl2ZSI6eyJmb3JtYXQiOiJ3c2p0eF9kYXRhZ3JhbSIsImRhdGEiOiJyYnpMMmdBQUFBTUFBQUFDQUFBQURYUmxjM1F0YVc1emRHRnVZMlVCQXJNcCsvLy8vKzgvMEFBQUFBQUFBQUFBQk5JQUFBQUJmZ0FBQUExRFVTQlJNVUZCUVNCR1RqUXlBQUU9In19",
+    "context": {
+      "direction": "unknown",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "native_version": "3",
+      "kind": "future_kind",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "request",
+        "source_id": "untrusted-serialized-source"
+      },
+      "fields": {
+        "future_field": 17
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAACAAAADXRlc3QtaW5zdGFuY2UBArMp+////+8/0AAAAAAAAAAABNIAAAABfgAAAA1DUSBRMUFBQSBGTjQyAAE="
+      },
+      "via": [
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown"
+          }
+        }
+      ]
+    },
+    "read": {
+      "kind": "native",
+      "fields": {}
+    }
+  },
+  "reencode": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "native_version": "3",
+      "kind": "future_kind",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "request",
+        "source_id": "untrusted-serialized-source"
+      },
+      "fields": {
+        "future_field": 17
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAACAAAADXRlc3QtaW5zdGFuY2UBArMp+////+8/0AAAAAAAAAAABNIAAAABfgAAAA1DUSBRMUFBQSBGTjQyAAE="
+      },
+      "via": [
+        {
+          "family": "qgi",
+          "context": {
+            "direction": "unknown",
+            "exchange": "unknown"
+          }
+        }
+      ]
+    },
+    "delimiter": ""
+  }
+}

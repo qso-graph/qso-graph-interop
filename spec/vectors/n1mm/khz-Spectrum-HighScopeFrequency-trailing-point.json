@@ -1,0 +1,40 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PFNwZWN0cnVtPjxIaWdoU2NvcGVGcmVxdWVuY3k+NzAwMC48L0hpZ2hTY29wZUZyZXF1ZW5jeT48L1NwZWN0cnVtPg==",
+    "context": {
+      "direction": "to_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "control",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "n1mm.spectrum"
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PFNwZWN0cnVtPjxIaWdoU2NvcGVGcmVxdWVuY3k+NzAwMC48L0hpZ2hTY29wZUZyZXF1ZW5jeT48L1NwZWN0cnVtPg=="
+      }
+    }
+  },
+  "reencode": {
+    "data": "PFNwZWN0cnVtPjxIaWdoU2NvcGVGcmVxdWVuY3k+NzAwMC48L0hpZ2hTY29wZUZyZXF1ZW5jeT48L1NwZWN0cnVtPg=="
+  },
+  "expected_message": {
+    "root": "Spectrum",
+    "xml": "<Spectrum><HighScopeFrequency>7000.</HighScopeFrequency></Spectrum>"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "compatibility",
+  "writer_spec": "0.2.0",
+  "reader_spec": "0.1.0",
+  "input": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "n1mm",
+      "mapping": 2,
+      "kind": "future_kind",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "radio": {
+          "instance": "SYNTHETIC-PC",
+          "number": 2
+        },
+        "dial_frequency_hz": 14071230,
+        "mode": "USB",
+        "station_call": "Q2AAA",
+        "running": true,
+        "focus_radio": 1,
+        "stereo": true,
+        "active_radio": 2,
+        "transmitting": false
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PEZ1dHVyZVJhZGlvLz4="
+      }
+    }
+  },
+  "expected": {
+    "read": {
+      "kind": "native",
+      "fields": {},
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PEZ1dHVyZVJhZGlvLz4="
+      }
+    },
+    "verification": "unavailable"
+  }
+}

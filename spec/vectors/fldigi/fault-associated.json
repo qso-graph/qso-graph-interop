@@ -1,0 +1,49 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "fldigi",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PG1ldGhvZFJlc3BvbnNlPjxmYXVsdD48dmFsdWU+PHN0cnVjdD48bWVtYmVyPjxuYW1lPmZhdWx0Q29kZTwvbmFtZT48dmFsdWU+PGludD4gKzAwNSA8L2ludD48L3ZhbHVlPjwvbWVtYmVyPjxtZW1iZXI+PG5hbWU+ZmF1bHRTdHJpbmc8L25hbWU+PHZhbHVlPjxzdHJpbmc+UTFBQUEgcmVqZWN0ZWQgJmFtcDsgcmV0YWluZWQ8L3N0cmluZz48L3ZhbHVlPjwvbWVtYmVyPjwvc3RydWN0PjwvdmFsdWU+PC9mYXVsdD48L21ldGhvZFJlc3BvbnNlPg==",
+    "context": {
+      "direction": "from_application",
+      "exchange": "response",
+      "correlation_id": "synthetic-17"
+    },
+    "request": {
+      "method": "main.abort"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "kind": "result",
+      "context": {
+        "direction": "from_application",
+        "exchange": "response",
+        "correlation_id": "synthetic-17"
+      },
+      "fields": {
+        "status": "error",
+        "native_code": " +005 ",
+        "text": "Q1AAA rejected & retained",
+        "operation": "halt_tx"
+      },
+      "native": {
+        "format": "fldigi_xmlrpc",
+        "data": "PG1ldGhvZFJlc3BvbnNlPjxmYXVsdD48dmFsdWU+PHN0cnVjdD48bWVtYmVyPjxuYW1lPmZhdWx0Q29kZTwvbmFtZT48dmFsdWU+PGludD4gKzAwNSA8L2ludD48L3ZhbHVlPjwvbWVtYmVyPjxtZW1iZXI+PG5hbWU+ZmF1bHRTdHJpbmc8L25hbWU+PHZhbHVlPjxzdHJpbmc+UTFBQUEgcmVqZWN0ZWQgJmFtcDsgcmV0YWluZWQ8L3N0cmluZz48L3ZhbHVlPjwvbWVtYmVyPjwvc3RydWN0PjwvdmFsdWU+PC9mYXVsdD48L21ldGhvZFJlc3BvbnNlPg=="
+      }
+    }
+  },
+  "expected_message": {
+    "root": "methodResponse",
+    "method": "main.abort",
+    "xml": "<methodResponse><fault><value><struct><member><name>faultCode</name><value><int> +005 </int></value></member><member><name>faultString</name><value><string>Q1AAA rejected &amp; retained</string></value></member></struct></value></fault></methodResponse>"
+  },
+  "reencode": {
+    "data": "PG1ldGhvZFJlc3BvbnNlPjxmYXVsdD48dmFsdWU+PHN0cnVjdD48bWVtYmVyPjxuYW1lPmZhdWx0Q29kZTwvbmFtZT48dmFsdWU+PGludD4gKzAwNSA8L2ludD48L3ZhbHVlPjwvbWVtYmVyPjxtZW1iZXI+PG5hbWU+ZmF1bHRTdHJpbmc8L25hbWU+PHZhbHVlPjxzdHJpbmc+UTFBQUEgcmVqZWN0ZWQgJmFtcDsgcmV0YWluZWQ8L3N0cmluZz48L3ZhbHVlPjwvbWVtYmVyPjwvc3RydWN0PjwvdmFsdWU+PC9mYXVsdD48L21ldGhvZFJlc3BvbnNlPg=="
+  }
+}

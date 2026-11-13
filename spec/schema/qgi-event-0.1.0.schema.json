@@ -1,0 +1,1985 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qso-graph.io/spec/qgi-event-0.1.0.schema.json",
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later. Reader schema: unknown members are open for same-MAJOR and additive mapping compatibility. Use the documented producer strictness flag for output validation (QGI-SER-0009). Unicode, byte bounds, supported revisions and native consistency require procedural checks. qgi appends via and preserves the carried event.",
+  "title": "QGI-SPEC-001 event, base version 0.1.0",
+  "type": "object",
+  "properties": {
+    "spec": {
+      "type": "string",
+      "pattern": "^0\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)(?![\\s\\S])"
+    },
+    "family": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]*(?![\\s\\S])"
+    },
+    "mapping": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "native_version": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "minLength": 1
+    },
+    "wire_id": {
+      "$ref": "#/$defs/text"
+    },
+    "context": {
+      "$ref": "#/$defs/context"
+    },
+    "fields": {
+      "type": "object"
+    },
+    "native": {
+      "$ref": "#/$defs/native_payload"
+    },
+    "via": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "$ref": "#/$defs/hop"
+      }
+    }
+  },
+  "required": [
+    "spec",
+    "family",
+    "mapping",
+    "kind",
+    "context",
+    "fields"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "not": {
+          "required": [
+            "native"
+          ]
+        }
+      },
+      "then": {
+        "properties": {
+          "kind": {
+            "const": "control"
+          },
+          "fields": {
+            "required": [
+              "operation"
+            ]
+          }
+        },
+        "not": {
+          "required": [
+            "native_version"
+          ]
+        }
+      },
+      "else": {
+        "required": [
+          "native"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "enum": [
+              "wsjtx",
+              "n1mm",
+              "fldigi",
+              "js8call",
+              "pskreporter-mqtt",
+              "pskreporter-ipfix",
+              "qgi"
+            ]
+          },
+          "kind": {
+            "const": "decode"
+          }
+        },
+        "required": [
+          "family",
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "fields": {
+            "$ref": "#/$defs/decode"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "enum": [
+              "wsjtx",
+              "n1mm",
+              "fldigi",
+              "js8call",
+              "pskreporter-mqtt",
+              "pskreporter-ipfix",
+              "qgi"
+            ]
+          },
+          "kind": {
+            "const": "radio_state"
+          }
+        },
+        "required": [
+          "family",
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "fields": {
+            "$ref": "#/$defs/radio_state"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "enum": [
+              "wsjtx",
+              "n1mm",
+              "fldigi",
+              "js8call",
+              "pskreporter-mqtt",
+              "pskreporter-ipfix",
+              "qgi"
+            ]
+          },
+          "kind": {
+            "const": "qso_logged"
+          }
+        },
+        "required": [
+          "family",
+          "kind"
+        ]
+      },
+      "then": {
+        "if": {
+          "properties": {
+            "family": {
+              "const": "n1mm"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/n1mm_qso"
+            }
+          }
+        },
+        "else": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/qso_logged"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "enum": [
+              "wsjtx",
+              "n1mm",
+              "fldigi",
+              "js8call",
+              "pskreporter-mqtt",
+              "pskreporter-ipfix",
+              "qgi"
+            ]
+          },
+          "kind": {
+            "const": "qso_changed"
+          }
+        },
+        "required": [
+          "family",
+          "kind"
+        ]
+      },
+      "then": {
+        "if": {
+          "properties": {
+            "family": {
+              "const": "n1mm"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/n1mm_qso"
+            }
+          }
+        },
+        "else": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/qso_changed"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "enum": [
+              "wsjtx",
+              "n1mm",
+              "fldigi",
+              "js8call",
+              "pskreporter-mqtt",
+              "pskreporter-ipfix",
+              "qgi"
+            ]
+          },
+          "kind": {
+            "const": "qso_deleted"
+          }
+        },
+        "required": [
+          "family",
+          "kind"
+        ]
+      },
+      "then": {
+        "if": {
+          "properties": {
+            "family": {
+              "const": "n1mm"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/n1mm_qso"
+            }
+          }
+        },
+        "else": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/qso_deleted"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "enum": [
+              "wsjtx",
+              "n1mm",
+              "fldigi",
+              "js8call",
+              "pskreporter-mqtt",
+              "pskreporter-ipfix",
+              "qgi"
+            ]
+          },
+          "kind": {
+            "const": "spot"
+          }
+        },
+        "required": [
+          "family",
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "fields": {
+            "$ref": "#/$defs/spot"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "enum": [
+              "wsjtx",
+              "n1mm",
+              "fldigi",
+              "js8call",
+              "pskreporter-mqtt",
+              "pskreporter-ipfix",
+              "qgi"
+            ]
+          },
+          "kind": {
+            "const": "score"
+          }
+        },
+        "required": [
+          "family",
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "fields": {
+            "$ref": "#/$defs/score"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "enum": [
+              "wsjtx",
+              "n1mm",
+              "fldigi",
+              "js8call",
+              "pskreporter-mqtt",
+              "pskreporter-ipfix",
+              "qgi"
+            ]
+          },
+          "kind": {
+            "const": "control"
+          }
+        },
+        "required": [
+          "family",
+          "kind"
+        ]
+      },
+      "then": {
+        "if": {
+          "properties": {
+            "family": {
+              "const": "n1mm"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/n1mm_control"
+            }
+          }
+        },
+        "else": {
+          "if": {
+            "properties": {
+              "family": {
+                "const": "fldigi"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "fields": {
+                "$ref": "#/$defs/fldigi_control"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "fields": {
+                "$ref": "#/$defs/control"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "enum": [
+              "wsjtx",
+              "n1mm",
+              "fldigi",
+              "js8call",
+              "pskreporter-mqtt",
+              "pskreporter-ipfix",
+              "qgi"
+            ]
+          },
+          "kind": {
+            "const": "notification"
+          }
+        },
+        "required": [
+          "family",
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "fields": {
+            "$ref": "#/$defs/notification"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "enum": [
+              "wsjtx",
+              "n1mm",
+              "fldigi",
+              "js8call",
+              "pskreporter-mqtt",
+              "pskreporter-ipfix",
+              "qgi"
+            ]
+          },
+          "kind": {
+            "const": "ambiguous"
+          }
+        },
+        "required": [
+          "family",
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "fields": {
+            "$ref": "#/$defs/ambiguous"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "enum": [
+              "wsjtx",
+              "n1mm",
+              "fldigi",
+              "js8call",
+              "pskreporter-mqtt",
+              "pskreporter-ipfix",
+              "qgi"
+            ]
+          },
+          "kind": {
+            "const": "lifecycle"
+          }
+        },
+        "required": [
+          "family",
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "fields": {
+            "$ref": "#/$defs/lifecycle"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "enum": [
+              "wsjtx",
+              "n1mm",
+              "fldigi",
+              "js8call",
+              "pskreporter-mqtt",
+              "pskreporter-ipfix",
+              "qgi"
+            ]
+          },
+          "kind": {
+            "const": "native"
+          }
+        },
+        "required": [
+          "family",
+          "kind"
+        ]
+      },
+      "then": {
+        "if": {
+          "properties": {
+            "family": {
+              "const": "n1mm"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/n1mm_native"
+            }
+          }
+        },
+        "else": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/native"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "pattern": "^x-"
+          }
+        },
+        "required": [
+          "family"
+        ]
+      },
+      "then": {
+        "properties": {
+          "family": {
+            "pattern": "^x-[a-z0-9-]+(?:\\.[a-z0-9-]+){2,}(?![\\s\\S])"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "control"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "if": {
+          "properties": {
+            "family": {
+              "const": "n1mm"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "fields": {
+              "$ref": "#/$defs/n1mm_control"
+            }
+          }
+        },
+        "else": {
+          "if": {
+            "properties": {
+              "family": {
+                "const": "fldigi"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "fields": {
+                "$ref": "#/$defs/fldigi_control"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "fields": {
+                "$ref": "#/$defs/control"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "notification"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "fields": {
+            "$ref": "#/$defs/notification"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "ambiguous"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "fields": {
+            "$ref": "#/$defs/ambiguous"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "result"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "fields": {
+            "$ref": "#/$defs/result"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "native": {
+            "properties": {
+              "format": {
+                "const": "mqtt_publish"
+              }
+            },
+            "required": [
+              "format"
+            ]
+          }
+        },
+        "required": [
+          "native"
+        ]
+      },
+      "then": {
+        "properties": {
+          "native": {
+            "required": [
+              "topic",
+              "retained"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "native": {
+            "properties": {
+              "format": {
+                "const": "ipfix_record"
+              }
+            },
+            "required": [
+              "format"
+            ]
+          }
+        },
+        "required": [
+          "native"
+        ]
+      },
+      "then": {
+        "properties": {
+          "native": {
+            "required": [
+              "template",
+              "header",
+              "message_data",
+              "set_id",
+              "set_index",
+              "record_index"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "spec": {
+            "const": "0.1.0"
+          },
+          "native": {
+            "properties": {
+              "format": {
+                "not": {
+                  "const": "mqtt_publish"
+                }
+              }
+            },
+            "required": [
+              "format"
+            ]
+          }
+        },
+        "required": [
+          "spec",
+          "native"
+        ]
+      },
+      "then": {
+        "properties": {
+          "native": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "topic"
+                  ]
+                },
+                {
+                  "required": [
+                    "retained"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "spec": {
+            "const": "0.1.0"
+          },
+          "native": {
+            "properties": {
+              "format": {
+                "not": {
+                  "const": "ipfix_record"
+                }
+              }
+            },
+            "required": [
+              "format"
+            ]
+          }
+        },
+        "required": [
+          "spec",
+          "native"
+        ]
+      },
+      "then": {
+        "properties": {
+          "native": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "template"
+                  ]
+                },
+                {
+                  "required": [
+                    "header"
+                  ]
+                },
+                {
+                  "required": [
+                    "message_data"
+                  ]
+                },
+                {
+                  "required": [
+                    "set_id"
+                  ]
+                },
+                {
+                  "required": [
+                    "set_index"
+                  ]
+                },
+                {
+                  "required": [
+                    "record_index"
+                  ]
+                },
+                {
+                  "required": [
+                    "dependencies"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "integer": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "token": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(?![\\s\\S])"
+    },
+    "text": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "utf8_bytes": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              }
+            }
+          },
+          "required": [
+            "utf8_bytes"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "utf16_units": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 65535
+              }
+            }
+          },
+          "required": [
+            "utf16_units"
+          ]
+        }
+      ]
+    },
+    "binary64": {
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "pattern": "^ieee754:[7f]ff[0-9a-f]{13}(?![\\s\\S])"
+        }
+      ]
+    },
+    "instant": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:(?:[0-5][0-9]|60)(?:\\.[0-9]+)?Z(?![\\s\\S])"
+    },
+    "time_of_day": {
+      "type": "string",
+      "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]:(?:[0-5][0-9]|60)(?:\\.[0-9]+)?(?![\\s\\S])"
+    },
+    "base64": {
+      "type": "string",
+      "contentEncoding": "base64",
+      "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/][AQgw]==|[A-Za-z0-9+/]{2}[AEIMQUYcgkosw048]=)?(?![\\s\\S])"
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "direction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exchange": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_id": {
+          "$ref": "#/$defs/text"
+        },
+        "target_id": {
+          "$ref": "#/$defs/text"
+        },
+        "correlation_id": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "direction",
+        "exchange"
+      ]
+    },
+    "native": {
+      "type": "object",
+      "properties": {}
+    },
+    "decode": {
+      "type": "object",
+      "properties": {
+        "time_of_day": {
+          "$ref": "#/$defs/time_of_day"
+        },
+        "time": {
+          "$ref": "#/$defs/instant"
+        },
+        "snr_db": {
+          "$ref": "#/$defs/integer"
+        },
+        "dt_seconds": {
+          "$ref": "#/$defs/binary64"
+        },
+        "audio_offset_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "frequency_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "mode": {
+          "$ref": "#/$defs/text"
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        },
+        "call": {
+          "$ref": "#/$defs/text"
+        },
+        "grid": {
+          "$ref": "#/$defs/text"
+        },
+        "power_dbm": {
+          "$ref": "#/$defs/integer"
+        },
+        "drift_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "is_new": {
+          "type": "boolean"
+        },
+        "low_confidence": {
+          "type": "boolean"
+        },
+        "off_air": {
+          "type": "boolean"
+        },
+        "radio": {
+          "$ref": "#/$defs/radio"
+        }
+      }
+    },
+    "radio_state": {
+      "type": "object",
+      "properties": {
+        "dial_frequency_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "rx_offset_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "tx_offset_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "mode": {
+          "$ref": "#/$defs/text"
+        },
+        "tx_mode": {
+          "$ref": "#/$defs/text"
+        },
+        "tx_enabled": {
+          "type": "boolean"
+        },
+        "transmitting": {
+          "type": "boolean"
+        },
+        "decoding": {
+          "type": "boolean"
+        },
+        "tx_watchdog": {
+          "type": "boolean"
+        },
+        "fast_mode": {
+          "type": "boolean"
+        },
+        "station_call": {
+          "$ref": "#/$defs/text"
+        },
+        "station_grid": {
+          "$ref": "#/$defs/text"
+        },
+        "dx_call": {
+          "$ref": "#/$defs/text"
+        },
+        "dx_grid": {
+          "$ref": "#/$defs/text"
+        },
+        "report": {
+          "$ref": "#/$defs/text"
+        },
+        "sub_mode": {
+          "$ref": "#/$defs/text"
+        },
+        "configuration_name": {
+          "$ref": "#/$defs/text"
+        },
+        "tx_message": {
+          "$ref": "#/$defs/text"
+        },
+        "band": {
+          "$ref": "#/$defs/text"
+        },
+        "frequency_tolerance_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "tr_period_seconds": {
+          "$ref": "#/$defs/integer"
+        },
+        "radio": {
+          "$ref": "#/$defs/radio"
+        },
+        "focus_radio": {
+          "$ref": "#/$defs/integer"
+        },
+        "active_radio": {
+          "$ref": "#/$defs/integer"
+        },
+        "running": {
+          "type": "boolean"
+        },
+        "stereo": {
+          "type": "boolean"
+        }
+      }
+    },
+    "qso_logged": {
+      "type": "object",
+      "properties": {
+        "record_id": {
+          "$ref": "#/$defs/text"
+        },
+        "call": {
+          "$ref": "#/$defs/text"
+        },
+        "grid": {
+          "$ref": "#/$defs/text"
+        },
+        "mode": {
+          "$ref": "#/$defs/text"
+        },
+        "station_call": {
+          "$ref": "#/$defs/text"
+        },
+        "station_grid": {
+          "$ref": "#/$defs/text"
+        },
+        "operator_call": {
+          "$ref": "#/$defs/text"
+        },
+        "report_sent": {
+          "$ref": "#/$defs/text"
+        },
+        "report_received": {
+          "$ref": "#/$defs/text"
+        },
+        "exchange_sent": {
+          "$ref": "#/$defs/text"
+        },
+        "exchange_received": {
+          "$ref": "#/$defs/text"
+        },
+        "start": {
+          "$ref": "#/$defs/instant"
+        },
+        "end": {
+          "$ref": "#/$defs/instant"
+        },
+        "tx_frequency_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "dial_frequency_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "band": {
+          "$ref": "#/$defs/text"
+        },
+        "contest_name": {
+          "$ref": "#/$defs/text"
+        },
+        "serial_sent": {
+          "$ref": "#/$defs/text"
+        },
+        "serial_received": {
+          "$ref": "#/$defs/text"
+        },
+        "section": {
+          "$ref": "#/$defs/text"
+        },
+        "precedence": {
+          "$ref": "#/$defs/text"
+        },
+        "check": {
+          "$ref": "#/$defs/text"
+        },
+        "tx_power": {
+          "$ref": "#/$defs/text"
+        },
+        "comments": {
+          "$ref": "#/$defs/text"
+        },
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "propagation_mode": {
+          "$ref": "#/$defs/text"
+        },
+        "adif": {
+          "$ref": "#/$defs/text"
+        },
+        "radio": {
+          "$ref": "#/$defs/radio"
+        }
+      }
+    },
+    "qso_changed": {
+      "$ref": "#/$defs/qso_logged"
+    },
+    "qso_deleted": {
+      "$ref": "#/$defs/qso_logged"
+    },
+    "spot": {
+      "type": "object",
+      "properties": {
+        "call": {
+          "$ref": "#/$defs/text"
+        },
+        "grid": {
+          "$ref": "#/$defs/text"
+        },
+        "mode": {
+          "$ref": "#/$defs/text"
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        },
+        "spotter_call": {
+          "$ref": "#/$defs/text"
+        },
+        "source": {
+          "$ref": "#/$defs/text"
+        },
+        "frequency_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "time": {
+          "$ref": "#/$defs/instant"
+        },
+        "time_of_day": {
+          "$ref": "#/$defs/time_of_day"
+        },
+        "receiver_call": {
+          "$ref": "#/$defs/text"
+        },
+        "receiver_locator": {
+          "$ref": "#/$defs/text"
+        },
+        "sender_call": {
+          "$ref": "#/$defs/text"
+        },
+        "sender_locator": {
+          "$ref": "#/$defs/text"
+        },
+        "reporting_software": {
+          "$ref": "#/$defs/text"
+        },
+        "snr_db": {
+          "$ref": "#/$defs/integer"
+        },
+        "radio": {
+          "$ref": "#/$defs/radio"
+        }
+      }
+    },
+    "score": {
+      "type": "object",
+      "properties": {
+        "contest_name": {
+          "$ref": "#/$defs/text"
+        },
+        "station_call": {
+          "$ref": "#/$defs/text"
+        },
+        "band": {
+          "$ref": "#/$defs/text"
+        },
+        "mode": {
+          "$ref": "#/$defs/text"
+        },
+        "qso_count": {
+          "$ref": "#/$defs/integer"
+        },
+        "multiplier_count": {
+          "$ref": "#/$defs/integer"
+        },
+        "points": {
+          "$ref": "#/$defs/integer"
+        },
+        "total_score": {
+          "$ref": "#/$defs/integer"
+        },
+        "time": {
+          "$ref": "#/$defs/instant"
+        }
+      }
+    },
+    "control": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "$ref": "#/$defs/operation"
+        },
+        "window": {
+          "$ref": "#/$defs/integer"
+        },
+        "time_of_day": {
+          "$ref": "#/$defs/time_of_day"
+        },
+        "snr_db": {
+          "$ref": "#/$defs/integer"
+        },
+        "dt_seconds": {
+          "$ref": "#/$defs/binary64"
+        },
+        "audio_offset_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "rx_offset_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "frequency_tolerance_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "frequency_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "mode": {
+          "$ref": "#/$defs/text"
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        },
+        "sub_mode": {
+          "$ref": "#/$defs/text"
+        },
+        "dx_call": {
+          "$ref": "#/$defs/text"
+        },
+        "dx_grid": {
+          "$ref": "#/$defs/text"
+        },
+        "location": {
+          "$ref": "#/$defs/text"
+        },
+        "call": {
+          "$ref": "#/$defs/text"
+        },
+        "configuration_name": {
+          "$ref": "#/$defs/text"
+        },
+        "low_confidence": {
+          "type": "boolean"
+        },
+        "auto_tx_only": {
+          "type": "boolean"
+        },
+        "highlight_last": {
+          "type": "boolean"
+        },
+        "fast_mode": {
+          "type": "boolean"
+        },
+        "generate_messages": {
+          "type": "boolean"
+        },
+        "sort_order_provided": {
+          "type": "boolean"
+        },
+        "modifiers": {
+          "$ref": "#/$defs/integer"
+        },
+        "sort_order": {
+          "$ref": "#/$defs/integer"
+        },
+        "tr_period_seconds": {
+          "$ref": "#/$defs/integer"
+        },
+        "transmit": {
+          "type": "boolean"
+        },
+        "max_schema": {
+          "$ref": "#/$defs/integer"
+        },
+        "version": {
+          "$ref": "#/$defs/text"
+        },
+        "revision": {
+          "$ref": "#/$defs/text"
+        },
+        "background_color": {
+          "$ref": "#/$defs/qcolor"
+        },
+        "foreground_color": {
+          "$ref": "#/$defs/qcolor"
+        },
+        "radio": {
+          "$ref": "#/$defs/radio"
+        }
+      },
+      "required": [
+        "operation"
+      ]
+    },
+    "notification": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "$ref": "#/$defs/operation"
+        },
+        "window": {
+          "$ref": "#/$defs/integer"
+        }
+      },
+      "required": [
+        "operation"
+      ]
+    },
+    "ambiguous": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "$ref": "#/$defs/operation"
+        },
+        "window": {
+          "$ref": "#/$defs/integer"
+        }
+      },
+      "required": [
+        "operation"
+      ]
+    },
+    "lifecycle": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/$defs/token"
+        },
+        "max_schema": {
+          "$ref": "#/$defs/integer"
+        },
+        "version": {
+          "$ref": "#/$defs/text"
+        },
+        "revision": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "state"
+      ]
+    },
+    "native_payload": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string",
+          "minLength": 1
+        },
+        "data": {
+          "$ref": "#/$defs/base64"
+        },
+        "message": {
+          "type": "object"
+        },
+        "topic": {
+          "$ref": "#/$defs/text"
+        },
+        "retained": {
+          "type": "boolean"
+        },
+        "template": {
+          "$ref": "#/$defs/base64"
+        },
+        "header": {
+          "$ref": "#/$defs/ipfix_header"
+        },
+        "message_data": {
+          "$ref": "#/$defs/base64"
+        },
+        "set_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "set_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "record_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ipfix_dependency"
+          }
+        }
+      },
+      "required": [
+        "format",
+        "data"
+      ]
+    },
+    "operation": {
+      "type": "string",
+      "pattern": "^(?:[a-z][a-z0-9.-]*\\.)?[a-z][a-z0-9_]*(?![\\s\\S])"
+    },
+    "qcolor": {
+      "type": "object",
+      "properties": {
+        "spec": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 65535
+          },
+          "minItems": 5,
+          "maxItems": 5
+        }
+      },
+      "required": [
+        "spec",
+        "channels"
+      ]
+    },
+    "result": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "error"
+          ]
+        },
+        "operation": {
+          "$ref": "#/$defs/operation"
+        },
+        "native_code": {
+          "$ref": "#/$defs/text"
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        },
+        "frequency_hz": {
+          "$ref": "#/$defs/integer"
+        }
+      },
+      "required": [
+        "status"
+      ]
+    },
+    "ipfix_header": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "export_time": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "sequence_number": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "observation_domain_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      },
+      "required": [
+        "version",
+        "length",
+        "export_time",
+        "sequence_number",
+        "observation_domain_id"
+      ]
+    },
+    "ipfix_dependency": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/base64"
+        },
+        "template": {
+          "$ref": "#/$defs/base64"
+        },
+        "header": {
+          "$ref": "#/$defs/ipfix_header"
+        },
+        "set_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        }
+      },
+      "required": [
+        "data",
+        "template",
+        "header",
+        "set_id"
+      ]
+    },
+    "hop": {
+      "type": "object",
+      "properties": {
+        "family": {
+          "const": "qgi"
+        },
+        "context": {
+          "$ref": "#/$defs/context"
+        }
+      },
+      "required": [
+        "family",
+        "context"
+      ]
+    },
+    "radio": {
+      "type": "object",
+      "properties": {
+        "instance": {
+          "$ref": "#/$defs/text"
+        },
+        "number": {
+          "$ref": "#/$defs/integer"
+        }
+      },
+      "minProperties": 1
+    },
+    "n1mm_control": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "$ref": "#/$defs/operation"
+        },
+        "window": {
+          "$ref": "#/$defs/integer"
+        },
+        "time_of_day": {
+          "$ref": "#/$defs/time_of_day"
+        },
+        "snr_db": {
+          "$ref": "#/$defs/integer"
+        },
+        "dt_seconds": {
+          "$ref": "#/$defs/binary64"
+        },
+        "audio_offset_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "rx_offset_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "frequency_tolerance_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "frequency_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "mode": {
+          "$ref": "#/$defs/text"
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        },
+        "sub_mode": {
+          "$ref": "#/$defs/text"
+        },
+        "dx_call": {
+          "$ref": "#/$defs/text"
+        },
+        "dx_grid": {
+          "$ref": "#/$defs/text"
+        },
+        "location": {
+          "$ref": "#/$defs/text"
+        },
+        "call": {
+          "$ref": "#/$defs/text"
+        },
+        "configuration_name": {
+          "$ref": "#/$defs/text"
+        },
+        "low_confidence": {
+          "type": "boolean"
+        },
+        "auto_tx_only": {
+          "type": "boolean"
+        },
+        "highlight_last": {
+          "type": "boolean"
+        },
+        "fast_mode": {
+          "type": "boolean"
+        },
+        "generate_messages": {
+          "type": "boolean"
+        },
+        "sort_order_provided": {
+          "type": "boolean"
+        },
+        "modifiers": {
+          "$ref": "#/$defs/integer"
+        },
+        "sort_order": {
+          "$ref": "#/$defs/integer"
+        },
+        "tr_period_seconds": {
+          "$ref": "#/$defs/integer"
+        },
+        "transmit": {
+          "type": "boolean"
+        },
+        "max_schema": {
+          "$ref": "#/$defs/integer"
+        },
+        "version": {
+          "$ref": "#/$defs/text"
+        },
+        "revision": {
+          "$ref": "#/$defs/text"
+        },
+        "background_color": {
+          "$ref": "#/$defs/qcolor"
+        },
+        "foreground_color": {
+          "$ref": "#/$defs/qcolor"
+        },
+        "radio": {
+          "$ref": "#/$defs/radio"
+        },
+        "app": {
+          "$ref": "#/$defs/text"
+        },
+        "spectrum_name": {
+          "$ref": "#/$defs/text"
+        },
+        "low_scope_frequency": {
+          "$ref": "#/$defs/integer"
+        },
+        "high_scope_frequency": {
+          "$ref": "#/$defs/integer"
+        },
+        "scaling_factor": {
+          "$ref": "#/$defs/text"
+        },
+        "spectrum_data": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 65535
+          }
+        }
+      },
+      "required": [
+        "operation"
+      ]
+    },
+    "n1mm_qso": {
+      "type": "object",
+      "properties": {
+        "record_id": {
+          "$ref": "#/$defs/text"
+        },
+        "call": {
+          "$ref": "#/$defs/text"
+        },
+        "grid": {
+          "$ref": "#/$defs/text"
+        },
+        "mode": {
+          "$ref": "#/$defs/text"
+        },
+        "station_call": {
+          "$ref": "#/$defs/text"
+        },
+        "station_grid": {
+          "$ref": "#/$defs/text"
+        },
+        "operator_call": {
+          "$ref": "#/$defs/text"
+        },
+        "report_sent": {
+          "$ref": "#/$defs/text"
+        },
+        "report_received": {
+          "$ref": "#/$defs/text"
+        },
+        "exchange_sent": {
+          "$ref": "#/$defs/text"
+        },
+        "exchange_received": {
+          "$ref": "#/$defs/text"
+        },
+        "start": {
+          "$ref": "#/$defs/instant"
+        },
+        "end": {
+          "$ref": "#/$defs/instant"
+        },
+        "tx_frequency_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "dial_frequency_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "band": {
+          "$ref": "#/$defs/text"
+        },
+        "contest_name": {
+          "$ref": "#/$defs/text"
+        },
+        "serial_sent": {
+          "$ref": "#/$defs/text"
+        },
+        "serial_received": {
+          "$ref": "#/$defs/text"
+        },
+        "section": {
+          "$ref": "#/$defs/text"
+        },
+        "precedence": {
+          "$ref": "#/$defs/text"
+        },
+        "check": {
+          "$ref": "#/$defs/text"
+        },
+        "tx_power": {
+          "$ref": "#/$defs/text"
+        },
+        "comments": {
+          "$ref": "#/$defs/text"
+        },
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "propagation_mode": {
+          "$ref": "#/$defs/text"
+        },
+        "adif": {
+          "$ref": "#/$defs/text"
+        },
+        "radio": {
+          "$ref": "#/$defs/radio"
+        },
+        "previous_start": {
+          "$ref": "#/$defs/instant"
+        }
+      }
+    },
+    "n1mm_native": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "$ref": "#/$defs/instant"
+        },
+        "previous_start": {
+          "$ref": "#/$defs/instant"
+        }
+      }
+    },
+    "fldigi_control": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "$ref": "#/$defs/operation"
+        },
+        "window": {
+          "$ref": "#/$defs/integer"
+        },
+        "time_of_day": {
+          "$ref": "#/$defs/time_of_day"
+        },
+        "snr_db": {
+          "$ref": "#/$defs/integer"
+        },
+        "dt_seconds": {
+          "$ref": "#/$defs/binary64"
+        },
+        "audio_offset_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "rx_offset_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "frequency_tolerance_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "frequency_hz": {
+          "$ref": "#/$defs/integer"
+        },
+        "mode": {
+          "$ref": "#/$defs/text"
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        },
+        "sub_mode": {
+          "$ref": "#/$defs/text"
+        },
+        "dx_call": {
+          "$ref": "#/$defs/text"
+        },
+        "dx_grid": {
+          "$ref": "#/$defs/text"
+        },
+        "location": {
+          "$ref": "#/$defs/text"
+        },
+        "call": {
+          "$ref": "#/$defs/text"
+        },
+        "configuration_name": {
+          "$ref": "#/$defs/text"
+        },
+        "low_confidence": {
+          "type": "boolean"
+        },
+        "auto_tx_only": {
+          "type": "boolean"
+        },
+        "highlight_last": {
+          "type": "boolean"
+        },
+        "fast_mode": {
+          "type": "boolean"
+        },
+        "generate_messages": {
+          "type": "boolean"
+        },
+        "sort_order_provided": {
+          "type": "boolean"
+        },
+        "modifiers": {
+          "$ref": "#/$defs/integer"
+        },
+        "sort_order": {
+          "$ref": "#/$defs/integer"
+        },
+        "tr_period_seconds": {
+          "$ref": "#/$defs/integer"
+        },
+        "transmit": {
+          "type": "boolean"
+        },
+        "max_schema": {
+          "$ref": "#/$defs/integer"
+        },
+        "version": {
+          "$ref": "#/$defs/text"
+        },
+        "revision": {
+          "$ref": "#/$defs/text"
+        },
+        "background_color": {
+          "$ref": "#/$defs/qcolor"
+        },
+        "foreground_color": {
+          "$ref": "#/$defs/qcolor"
+        },
+        "radio": {
+          "$ref": "#/$defs/radio"
+        },
+        "rx_start": {
+          "$ref": "#/$defs/integer"
+        },
+        "rx_length": {
+          "$ref": "#/$defs/integer"
+        }
+      },
+      "required": [
+        "operation"
+      ]
+    }
+  }
+}

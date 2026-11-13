@@ -1,0 +1,20 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "skip",
+  "input": {
+    "data": "PHJhZGlvaW5mby8+",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "skip": {
+      "reason": "unknown_type",
+      "type": "radioinfo"
+    }
+  }
+}

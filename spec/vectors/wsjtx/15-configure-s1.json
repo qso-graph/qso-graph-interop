@@ -1,0 +1,64 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "rbzL2gAAAAEAAAAPAAAADXRlc3QtaW5zdGFuY2UAAAADRlQ4AAAAZAAAAAhzdWItdGVzdAAAAAAPAAAHCAAAAAVRMUFBQQAAAARGTjQyAQ==",
+    "context": {
+      "direction": "to_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "native_version": "1",
+      "kind": "control",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "wsjtx.configure",
+        "mode": "FT8",
+        "frequency_tolerance_hz": 100,
+        "sub_mode": "sub-test",
+        "fast_mode": false,
+        "tr_period_seconds": 15,
+        "rx_offset_hz": 1800,
+        "dx_call": "Q1AAA",
+        "dx_grid": "FN42",
+        "generate_messages": true
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAEAAAAPAAAADXRlc3QtaW5zdGFuY2UAAAADRlQ4AAAAZAAAAAhzdWItdGVzdAAAAAAPAAAHCAAAAAVRMUFBQQAAAARGTjQyAQ=="
+      }
+    }
+  },
+  "expected_message": {
+    "schema": 1,
+    "type": 15,
+    "id": "test-instance",
+    "body": {
+      "mode": "FT8",
+      "frequency_tolerance_hz": 100,
+      "sub_mode": "sub-test",
+      "fast_mode": false,
+      "tr_period_seconds": 15,
+      "rx_df_hz": 1800,
+      "dx_call": "Q1AAA",
+      "dx_grid": "FN42",
+      "generate_messages": true
+    },
+    "extensions": ""
+  },
+  "reencode": {
+    "data": "rbzL2gAAAAEAAAAPAAAADXRlc3QtaW5zdGFuY2UAAAADRlQ4AAAAZAAAAAhzdWItdGVzdAAAAAAPAAAHCAAAAAVRMUFBQQAAAARGTjQyAQ=="
+  }
+}

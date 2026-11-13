@@ -1,4 +1,8 @@
 
 # cargo-vet audits file
 
-[audits]
+[[audits.sha2-const-stable]]
+who = "QG Interop automated source review"
+criteria = "safe-to-deploy"
+version = "0.1.0"
+notes = "Reviewed Cargo.toml and all four source files (719 lines): dependency-free no_std const SHA-2 arithmetic, fixed arrays, checked Rust indexing, no unsafe, I/O, foreign code, build script or dynamic loading. Reviewed update/finalize padding and length accounting and the SHA-256 compression constants/rounds. Used only by optional conformance tooling to hash bounded vector files, not for authentication or secret processing. Independently checked against known SHA-256 answers and every specification manifest digest. This is an automated local source review, not an independent human audit."

@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+[package]
+name = "qso-graph-interop-ffi"
+description = "C ABI for bounded amateur radio protocol codecs"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "README.md"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+qso-graph-interop = { version = "0.1.0", path = "../qso-graph-interop" }
+serde_json = { version = "1.0.145", features = ["float_roundtrip"] }
+
+[lints]
+workspace = true

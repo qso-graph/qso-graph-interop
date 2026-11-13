@@ -1,0 +1,55 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "fldigi",
+  "mapping": 1,
+  "class": "compatibility",
+  "input": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 2,
+      "kind": "control",
+      "context": {
+        "direction": "to_application",
+        "exchange": "request",
+        "correlation_id": "synthetic-17"
+      },
+      "fields": {
+        "operation": "fldigi.modem_get_name"
+      }
+    },
+    "reader_spec": "0.1.0",
+    "writer_spec": "0.1.0"
+  },
+  "expected": {
+    "read": {
+      "kind": "control",
+      "fields": {
+        "operation": "fldigi.modem_get_name"
+      },
+      "context": {
+        "direction": "to_application",
+        "exchange": "request",
+        "correlation_id": "synthetic-17"
+      }
+    },
+    "preserved_command": {
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 2,
+      "kind": "control",
+      "context": {
+        "direction": "to_application",
+        "exchange": "request",
+        "correlation_id": "synthetic-17"
+      },
+      "fields": {
+        "operation": "fldigi.modem_get_name"
+      }
+    },
+    "verification": {
+      "status": "unavailable"
+    }
+  }
+}

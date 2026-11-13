@@ -1,0 +1,67 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "compatibility",
+  "writer_spec": "0.1.0",
+  "reader_spec": "0.1.0",
+  "input": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "radio_state",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "radio": {
+          "instance": "SYNTHETIC-PC",
+          "number": 2
+        },
+        "dial_frequency_hz": 14071230,
+        "mode": "USB",
+        "station_call": "Q2AAA",
+        "running": true,
+        "focus_radio": 1,
+        "stereo": true,
+        "active_radio": 2,
+        "transmitting": false
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48UmFkaW9JbmZvPjxhcHA+c3ludGhldGljLW5ld2VyLXByb2dyYW08L2FwcD48U3RhdGlvbk5hbWU+U1lOVEhFVElDLVBDPC9TdGF0aW9uTmFtZT48UmFkaW9Ocj4yPC9SYWRpb05yPjxGcmVxPjE0MDcxMjM8L0ZyZXE+PFRYRnJlcT4xNDA3MjM0PC9UWEZyZXE+PE1vZGU+VVNCPC9Nb2RlPjxteWNhbGw+UTJBQUE8L215Y2FsbD48T3BDYWxsPlEyQkJCPC9PcENhbGw+PElzUnVubmluZz5UcnVlPC9Jc1J1bm5pbmc+PEZvY3VzRW50cnk+MTIzNDU8L0ZvY3VzRW50cnk+PEVudHJ5V2luZG93SHduZD4yMzQ1NjwvRW50cnlXaW5kb3dId25kPjxBbnRlbm5hPjg8L0FudGVubmE+PFJvdG9ycz5zeW50aGV0aWMtcm90b3I8L1JvdG9ycz48Rm9jdXNSYWRpb05yPjE8L0ZvY3VzUmFkaW9Ocj48SXNTdGVyZW8+VHJ1ZTwvSXNTdGVyZW8+PElzU3BsaXQ+RmFsc2U8L0lzU3BsaXQ+PEFjdGl2ZVJhZGlvTnI+MjwvQWN0aXZlUmFkaW9Ocj48SXNUcmFuc21pdHRpbmc+RmFsc2U8L0lzVHJhbnNtaXR0aW5nPjxGdW5jdGlvbktleUNhcHRpb24+c3ludGhldGljLUNRPC9GdW5jdGlvbktleUNhcHRpb24+PFJhZGlvTmFtZT5zeW50aGV0aWMtcmFkaW88L1JhZGlvTmFtZT48QXV4QW50U2VsZWN0ZWQ+LTE8L0F1eEFudFNlbGVjdGVkPjxBdXhBbnRTZWxlY3RlZE5hbWU+PC9BdXhBbnRTZWxlY3RlZE5hbWU+PElzQ29ubmVjdGVkPjwvSXNDb25uZWN0ZWQ+PC9SYWRpb0luZm8+"
+      }
+    }
+  },
+  "expected": {
+    "read": {
+      "kind": "radio_state",
+      "fields": {
+        "radio": {
+          "instance": "SYNTHETIC-PC",
+          "number": 2
+        },
+        "dial_frequency_hz": 14071230,
+        "mode": "USB",
+        "station_call": "Q2AAA",
+        "running": true,
+        "focus_radio": 1,
+        "stereo": true,
+        "active_radio": 2,
+        "transmitting": false
+      },
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48UmFkaW9JbmZvPjxhcHA+c3ludGhldGljLW5ld2VyLXByb2dyYW08L2FwcD48U3RhdGlvbk5hbWU+U1lOVEhFVElDLVBDPC9TdGF0aW9uTmFtZT48UmFkaW9Ocj4yPC9SYWRpb05yPjxGcmVxPjE0MDcxMjM8L0ZyZXE+PFRYRnJlcT4xNDA3MjM0PC9UWEZyZXE+PE1vZGU+VVNCPC9Nb2RlPjxteWNhbGw+UTJBQUE8L215Y2FsbD48T3BDYWxsPlEyQkJCPC9PcENhbGw+PElzUnVubmluZz5UcnVlPC9Jc1J1bm5pbmc+PEZvY3VzRW50cnk+MTIzNDU8L0ZvY3VzRW50cnk+PEVudHJ5V2luZG93SHduZD4yMzQ1NjwvRW50cnlXaW5kb3dId25kPjxBbnRlbm5hPjg8L0FudGVubmE+PFJvdG9ycz5zeW50aGV0aWMtcm90b3I8L1JvdG9ycz48Rm9jdXNSYWRpb05yPjE8L0ZvY3VzUmFkaW9Ocj48SXNTdGVyZW8+VHJ1ZTwvSXNTdGVyZW8+PElzU3BsaXQ+RmFsc2U8L0lzU3BsaXQ+PEFjdGl2ZVJhZGlvTnI+MjwvQWN0aXZlUmFkaW9Ocj48SXNUcmFuc21pdHRpbmc+RmFsc2U8L0lzVHJhbnNtaXR0aW5nPjxGdW5jdGlvbktleUNhcHRpb24+c3ludGhldGljLUNRPC9GdW5jdGlvbktleUNhcHRpb24+PFJhZGlvTmFtZT5zeW50aGV0aWMtcmFkaW88L1JhZGlvTmFtZT48QXV4QW50U2VsZWN0ZWQ+LTE8L0F1eEFudFNlbGVjdGVkPjxBdXhBbnRTZWxlY3RlZE5hbWU+PC9BdXhBbnRTZWxlY3RlZE5hbWU+PElzQ29ubmVjdGVkPjwvSXNDb25uZWN0ZWQ+PC9SYWRpb0luZm8+"
+      }
+    },
+    "verification": "verified"
+  }
+}

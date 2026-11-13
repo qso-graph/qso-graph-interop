@@ -4,13 +4,17 @@
 Report vulnerabilities using [private vulnerability reporting](https://github.com/qso-graph/qso-graph-interop/security/advisories/new).
 Do not include private logs or credentials in a public issue.
 
-Our own code forbids unsafe Rust and defines no macros, including code behind inactive
-conditions. Dependencies may use unsafe Rust and define macros. Dependencies must come from
+Our code defines no macros, including code behind inactive conditions. All crate
+roots forbid unsafe Rust except the exact `qso-graph-interop-ffi` package. Its root
+denies unsafe operations in unsafe functions; every unsafe block requires a nearby
+`// SAFETY:` justification, checked in active and inactive code by policy. The
+workspace inherits the unsafe-operation lint; other roots retain their forbids.
+Dependencies may use unsafe Rust and define macros. Dependencies must come from
 crates.io, contain no native code, and pass cargo-vet, cargo-deny, and cargo-audit checks.
 Exemptions in cargo-vet are explicit review status, not completed audits.
 
 `cargo xtask policy` checks crate-root forbids, inherited lints, edition 2024, all first-party
-source tokens, exact dependency requirements, crates.io sources, and the pinned compiler.
+source tokens, compatible dependency ranges, crates.io sources, and the pinned compiler.
 It rejects native source/object files, foreign blocks, assembly, and link attributes in the
 shipped dependency graph. Registry Rust unsafe code and macro definitions are allowed.
 
@@ -35,7 +39,29 @@ The direct dependency API set is also fixed: serde for the library, serde_json f
 and clap, serde_json, and the codec for the CLI. Package renames, target-specific additions,
 and new direct dependencies fail until this policy is updated after API review, so a wrapper
 crate cannot silently introduce process or resolver APIs under an arbitrary name.
+The fldigi client's and simulator's TCP operations are confined to `loopback_tcp.rs`, whose complete tokens
+must match a separate audited policy template. Its connection and listener entry points take
+`SocketAddr`, checks `ip().is_loopback()` and rejects port zero before opening a socket. The listener also checks that accepted peers are loopback.
+Only IPv4's 127.0.0.0/8 range and IPv6's ::1 are accepted. Names, DNS resolution, redirects,
+proxies, and non-loopback connections are unsupported. fldigi XML-RPC uses plain HTTP;
+restricting it to loopback keeps unencrypted application state and received text off outside
+networks. Other CLI code still cannot use TCP socket APIs. The library opens no sockets.
+Each HTTP request has a five-second deadline covering connection, writing, and reading,
+a 16,384-byte header budget, and a 262,144-byte decoded body limit. Chunked replies have
+at most 1,024 chunks, 128-byte chunk lines and 16,384 bytes of trailers. Conflicting framing,
+unsupported content encodings, and incomplete bodies fail before publication.
+
+The fldigi simulator accepts at most 16 concurrent streams in one nonblocking loop. A slow
+peer cannot block other clients. Every exchange, including idle keep-alive, has a five-second
+total read/write deadline. Requests require a positive Content-Length, at most 16,384 header
+bytes and 262,144 body bytes; ambiguous framing, compressed bodies, and transfer encoding
+close the stream without dispatch. Connections over capacity are closed. RX and queued TX
+buffers are capped at 65,536 bytes each, with a separate 4,096-byte raw RX buffer. Oversized
+responses and TX appends return simulator-limit faults. It binds numeric loopback only, has
+no DNS or discovery, and never contacts a rig, fldigi, or an outside service.
+
 Policy self-tests plant an external binary, a build script, aliases, implicit DNS, adapter changes, unreviewed dependency APIs,
+non-loopback TCP, external/wildcard listener binds, listener DNS, loopback-guard removal,
 and native/first-party violations.
 Policy tooling itself may invoke build tools. Fuzzing is an isolated workspace; libFuzzer's C++
 runtime and its build dependencies never enter the shipped dependency graph.
@@ -67,3 +93,28 @@ operators (U+2060–U+2064), reserved/deprecated format controls (U+2065, U+206A
 BOM (U+FEFF), and interlinear annotation controls (U+FFF9–U+FFFB). These additional invisible
 format controls can hide boundaries or alter presentation. Other printable Unicode is retained.
 The library and JSON retain original text and raw invalid UTF-8 bytes.
+
+## C ABI memory boundary
+
+The C ABI is the sole first-party unsafe exception. Input helpers check null/length,
+alignment of typed outputs, address overflow, and byte limits before creating slices
+or writing outputs. The caller must provide live, correctly sized readable/writable
+allocations and disjoint output slots; Rust cannot validate arbitrary mapped memory,
+foreign data races, or dangling pointers. See [C ABI](docs/C-ABI.md) for the contract.
+Opaque, monotonically assigned integer handles are validated through a mutex-protected
+registry and never dereferenced as pointers. Buffers have independent non-reused tokens;
+free checks the complete descriptor before removing an allocation. Handles and buffers
+can cross threads; freeing a buffer requires all readers to have finished. A process
+has at most 4,096 live handles and 4,096 outstanding buffers; inputs are bounded before
+copying. Callers can still exhaust their own memory by repeatedly retaining large results.
+
+Every exported entry contains unwinding panics. A contained codec panic invalidates
+that handle; the registry recovers its mutex and other handles remain available. OOM,
+process abort, invalid foreign memory and violations of the caller contract are not
+recoverable status failures. Error text is thread-local, borrowed until the next ordinary
+ABI call on that thread, and must never be passed to the buffer release function.
+No callback is invoked. All codec operations are serialized internally; the boundary
+opens no socket or process. Only the exact generated header and two consumer test paths
+are exempt from first-party native-file rejection. Dependency native-code restrictions
+remain unchanged. Planted tests reject undocumented unsafe blocks, fake justifications,
+unsafe code outside FFI, native files outside those paths, and header drift.

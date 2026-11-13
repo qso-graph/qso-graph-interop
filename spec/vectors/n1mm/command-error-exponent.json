@@ -1,0 +1,38 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "command_negative",
+  "input": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "control",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "n1mm.spectrum",
+        "app": "synthetic-client",
+        "spectrum_name": "synthetic-spectrum",
+        "low_scope_frequency": 14000000,
+        "high_scope_frequency": 14055000,
+        "scaling_factor": "1e3",
+        "spectrum_data": [
+          0,
+          1,
+          160,
+          65535
+        ]
+      }
+    }
+  },
+  "expected": {
+    "error": {
+      "category": "invalid_value"
+    }
+  }
+}

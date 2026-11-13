@@ -1,0 +1,44 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "fldigi",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIj8+DQo8bWV0aG9kUmVzcG9uc2U+PHBhcmFtcz48cGFyYW0+DQoJPHZhbHVlPjxzdHJ1Y3Q+PG1lbWJlcj48bmFtZT5tYWpvcjwvbmFtZT48dmFsdWU+PGk0PjQ8L2k0PjwvdmFsdWU+PC9tZW1iZXI+PG1lbWJlcj48bmFtZT5taW5vcjwvbmFtZT48dmFsdWU+PGk0PjI8L2k0PjwvdmFsdWU+PC9tZW1iZXI+PG1lbWJlcj48bmFtZT5wYXRjaDwvbmFtZT48dmFsdWU+MTM8L3ZhbHVlPjwvbWVtYmVyPjwvc3RydWN0PjwvdmFsdWU+DQo8L3BhcmFtPjwvcGFyYW1zPjwvbWV0aG9kUmVzcG9uc2U+DQo=",
+    "context": {
+      "direction": "from_application",
+      "exchange": "response",
+      "correlation_id": "synthetic-17"
+    },
+    "request": {
+      "method": "fldigi.version_struct"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "kind": "native",
+      "context": {
+        "direction": "from_application",
+        "exchange": "response",
+        "correlation_id": "synthetic-17"
+      },
+      "fields": {},
+      "native": {
+        "format": "fldigi_xmlrpc",
+        "data": "PD94bWwgdmVyc2lvbj0iMS4wIj8+DQo8bWV0aG9kUmVzcG9uc2U+PHBhcmFtcz48cGFyYW0+DQoJPHZhbHVlPjxzdHJ1Y3Q+PG1lbWJlcj48bmFtZT5tYWpvcjwvbmFtZT48dmFsdWU+PGk0PjQ8L2k0PjwvdmFsdWU+PC9tZW1iZXI+PG1lbWJlcj48bmFtZT5taW5vcjwvbmFtZT48dmFsdWU+PGk0PjI8L2k0PjwvdmFsdWU+PC9tZW1iZXI+PG1lbWJlcj48bmFtZT5wYXRjaDwvbmFtZT48dmFsdWU+MTM8L3ZhbHVlPjwvbWVtYmVyPjwvc3RydWN0PjwvdmFsdWU+DQo8L3BhcmFtPjwvcGFyYW1zPjwvbWV0aG9kUmVzcG9uc2U+DQo="
+      }
+    }
+  },
+  "expected_message": {
+    "root": "methodResponse",
+    "xml": "<?xml version=\"1.0\"?>\r\n<methodResponse><params><param>\r\n\t<value><struct><member><name>major</name><value><i4>4</i4></value></member><member><name>minor</name><value><i4>2</i4></value></member><member><name>patch</name><value>13</value></member></struct></value>\r\n</param></params></methodResponse>\r\n",
+    "method": "fldigi.version_struct"
+  },
+  "reencode": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIj8+DQo8bWV0aG9kUmVzcG9uc2U+PHBhcmFtcz48cGFyYW0+DQoJPHZhbHVlPjxzdHJ1Y3Q+PG1lbWJlcj48bmFtZT5tYWpvcjwvbmFtZT48dmFsdWU+PGk0PjQ8L2k0PjwvdmFsdWU+PC9tZW1iZXI+PG1lbWJlcj48bmFtZT5taW5vcjwvbmFtZT48dmFsdWU+PGk0PjI8L2k0PjwvdmFsdWU+PC9tZW1iZXI+PG1lbWJlcj48bmFtZT5wYXRjaDwvbmFtZT48dmFsdWU+MTM8L3ZhbHVlPjwvbWVtYmVyPjwvc3RydWN0PjwvdmFsdWU+DQo8L3BhcmFtPjwvcGFyYW1zPjwvbWV0aG9kUmVzcG9uc2U+DQo="
+  }
+}

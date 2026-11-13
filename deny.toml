@@ -26,3 +26,9 @@ deny = [
 [licenses]
 confidence-threshold = 0.93
 allow = ["Apache-2.0", "GPL-3.0-or-later", "MIT", "Unicode-3.0"]
+
+# cbindgen is repository-only header tooling; no MPL code enters shipped artifacts.
+[[licenses.exceptions]]
+name = "cbindgen"
+version = "=0.29.4"
+allow = ["MPL-2.0"]

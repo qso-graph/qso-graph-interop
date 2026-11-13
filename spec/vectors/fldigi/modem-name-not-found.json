@@ -1,0 +1,48 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "fldigi",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PG1ldGhvZFJlc3BvbnNlPjxwYXJhbXM+PHBhcmFtPjx2YWx1ZT48c3RyaW5nPk5vIHN1Y2ggbW9kZW08L3N0cmluZz48L3ZhbHVlPjwvcGFyYW0+PC9wYXJhbXM+PC9tZXRob2RSZXNwb25zZT4=",
+    "context": {
+      "direction": "from_application",
+      "exchange": "response",
+      "correlation_id": "synthetic-17"
+    },
+    "request": {
+      "method": "modem.set_by_name"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "kind": "result",
+      "context": {
+        "direction": "from_application",
+        "exchange": "response",
+        "correlation_id": "synthetic-17"
+      },
+      "fields": {
+        "status": "ok",
+        "operation": "fldigi.modem_set_by_name",
+        "text": "No such modem"
+      },
+      "native": {
+        "format": "fldigi_xmlrpc",
+        "data": "PG1ldGhvZFJlc3BvbnNlPjxwYXJhbXM+PHBhcmFtPjx2YWx1ZT48c3RyaW5nPk5vIHN1Y2ggbW9kZW08L3N0cmluZz48L3ZhbHVlPjwvcGFyYW0+PC9wYXJhbXM+PC9tZXRob2RSZXNwb25zZT4="
+      }
+    }
+  },
+  "expected_message": {
+    "root": "methodResponse",
+    "method": "modem.set_by_name",
+    "xml": "<methodResponse><params><param><value><string>No such modem</string></value></param></params></methodResponse>"
+  },
+  "reencode": {
+    "data": "PG1ldGhvZFJlc3BvbnNlPjxwYXJhbXM+PHBhcmFtPjx2YWx1ZT48c3RyaW5nPk5vIHN1Y2ggbW9kZW08L3N0cmluZz48L3ZhbHVlPjwvcGFyYW0+PC9wYXJhbXM+PC9tZXRob2RSZXNwb25zZT4="
+  }
+}

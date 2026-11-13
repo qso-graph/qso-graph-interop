@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Policy adapted from QSO Graph's token-based Rust checks. Fail closed on unreadable input.
 #![forbid(unsafe_code)]
+pub mod ffi_memory;
 
 use proc_macro2::{Delimiter, TokenStream, TokenTree};
 use serde_json::Value;
@@ -9,6 +10,10 @@ use std::{
     path::{Path, PathBuf},
     process::Command,
 };
+
+pub mod ffi;
+mod synthetic_calls;
+pub mod verify;
 
 type Check = Result<(), String>;
 
@@ -77,7 +82,10 @@ pub fn forbids_unsafe(source: &str) -> bool {
 /// Scan all tokens, including disabled cfg branches; comments and strings are not code.
 /// Macro definitions, includes and path redirection cannot hide source from the scan.
 pub fn source_tokens(tokens: TokenStream) -> Check {
-    fn scan(tokens: TokenStream, in_attribute: bool) -> Check {
+    source_tokens_mode(tokens, false)
+}
+fn source_tokens_mode(tokens: TokenStream, ffi: bool) -> Check {
+    fn scan(tokens: TokenStream, in_attribute: bool, ffi: bool) -> Check {
         let trees: Vec<_> = tokens.into_iter().collect();
         let punct =
             |i: usize, c: char| matches!(trees.get(i),Some(TokenTree::Punct(p)) if p.as_char()==c);
@@ -87,21 +95,21 @@ pub fn source_tokens(tokens: TokenStream) -> Check {
                     let name = id.to_string();
                     let name = name.trim_start_matches("r#");
                     require(
-                        !matches!(
-                            name,
-                            "unsafe"
-                                | "macro_rules"
-                                | "macro"
-                                | "include"
-                                | "asm"
-                                | "global_asm"
-                                | "naked_asm"
-                        ),
+                        !(name == "unsafe" && !ffi)
+                            && !matches!(
+                                name,
+                                "macro_rules"
+                                    | "macro"
+                                    | "include"
+                                    | "asm"
+                                    | "global_asm"
+                                    | "naked_asm"
+                            ),
                         format!("forbidden source token {name}"),
                     )?;
                     if in_attribute {
                         require(
-                            !matches!(name, "path" | "feature" | "allow" | "expect" | "warn"),
+                            !matches!(name, "path" | "allow" | "expect" | "warn"),
                             format!("attribute can bypass policy: {name}"),
                         )?;
                     }
@@ -116,6 +124,10 @@ pub fn source_tokens(tokens: TokenStream) -> Check {
                         .next()
                         .map(|t| t.to_string())
                         .unwrap_or_default();
+                    require(
+                        !attribute || first != "feature",
+                        "unstable language feature attribute",
+                    )?;
                     // Rust's prose attributes and clap help text contain no Rust code.
                     if attribute && !matches!(first.as_str(), "doc" | "test" | "command" | "arg") {
                         for item in g.stream() {
@@ -123,21 +135,24 @@ pub fn source_tokens(tokens: TokenStream) -> Check {
                                 && let Ok(lit) = syn::parse_str::<syn::LitStr>(&l.to_string())
                                 && let Ok(inner) = lit.value().parse::<TokenStream>()
                             {
-                                scan(inner, false)?;
+                                scan(inner, false, ffi)?;
                             }
                         }
                     }
-                    scan(g.stream(), in_attribute || attribute)?;
+                    scan(g.stream(), in_attribute || attribute, ffi)?;
                 }
                 _ => {}
             }
         }
         Ok(())
     }
-    scan(tokens, false)
+    scan(tokens, false, ffi)
 }
 
 pub fn native_tokens(tokens: TokenStream) -> Check {
+    native_tokens_with_system_bindings(tokens, false)
+}
+fn native_tokens_with_system_bindings(tokens: TokenStream, system_bindings: bool) -> Check {
     let trees: Vec<_> = tokens.into_iter().collect();
     for (i, t) in trees.iter().enumerate() {
         match t {
@@ -145,7 +160,10 @@ pub fn native_tokens(tokens: TokenStream) -> Check {
                 let name = id.to_string();
                 let name = name.trim_start_matches("r#");
                 require(
-                    !matches!(name, "asm" | "global_asm" | "naked_asm"),
+                    !(matches!(name, "asm" | "global_asm" | "naked_asm")
+                        && !matches!(trees.get(i+1),Some(TokenTree::Punct(p)) if p.as_char()==':')
+                        && !(i > 0
+                            && matches!(trees.get(i-1),Some(TokenTree::Ident(id)) if id=="mod"))),
                     "native assembly",
                 )?;
                 if name == "extern" {
@@ -155,7 +173,8 @@ pub fn native_tokens(tokens: TokenStream) -> Check {
                     let rust_abi =
                         matches!(next, Some(TokenTree::Literal(l)) if l.to_string() == "\"Rust\"");
                     require(
-                        rust_abi
+                        system_bindings
+                            || rust_abi
                             || !(brace(next)
                                 || matches!(next, Some(TokenTree::Literal(_))) && brace(after)),
                         "native foreign block",
@@ -170,11 +189,12 @@ pub fn native_tokens(tokens: TokenStream) -> Check {
                     .map(|t| t.to_string())
                     .unwrap_or_default();
                 require(
-                    g.delimiter() != Delimiter::Bracket
+                    system_bindings
+                        || g.delimiter() != Delimiter::Bracket
                         || !matches!(first.as_str(), "link" | "link_name" | "link_section"),
                     "native link attribute",
                 )?;
-                native_tokens(g.stream())?;
+                native_tokens_with_system_bindings(g.stream(), system_bindings)?;
             }
             _ => {}
         }
@@ -183,7 +203,8 @@ pub fn native_tokens(tokens: TokenStream) -> Check {
 }
 
 /// The codec library has no sockets or processes. The CLI may use only UDP with
-/// numeric addresses; process creation and TCP/DNS APIs are forbidden there too.
+/// numeric addresses, plus the audited loopback TCP adapter for fldigi HTTP.
+/// General TCP, DNS and process creation remain forbidden.
 pub fn network_tokens(tokens: TokenStream, library: bool) -> Check {
     let trees: Vec<_> = tokens.into_iter().collect();
     for (i, token) in trees.iter().enumerate() {
@@ -225,11 +246,18 @@ pub fn network_tokens(tokens: TokenStream, library: bool) -> Check {
                         }
                         let path = segments.join("::");
                         let allowed = [
+                            "path::PathBuf",
+                            "sync::atomic",
+                            "sync::Arc",
+                            "sync::OnceLock",
+                            "result::Result",
+                            "fs::File",
                             "io",
                             "time",
                             "error",
                             "str",
                             "net::SocketAddr",
+                            "thread::sleep",
                             "process::ExitCode",
                         ];
                         require(
@@ -299,6 +327,10 @@ impl NumericUdp {
         self.0.recv_from(bytes)
     }
 
+    pub fn set_read_timeout(&self, timeout: Option<std::time::Duration>) -> io::Result<()> {
+        self.0.set_read_timeout(timeout)
+    }
+
     pub fn send(&self, bytes: &[u8]) -> io::Result<usize> {
         self.0.send(bytes)
     }
@@ -313,6 +345,100 @@ fn numeric_udp_tokens(tokens: TokenStream) -> Check {
                 .expect("audited template")
                 .to_string(),
         "numeric UDP adapter differs from the audited template",
+    )
+}
+
+// Exact tokens keep TCP inside the loopback guard and five-second deadline adapter.
+const AUDITED_LOOPBACK_TCP: &str = r#"// SPDX-License-Identifier: GPL-3.0-or-later
+//! Audited numeric, loopback-only adapter for fldigi HTTP clients and listeners.
+#![forbid(unsafe_code)]
+use std::io::{self, Read, Write};
+use std::net::{SocketAddr, TcpListener, TcpStream};
+use std::time::{Duration, Instant};
+pub struct LoopbackTcp {
+    stream: TcpStream,
+    deadline: Instant,
+}
+impl LoopbackTcp {
+    pub fn connect(address: SocketAddr) -> io::Result<Self> {
+        if !address.ip().is_loopback() || address.port() == 0 {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "fldigi XML-RPC uses plain HTTP; only numeric loopback addresses with a nonzero port are allowed",
+            ));
+        }
+        let timeout = Duration::from_secs(5);
+        let deadline = Instant::now() + timeout;
+        let stream = TcpStream::connect_timeout(&address, timeout)?;
+        Ok(Self { stream, deadline })
+    }
+    pub fn restart_deadline(&mut self) {
+        self.deadline = Instant::now() + Duration::from_secs(5);
+    }
+    fn remaining(&self) -> io::Result<Duration> {
+        self.deadline
+            .checked_duration_since(Instant::now())
+            .filter(|d| !d.is_zero())
+            .ok_or_else(|| {
+                io::Error::new(
+                    io::ErrorKind::TimedOut,
+                    "fldigi HTTP request exceeded five seconds",
+                )
+            })
+    }
+}
+pub struct LoopbackListener(TcpListener);
+impl LoopbackListener {
+    pub fn bind(address: SocketAddr) -> io::Result<Self> {
+        if !address.ip().is_loopback() || address.port() == 0 {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "fldigi XML-RPC uses plain HTTP; only numeric loopback listeners with a nonzero port are allowed",
+            ));
+        }
+        let listener = TcpListener::bind(address)?;
+        listener.set_nonblocking(true)?;
+        Ok(Self(listener))
+    }
+    pub fn accept(&self) -> io::Result<LoopbackTcp> {
+        let (stream, peer) = self.0.accept()?;
+        if !peer.ip().is_loopback() {
+            return Err(io::Error::new(
+                io::ErrorKind::PermissionDenied,
+                "non-loopback peer",
+            ));
+        }
+        stream.set_nonblocking(true)?;
+        Ok(LoopbackTcp {
+            stream,
+            deadline: Instant::now() + Duration::from_secs(5),
+        })
+    }
+}
+impl Read for LoopbackTcp {
+    fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
+        self.stream.set_read_timeout(Some(self.remaining()?))?;
+        self.stream.read(buf)
+    }
+}
+impl Write for LoopbackTcp {
+    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+        self.stream.set_write_timeout(Some(self.remaining()?))?;
+        self.stream.write(buf)
+    }
+    fn flush(&mut self) -> io::Result<()> {
+        self.stream.flush()
+    }
+}
+"#;
+fn loopback_tcp_tokens(tokens: TokenStream) -> Check {
+    require(
+        tokens.to_string()
+            == AUDITED_LOOPBACK_TCP
+                .parse::<TokenStream>()
+                .expect("audited TCP template")
+                .to_string(),
+        "loopback TCP adapter differs from audited template",
     )
 }
 
@@ -342,6 +468,9 @@ fn token_file(path: &Path) -> Result<TokenStream, String> {
         .map_err(|e| format!("{} does not tokenize: {e}", path.display()))
 }
 fn no_native(dir: &Path) -> Check {
+    no_native_with_system_bindings(dir, false)
+}
+fn no_native_with_system_bindings(dir: &Path, system_bindings: bool) -> Check {
     for path in files(dir)? {
         let ext = path
             .extension()
@@ -369,7 +498,8 @@ fn no_native(dir: &Path) -> Check {
             format!("native code: {}", path.display()),
         )?;
         if ext == "rs" {
-            native_tokens(token_file(&path)?).map_err(|e| format!("{}: {e}", path.display()))?;
+            native_tokens_with_system_bindings(token_file(&path)?, system_bindings)
+                .map_err(|e| format!("{}: {e}", path.display()))?;
         }
     }
     Ok(())
@@ -397,8 +527,12 @@ pub fn manifest_policy(t: &toml::Table, fuzz: bool) -> Check {
                         .as_str()
                         .or_else(|| value.get("version").and_then(|v| v.as_str()));
                     require(
-                        version.is_some_and(exact_version),
-                        format!("dependency {key} must use an exact = version"),
+                        version.is_some_and(compatible_version)
+                            || key == "cbindgen"
+                                && version == Some("=0.29.4")
+                                && value.get("default-features").and_then(|v| v.as_bool())
+                                    == Some(false),
+                        format!("dependency {key} must use a compatible version range"),
                     )?;
                     if key == "serde_json" {
                         require(
@@ -432,9 +566,12 @@ pub fn manifest_policy(t: &toml::Table, fuzz: bool) -> Check {
     }
     dependencies(&toml::Value::Table(t.clone()), false)
 }
-fn exact_version(v: &str) -> bool {
-    v.strip_prefix('=')
-        .is_some_and(|s| !s.is_empty() && !s.contains([',', '*', '^', '~', ' ', '>', '<']))
+fn compatible_version(v: &str) -> bool {
+    let v = v
+        .strip_prefix('^')
+        .or_else(|| v.strip_prefix('~'))
+        .unwrap_or(v);
+    !v.is_empty() && v.as_bytes()[0].is_ascii_digit() && !v.contains(['=', '*', '>', '<', ',', ' '])
 }
 
 // A new dependency can expose process/network APIs under arbitrary names. Reject additions
@@ -451,9 +588,11 @@ fn shipped_dependency_names(table: &toml::Table, library: bool) -> Check {
                     .ok_or("dependency section must be a table")?;
                 for (name, specification) in dependencies {
                     let allowed: &[&str] = match (library, key.as_str()) {
-                        (true, "dependencies") => &["serde"],
+                        (true, "dependencies") => &["serde", "serde_json", "sha2-const-stable"],
                         (true, "dev-dependencies") => &["serde_json"],
-                        (false, "dependencies") => &["clap", "qso-graph-interop", "serde_json"],
+                        (false, "dependencies") => {
+                            &["clap", "qso-graph-interop", "serde_json", "signal-hook"]
+                        }
                         _ => &[],
                     };
                     require(
@@ -503,10 +642,10 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
             .get("workspace")
             .and_then(|v| v.get("lints"))
             .and_then(|v| v.get("rust"))
-            .and_then(|v| v.get("unsafe_code"))
+            .and_then(|v| v.get("unsafe_op_in_unsafe_fn"))
             .and_then(|v| v.as_str())
-            == Some("forbid"),
-        "workspace must forbid unsafe_code",
+            == Some("deny"),
+        "workspace must deny unsafe_op_in_unsafe_fn",
     )?;
     let members = array(meta, "workspace_members")?;
     for pkg in array(meta, "packages")? {
@@ -520,7 +659,16 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
         if pkg["name"] == "qso-graph-interop" || pkg["name"] == "qso-graph-interop-cli" {
             shipped_dependency_names(&package_manifest, pkg["name"] == "qso-graph-interop")?;
         }
-        no_native(dir)?;
+        let is_ffi = pkg["name"] == "qso-graph-interop-ffi";
+        if is_ffi {
+            require(
+                dir == root.join("crates/qso-graph-interop-ffi"),
+                "FFI exception requires exact package path",
+            )?;
+            ffi::package_policy(dir, &package_manifest)?;
+        } else {
+            no_native(dir)?;
+        }
         let targets = array(pkg, "targets")?;
         let mut test_roots = BTreeSet::new();
         let mut other_roots = BTreeSet::new();
@@ -573,14 +721,26 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
                 "crate root must be a .rs file in its own crate",
             )?;
             require(
-                forbids_unsafe(&read(source)?),
+                if is_ffi {
+                    ffi::root_policy(&read(source)?).is_ok()
+                } else {
+                    forbids_unsafe(&read(source)?)
+                },
                 format!("{} must say #![forbid(unsafe_code)]", source.display()),
             )?;
         }
         for file in files(dir)? {
             if file.extension().is_some_and(|e| e == "rs") {
                 let tokens = token_file(&file)?;
-                source_tokens(tokens.clone()).map_err(|e| format!("{}: {e}", file.display()))?;
+                if is_ffi {
+                    source_tokens_mode(tokens.clone(), true)?;
+                    ffi::unsafe_comments(&read(&file)?)?;
+                    network_tokens(tokens.clone(), true)?;
+                    native_tokens(tokens.clone())?;
+                } else {
+                    source_tokens(tokens.clone())
+                        .map_err(|e| format!("{}: {e}", file.display()))?;
+                }
                 if pkg["name"] == "qso-graph-interop-cli" {
                     reject_test_root_modules(tokens, &test_names)
                         .map_err(|e| format!("{}: {e}", file.display()))?;
@@ -597,6 +757,10 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
                         && file == dir.join("src/numeric_udp.rs")
                     {
                         numeric_udp_tokens(token_file(&file)?)?;
+                    } else if pkg["name"] == "qso-graph-interop-cli"
+                        && file == dir.join("src/loopback_tcp.rs")
+                    {
+                        loopback_tcp_tokens(token_file(&file)?)?;
                     } else {
                         network_tokens(token_file(&file)?, pkg["name"] == "qso-graph-interop")?;
                     }
@@ -612,7 +776,11 @@ fn dependency_policy(meta: &Value) -> Check {
     let nodes = array(&meta["resolve"], "nodes")?;
     let mut queue: VecDeque<&Value> = packages
         .iter()
-        .filter(|p| p["name"] == "qso-graph-interop" || p["name"] == "qso-graph-interop-cli")
+        .filter(|p| {
+            p["name"] == "qso-graph-interop"
+                || p["name"] == "qso-graph-interop-cli"
+                || p["name"] == "qso-graph-interop-ffi"
+        })
         .map(|p| &p["id"])
         .collect();
     let mut seen = BTreeSet::new();
@@ -630,12 +798,26 @@ fn dependency_policy(meta: &Value) -> Check {
                 "only crates.io sources allowed",
             )?;
             let manifest = Path::new(pkg["manifest_path"].as_str().ok_or("missing manifest")?);
-            no_native(manifest.parent().ok_or("missing crate directory")?)?;
+            // Rust-only OS bindings used by safe signal handling. No bundled native sources,
+            // assembly, or foreign libraries enter the shipped graph. Versions require review.
+            let system_bindings = matches!(
+                (pkg["name"].as_str(), pkg["version"].as_str()),
+                (Some("libc"), Some("0.2.191"))
+                    | (Some("errno"), Some("0.3.15"))
+                    | (Some("windows-sys"), Some("0.61.2"))
+                    | (Some("windows-link"), Some("0.2.1"))
+            );
+            no_native_with_system_bindings(
+                manifest.parent().ok_or("missing crate directory")?,
+                system_bindings,
+            )?;
             // Build scripts and procedural macros are subject to cargo-vet, including exact
             // versions that remain explicitly not audited in supply-chain/config.toml.
         } else {
             require(
-                pkg["name"] == "qso-graph-interop" || pkg["name"] == "qso-graph-interop-cli",
+                pkg["name"] == "qso-graph-interop"
+                    || pkg["name"] == "qso-graph-interop-cli"
+                    || pkg["name"] == "qso-graph-interop-ffi",
                 "unexpected path dependency in shipped graph",
             )?;
         }
@@ -709,16 +891,110 @@ fn fuzz_policy(root: &Path) -> Check {
     Ok(())
 }
 
+/// Public named structs and enums must remain extensible across additive revisions.
+fn public_shapes(source: &str) -> Check {
+    fn items(item_list: &[syn::Item]) -> Check {
+        for item in item_list {
+            let attrs = match item {
+                syn::Item::Enum(e) if matches!(e.vis, syn::Visibility::Public(_)) => Some(&e.attrs),
+                syn::Item::Struct(s) if matches!(s.vis, syn::Visibility::Public(_)) => {
+                    Some(&s.attrs)
+                }
+                syn::Item::Mod(m) => {
+                    if let Some((_, content)) = &m.content {
+                        items(content)?;
+                    }
+                    None
+                }
+                _ => None,
+            };
+            if let Some(attrs) = attrs {
+                require(
+                    attrs.iter().any(|a| a.path().is_ident("non_exhaustive")),
+                    "public growable types must be non_exhaustive",
+                )?;
+            }
+        }
+        Ok(())
+    }
+    items(&syn::parse_file(source).map_err(|e| e.to_string())?.items)
+}
+fn core_family_free(tokens: TokenStream) -> Check {
+    for token in tokens {
+        match token {
+            TokenTree::Ident(i) => require(
+                !matches!(i.to_string().as_str(), "wsjtx" | "qgi"),
+                "core references a family module",
+            )?,
+            TokenTree::Group(g) => core_family_free(g.stream())?,
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
 pub fn policy(root: &Path) -> Check {
     let meta = metadata(root)?;
     compiler_policy(root)?;
     println!("policy: pinned compiler and flags: pass");
     workspace_policy(root, &meta)?;
-    println!("policy: roots, lints, tokens, dependency pins, codec without networking: pass");
+    for file in files(&root.join("crates/qso-graph-interop/src"))? {
+        if file.extension().is_some_and(|e| e == "rs") {
+            public_shapes(&read(&file)?)?;
+        }
+    }
+    for name in [
+        "model",
+        "codec",
+        "error",
+        "json",
+        "catalog",
+        "base64",
+        "conformance",
+    ] {
+        core_family_free(token_file(
+            &root.join(format!("crates/qso-graph-interop/src/{name}.rs")),
+        )?)?;
+    }
+    println!("policy: extensible public types and family-independent core: pass");
+    println!("policy: roots, lints, tokens, dependency ranges, codec without networking: pass");
     dependency_policy(&meta)?;
     println!("policy: crates.io only, no native code in shipped dependency graph: pass");
     fuzz_policy(root)?;
     println!("policy: isolated, pinned fuzz target: pass");
+    synthetic_calls::check(root)?;
+    println!("policy: Q-prefixed invented calls in sources, fixtures and vectors: pass");
+    portable_names(&tracked_files(root)?)?;
+    println!("policy: no tracked paths that differ only by case: pass");
+    Ok(())
+}
+
+fn tracked_files(root: &Path) -> Result<Vec<String>, String> {
+    let out = std::process::Command::new("git")
+        .arg("-C")
+        .arg(root)
+        .args(["ls-files", "-z"])
+        .output()
+        .map_err(|e| format!("git ls-files: {e}"))?;
+    require(out.status.success(), "git ls-files failed")?;
+    Ok(String::from_utf8_lossy(&out.stdout)
+        .split('\0')
+        .filter(|s| !s.is_empty())
+        .map(str::to_owned)
+        .collect())
+}
+
+/// macOS and Windows file systems ignore case: two tracked paths that differ only by case
+/// are one file there, and a checkout silently keeps one of them.
+fn portable_names(paths: &[String]) -> Check {
+    let mut seen = std::collections::BTreeMap::<String, &str>::new();
+    for path in paths {
+        if let Some(other) = seen.insert(path.to_lowercase(), path) {
+            return Err(format!(
+                "{other} and {path} differ only by case: one file on macOS and Windows"
+            ));
+        }
+    }
     Ok(())
 }
 
@@ -726,6 +1002,33 @@ pub fn policy(root: &Path) -> Check {
 mod tests {
     use super::*;
 
+    #[test]
+    fn planted_case_only_path_clash_is_caught() {
+        let ok = [
+            "spec/a-true.json".to_owned(),
+            "spec/a-true-capitalized.json".to_owned(),
+        ];
+        assert!(portable_names(&ok).is_ok());
+        let planted = ["spec/a-True.json".to_owned(), "spec/a-true.json".to_owned()];
+        assert!(
+            portable_names(&planted)
+                .unwrap_err()
+                .contains("differ only by case")
+        );
+    }
+
+    #[test]
+    fn planted_closed_types_family_imports_and_feature_bypasses() {
+        assert!(public_shapes("#[non_exhaustive] pub enum E { A } #[non_exhaustive] pub struct S { pub value:u32 }").is_ok());
+        assert!(public_shapes("pub enum E { A }").is_err());
+        assert!(public_shapes("pub struct S { pub value:u32 }").is_err());
+        assert!(public_shapes("pub struct T(pub Vec<u8>);").is_err());
+        assert!(core_family_free("use crate::model::Text;".parse().unwrap()).is_ok());
+        assert!(core_family_free("use crate::wsjtx::Utf8;".parse().unwrap()).is_err());
+        assert!(core_family_free("crate::qgi::Qgi::new();".parse().unwrap()).is_err());
+        assert!(source_tokens("#[cfg(feature = \"wsjtx\")] mod family;".parse().unwrap()).is_ok());
+        assert!(source_tokens("#![feature(something)]".parse().unwrap()).is_err());
+    }
     #[test]
     fn planted_unsafe_and_macro_cases() {
         for source in [
@@ -737,6 +1040,7 @@ mod tests {
             "#[path=\"hidden\"] mod m;",
             "#[allow(unsafe_code)] fn f() {}",
             "#[cfg_attr(any(), allow(unsafe_code))] fn f() {}",
+            "#![feature(something)]",
             "asm!(\"\")",
         ] {
             assert!(source_tokens(source.parse().unwrap()).is_err(), "{source}");
@@ -803,7 +1107,7 @@ mod tests {
         let manifest = r#"
 [workspace]
 [workspace.lints.rust]
-unsafe_code = "forbid"
+unsafe_op_in_unsafe_fn = "deny"
 [package]
 name = "qso-graph-interop-cli"
 version = "0.1.0"
@@ -871,6 +1175,89 @@ fn main() {}
     }
 
     #[test]
+    fn planted_unsafe_exception_is_confined_to_exact_ffi_package() {
+        let dir = std::env::temp_dir().join(format!("qgi-ffi-policy-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::write(
+            dir.join("Cargo.toml"),
+            "[workspace.lints.rust]\nunsafe_op_in_unsafe_fn = \"deny\"\n",
+        )
+        .unwrap();
+        let names = [
+            "qso-graph-interop",
+            "qso-graph-interop-cli",
+            "xtask",
+            "qso-graph-interop-ffi",
+        ];
+        let mut packages = Vec::new();
+        for name in names {
+            let package = dir.join("crates").join(name);
+            std::fs::create_dir_all(package.join("src")).unwrap();
+            let mut manifest = "[lints]\nworkspace = true\n".to_owned();
+            if name == "qso-graph-interop-ffi" {
+                manifest.push_str("[dependencies]\nqso-graph-interop = \"0.1.0\"\nserde_json = { version = \"1.0.145\", features = [\"float_roundtrip\"] }\n");
+            }
+            std::fs::write(package.join("Cargo.toml"), manifest).unwrap();
+            let source = if name == "qso-graph-interop-ffi" {
+                "#![deny(unsafe_op_in_unsafe_fn)]\nfn f() {\n// SAFETY: planted documented empty block\nunsafe {}\n}\n"
+            } else {
+                "#![forbid(unsafe_code)]\n"
+            };
+            std::fs::write(package.join("src/lib.rs"), source).unwrap();
+            packages.push(serde_json::json!({"id":name,"name":name,"manifest_path":package.join("Cargo.toml"),"targets":[{"kind":["lib"],"edition":"2024","src_path":package.join("src/lib.rs") }]}));
+        }
+        let meta = serde_json::json!({"workspace_members": names,"packages":packages});
+        workspace_policy(&dir, &meta).unwrap();
+        for name in &names[..3] {
+            let source = dir.join("crates").join(name).join("src/lib.rs");
+            std::fs::write(
+                &source,
+                "#![forbid(unsafe_code)]\n#[cfg(any())] fn planted() { unsafe {} }\n",
+            )
+            .unwrap();
+            assert!(
+                workspace_policy(&dir, &meta)
+                    .unwrap_err()
+                    .contains("forbidden source token unsafe"),
+                "{name}"
+            );
+            std::fs::write(source, "#![forbid(unsafe_code)]\n").unwrap();
+        }
+        let ffi = dir.join("crates/qso-graph-interop-ffi");
+        std::fs::write(
+            ffi.join("src/lib.rs"),
+            "#![deny(unsafe_op_in_unsafe_fn)]\nfn f() { unsafe {} }\n",
+        )
+        .unwrap();
+        assert!(
+            workspace_policy(&dir, &meta)
+                .unwrap_err()
+                .contains("SAFETY:")
+        );
+        std::fs::write(ffi.join("src/lib.rs"), "#![deny(unsafe_op_in_unsafe_fn)]\n").unwrap();
+        std::fs::write(ffi.join("unreviewed.c"), "int planted;").unwrap();
+        assert!(
+            workspace_policy(&dir, &meta)
+                .unwrap_err()
+                .contains("unapproved FFI native file")
+        );
+        std::fs::remove_file(ffi.join("unreviewed.c")).unwrap();
+        std::fs::rename(&ffi, dir.join("crates/pretend-ffi")).unwrap();
+        let mut moved = meta.clone();
+        moved["packages"][3]["manifest_path"] = dir
+            .join("crates/pretend-ffi/Cargo.toml")
+            .to_string_lossy()
+            .into_owned()
+            .into();
+        assert!(
+            workspace_policy(&dir, &moved)
+                .unwrap_err()
+                .contains("exact package path")
+        );
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
     fn planted_network_cases() {
         for s in [
             "use std::net as n;",
@@ -881,6 +1268,7 @@ fn main() {}
         }
         for s in [
             "std::net::TcpStream::connect(\"example.com\");",
+            "std::net::TcpListener::bind(\"127.0.0.1:7362\");",
             "use std::net::ToSocketAddrs;",
             "std::process::Command::new(\"curl\");",
         ] {
@@ -947,6 +1335,54 @@ fn main() {}
     }
 
     #[test]
+    fn loopback_tcp_adapter_changes_are_rejected() {
+        assert!(loopback_tcp_tokens(AUDITED_LOOPBACK_TCP.parse().unwrap()).is_ok());
+        for mutant in [
+            AUDITED_LOOPBACK_TCP.replace("!address.ip().is_loopback()", "false"),
+            AUDITED_LOOPBACK_TCP.replace(
+                "TcpStream::connect_timeout(&address, timeout)",
+                "TcpStream::connect(\"192.0.2.1:7362\")",
+            ),
+            AUDITED_LOOPBACK_TCP.replace(
+                "TcpStream::connect_timeout(&address, timeout)",
+                "TcpStream::connect(\"localhost:7362\")",
+            ),
+            AUDITED_LOOPBACK_TCP.replace("Duration::from_secs(5)", "Duration::from_secs(500)"),
+            AUDITED_LOOPBACK_TCP.replace(
+                "TcpListener::bind(address)",
+                "TcpListener::bind(\"0.0.0.0:7362\")",
+            ),
+            AUDITED_LOOPBACK_TCP.replace(
+                "TcpListener::bind(address)",
+                "TcpListener::bind(\"localhost:7362\")",
+            ),
+            AUDITED_LOOPBACK_TCP.replace("!peer.ip().is_loopback()", "false"),
+            AUDITED_LOOPBACK_TCP.replace(
+                "listener.set_nonblocking(true)",
+                "listener.set_nonblocking(false)",
+            ),
+        ] {
+            assert!(loopback_tcp_tokens(mutant.parse().unwrap()).is_err());
+        }
+    }
+
+    #[test]
+    fn os_bindings_do_not_allow_native_code_in_ordinary_dependencies() {
+        let ffi = "unsafe extern \"C\" { fn signal(); }";
+        assert!(native_tokens(ffi.parse().unwrap()).is_err());
+        assert!(native_tokens_with_system_bindings(ffi.parse().unwrap(), true).is_ok());
+        for source in [
+            "asm!(\"nop\");",
+            "global_asm!(\"nop\");",
+            "naked_asm!(\"nop\");",
+            "use core::arch::asm as hidden; hidden!(\"nop\");",
+        ] {
+            assert!(native_tokens_with_system_bindings(source.parse().unwrap(), true).is_err());
+        }
+        assert!(native_tokens("use asm::socket; mod asm;".parse().unwrap()).is_ok());
+    }
+
+    #[test]
     fn dependency_policy_allows_rust_unsafe_and_macros_but_own_code_does_not() {
         let dependency = "unsafe fn internal() {} macro_rules! helper { () => {} }";
         assert!(native_tokens(dependency.parse().unwrap()).is_ok());
@@ -972,18 +1408,18 @@ fn main() {}
     #[test]
     fn unreviewed_dependency_apis_aliases_and_target_paths_are_rejected() {
         for source in [
-            "[dependencies]\nduct='=0.13.0'",
-            "[dependencies]\nclap={package='duct',version='=0.13.0'}",
-            "[target.'cfg(unix)'.dependencies]\nresolver='=1.0.0'",
-            "[dev-dependencies]\nprocess_wrapper='=1.0.0'",
-            "[build-dependencies]\nprocess_wrapper='=1.0.0'",
+            "[dependencies]\nduct='0.13.0'",
+            "[dependencies]\nclap={package='duct',version='0.13.0'}",
+            "[target.'cfg(unix)'.dependencies]\nresolver='1.0.0'",
+            "[dev-dependencies]\nprocess_wrapper='1.0.0'",
+            "[build-dependencies]\nprocess_wrapper='1.0.0'",
         ] {
             assert!(shipped_dependency_names(&toml::from_str(source).unwrap(), false).is_err());
         }
         assert!(
             shipped_dependency_names(
                 &toml::from_str(
-                    "[dependencies]\nserde='=1.0.229'\n[dev-dependencies]\nserde_json='=1.0.145'"
+                    "[dependencies]\nserde='1.0.229'\n[dev-dependencies]\nserde_json='1.0.145'"
                 )
                 .unwrap(),
                 true
@@ -993,7 +1429,7 @@ fn main() {}
         assert!(
             shipped_dependency_names(
                 &toml::from_str(
-                    "[dependencies]\nclap='=4.6.7'\nserde_json='=1.0.145'\nqso-graph-interop='=0.1.0'"
+                    "[dependencies]\nclap='4.6.7'\nserde_json='1.0.145'\nqso-graph-interop='0.1.0'"
                 )
                 .unwrap(),
                 false
@@ -1002,7 +1438,7 @@ fn main() {}
         );
         assert!(
             shipped_dependency_names(
-                &toml::from_str("[dependencies]\nwrapper='=1.0.0'").unwrap(),
+                &toml::from_str("[dependencies]\nwrapper='1.0.0'").unwrap(),
                 true
             )
             .is_err()
@@ -1012,27 +1448,29 @@ fn main() {}
     #[test]
     fn serde_json_requires_float_roundtrip_in_every_manifest() {
         for dependency in [
-            "serde_json='=1.0.145'",
-            "serde_json={version='=1.0.145',features=[]}",
+            "serde_json='1.0.145'",
+            "serde_json={version='1.0.145',features=[]}",
         ] {
             let source = format!("[lints]\nworkspace=true\n[dependencies]\n{dependency}");
             assert!(manifest_policy(&toml::from_str(&source).unwrap(), false).is_err());
         }
-        let source = "[lints]\nworkspace=true\n[dependencies]\nserde_json={version='=1.0.145',features=['float_roundtrip']}";
+        let source = "[lints]\nworkspace=true\n[dependencies]\nserde_json={version='1.0.145',features=['float_roundtrip']}";
         assert!(manifest_policy(&toml::from_str(source).unwrap(), false).is_ok());
     }
 
     #[test]
-    fn planted_floating_dependency_and_lint_override() {
-        let good: toml::Table =
-            toml::from_str("[lints]\nworkspace=true\n[dependencies]\nserde='=1.0.229'").unwrap();
-        assert!(manifest_policy(&good, false).is_ok());
-        for s in [
+    fn planted_incompatible_dependency_and_lint_override() {
+        for range in ["1", "1.0.229", "^1.0", "~1.0.229"] {
+            let source = format!("[lints]\nworkspace=true\n[dependencies]\nserde='{range}'");
+            assert!(manifest_policy(&toml::from_str(&source).unwrap(), false).is_ok());
+        }
+        for source in [
             "[dependencies]\nserde='1'",
-            "[lints]\nworkspace=true\n[dependencies]\nserde='^1'",
-            "[lints]\nworkspace=true\n[dependencies]\nserde={version='=1.0.229',git='https://example.com'}",
+            "[lints]\nworkspace=true\n[dependencies]\nserde='*'",
+            "[lints]\nworkspace=true\n[dependencies]\nserde='=1.0.229'",
+            "[lints]\nworkspace=true\n[dependencies]\nserde={version='1.0.229',git='https://example.com'}",
         ] {
-            assert!(manifest_policy(&toml::from_str(s).unwrap(), false).is_err());
+            assert!(manifest_policy(&toml::from_str(source).unwrap(), false).is_err());
         }
     }
 }

@@ -1,0 +1,53 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "rbzL2gAAAAMAAAABAAAADXRlc3QtaW5zdGFuY2UAAAAAANbAkAAAAANGVDgAAAAFUTFBQUEAAAADLTA5AAAAA0ZUNAEAAQAABLEAAAj+AAAABVEyQUFBAAAABEZOMzEAAAAERk40MgAAAAAIc3ViLXRlc3QBAw==",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "native_version": "3",
+      "kind": "radio_state",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "dial_frequency_hz": 14074000,
+        "mode": "FT8",
+        "dx_call": "Q1AAA",
+        "report": "-09",
+        "tx_mode": "FT4",
+        "tx_enabled": true,
+        "transmitting": false,
+        "decoding": true,
+        "rx_offset_hz": 1201,
+        "tx_offset_hz": 2302,
+        "station_call": "Q2AAA",
+        "station_grid": "FN31",
+        "dx_grid": "FN42",
+        "tx_watchdog": false,
+        "sub_mode": "sub-test",
+        "fast_mode": true,
+        "radio": {
+          "instance": "test-instance"
+        }
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAABAAAADXRlc3QtaW5zdGFuY2UAAAAAANbAkAAAAANGVDgAAAAFUTFBQUEAAAADLTA5AAAAA0ZUNAEAAQAABLEAAAj+AAAABVEyQUFBAAAABEZOMzEAAAAERk40MgAAAAAIc3ViLXRlc3QBAw=="
+      }
+    }
+  }
+}

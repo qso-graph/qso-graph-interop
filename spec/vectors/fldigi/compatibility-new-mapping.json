@@ -1,0 +1,53 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "fldigi",
+  "mapping": 1,
+  "class": "compatibility",
+  "input": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 2,
+      "kind": "radio_state",
+      "context": {
+        "direction": "from_application",
+        "exchange": "response",
+        "correlation_id": "synthetic-17"
+      },
+      "fields": {
+        "mode": "BPSK31",
+        "future": 1
+      },
+      "native": {
+        "format": "fldigi_xmlrpc",
+        "data": "PG1ldGhvZFJlc3BvbnNlPjxwYXJhbXM+PHBhcmFtPjx2YWx1ZT48c3RyaW5nPkJQU0szMTwvc3RyaW5nPjwvdmFsdWU+PC9wYXJhbT48L3BhcmFtcz48L21ldGhvZFJlc3BvbnNlPg=="
+      }
+    },
+    "reader_spec": "0.1.0",
+    "writer_spec": "0.1.0",
+    "request": {
+      "method": "modem.get_name"
+    }
+  },
+  "expected": {
+    "read": {
+      "kind": "radio_state",
+      "fields": {
+        "mode": "BPSK31"
+      },
+      "context": {
+        "direction": "from_application",
+        "exchange": "response",
+        "correlation_id": "synthetic-17"
+      },
+      "native": {
+        "format": "fldigi_xmlrpc",
+        "data": "PG1ldGhvZFJlc3BvbnNlPjxwYXJhbXM+PHBhcmFtPjx2YWx1ZT48c3RyaW5nPkJQU0szMTwvc3RyaW5nPjwvdmFsdWU+PC9wYXJhbT48L3BhcmFtcz48L21ldGhvZFJlc3BvbnNlPg=="
+      }
+    },
+    "verification": {
+      "status": "verified"
+    }
+  }
+}

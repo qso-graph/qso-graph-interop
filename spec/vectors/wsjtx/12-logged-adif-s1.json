@@ -1,0 +1,47 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "rbzL2gAAAAEAAAAMAAAADXRlc3QtaW5zdGFuY2UAAAAoPEFESUZfVkVSOjU+My4xLjQ8RU9IPjxDQUxMOjU+UTFBQUE8RU9SPg==",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "native_version": "1",
+      "kind": "qso_logged",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "adif": "<ADIF_VER:5>3.1.4<EOH><CALL:5>Q1AAA<EOR>",
+        "radio": {
+          "instance": "test-instance"
+        }
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAEAAAAMAAAADXRlc3QtaW5zdGFuY2UAAAAoPEFESUZfVkVSOjU+My4xLjQ8RU9IPjxDQUxMOjU+UTFBQUE8RU9SPg=="
+      }
+    }
+  },
+  "expected_message": {
+    "schema": 1,
+    "type": 12,
+    "id": "test-instance",
+    "body": {
+      "adif": "<ADIF_VER:5>3.1.4<EOH><CALL:5>Q1AAA<EOR>"
+    },
+    "extensions": ""
+  }
+}

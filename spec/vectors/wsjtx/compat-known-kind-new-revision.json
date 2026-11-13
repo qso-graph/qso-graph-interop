@@ -1,0 +1,47 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "compatibility",
+  "writer_spec": "0.1.0",
+  "reader_spec": "0.1.0",
+  "input": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 2,
+      "native_version": "3",
+      "kind": "radio_state",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "dial_frequency_hz": 14074000
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAARAAAADXRlc3QtaW5zdGFuY2U="
+      }
+    }
+  },
+  "expected": {
+    "read": {
+      "kind": "radio_state",
+      "fields": {
+        "dial_frequency_hz": 14074000
+      },
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAARAAAADXRlc3QtaW5zdGFuY2U="
+      }
+    },
+    "verification": "unavailable"
+  }
+}

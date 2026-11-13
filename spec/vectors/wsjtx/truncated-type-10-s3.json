@@ -1,0 +1,19 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "negative",
+  "input": {
+    "data": "rbzL2gAAAAMAAAAKAAAADXRlc3QtaW5zdGFuY2UAArMp+////+W/4AAAAAAAAAAAAAAA1xTw/////gAAAAVRMUFBQQAAAARGTjQyAAAA",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "error": {
+      "category": "truncated"
+    }
+  }
+}

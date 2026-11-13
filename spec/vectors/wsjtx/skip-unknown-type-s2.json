@@ -1,0 +1,21 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "skip",
+  "input": {
+    "data": "rbzL2gAAAAIAAABj",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "skip": {
+      "reason": "unknown_type",
+      "native_version": "2",
+      "type": 99
+    }
+  }
+}

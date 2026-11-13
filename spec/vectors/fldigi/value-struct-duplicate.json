@@ -1,0 +1,44 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "fldigi",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PG1ldGhvZFJlc3BvbnNlPjxwYXJhbXM+PHBhcmFtPjx2YWx1ZT48c3RydWN0PjxtZW1iZXI+PG5hbWU+eDwvbmFtZT48dmFsdWU+b25lPC92YWx1ZT48L21lbWJlcj48bWVtYmVyPjxuYW1lPng8L25hbWU+PHZhbHVlPnR3bzwvdmFsdWU+PC9tZW1iZXI+PC9zdHJ1Y3Q+PC92YWx1ZT48L3BhcmFtPjwvcGFyYW1zPjwvbWV0aG9kUmVzcG9uc2U+",
+    "context": {
+      "direction": "from_application",
+      "exchange": "response",
+      "correlation_id": "synthetic-17"
+    },
+    "request": {
+      "method": "future.method"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "kind": "native",
+      "context": {
+        "direction": "from_application",
+        "exchange": "response",
+        "correlation_id": "synthetic-17"
+      },
+      "fields": {},
+      "native": {
+        "format": "fldigi_xmlrpc",
+        "data": "PG1ldGhvZFJlc3BvbnNlPjxwYXJhbXM+PHBhcmFtPjx2YWx1ZT48c3RydWN0PjxtZW1iZXI+PG5hbWU+eDwvbmFtZT48dmFsdWU+b25lPC92YWx1ZT48L21lbWJlcj48bWVtYmVyPjxuYW1lPng8L25hbWU+PHZhbHVlPnR3bzwvdmFsdWU+PC9tZW1iZXI+PC9zdHJ1Y3Q+PC92YWx1ZT48L3BhcmFtPjwvcGFyYW1zPjwvbWV0aG9kUmVzcG9uc2U+"
+      }
+    }
+  },
+  "expected_message": {
+    "root": "methodResponse",
+    "method": "future.method",
+    "xml": "<methodResponse><params><param><value><struct><member><name>x</name><value>one</value></member><member><name>x</name><value>two</value></member></struct></value></param></params></methodResponse>"
+  },
+  "reencode": {
+    "data": "PG1ldGhvZFJlc3BvbnNlPjxwYXJhbXM+PHBhcmFtPjx2YWx1ZT48c3RydWN0PjxtZW1iZXI+PG5hbWU+eDwvbmFtZT48dmFsdWU+b25lPC92YWx1ZT48L21lbWJlcj48bWVtYmVyPjxuYW1lPng8L25hbWU+PHZhbHVlPnR3bzwvdmFsdWU+PC9tZW1iZXI+PC9zdHJ1Y3Q+PC92YWx1ZT48L3BhcmFtPjwvcGFyYW1zPjwvbWV0aG9kUmVzcG9uc2U+"
+  }
+}

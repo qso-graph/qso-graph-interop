@@ -1,0 +1,40 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "fldigi",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PGY6bWV0aG9kUmVzcG9uc2UgeG1sbnM6Zj0idXJuOnN5bnRoZXRpYyIvPg==",
+    "context": {
+      "direction": "from_application",
+      "exchange": "response",
+      "correlation_id": "synthetic-17"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "fldigi",
+      "mapping": 1,
+      "kind": "native",
+      "context": {
+        "direction": "from_application",
+        "exchange": "response",
+        "correlation_id": "synthetic-17"
+      },
+      "fields": {},
+      "native": {
+        "format": "fldigi_xmlrpc",
+        "data": "PGY6bWV0aG9kUmVzcG9uc2UgeG1sbnM6Zj0idXJuOnN5bnRoZXRpYyIvPg=="
+      }
+    }
+  },
+  "expected_message": {
+    "root": "f:methodResponse",
+    "xml": "<f:methodResponse xmlns:f=\"urn:synthetic\"/>"
+  },
+  "reencode": {
+    "data": "PGY6bWV0aG9kUmVzcG9uc2UgeG1sbnM6Zj0idXJuOnN5bnRoZXRpYyIvPg=="
+  }
+}

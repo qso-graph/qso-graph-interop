@@ -1,0 +1,52 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "rbzL2gAAAAMAAAAAAAAADXRlc3QtaW5zdGFuY2UAAAADAAAABTMuMC4yAAAAB3Rlc3QtcjE=",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "native_version": "3",
+      "kind": "lifecycle",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "state": "heartbeat",
+        "max_schema": 3,
+        "version": "3.0.2",
+        "revision": "test-r1"
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAAAAAAADXRlc3QtaW5zdGFuY2UAAAADAAAABTMuMC4yAAAAB3Rlc3QtcjE="
+      }
+    }
+  },
+  "expected_message": {
+    "schema": 3,
+    "type": 0,
+    "id": "test-instance",
+    "body": {
+      "max_schema": 3,
+      "version": "3.0.2",
+      "revision": "test-r1"
+    },
+    "extensions": ""
+  },
+  "reencode": {
+    "data": "rbzL2gAAAAMAAAAAAAAADXRlc3QtaW5zdGFuY2UAAAADAAAABTMuMC4yAAAAB3Rlc3QtcjE="
+  }
+}

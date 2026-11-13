@@ -1,0 +1,40 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PFJhZGlvSW5mby8+",
+    "context": {
+      "direction": "unknown",
+      "exchange": "request",
+      "source_id": "synthetic-observer",
+      "target_id": "synthetic-target",
+      "correlation_id": "synthetic-request"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "radio_state",
+      "context": {
+        "direction": "unknown",
+        "exchange": "request",
+        "source_id": "synthetic-observer",
+        "target_id": "synthetic-target",
+        "correlation_id": "synthetic-request"
+      },
+      "fields": {},
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PFJhZGlvSW5mby8+"
+      }
+    }
+  },
+  "reencode": {
+    "data": "PFJhZGlvSW5mby8+"
+  }
+}

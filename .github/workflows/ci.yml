@@ -45,6 +45,8 @@ jobs:
       - run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
       - run: cargo test --workspace --all-features --locked
+      - run: cargo clippy -p qso-graph-interop --all-targets --no-default-features --locked -- -D warnings
+      - run: cargo test -p qso-graph-interop --no-default-features --locked
 
   policy:
     runs-on: ubuntu-latest
@@ -56,8 +58,24 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Pinned Rust
         run: rustup show active-toolchain || rustup toolchain install
+      - run: cargo xtask ffi-header
+      - run: cargo build -p qso-graph-interop-ffi --locked
+      - run: cargo xtask ffi-c-compile
+      - run: cargo xtask ffi-c-run
+      - run: cargo xtask ffi-cxx
       - run: cargo xtask policy
       - run: python3 scripts/generate-fixtures.py --check
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        # No cache: nothing to key it on, and no build should restore one.
+        with:
+          enable-cache: false
+      - run: uv run --no-project --with 'jsonschema[format-nongpl]==4.26.0' python scripts/gen_vectors.py --check --producer-strict
+      - run: uv run --no-project --python 3.11 python scripts/test_release_check.py
+      - run: uv run --no-project python scripts/package-files.py --check
+      # allow-dirty also lets the identical local verifier check uncommitted review work.
+      - run: cargo package --locked --allow-dirty -p qso-graph-interop -p qso-graph-interop-cli
+      # Hosted Ubuntu includes Go; the script fetches actionlint at exactly v1.7.11.
+      - run: uv run --no-project python scripts/lint-workflows.py
       - name: cargo vet
         run: |
           cargo install cargo-vet --version 0.10.3 --locked --quiet
@@ -95,6 +113,17 @@ jobs:
         env:
           SECONDS_EACH: ${{ github.event_name == 'schedule' && '600' || '60' }}
         run: cargo fuzz run wsjtx -- -max_total_time="$SECONDS_EACH" -max_len=65508 -timeout=10 -rss_limit_mb=2048 -print_final_stats=1
+      - name: Fuzz N1MM decoding and command encoding
+        # Each family gets the same fuzz duration as the local verifier.
+        working-directory: fuzz
+        env:
+          SECONDS_EACH: ${{ github.event_name == 'schedule' && '600' || '60' }}
+        run: cargo fuzz run n1mm -- -max_total_time="$SECONDS_EACH" -max_len=65508 -timeout=10 -rss_limit_mb=2048 -print_final_stats=1
+      - name: Fuzz fldigi bodies, association and commands
+        working-directory: fuzz
+        env:
+          SECONDS_EACH: ${{ github.event_name == 'schedule' && '600' || '60' }}
+        run: cargo fuzz run fldigi -- -max_total_time="$SECONDS_EACH" -max_len=262145 -timeout=10 -rss_limit_mb=2048 -print_final_stats=1
       - name: Lockfiles did not change
         run: git diff --exit-code -- Cargo.lock fuzz/Cargo.lock
       - name: Keep failure inputs
@@ -105,9 +134,47 @@ jobs:
           path: fuzz/artifacts
           if-no-files-found: ignore
 
+  ffi-memory:
+    runs-on: ubuntu-latest
+    # Miri interprets tiny FFI boundary cases; native tests retain vectors and large inputs.
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Pinned Rust and memory-check nightly
+        run: |
+          rustup show active-toolchain || rustup toolchain install
+          rustup toolchain install nightly-2026-10-30 --profile minimal --component miri --component rust-src
+      - run: cargo xtask ffi-miri
+      - run: cargo xtask ffi-miri-planted
+      - run: cargo xtask ffi-sanitize
+      - run: cargo xtask ffi-sanitize-planted
+      - name: Lockfiles did not change
+        run: git diff --exit-code -- Cargo.lock fuzz/Cargo.lock
+      - name: Keep memory-check diagnostics
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ffi-memory-diagnostics
+          path: target/verify/*planted.txt
+          if-no-files-found: ignore
+
+  # Exercise unsigned assembly on every release platform before merging.
+  binaries:
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    uses: ./.github/workflows/binaries.yml
+    with:
+      sha: ${{ github.event.pull_request.head.sha || github.sha }}
+      sign: false
+
   ci-all-green:
     name: ci-all-green
-    needs: [check, policy, fuzz]
+    needs: [check, policy, fuzz, ffi-memory, binaries]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5

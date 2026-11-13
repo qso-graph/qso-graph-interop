@@ -1,58 +1,45 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-# Identity, direction, and protocol adapters
+# Identity, direction, and recognized views
 
-`Message<F = wsjtx::Packet>` separates normalized values, caller context, and the complete native
-family representation. The default preserves the existing binary protocol; another adapter can
-use a parsed XML/JSON envelope plus original bytes as `F`. Schema belongs to the
-family, not to the transport-independent envelope. `client_id` preserves the neutral wire ID,
-including null, empty, and invalid UTF-8. It is not a peer identity or an authenticated source.
-Protocols without an application ID use a null `Utf8`; their family retains the exact distinction
-between absent and explicitly null fields.
+`Event` preserves a QGI-SPEC-001 envelope. `Codec::decode` takes observer context explicitly;
+its default has unknown direction and exchange. Wire IDs and radio instance labels remain data
+and never supply `context.source_id`. An absent wire ID differs from explicit null, empty text,
+and invalid native text. Neutral `Text` preserves those representations without Qt dependencies.
 
-`Context` has direction relative to the application (`Unknown`, `FromApplication`, `ToApplication`),
-optional caller-supplied source/target identities, request/response/notification role, and an
-optional correlation ID. The caller obtains endpoint knowledge from its transport/session; the
-codec opens no connection and does not infer that knowledge from an ID. Direction and exchange
-role are independent: an application can originate notifications, requests, and responses.
+The core has no default family type. `Codec` and `Profile` use the public event API. Native wire
+types stay in family modules and map to neutral common fields at the family boundary. Commands
+contain `fields.operation` and its arguments plus `wire_id` when required. Observations carry
+native evidence, including observed controls. The separate command encoder, observed re-encoder,
+and original-byte accessor prevent reading an event from causing an action.
 
-`Message::from(packet)` uses unknown context. WSJT-X Clear and Close become `Kind::Ambiguous`, even
-when Clear has no window: the legacy inbound command has no window too. `with_context` maps Clear
-from the application to a notification and Clear to the application to a control. Close from the
-application is lifecycle notification; Close to it is a shutdown control. Reply and Configure
-have protocol-defined target IDs in `Control::target_id`, copied from `client_id`; neither becomes
-a source ID. Context identities remain exactly what the caller supplied.
-Normalization does not validate or execute a command.
-Heartbeat is lifecycle
-in either direction. Every normalization path retains the original packet, and `into_family`
-returns it without applying edits to normalized views. See WSJT-X v3.0.2
-[Clear/Reply](https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp#L235) and
-[Close](https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp#L321).
+WSJT-X Clear maps to notification from the application, control to it, and ambiguous with unknown
+direction. Close maps to closed lifecycle from the application, control to it, and ambiguous with
+unknown direction. Heartbeat is lifecycle in every direction. No message type supplies observer
+identity or exchange role. Native version and mapping revision remain independent.
 
-The following are adapter design mappings, not additional protocol implementations:
+`Event::recognized` returns known common fields and context separately from the preserved event.
+Unknown kinds or families read as native. New additive mapping members are ignored recursively in
+the recognized view. A supplied family `Profile` verifies supported native versions and types,
+returning `Verification::Verified` or `Unavailable` separately from the JSON envelope. A recognized
+operation or native type alone is insufficient for verification or authorization.
 
-| Adapter | Direction and identity | Normalized content and native preservation |
-| --- | --- | --- |
-| [N1MM XML over UDP](https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/) | A configured receive endpoint supplies `FromApplication` and notification context. An XML app/station label is metadata, not evidence of origin. A contact record ID remains a record ID in the family. | Map supported contact fields to LoggedQso and radio reports to RadioState. Keep XML attributes, units, missing/empty fields, and original bytes in the family; use Native for unsupported reports. |
-| [JS8Call JSON over TCP/UDP](https://github.com/js8call/js8call) | The session tells the adapter whether a message is from or to JS8Call. Request correlation is separate from client/source identity; receiving JSON does not by itself mean a notification. | Map explicit radio/decode fields to the common views; commands use Control, unmatched payloads use Native. Keep message type, correlation fields, and the full JSON envelope in the family. |
-| [fldigi XML-RPC](https://www.w1hkj.org/FldigiHelp/xmlrpc_control_page.html) | ToApplication requests and FromApplication responses share a caller-created correlation ID for the RPC exchange. XML-RPC has no general client ID: leave it null. | Map getter results only using the associated method and its defined units. Setter requests are controls; faults and unsupported methods use Native. Preserve the complete method call/response, including fault data and original XML, in the family. |
-
-No adapter needs to introduce sockets into this model or treat every incoming value as an
-observation. Optional time fields are populated only when the adapter has enough information. If a common
-view requires a field the native record lacks, use Native rather than inventing a value; raw
-fields remain in the family.
+`qgi` appends only a receiving hop. Forwarding preserves the original envelope, context, command
+form, native evidence, and unknown additions. Original-family verification requires its supported
+profile; carriage never supplies that proof itself. See [protocol behavior](PROTOCOL.md) and the
+[specification outcome table](../spec/QGI-SPEC-001.md#4-mapping-rules-for-every-family).
 
 ## JSON float preservation
 
-Finite binary64 fields use JSON numbers; nonfinite values use `ieee754:` plus 16 hexadecimal bit
-digits. All project serde_json dependencies enable `float_roundtrip`. Downstream consumers that
-use serde_json must enable that feature too when deserializing packets or normalized views:
+Finite binary64 fields use JSON numbers. Nonfinite values use `ieee754:` plus 16 lowercase
+hexadecimal digits, preserving sign and NaN payload. Every serde_json dependency enables
+`float_roundtrip`. Downstream serde_json readers should do the same:
 
 ```toml
-serde_json = { version = "=1.0.145", features = ["float_roundtrip"] }
+serde_json = { version = "1.0.145", features = ["float_roundtrip"] }
 ```
 
-Other JSON readers must correctly round binary64 numbers to preserve finite bits. This is a
-reader requirement, not a serializer-independent exactness guarantee. Preserve the binary packet
-when a downstream JSON implementation cannot provide it. Tests cover boundary values, both
-signed zeros, 10,000 deterministic random bit patterns, and the review's `3f99867e711c7600` case;
-the fuzz target covers both packet and common-model JSON paths.
+`Binary64` is the neutral value type. The bounded JSON reader retains exact unknown numeric tokens
+and rejects duplicate object members at every depth. Semantic event comparison uses binary64 for
+floating fields and exact integers elsewhere, independent of object ordering. Keep native evidence
+when a downstream reader cannot round floating values correctly. Supplemental tests retain 10,000
+random finite bit patterns and difficult boundary values; fuzzing also accepts arbitrary JSON.

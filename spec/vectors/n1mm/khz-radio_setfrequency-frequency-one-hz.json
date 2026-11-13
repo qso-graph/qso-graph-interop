@@ -1,0 +1,41 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PHJhZGlvX3NldGZyZXF1ZW5jeT48ZnJlcXVlbmN5PjAuMDAxPC9mcmVxdWVuY3k+PC9yYWRpb19zZXRmcmVxdWVuY3k+",
+    "context": {
+      "direction": "to_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "control",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "frequency_hz": 1,
+        "operation": "set_frequency"
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PHJhZGlvX3NldGZyZXF1ZW5jeT48ZnJlcXVlbmN5PjAuMDAxPC9mcmVxdWVuY3k+PC9yYWRpb19zZXRmcmVxdWVuY3k+"
+      }
+    }
+  },
+  "reencode": {
+    "data": "PHJhZGlvX3NldGZyZXF1ZW5jeT48ZnJlcXVlbmN5PjAuMDAxPC9mcmVxdWVuY3k+PC9yYWRpb19zZXRmcmVxdWVuY3k+"
+  },
+  "expected_message": {
+    "root": "radio_setfrequency",
+    "xml": "<radio_setfrequency><frequency>0.001</frequency></radio_setfrequency>"
+  }
+}

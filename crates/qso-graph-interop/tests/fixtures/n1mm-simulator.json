@@ -1,0 +1,31 @@
+{
+  "SPDX-License-Identifier": "GPL-3.0-or-later",
+  "evidence": "Hand-authored synthetic expectations from Annex D D.4 (AppInfo, RadioInfo, Contact Info and Score Reporting), independently of the simulator serializer. This is not a live N1MM capture.",
+  "app_xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?><AppInfo><app>N1MM</app><dbname>SYNTHETIC</dbname><contestnr>1</contestnr><contestname>SYNTHETIC</contestname><StationName>SYNTHETIC-01</StationName><mycall>N0CALL</mycall></AppInfo>",
+  "radio_xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?><RadioInfo><app>N1MM</app><StationName>SYNTHETIC-01</StationName><mycall>N0CALL</mycall><RadioNr>1</RadioNr><Freq>1402500</Freq><TXFreq>1402500</TXFreq><Mode>CW</Mode><OpCall>N0CALL</OpCall><IsRunning>True</IsRunning><FocusRadioNr>1</FocusRadioNr><IsStereo>True</IsStereo><ActiveRadioNr>1</ActiveRadioNr><IsTransmitting>False</IsTransmitting><RadioName>SYNTHETIC-RADIO-1</RadioName></RadioInfo>",
+  "first_contact_fields": {
+    "station_call": "N0CALL",
+    "operator_call": "N0CALL",
+    "radio": {"instance": "SYNTHETIC-01", "number": 1},
+    "contest_name": "SYNTHETIC",
+    "band": "14",
+    "dial_frequency_hz": 14025000,
+    "tx_frequency_hz": 14025000,
+    "mode": "CW",
+    "report_sent": "599",
+    "serial_sent": "001",
+    "report_received": "599",
+    "serial_received": "011",
+    "comments": "Synthetic contest contact",
+    "start": "2026-01-01T00:00:01Z",
+    "record_id": "00000000000000000000000000000001"
+  },
+  "last_score_fields": {
+    "contest_name": "SYNTHETIC",
+    "station_call": "N0CALL",
+    "qso_count": 30,
+    "points": 66,
+    "total_score": 66,
+    "time": "2026-01-01T00:00:35Z"
+  }
+}

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 [workspace]
-members = ["crates/qso-graph-interop", "crates/qso-graph-interop-cli", "xtask"]
+members = ["crates/qso-graph-interop", "crates/qso-graph-interop-cli", "xtask", "crates/qso-graph-interop-ffi"]
 exclude = ["fuzz"]
 resolver = "3"
 
@@ -12,7 +12,8 @@ license = "GPL-3.0-or-later"
 repository = "https://github.com/qso-graph/qso-graph-interop"
 
 [workspace.lints.rust]
-unsafe_code = "forbid"
+unsafe_op_in_unsafe_fn = "deny"
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(qgi_planted_read)'] }
 
 [workspace.lints.clippy]
 all = { level = "warn", priority = -1 }

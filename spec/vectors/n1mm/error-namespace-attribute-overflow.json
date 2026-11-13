@@ -1,0 +1,19 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "negative",
+  "input": {
+    "data": "PFJhZGlvSW5mbyB4bWxuczpuMD0idXJuOnN5bnRoZXRpYzowIiB4bWxuczpuMT0idXJuOnN5bnRoZXRpYzoxIiB4bWxuczpuMj0idXJuOnN5bnRoZXRpYzoyIiB4bWxuczpuMz0idXJuOnN5bnRoZXRpYzozIiB4bWxuczpuND0idXJuOnN5bnRoZXRpYzo0IiB4bWxuczpuNT0idXJuOnN5bnRoZXRpYzo1IiB4bWxuczpuNj0idXJuOnN5bnRoZXRpYzo2IiB4bWxuczpuNz0idXJuOnN5bnRoZXRpYzo3IiB4bWxuczpuOD0idXJuOnN5bnRoZXRpYzo4IiB4bWxuczpuOT0idXJuOnN5bnRoZXRpYzo5IiB4bWxuczpuMTA9InVybjpzeW50aGV0aWM6MTAiIHhtbG5zOm4xMT0idXJuOnN5bnRoZXRpYzoxMSIgeG1sbnM6bjEyPSJ1cm46c3ludGhldGljOjEyIiB4bWxuczpuMTM9InVybjpzeW50aGV0aWM6MTMiIHhtbG5zOm4xND0idXJuOnN5bnRoZXRpYzoxNCIgeG1sbnM6bjE1PSJ1cm46c3ludGhldGljOjE1IiB4bWxuczpuMTY9InVybjpzeW50aGV0aWM6MTYiLz4=",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "error": {
+      "category": "oversized"
+    }
+  }
+}

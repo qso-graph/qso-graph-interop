@@ -1,0 +1,45 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48U3BlY3RydW0+PGFwcD5zeW50aGV0aWMtY2xpZW50PC9hcHA+PE5hbWU+c3ludGhldGljLXNwZWN0cnVtPC9OYW1lPjxMb3dTY29wZUZyZXF1ZW5jeT4xNDAwMDwvTG93U2NvcGVGcmVxdWVuY3k+PEhpZ2hTY29wZUZyZXF1ZW5jeT4xNDA1NTwvSGlnaFNjb3BlRnJlcXVlbmN5PjxTY2FsaW5nRmFjdG9yPjAuMzEyNTwvU2NhbGluZ0ZhY3Rvcj48RGF0YUNvdW50PjQ8L0RhdGFDb3VudD48U3BlY3RydW1EYXRhPjAsMSwxNjAsNjU1MzU8L1NwZWN0cnVtRGF0YT48L1NwZWN0cnVtPg==",
+    "context": {
+      "direction": "to_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "control",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "app": "synthetic-client",
+        "spectrum_name": "synthetic-spectrum",
+        "low_scope_frequency": 14000000,
+        "high_scope_frequency": 14055000,
+        "scaling_factor": "0.3125",
+        "operation": "n1mm.spectrum"
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48U3BlY3RydW0+PGFwcD5zeW50aGV0aWMtY2xpZW50PC9hcHA+PE5hbWU+c3ludGhldGljLXNwZWN0cnVtPC9OYW1lPjxMb3dTY29wZUZyZXF1ZW5jeT4xNDAwMDwvTG93U2NvcGVGcmVxdWVuY3k+PEhpZ2hTY29wZUZyZXF1ZW5jeT4xNDA1NTwvSGlnaFNjb3BlRnJlcXVlbmN5PjxTY2FsaW5nRmFjdG9yPjAuMzEyNTwvU2NhbGluZ0ZhY3Rvcj48RGF0YUNvdW50PjQ8L0RhdGFDb3VudD48U3BlY3RydW1EYXRhPjAsMSwxNjAsNjU1MzU8L1NwZWN0cnVtRGF0YT48L1NwZWN0cnVtPg=="
+      }
+    }
+  },
+  "reencode": {
+    "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48U3BlY3RydW0+PGFwcD5zeW50aGV0aWMtY2xpZW50PC9hcHA+PE5hbWU+c3ludGhldGljLXNwZWN0cnVtPC9OYW1lPjxMb3dTY29wZUZyZXF1ZW5jeT4xNDAwMDwvTG93U2NvcGVGcmVxdWVuY3k+PEhpZ2hTY29wZUZyZXF1ZW5jeT4xNDA1NTwvSGlnaFNjb3BlRnJlcXVlbmN5PjxTY2FsaW5nRmFjdG9yPjAuMzEyNTwvU2NhbGluZ0ZhY3Rvcj48RGF0YUNvdW50PjQ8L0RhdGFDb3VudD48U3BlY3RydW1EYXRhPjAsMSwxNjAsNjU1MzU8L1NwZWN0cnVtRGF0YT48L1NwZWN0cnVtPg=="
+  },
+  "expected_message": {
+    "root": "Spectrum",
+    "xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?><Spectrum><app>synthetic-client</app><Name>synthetic-spectrum</Name><LowScopeFrequency>14000</LowScopeFrequency><HighScopeFrequency>14055</HighScopeFrequency><ScalingFactor>0.3125</ScalingFactor><DataCount>4</DataCount><SpectrumData>0,1,160,65535</SpectrumData></Spectrum>"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "//48AD8AeABtAGwAIAB2AGUAcgBzAGkAbwBuAD0AIgAxAC4AMAAiACAAZQBuAGMAbwBkAGkAbgBnAD0AIgBVAFQARgAtADEANgAiAD8APgA8AFIAYQBkAGkAbwBJAG4AZgBvAD4APABTAHQAYQB0AGkAbwBuAE4AYQBtAGUAPgBzAHkAbgB0AGgAZQB0AGkAYwAtALEDPAAvAFMAdABhAHQAaQBvAG4ATgBhAG0AZQA+ADwALwBSAGEAZABpAG8ASQBuAGYAbwA+AA==",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "radio_state",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "radio": {
+          "instance": "synthetic-\u03b1"
+        }
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "//48AD8AeABtAGwAIAB2AGUAcgBzAGkAbwBuAD0AIgAxAC4AMAAiACAAZQBuAGMAbwBkAGkAbgBnAD0AIgBVAFQARgAtADEANgAiAD8APgA8AFIAYQBkAGkAbwBJAG4AZgBvAD4APABTAHQAYQB0AGkAbwBuAE4AYQBtAGUAPgBzAHkAbgB0AGgAZQB0AGkAYwAtALEDPAAvAFMAdABhAHQAaQBvAG4ATgBhAG0AZQA+ADwALwBSAGEAZABpAG8ASQBuAGYAbwA+AA=="
+      }
+    }
+  },
+  "reencode": {
+    "data": "//48AD8AeABtAGwAIAB2AGUAcgBzAGkAbwBuAD0AIgAxAC4AMAAiACAAZQBuAGMAbwBkAGkAbgBnAD0AIgBVAFQARgAtADEANgAiAD8APgA8AFIAYQBkAGkAbwBJAG4AZgBvAD4APABTAHQAYQB0AGkAbwBuAE4AYQBtAGUAPgBzAHkAbgB0AGgAZQB0AGkAYwAtALEDPAAvAFMAdABhAHQAaQBvAG4ATgBhAG0AZQA+ADwALwBSAGEAZABpAG8ASQBuAGYAbwA+AA=="
+  },
+  "expected_message": {
+    "root": "RadioInfo",
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><RadioInfo><StationName>synthetic-\u03b1</StationName></RadioInfo>"
+  }
+}

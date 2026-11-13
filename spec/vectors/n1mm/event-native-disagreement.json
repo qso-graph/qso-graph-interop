@@ -1,0 +1,42 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "n1mm",
+  "mapping": 1,
+  "class": "negative",
+  "input": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "n1mm",
+      "mapping": 1,
+      "kind": "radio_state",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "radio": {
+          "instance": "SYNTHETIC-PC",
+          "number": 2
+        },
+        "dial_frequency_hz": 14071230,
+        "mode": "USB",
+        "station_call": "Q2AAA",
+        "running": true,
+        "focus_radio": 2,
+        "stereo": true,
+        "active_radio": 2,
+        "transmitting": false
+      },
+      "native": {
+        "format": "n1mm_xml",
+        "data": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48UmFkaW9JbmZvPjxhcHA+c3ludGhldGljLWxvZ2dlcjwvYXBwPjxTdGF0aW9uTmFtZT5TWU5USEVUSUMtUEM8L1N0YXRpb25OYW1lPjxSYWRpb05yPjI8L1JhZGlvTnI+PEZyZXE+MTQwNzEyMzwvRnJlcT48VFhGcmVxPjE0MDcyMzQ8L1RYRnJlcT48TW9kZT5VU0I8L01vZGU+PG15Y2FsbD5RMkFBQTwvbXljYWxsPjxPcENhbGw+UTJCQkI8L09wQ2FsbD48SXNSdW5uaW5nPlRydWU8L0lzUnVubmluZz48Rm9jdXNFbnRyeT4xMjM0NTwvRm9jdXNFbnRyeT48RW50cnlXaW5kb3dId25kPjIzNDU2PC9FbnRyeVdpbmRvd0h3bmQ+PEFudGVubmE+ODwvQW50ZW5uYT48Um90b3JzPnN5bnRoZXRpYy1yb3RvcjwvUm90b3JzPjxGb2N1c1JhZGlvTnI+MTwvRm9jdXNSYWRpb05yPjxJc1N0ZXJlbz5UcnVlPC9Jc1N0ZXJlbz48SXNTcGxpdD5GYWxzZTwvSXNTcGxpdD48QWN0aXZlUmFkaW9Ocj4yPC9BY3RpdmVSYWRpb05yPjxJc1RyYW5zbWl0dGluZz5GYWxzZTwvSXNUcmFuc21pdHRpbmc+PEZ1bmN0aW9uS2V5Q2FwdGlvbj5zeW50aGV0aWMtQ1E8L0Z1bmN0aW9uS2V5Q2FwdGlvbj48UmFkaW9OYW1lPnN5bnRoZXRpYy1yYWRpbzwvUmFkaW9OYW1lPjxBdXhBbnRTZWxlY3RlZD4tMTwvQXV4QW50U2VsZWN0ZWQ+PEF1eEFudFNlbGVjdGVkTmFtZT48L0F1eEFudFNlbGVjdGVkTmFtZT48SXNDb25uZWN0ZWQ+PC9Jc0Nvbm5lY3RlZD48L1JhZGlvSW5mbz4="
+      }
+    }
+  },
+  "expected": {
+    "error": {
+      "category": "invalid_value"
+    }
+  }
+}

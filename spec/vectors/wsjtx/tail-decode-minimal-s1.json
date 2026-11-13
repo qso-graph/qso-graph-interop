@@ -1,0 +1,44 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "rbzL2gAAAAEAAAACAAAADXRlc3QtaW5zdGFuY2UBArMp+////+8/0AAAAAAAAAAABNIAAAABfgAAAA1DUSBRMUFBQSBGTjQy",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "wsjtx",
+      "mapping": 1,
+      "native_version": "1",
+      "kind": "decode",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "is_new": true,
+        "time_of_day": "12:34:56.123",
+        "snr_db": -17,
+        "dt_seconds": 0.25,
+        "audio_offset_hz": 1234,
+        "mode": "~",
+        "text": "CQ Q1AAA FN42",
+        "radio": {
+          "instance": "test-instance"
+        }
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAEAAAACAAAADXRlc3QtaW5zdGFuY2UBArMp+////+8/0AAAAAAAAAAABNIAAAABfgAAAA1DUSBRMUFBQSBGTjQy"
+      }
+    }
+  }
+}

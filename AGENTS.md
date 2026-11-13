@@ -25,15 +25,19 @@
 The library implements the protocol; its caller chooses destinations and control policy.
 Public files describe this project only. Use American English and synthetic test QSOs.
 
-- Rust 1.99.1, edition 2024; exact `=` dependencies; keep both lockfiles current.
-- Every crate root, including tests and fuzz targets, says `#![forbid(unsafe_code)]`.
-  Every workspace member inherits the workspace lints. Our own code has no unsafe Rust
-  and defines no macros. Dependencies may use unsafe Rust and define macros; they must
+- Invented callsigns use the Q prefix.
+- Rust 1.99.1, edition 2024; compatible dependency ranges; keep both lockfiles current.
+- Every crate root, including tests and fuzz targets, says `#![forbid(unsafe_code)]`,
+  except `qso-graph-interop-ffi`, whose root says `#![deny(unsafe_op_in_unsafe_fn)]`.
+  Only that exact package may use unsafe Rust; each unsafe block has a `// SAFETY:`
+  justification checked by policy. Every workspace member inherits the workspace
+  lints. Our own code defines no macros. Dependencies may use unsafe Rust and define macros; they must
   come from crates.io, contain no native code, and pass cargo-vet, cargo-deny, and cargo-audit.
 - Fuzzing is separate developer tooling on nightly-2026-10-30, with libFuzzer's runtime only
   in its isolated workspace. Do not make shipped crates depend on it.
-- The library opens no sockets or processes. The CLI uses only UDP at the numeric addresses
-  the user supplies; the listener defaults to 127.0.0.1:2237. Do not add discovery or DNS.
+- The library opens no sockets or processes. The CLI uses UDP at numeric addresses the user
+  supplies and TCP only to numeric loopback addresses for fldigi's plain HTTP XML-RPC client.
+  The UDP listener defaults to 127.0.0.1:2237. Do not add discovery or DNS.
 - Preserve null, empty, absent, raw bytes, all family fields, and trailing extensions.
   Never guess a new schema's field encoding or infer a variant from its sender ID.
 - Pin protocol changes to released source; keep evidence in docs/PROTOCOL.md and independent
@@ -41,16 +45,16 @@ Public files describe this project only. Use American English and synthetic test
 - Keep the README a product page. Put validation details and limitations in docs/ or SECURITY.md.
 - SPDX GPL-3.0-or-later headers on new files, using that format's comment syntax.
 
+Run every check with one command before you report work as done:
+
 ```sh
-cargo fmt --all --check
-cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
-cargo test --workspace --all-features --locked
-cargo xtask policy
-python3 scripts/generate-fixtures.py --check
-cargo deny --locked check bans licenses sources
-cargo vet --locked
-cargo audit --file Cargo.lock
+cargo xtask verify                    # all checks plus 60 s of fuzzing; one pass/fail table
+cargo xtask verify --fuzz-seconds 0   # the same without fuzzing
 ```
+
+It runs formatting, Clippy, tests (full and core only), policy, fixtures, the specification
+vectors, cargo-vet, cargo-deny, cargo-audit and the fuzz smoke, and fails if a lockfile changed.
+Logs are in `target/verify/`. Report its table, not individual commands.
 
 For the dated-nightly fuzz commands, see CONTRIBUTING.md. CI checks Linux, macOS, and Windows,
 policy, dependency checks, fixtures, and fuzz smoke; ci-all-green requires every job to pass.

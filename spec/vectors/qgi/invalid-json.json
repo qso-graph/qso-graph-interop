@@ -1,0 +1,20 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.1.0",
+  "family": "qgi",
+  "mapping": 1,
+  "class": "negative",
+  "input": {
+    "transport": "udp",
+    "data": "ew==",
+    "context": {
+      "direction": "unknown",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "error": {
+      "category": "malformed"
+    }
+  }
+}
