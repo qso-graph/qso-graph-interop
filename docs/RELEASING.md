@@ -26,8 +26,9 @@ and creates the GitHub Release last. The FFI crate is never published to crates.
    `CSC_LINK`, `CSC_KEY_PASSWORD`, `APPLE_API_KEY_P8`, `APPLE_API_KEY_ID`,
    `APPLE_API_ISSUER`, and `APPLE_TEAM_ID`. The release forwards those six by
    name to the shared `sign-macos.yml`, never through `secrets: inherit`. The
-   Azure IDs are not forwarded: the shared `sign-windows.yml` job runs in this
-   repository's `windows-signing` Environment and reads them there.
+   three Azure IDs are passed by name too: GitHub gives an Environment secret to a
+   shared workflow's job only when the caller passes it, and the value read is
+   still the `windows-signing` Environment's.
 4. For the first publish, put `CRATES_IO_FIRST_PUBLISH` in `crates-io`: a
    short-lived crates.io token permitted to create `qso-graph-interop` and
    `qso-graph-interop-cli`. Only a crate not yet on crates.io uses it. After that

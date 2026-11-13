@@ -28,6 +28,12 @@ on:
         required: false
       APPLE_TEAM_ID:
         required: false
+      AZURE_CLIENT_ID:
+        required: false
+      AZURE_TENANT_ID:
+        required: false
+      AZURE_SUBSCRIPTION_ID:
+        required: false
 
 permissions:
   contents: read
@@ -163,7 +169,7 @@ jobs:
     if: inputs.sign
     permissions:
       contents: read
-    uses: qso-graph/.github/.github/workflows/sign-macos.yml@8454b4d9533a4b98e477b7b0956e4c077a0f041e # qso-graph/.github sign-macos-secrets
+    uses: qso-graph/.github/.github/workflows/sign-macos.yml@ce98621da707d49c828805d92f3117b6bf282cd5 # qso-graph/.github sign-windows-secrets
     with:
       artifact: interop-unsigned-macos-arm64
       signed: interop-signed-macos-arm64
@@ -181,11 +187,15 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: qso-graph/.github/.github/workflows/sign-windows.yml@8454b4d9533a4b98e477b7b0956e4c077a0f041e # qso-graph/.github sign-macos-secrets
+    uses: qso-graph/.github/.github/workflows/sign-windows.yml@ce98621da707d49c828805d92f3117b6bf282cd5 # qso-graph/.github sign-windows-secrets
     with:
       artifact: interop-unsigned-windows-x86_64
       signed: interop-signed-windows-x86_64
-    # No secrets: the called job reads the Azure IDs from this repository's windows-signing Environment.
+    # GitHub requires the pass; the values read are this repository's windows-signing Environment's.
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
   assemble:
     needs: [source, build, sign-macos, sign-windows]

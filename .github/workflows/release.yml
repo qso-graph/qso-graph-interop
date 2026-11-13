@@ -115,8 +115,8 @@ jobs:
     with:
       sha: ${{ needs.check.outputs.sha }}
       sign: true
-    # Only the Apple organization secrets pass; Windows signing reads its Environment. Publication
-    # credentials never reach the builds.
+    # The nine signing secrets, by name, through each workflow (GitHub passes a secret only to the
+    # workflow called directly). Publication credentials never reach the builds.
     secrets:
       CSC_LINK: ${{ secrets.CSC_LINK }}
       CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
@@ -124,6 +124,9 @@ jobs:
       APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
       APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
   publish:
     name: publish
