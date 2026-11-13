@@ -42,7 +42,7 @@ pub fn round_trip(
     event: &Event,
     options: &DecodeOptions<'_>,
 ) -> Result<Outcome, Error> {
-    let bytes = codec.reencode(event, &EncodeOptions::default())?;
+    let bytes = codec.reencode_with(event, &EncodeOptions::default(), options)?;
     codec.decode(&bytes, options)
 }
 /// Exercise every proper prefix. Successful historical tails and skips are valid outcomes.
@@ -105,14 +105,19 @@ pub fn run_vector(codec: &mut dyn Codec, vector: &Value) -> Result<(), String> {
     let input = &vector["input"];
     let expected = &vector["expected"];
     let class = vector["class"].as_str().ok_or("missing vector class")?;
-    let options = DecodeOptions {
+    let mut options = DecodeOptions {
         context: input
             .get("context")
             .cloned()
             .unwrap_or_else(|| DecodeOptions::default().context),
-        structured: vector.get("expected_message").is_some(),
+        structured: vector["family"] == "fldigi" || vector.get("expected_message").is_some(),
         ..DecodeOptions::default()
     };
+    for key in ["request", "via"] {
+        if let Some(value) = input.get(key) {
+            options.native.insert(key.into(), value.clone());
+        }
+    }
     let encode_options = EncodeOptions {
         native: input
             .get("options")
@@ -134,7 +139,9 @@ pub fn run_vector(codec: &mut dyn Codec, vector: &Value) -> Result<(), String> {
         Ok(())
     };
     let read = |codec: &dyn Codec, e: &Event| -> Result<(), String> {
-        let r = e.recognized(Some(codec)).map_err(|e| e.to_string())?;
+        let r = e
+            .recognized_with(Some(codec), &options)
+            .map_err(|e| e.to_string())?;
         if let Some(wanted) = expected.get("read") {
             let mut actual =
                 serde_json::json!({"kind":r.kind,"fields":r.fields,"context":r.context});
@@ -154,7 +161,7 @@ pub fn run_vector(codec: &mut dyn Codec, vector: &Value) -> Result<(), String> {
                 crate::model::Verification::Verified => "verified",
                 _ => "unavailable",
             };
-            if wanted != actual {
+            if wanted.as_str().or_else(|| wanted["status"].as_str()) != Some(actual) {
                 return Err(format!("expected verification {wanted}, received {actual}"));
             }
         }
@@ -175,14 +182,25 @@ pub fn run_vector(codec: &mut dyn Codec, vector: &Value) -> Result<(), String> {
             };
             let result = authored
                 .and_then(Event::from_value)
-                .and_then(|e| codec.encode_command(&e, &encode_options));
+                .and_then(|e| codec.encode_commands(&e, &encode_options));
             if class == "command_negative" {
                 check_error(result.map(|_| ()))
             } else {
                 let actual = result.map_err(|e| e.to_string())?;
-                let wanted =
-                    base64::decode(expected["data"].as_str().ok_or("missing expected bytes")?)
-                        .map_err(|e| e.to_string())?;
+                let wanted = if let Some(requests) = expected["requests"].as_array() {
+                    requests
+                        .iter()
+                        .map(|v| {
+                            base64::decode(v.as_str().ok_or("invalid expected request")?)
+                                .map_err(|e| e.to_string())
+                        })
+                        .collect::<Result<Vec<_>, _>>()?
+                } else {
+                    vec![
+                        base64::decode(expected["data"].as_str().ok_or("missing expected bytes")?)
+                            .map_err(|e| e.to_string())?,
+                    ]
+                };
                 if actual != wanted {
                     return Err("command bytes differ".into());
                 }
@@ -192,7 +210,9 @@ pub fn run_vector(codec: &mut dyn Codec, vector: &Value) -> Result<(), String> {
         "compatibility" => {
             let event = Event::from_value(input["event"].clone());
             if expected.get("error").is_some() {
-                return check_error(event.and_then(|e| e.recognized(Some(codec)).map(|_| ())));
+                return check_error(
+                    event.and_then(|e| e.recognized_with(Some(codec), &options).map(|_| ())),
+                );
             }
             read(codec, &event.map_err(|e| e.to_string())?)
         }
@@ -206,9 +226,10 @@ pub fn run_vector(codec: &mut dyn Codec, vector: &Value) -> Result<(), String> {
                     json.as_str().ok_or("invalid event_json")?.as_bytes(),
                     crate::model::MAX_RECORD,
                 )
-                .and_then(|e| e.recognized(Some(codec)).map(|_| ()))
+                .and_then(|e| e.recognized_with(Some(codec), &options).map(|_| ()))
             } else if let Some(event) = input.get("event") {
-                Event::from_value(event.clone()).and_then(|e| e.recognized(Some(codec)).map(|_| ()))
+                Event::from_value(event.clone())
+                    .and_then(|e| e.recognized_with(Some(codec), &options).map(|_| ()))
             } else {
                 return Err("unhandled negative vector instruction".into());
             };
@@ -262,16 +283,31 @@ pub fn run_vector(codec: &mut dyn Codec, vector: &Value) -> Result<(), String> {
                 if event.native_bytes().map_err(|e| e.to_string())? != bytes {
                     return Err("original-byte retrieval differs".into());
                 }
-                if codec.verify(event).map_err(|e| e.to_string())?
-                    != crate::model::Verification::Verified
+                let verified = codec
+                    .verify_with(event, &options)
+                    .map_err(|e| e.to_string())?;
+                let want = expected["verification"]
+                    .as_str()
+                    .or_else(|| expected["verification"]["status"].as_str())
+                    .unwrap_or("verified");
+                if (expected.get("verification").is_some()
+                    || vector["family"] != "fldigi"
+                    || event.value()["kind"] != "native")
+                    && verified
+                        != if want == "unavailable" {
+                            crate::model::Verification::Unavailable
+                        } else {
+                            crate::model::Verification::Verified
+                        }
                 {
                     return Err("supported native evidence was not verified".into());
                 }
-                crate::json::write(event, true, Some(codec)).map_err(|e| e.to_string())?;
+                crate::json::write_with(event, true, Some(codec), &options)
+                    .map_err(|e| e.to_string())?;
             }
             if let Some(reencode) = vector.get("reencode") {
                 let encoded = codec
-                    .reencode(event, &EncodeOptions::default())
+                    .reencode_with(event, &EncodeOptions::default(), &options)
                     .map_err(|e| e.to_string())?;
                 if let Some(wanted) = reencode.get("data") {
                     if encoded

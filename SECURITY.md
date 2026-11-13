@@ -35,7 +35,20 @@ The direct dependency API set is also fixed: serde for the library, serde_json f
 and clap, serde_json, and the codec for the CLI. Package renames, target-specific additions,
 and new direct dependencies fail until this policy is updated after API review, so a wrapper
 crate cannot silently introduce process or resolver APIs under an arbitrary name.
+The fldigi client's TCP operations are confined to `loopback_tcp.rs`, whose complete tokens
+must match a separate audited policy template. Its only connection entry point takes
+`SocketAddr`, checks `ip().is_loopback()` and rejects port zero before opening a socket.
+Only IPv4's 127.0.0.0/8 range and IPv6's ::1 are accepted. Names, DNS resolution, redirects,
+proxies, and non-loopback connections are unsupported. fldigi XML-RPC uses plain HTTP;
+restricting it to loopback keeps unencrypted application state and received text off outside
+networks. Other CLI code still cannot use TCP socket APIs. The library opens no sockets.
+Each HTTP request has a five-second deadline covering connection, writing, and reading,
+a 16,384-byte header budget, and a 262,144-byte decoded body limit. Chunked replies have
+at most 1,024 chunks, 128-byte chunk lines and 16,384 bytes of trailers. Conflicting framing,
+unsupported content encodings, and incomplete bodies fail before publication.
+
 Policy self-tests plant an external binary, a build script, aliases, implicit DNS, adapter changes, unreviewed dependency APIs,
+non-loopback TCP, loopback-guard removal,
 and native/first-party violations.
 Policy tooling itself may invoke build tools. Fuzzing is an isolated workspace; libFuzzer's C++
 runtime and its build dependencies never enter the shipped dependency graph.

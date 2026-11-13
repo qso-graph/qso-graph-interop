@@ -146,12 +146,28 @@ pub trait Profile {
         true
     }
     fn verify(&self, event: &Event) -> Result<Verification, Error>;
+    /// Check evidence using caller-owned class metadata, never evidence-view association.
+    fn verify_with(
+        &self,
+        event: &Event,
+        _options: &DecodeOptions<'_>,
+    ) -> Result<Verification, Error> {
+        self.verify(event)
+    }
     /// Remove additions recursively from the recognized common view only.
     fn fields(&self, event: &Event) -> Value {
         crate::json::known_fields(event.value())
     }
     fn validate_authored(&self, _event: &Event) -> Result<(), Error> {
         Ok(())
+    }
+    /// Producer validation with explicit request association for request/response families.
+    fn validate_authored_with(
+        &self,
+        event: &Event,
+        _options: &DecodeOptions<'_>,
+    ) -> Result<(), Error> {
+        self.validate_authored(event)
     }
 }
 /// Implementations must commit state only after the entire native message and every output pass admission.
@@ -161,6 +177,22 @@ pub trait Codec: Profile {
     fn decode(&mut self, input: &[u8], options: &DecodeOptions<'_>) -> Result<Outcome, Error>;
     fn encode_command(&self, event: &Event, options: &EncodeOptions) -> Result<Vec<u8>, Error>;
     fn reencode(&self, event: &Event, options: &EncodeOptions) -> Result<Vec<u8>, Error>;
+    /// Ordered separate native requests. Callers execute and correlate each response.
+    fn encode_commands(
+        &self,
+        event: &Event,
+        options: &EncodeOptions,
+    ) -> Result<Vec<Vec<u8>>, Error> {
+        self.encode_command(event, options).map(|body| vec![body])
+    }
+    fn reencode_with(
+        &self,
+        event: &Event,
+        options: &EncodeOptions,
+        _decode: &DecodeOptions<'_>,
+    ) -> Result<Vec<u8>, Error> {
+        self.reencode(event, options)
+    }
     fn reset(&mut self, session: Option<&[u8]>);
     /// Consume complete frames from the caller-owned buffer. `None` needs more input.
     /// On error the implementation consumes through its documented recovery boundary.

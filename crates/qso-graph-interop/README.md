@@ -4,12 +4,12 @@
 <!-- vale Google.Headings = YES -->
 
 QG Interop is a Rust library for applications that exchange amateur radio events and commands.
-It implements QGI-SPEC-001 0.1.0 for WSJT-X schemas 1–3, N1MM Logger+ XML, and QGI event carriage over UDP and TCP.
+It implements QGI-SPEC-001 0.1.0 for WSJT-X schemas 1–3, N1MM Logger+ XML, fldigi XML-RPC, and QGI event carriage over UDP and TCP.
 Callers supply native bytes and context, and receive specification events with preserved evidence.
 Applications own transport, destinations, session identity, and control policy.
 
 Install with `cargo add qso-graph-interop`. Add `serde_json` with its `float_roundtrip` feature
-for the JSON construction in the example below. The default features are `wsjtx`, `n1mm`, `qgi`, and `serde`.
+for the JSON construction in the example below. The default features are `wsjtx`, `n1mm`, `fldigi`, `qgi`, and `serde`.
 Use `default-features = false` for the core without protocol families. Enable `conformance` to use the
 vector runner, manifest hashing, round-trip, prefix, and fuzz helpers for another codec.
 
@@ -50,6 +50,23 @@ assert!(std::str::from_utf8(&bytes).unwrap().contains("<frequency>14053.284</fre
 
 N1MM also encodes `n1mm.spectrum` from fields and re-encodes observations byte for byte after
 checking their native evidence. See the [N1MM guide](../../docs/user/n1mm.md).
+
+With `fldigi`, decode XML-RPC bodies with caller-supplied request association:
+
+```rust
+# #[cfg(feature = "fldigi")] {
+use qso_graph_interop::{Codec, codec::DecodeOptions, fldigi::Fldigi};
+use serde_json::json;
+let mut codec = Fldigi::with_request(json!({"method":"rig.get_frequency"}));
+let body = b"<methodResponse><params><param><value><double>14071000.0</double></value></param></params></methodResponse>";
+let event = codec.decode(body, &DecodeOptions::default())?.events.remove(0);
+assert_eq!(event.value()["fields"]["dial_frequency_hz"], 14071000);
+# }
+# Ok::<(), qso_graph_interop::Error>(())
+```
+
+Use `Codec::encode_commands` for ordered, separate request bodies and `Codec::verify_with`
+or `reencode_with` for per-call association. See the [fldigi guide](../../docs/user/fldigi.md).
 
 The public `Codec` and `Profile` traits support third-party families without a fork. Stream codecs
 consume a caller-owned buffer; stateful codecs receive a caller session key and expiry input and

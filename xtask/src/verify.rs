@@ -215,6 +215,15 @@ pub fn steps(fuzz_seconds: u64) -> Vec<Step> {
         n1mm.name = "fuzz n1mm";
         n1mm.args[2] = "n1mm".into();
         list.push(n1mm);
+        let mut fldigi = list.last().expect("N1MM fuzz step").clone();
+        fldigi.name = "fuzz fldigi";
+        fldigi.args[2] = "fldigi".into();
+        for arg in &mut fldigi.args {
+            if arg.starts_with("-max_len=") {
+                *arg = "-max_len=262145".into();
+            }
+        }
+        list.push(fldigi);
     }
     list
 }
@@ -560,6 +569,7 @@ mod tests {
             "cargo audit",
             "fuzz run",
             "fuzz n1mm",
+            "fuzz fldigi",
         ] {
             assert!(names.contains(&required), "{required} missing");
         }

@@ -5,6 +5,18 @@
 
 ### Added
 
+- Default-feature fldigi codec for Annex E revision 1, with all 50 mapped methods,
+  typed XML-RPC values and faults, caller-supplied request association and correlation,
+  ordered canonical command requests, and exact observed re-encoding.
+- `decode --fldigi` with explicit response method or request file, and loopback-only
+  `poll --fldigi` for state and RX text over bounded HTTP/1.1.
+- Execute all 650 fldigi vectors, including 455 native re-encoding checks, and fuzz
+  decoding, association, command encoding, and round trips from vector seeds in CI
+  and `cargo xtask verify`.
+- Reuse the bounded N1MM XML tokenizer with configurable family limits; preserve
+  N1MM admission rules. Extend CLI policy with an audited loopback TCP boundary
+  and planted DNS, external-connect, guard-removal, and timeout failures.
+
 - Complete draft Annex E fldigi request/response profile pinned to released 4.2.13:
   all 174 method names, 50 common mappings, bounded XML-RPC values and faults,
   caller-supplied correlation, canonical ordered command bodies, and independent

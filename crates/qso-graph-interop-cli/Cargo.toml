@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 [package]
 name = "qso-graph-interop-cli"
-description = "Listen to and simulate WSJT-X UDP messages"
+description = "Decode, poll, and simulate amateur radio application protocols"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

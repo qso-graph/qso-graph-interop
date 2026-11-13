@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- Synthetic old RF value; independently written from Annex E.4. -->
+<methodResponse><params><param><value><double>137500.0</double></value></param></params></methodResponse>

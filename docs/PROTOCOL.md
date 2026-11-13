@@ -29,12 +29,12 @@ The implementation is Rust; upstream C++ is not compiled or shipped here.
 ## Specification and public API
 
 The implementation follows [QGI-SPEC-001 0.1.0](../spec/QGI-SPEC-001.md), Annex A's common
-fields, Annex B revision 1 for WSJT-X, Annex D revision 1 for N1MM, and Annex I revision 1 for event carriage. The source pins
+fields, Annex B revision 1 for WSJT-X, Annex D revision 1 for N1MM, Annex E revision 1 for fldigi, and Annex I revision 1 for event carriage. The source pins
 above remain the native-layout evidence. No upstream source was fetched during this alignment.
 
 The family-independent core exports `Event`, `Context`, neutral text/integer/time/binary64 values,
 radio labels, hops, class-native evidence, `Codec`, `Profile`, outcomes, skips, limits, and errors.
-It imports no family. Default features select `wsjtx`, `n1mm`, `qgi`, and `serde`; disabling default features
+It imports no family. Default features select `wsjtx`, `n1mm`, `fldigi`, `qgi`, and `serde`; disabling default features
 builds and tests the core alone. `conformance` exports the vector runner and hash, round-trip,
 truncation, limit and fuzz helpers. The `serde` feature enables serde traits on neutral values and events. The core retains serde_json
 for the preserved JSON value model and bounded JSON format, including with serde integration off.
@@ -275,3 +275,71 @@ It implements the state it can observe and emits no invented success response. R
 annotation and unavailable named configurations have no synthetic acknowledgment. Shutdown Clear
 then Close matches the Python retirement contract. UDP capture playback emits the captured
 messages unchanged; qgi playback forwards complete events and adds no hop at send time.
+
+## fldigi mapping and evidence
+
+The codec follows [Annex E](../spec/annex-e-fldigi.md), pinned to the released
+[fldigi 4.2.13 archive](https://www.w1hkj.org/files/fldigi/fldigi-4.2.13.tar.gz),
+SHA-256 `a1e8d990359ce9c0cce3ceb5116fd0cf72c95528969766898640ca6ca2dba8d4`.
+Annex E records the archive-member hashes and the complete handler audit. No source
+was retrieved for this implementation. Independent synthetic RF evidence is in
+`tests/fixtures/fldigi-frequency-response.xml`; the unchanged specification suite
+provides 650 cases and 455 exact re-encoding checks. These are profile tests, not
+captures from a live fldigi instance.
+
+The shared XML tokenizer in `src/xml.rs` retains Annex D's encoding, namespaces,
+DTD isolation, line-ending/entity handling, invalid-unit preservation, document-order
+resource checks, and attribute/depth/name limits. N1MM supplies its original limits.
+fldigi supplies a 262,144-byte input/text budget and 8,192 elements. Its additional
+XML-RPC layer checks the entire container grammar before container counts, numeric
+lengths, scalar conversion, method/association, context, dispatch, and output size.
+An unfinished declaration is malformed under Annex E; other unfinished XML is truncated.
+Arrays, structs, faults, nil and unknown types need no new XML dependency.
+
+`Fldigi` implements the public `Codec` and `Profile` traits. Supply `request` in
+`DecodeOptions.native` as an object with `method` and optional `arguments`, or use
+`Fldigi::with_request` to associate Profile verification as well. `text.get_rx`
+responses need the request's two integer arguments. Context and correlation remain
+caller-owned; structured evidence never supplies association. A compatible but wrong
+caller method cannot be detected from a response that does not name its method.
+Faults always produce error results; unmatched valid values and unassociated responses
+remain native. Unknown roots/types have unavailable verification. The evidence view
+contains only root, whole original XML text, and the method when known.
+
+RF double values map only when exactly integral within the common integer range.
+Setter responses carry the old RF value. Audio carrier is RX offset only. No QSO,
+station identity, sideband arithmetic, session version, cursor, or completed character
+is inferred. RX chunks preserve their entire byte sequence, including split UTF-8.
+
+`Codec::encode_commands` returns separate, ordered bodies. Shared `send_text` appends
+text then requests TX only when transmit is true; optional-offset `set_frequency`
+sets RF then audio. The single-body `encode_command` rejects multi-request operations.
+A caller must wait for the preceding response's matching success type before sending
+the next request, stopping on a fault, wrong type, transport error, or lost association.
+In particular, bundled empty-string replies are native, not nil acknowledgments, and
+cannot advance text transmission. Encoding opens no connections and changes no RF state.
+
+`verify_with` and `reencode_with` accept per-call association through DecodeOptions;
+`with_request` makes that same metadata available to Profile and JSON producer checks.
+`Event::recognized_with` and `json::write_with` accept those per-call options as well.
+Re-encoding compares recognized content and any supplied evidence view; it never adds
+an absent view. Unknown or unassociated content can be retrieved unchanged with
+unavailable verification, which is not a verified mapped interpretation. Output admission
+uses actual compact JSON size, including the view and caller contexts, at 1,048,576 bytes.
+
+The CLI's HTTP transport sits outside the codec. It polls eight mapped state getters
+and `rx.get_data`, creates distinct request correlation IDs, and prints associated
+responses with direction `from_application`. It supports bounded Content-Length,
+chunked, and close-delimited replies, without redirects, compression, proxies, DNS,
+or retries. HTTP status does not change XML-RPC body interpretation. The adapter
+checks numeric loopback before connection and applies a five-second total deadline.
+See [the fldigi guide](user/fldigi.md) and [security rules](../SECURITY.md).
+
+The default XML-RPC port is documented in the same archive's `doc/fldigi.1.txt`
+(`--xmlrpc-server-port`, default 7362) and `src/include/data_io.h`
+(`DEFAULT_XMLRPC_IP_PORT`). The complete local files hash to:
+
+```text
+39c9cfd99077a86c7b91b5d09f25ed2ce9332573be2cec14e67a74808d9de3b9  doc/fldigi.1.txt
+9e2e0efd5d315527d58361c7621154b1caf299df0cebc20c0c6923c3d108d5ef  src/include/data_io.h
+```

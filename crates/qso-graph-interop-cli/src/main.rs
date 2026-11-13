@@ -4,6 +4,8 @@
 
 use qso_graph_interop_cli::alltxt;
 mod capture;
+mod fldigi_poll;
+mod loopback_tcp;
 mod n1mm_sim;
 mod numeric_udp;
 mod sim;
@@ -42,11 +44,16 @@ enum Command {
         after_help = "Examples:\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --n1mm --to 127.0.0.1:12060 --radios 2 --speed 60\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call Q1AW --mode FT4 --frequency 7074000"
     )]
     Sim(Box<Sim>),
-    /// Decode one complete native datagram from a file or standard input.
+    /// Decode one complete native body from a file or standard input.
     #[command(
-        after_help = "Examples:\n  qg-interop decode --wsjtx capture.bin\n  qg-interop decode --n1mm capture.xml\n  qg-interop decode --n1mm -"
+        after_help = "Examples:\n  qg-interop decode --wsjtx capture.bin\n  qg-interop decode --n1mm capture.xml\n  qg-interop decode --n1mm -\n  qg-interop decode --fldigi response.xml --request-method rig.get_frequency"
     )]
     Decode(Decode),
+    /// Poll fldigi XML-RPC state and RX text on numeric loopback only.
+    #[command(
+        after_help = "Examples:\n  qg-interop poll --fldigi\n  qg-interop poll --fldigi 127.0.0.1:7362 --interval 500 --count 3"
+    )]
+    Poll(Poll),
 }
 
 #[derive(Args)]
@@ -69,16 +76,48 @@ struct Listen {
 
 #[derive(Args)]
 struct Decode {
-    #[arg(long, required_unless_present = "n1mm", conflicts_with = "n1mm")]
+    #[arg(long, required_unless_present_any = ["n1mm", "fldigi"], conflicts_with_all = ["n1mm", "fldigi"])]
     wsjtx: bool,
     /// Select the N1MM Logger+ protocol family.
     #[arg(long)]
     n1mm: bool,
-    /// File containing one native datagram; '-' reads standard input.
+    /// Select fldigi XML-RPC bodies.
+    #[arg(long, conflicts_with = "n1mm")]
+    fldigi: bool,
+    /// Associated method, required when decoding an XML-RPC response.
+    #[arg(long, requires = "fldigi", conflicts_with = "request_file")]
+    request_method: Option<String>,
+    /// Original XML-RPC request body (also supplies text.get_rx range arguments).
+    #[arg(long, requires = "fldigi")]
+    request_file: Option<PathBuf>,
+    /// File containing one native body; '-' reads standard input.
     #[arg(default_value = "-")]
     file: PathBuf,
 }
 
+#[derive(Args)]
+struct Poll {
+    #[arg(long, required = true)]
+    fldigi: bool,
+    /// Numeric loopback address; fldigi's default XML-RPC port is 7362.
+    #[arg(default_value = "127.0.0.1:7362", value_parser = loopback_address)]
+    address: SocketAddr,
+    /// Delay between complete polling cycles, in milliseconds.
+    #[arg(long, default_value = "1000", value_parser = clap::value_parser!(u64).range(1..=86_400_000))]
+    interval: u64,
+    /// Exit after N cycles (0 polls indefinitely).
+    #[arg(long, default_value_t = 0)]
+    count: u64,
+}
+fn loopback_address(s: &str) -> Result<SocketAddr, String> {
+    let address: SocketAddr = s.parse().map_err(|_| {
+        "fldigi XML-RPC uses plain HTTP; supply a numeric loopback address, without DNS".to_owned()
+    })?;
+    if !address.ip().is_loopback() || address.port() == 0 {
+        return Err("fldigi XML-RPC uses plain HTTP; only loopback addresses with a nonzero port are allowed".into());
+    }
+    Ok(address)
+}
 #[derive(Args)]
 struct Sim {
     #[arg(long, required_unless_present_any = ["capture", "n1mm"], conflicts_with_all = ["qgi", "n1mm"])]
@@ -152,6 +191,7 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
         Command::Listen(options) => listen(options),
         Command::Sim(options) => sim::run(*options),
         Command::Decode(options) => decode_file(options),
+        Command::Poll(options) => fldigi_poll::run(options),
     }
 }
 
@@ -199,7 +239,43 @@ fn emit(
     Ok(())
 }
 fn decode_file(options: Decode) -> Result<(), Box<dyn std::error::Error>> {
-    let mut codec = selected_codec(options.n1mm);
+    let mut codec: Box<dyn Codec> = if options.fldigi {
+        Box::new(qso_graph_interop::fldigi::Fldigi::default())
+    } else {
+        selected_codec(options.n1mm)
+    };
+    let mut decode = DecodeOptions::default();
+    decode.structured = true;
+    if let Some(method) = options.request_method {
+        decode
+            .native
+            .insert("request".into(), serde_json::json!({"method":method}));
+    }
+    if let Some(file) = options.request_file {
+        let mut request = Vec::new();
+        std::fs::File::open(file)?
+            .take((qso_graph_interop::fldigi::MAX_BODY + 1) as u64)
+            .read_to_end(&mut request)?;
+        let mut view_options = DecodeOptions::default();
+        view_options.structured = true;
+        let out = codec.decode(&request, &view_options)?;
+        let event = &out.events[0];
+        let view = &event.value()["native"]["message"];
+        if view["root"] != "methodCall" {
+            return Err("--request-file must contain a request".into());
+        }
+        let method = view["method"]
+            .as_str()
+            .ok_or("request file has no method")?;
+        let mut association = serde_json::json!({"method":method});
+        if method == "text.get_rx" {
+            association["arguments"] = serde_json::json!([
+                event.value()["fields"]["rx_start"],
+                event.value()["fields"]["rx_length"]
+            ]);
+        }
+        decode.native.insert("request".into(), association);
+    }
     let input: Box<dyn Read> = if options.file.as_os_str() == "-" {
         Box::new(io::stdin().lock())
     } else {
@@ -209,7 +285,22 @@ fn decode_file(options: Decode) -> Result<(), Box<dyn std::error::Error>> {
     input
         .take((codec.limits().message_bytes + 1) as u64)
         .read_to_end(&mut bytes)?;
-    emit(codec.as_mut(), &bytes, &mut io::stdout().lock(), "unknown")
+    if !options.fldigi {
+        return emit(codec.as_mut(), &bytes, &mut io::stdout().lock(), "unknown");
+    }
+    let out = codec.decode(&bytes, &decode)?;
+    if !decode.native.contains_key("request")
+        && out.events[0].value()["native"]["message"]["root"] == "methodResponse"
+    {
+        return Err("fldigi responses require --request-method NAME or --request-file FILE".into());
+    }
+    for event in out.events {
+        io::stdout()
+            .lock()
+            .write_all(&qso_graph_interop::json::write(&event, false, None)?)?;
+        println!();
+    }
+    Ok(())
 }
 fn selected_codec(n1mm: bool) -> Box<dyn Codec> {
     if n1mm {

@@ -255,6 +255,14 @@ impl Event {
     ) -> Result<Recognized, Error> {
         crate::json::recognized(self, profile)
     }
+    /// Read a compatible view with caller-owned request association for evidence checking.
+    pub fn recognized_with(
+        &self,
+        profile: Option<&dyn crate::codec::Profile>,
+        options: &crate::codec::DecodeOptions<'_>,
+    ) -> Result<Recognized, Error> {
+        crate::json::recognized_with(self, profile, options)
+    }
 }
 #[derive(Clone, Debug, PartialEq)]
 #[non_exhaustive]

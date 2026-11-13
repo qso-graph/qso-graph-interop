@@ -2,7 +2,7 @@
 # `qg-interop`
 
 Test amateur radio applications without a radio. `qg-interop` listens to WSJT-X and N1MM Logger+ UDP messages,
-decodes captured datagrams as QGI-SPEC-001 NDJSON events, simulates WSJT-X from ALL.TXT logs,
+polls local fldigi state and received text, decodes captured bodies as QGI-SPEC-001 NDJSON events, simulates WSJT-X from ALL.TXT logs,
 and generates N1MM contest traffic for dashboards, logger bridges, and band maps.
 The single binary runs without Python or other runtime packages.
 
@@ -13,6 +13,8 @@ qg-interop listen --wsjtx
 qg-interop listen --n1mm
 qg-interop decode --n1mm capture.xml
 qg-interop decode --wsjtx capture.bin
+qg-interop decode --fldigi response.xml --request-method rig.get_frequency
+qg-interop poll --fldigi --count 3
 qg-interop sim --wsjtx --to 127.0.0.1:2237
 qg-interop sim --wsjtx --to 127.0.0.1:2237 --file ALL.TXT --speed 60
 qg-interop sim --n1mm --to 127.0.0.1:12060 --radios 2 --rate 120 --speed 60
@@ -33,5 +35,9 @@ receiver updates the selected radio's next scheduled report.
 The listener defaults to `127.0.0.1:2237` for WSJT-X and `127.0.0.1:12060` for N1MM.
 See the [N1MM guide](../../docs/user/n1mm.md) for logger setup and capture decoding. Standard output contains one specification event per line;
 errors and skip notices go to standard error. Each subcommand's `--help` includes examples.
+
+The fldigi poller defaults to `127.0.0.1:7362` and accepts numeric loopback addresses.
+Use `--interval` for the delay between cycles and `--count` for the number of cycles.
+See the [fldigi guide](../../docs/user/fldigi.md) for XML-RPC setup and response association.
 
 Licensed under GPL-3.0-or-later.

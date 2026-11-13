@@ -10,9 +10,10 @@ repository.workspace = true
 readme = "README.md"
 
 [features]
-default = ["wsjtx", "n1mm", "qgi", "serde"]
+default = ["wsjtx", "n1mm", "fldigi", "qgi", "serde"]
 wsjtx = ["serde"]
 n1mm = ["serde"]
+fldigi = ["serde"]
 qgi = ["serde"]
 serde = ["dep:serde"]
 conformance = ["serde", "dep:sha2-const-stable"]
@@ -35,4 +36,8 @@ required-features = ["n1mm"]
 
 [[test]]
 name = "conformance"
-required-features = ["conformance", "wsjtx", "n1mm", "qgi"]
+required-features = ["conformance", "wsjtx", "n1mm", "fldigi", "qgi"]
+
+[[test]]
+name = "fldigi"
+required-features = ["fldigi"]

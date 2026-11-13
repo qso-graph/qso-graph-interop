@@ -33,8 +33,9 @@ Public files describe this project only. Use American English and synthetic test
   come from crates.io, contain no native code, and pass cargo-vet, cargo-deny, and cargo-audit.
 - Fuzzing is separate developer tooling on nightly-2026-10-30, with libFuzzer's runtime only
   in its isolated workspace. Do not make shipped crates depend on it.
-- The library opens no sockets or processes. The CLI uses only UDP at the numeric addresses
-  the user supplies; the listener defaults to 127.0.0.1:2237. Do not add discovery or DNS.
+- The library opens no sockets or processes. The CLI uses UDP at numeric addresses the user
+  supplies and TCP only to numeric loopback addresses for fldigi's plain HTTP XML-RPC client.
+  The UDP listener defaults to 127.0.0.1:2237. Do not add discovery or DNS.
 - Preserve null, empty, absent, raw bytes, all family fields, and trailing extensions.
   Never guess a new schema's field encoding or infer a variant from its sender ID.
 - Pin protocol changes to released source; keep evidence in docs/PROTOCOL.md and independent

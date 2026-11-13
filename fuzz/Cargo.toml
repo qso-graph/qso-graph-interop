@@ -39,3 +39,10 @@ path = "fuzz_targets/wsjtx.rs"
 test = false
 doc = false
 bench = false
+
+[[bin]]
+name = "fldigi"
+path = "fuzz_targets/fldigi.rs"
+test = false
+doc = false
+bench = false

@@ -309,6 +309,20 @@ pub fn write(
     producer_strict: bool,
     profile: Option<&dyn Profile>,
 ) -> Result<Vec<u8>, Error> {
+    write_with(
+        event,
+        producer_strict,
+        profile,
+        &crate::codec::DecodeOptions::default(),
+    )
+}
+/// Compact publication with caller-owned class metadata for producer consistency checks.
+pub fn write_with(
+    event: &Event,
+    producer_strict: bool,
+    profile: Option<&dyn Profile>,
+    options: &crate::codec::DecodeOptions<'_>,
+) -> Result<Vec<u8>, Error> {
     validate(event.value(), producer_strict)?;
     if producer_strict
         && event.value()["native"].get("message").is_some()
@@ -319,7 +333,7 @@ pub fn write(
         ));
     }
     if producer_strict && let Some(p) = profile {
-        p.validate_authored(event)?;
+        p.validate_authored_with(event, options)?;
     }
     bounds_with_elements(event.value(), MAX_RECORD, MAX_RECORD_ELEMENTS)?;
     let mut output = RecordBuffer {
@@ -916,6 +930,9 @@ pub fn known_fields(v: &Value) -> Value {
     fields
 }
 fn family_fields(v: &Value) -> Option<&'static str> {
+    if v["family"] == "fldigi" && v["kind"] == "control" {
+        return Some("fldigi_control");
+    }
     if v["family"] != "n1mm" {
         return None;
     }
@@ -927,6 +944,14 @@ fn family_fields(v: &Value) -> Option<&'static str> {
     }
 }
 pub fn recognized(event: &Event, profile: Option<&dyn Profile>) -> Result<Recognized, Error> {
+    recognized_with(event, profile, &crate::codec::DecodeOptions::default())
+}
+/// Read known content and verify it with caller-supplied class association.
+pub fn recognized_with(
+    event: &Event,
+    profile: Option<&dyn Profile>,
+    options: &crate::codec::DecodeOptions<'_>,
+) -> Result<Recognized, Error> {
     let v = event.value();
     let family = v["family"].as_str().unwrap_or("");
     let kind = v["kind"].as_str().unwrap_or("native");
@@ -945,7 +970,7 @@ pub fn recognized(event: &Event, profile: Option<&dyn Profile>) -> Result<Recogn
     }
     let profile = profile.filter(|p| p.family() == family);
     let verification = if let Some(p) = profile {
-        p.verify(event)?
+        p.verify_with(event, options)?
     } else {
         Verification::Unavailable
     };

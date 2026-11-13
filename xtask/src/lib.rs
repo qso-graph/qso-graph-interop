@@ -198,7 +198,8 @@ fn native_tokens_with_system_bindings(tokens: TokenStream, system_bindings: bool
 }
 
 /// The codec library has no sockets or processes. The CLI may use only UDP with
-/// numeric addresses; process creation and TCP/DNS APIs are forbidden there too.
+/// numeric addresses, plus the audited loopback TCP adapter for fldigi HTTP.
+/// General TCP, DNS and process creation remain forbidden.
 pub fn network_tokens(tokens: TokenStream, library: bool) -> Check {
     let trees: Vec<_> = tokens.into_iter().collect();
     for (i, token) in trees.iter().enumerate() {
@@ -251,6 +252,7 @@ pub fn network_tokens(tokens: TokenStream, library: bool) -> Check {
                             "error",
                             "str",
                             "net::SocketAddr",
+                            "thread::sleep",
                             "process::ExitCode",
                         ];
                         require(
@@ -338,6 +340,69 @@ fn numeric_udp_tokens(tokens: TokenStream) -> Check {
                 .expect("audited template")
                 .to_string(),
         "numeric UDP adapter differs from the audited template",
+    )
+}
+
+// Exact tokens keep TCP inside the loopback guard and five-second deadline adapter.
+const AUDITED_LOOPBACK_TCP: &str = r#"// SPDX-License-Identifier: GPL-3.0-or-later
+//! Audited numeric, loopback-only adapter for fldigi's plain HTTP XML-RPC client.
+#![forbid(unsafe_code)]
+use std::io::{self, Read, Write};
+use std::net::{SocketAddr, TcpStream};
+use std::time::{Duration, Instant};
+pub struct LoopbackTcp {
+    stream: TcpStream,
+    deadline: Instant,
+}
+impl LoopbackTcp {
+    pub fn connect(address: SocketAddr) -> io::Result<Self> {
+        if !address.ip().is_loopback() || address.port() == 0 {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "fldigi XML-RPC uses plain HTTP; only numeric loopback addresses with a nonzero port are allowed",
+            ));
+        }
+        let timeout = Duration::from_secs(5);
+        let deadline = Instant::now() + timeout;
+        let stream = TcpStream::connect_timeout(&address, timeout)?;
+        Ok(Self { stream, deadline })
+    }
+    fn remaining(&self) -> io::Result<Duration> {
+        self.deadline
+            .checked_duration_since(Instant::now())
+            .filter(|d| !d.is_zero())
+            .ok_or_else(|| {
+                io::Error::new(
+                    io::ErrorKind::TimedOut,
+                    "fldigi HTTP request exceeded five seconds",
+                )
+            })
+    }
+}
+impl Read for LoopbackTcp {
+    fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
+        self.stream.set_read_timeout(Some(self.remaining()?))?;
+        self.stream.read(buf)
+    }
+}
+impl Write for LoopbackTcp {
+    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+        self.stream.set_write_timeout(Some(self.remaining()?))?;
+        self.stream.write(buf)
+    }
+    fn flush(&mut self) -> io::Result<()> {
+        self.stream.flush()
+    }
+}
+"#;
+fn loopback_tcp_tokens(tokens: TokenStream) -> Check {
+    require(
+        tokens.to_string()
+            == AUDITED_LOOPBACK_TCP
+                .parse::<TokenStream>()
+                .expect("audited TCP template")
+                .to_string(),
+        "loopback TCP adapter differs from audited template",
     )
 }
 
@@ -631,6 +696,10 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
                         && file == dir.join("src/numeric_udp.rs")
                     {
                         numeric_udp_tokens(token_file(&file)?)?;
+                    } else if pkg["name"] == "qso-graph-interop-cli"
+                        && file == dir.join("src/loopback_tcp.rs")
+                    {
+                        loopback_tcp_tokens(token_file(&file)?)?;
                     } else {
                         network_tokens(token_file(&file)?, pkg["name"] == "qso-graph-interop")?;
                     }
@@ -1065,6 +1134,25 @@ fn main() {}
             format!("{AUDITED_NUMERIC_UDP} pub fn extra() {{}}"),
         ] {
             assert!(numeric_udp_tokens(mutant.parse().unwrap()).is_err());
+        }
+    }
+
+    #[test]
+    fn loopback_tcp_adapter_changes_are_rejected() {
+        assert!(loopback_tcp_tokens(AUDITED_LOOPBACK_TCP.parse().unwrap()).is_ok());
+        for mutant in [
+            AUDITED_LOOPBACK_TCP.replace("!address.ip().is_loopback()", "false"),
+            AUDITED_LOOPBACK_TCP.replace(
+                "TcpStream::connect_timeout(&address, timeout)",
+                "TcpStream::connect(\"192.0.2.1:7362\")",
+            ),
+            AUDITED_LOOPBACK_TCP.replace(
+                "TcpStream::connect_timeout(&address, timeout)",
+                "TcpStream::connect(\"localhost:7362\")",
+            ),
+            AUDITED_LOOPBACK_TCP.replace("Duration::from_secs(5)", "Duration::from_secs(500)"),
+        ] {
+            assert!(loopback_tcp_tokens(mutant.parse().unwrap()).is_err());
         }
     }
 

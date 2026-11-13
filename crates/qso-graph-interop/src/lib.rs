@@ -19,3 +19,8 @@ pub mod conformance;
 pub mod qgi;
 #[cfg(feature = "wsjtx")]
 pub mod wsjtx;
+
+#[cfg(feature = "fldigi")]
+pub mod fldigi;
+#[cfg(any(feature = "n1mm", feature = "fldigi"))]
+mod xml;

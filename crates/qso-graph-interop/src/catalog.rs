@@ -20,6 +20,7 @@ pub(super) fn catalog(name: &str) -> Option<Shape> {
         "native" => Some((&[], &[])),
         "n1mm_native" => Some((&[("start", "instant"), ("previous_start", "instant")], &[])),
         "n1mm_qso" => Some((&[("previous_start", "instant")], &[])),
+        "fldigi_control" => Some((&[("rx_start", "integer"), ("rx_length", "integer")], &[])),
         "n1mm_control" => Some((
             &[
                 ("app", "text"),
