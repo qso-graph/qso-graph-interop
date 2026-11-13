@@ -1,0 +1,3 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Keep the generated header byte-identical on Windows checkouts.
+crates/qso-graph-interop-ffi/include/qso_graph_interop.h text eol=lf

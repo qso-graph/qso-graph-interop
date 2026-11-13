@@ -10,6 +10,7 @@ use std::{
     process::Command,
 };
 
+pub mod ffi;
 mod synthetic_calls;
 pub mod verify;
 
@@ -80,7 +81,10 @@ pub fn forbids_unsafe(source: &str) -> bool {
 /// Scan all tokens, including disabled cfg branches; comments and strings are not code.
 /// Macro definitions, includes and path redirection cannot hide source from the scan.
 pub fn source_tokens(tokens: TokenStream) -> Check {
-    fn scan(tokens: TokenStream, in_attribute: bool) -> Check {
+    source_tokens_mode(tokens, false)
+}
+fn source_tokens_mode(tokens: TokenStream, ffi: bool) -> Check {
+    fn scan(tokens: TokenStream, in_attribute: bool, ffi: bool) -> Check {
         let trees: Vec<_> = tokens.into_iter().collect();
         let punct =
             |i: usize, c: char| matches!(trees.get(i),Some(TokenTree::Punct(p)) if p.as_char()==c);
@@ -90,16 +94,16 @@ pub fn source_tokens(tokens: TokenStream) -> Check {
                     let name = id.to_string();
                     let name = name.trim_start_matches("r#");
                     require(
-                        !matches!(
-                            name,
-                            "unsafe"
-                                | "macro_rules"
-                                | "macro"
-                                | "include"
-                                | "asm"
-                                | "global_asm"
-                                | "naked_asm"
-                        ),
+                        !(name == "unsafe" && !ffi)
+                            && !matches!(
+                                name,
+                                "macro_rules"
+                                    | "macro"
+                                    | "include"
+                                    | "asm"
+                                    | "global_asm"
+                                    | "naked_asm"
+                            ),
                         format!("forbidden source token {name}"),
                     )?;
                     if in_attribute {
@@ -130,18 +134,18 @@ pub fn source_tokens(tokens: TokenStream) -> Check {
                                 && let Ok(lit) = syn::parse_str::<syn::LitStr>(&l.to_string())
                                 && let Ok(inner) = lit.value().parse::<TokenStream>()
                             {
-                                scan(inner, false)?;
+                                scan(inner, false, ffi)?;
                             }
                         }
                     }
-                    scan(g.stream(), in_attribute || attribute)?;
+                    scan(g.stream(), in_attribute || attribute, ffi)?;
                 }
                 _ => {}
             }
         }
         Ok(())
     }
-    scan(tokens, false)
+    scan(tokens, false, ffi)
 }
 
 pub fn native_tokens(tokens: TokenStream) -> Check {
@@ -522,7 +526,11 @@ pub fn manifest_policy(t: &toml::Table, fuzz: bool) -> Check {
                         .as_str()
                         .or_else(|| value.get("version").and_then(|v| v.as_str()));
                     require(
-                        version.is_some_and(compatible_version),
+                        version.is_some_and(compatible_version)
+                            || key == "cbindgen"
+                                && version == Some("=0.29.4")
+                                && value.get("default-features").and_then(|v| v.as_bool())
+                                    == Some(false),
                         format!("dependency {key} must use a compatible version range"),
                     )?;
                     if key == "serde_json" {
@@ -633,10 +641,10 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
             .get("workspace")
             .and_then(|v| v.get("lints"))
             .and_then(|v| v.get("rust"))
-            .and_then(|v| v.get("unsafe_code"))
+            .and_then(|v| v.get("unsafe_op_in_unsafe_fn"))
             .and_then(|v| v.as_str())
-            == Some("forbid"),
-        "workspace must forbid unsafe_code",
+            == Some("deny"),
+        "workspace must deny unsafe_op_in_unsafe_fn",
     )?;
     let members = array(meta, "workspace_members")?;
     for pkg in array(meta, "packages")? {
@@ -650,7 +658,16 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
         if pkg["name"] == "qso-graph-interop" || pkg["name"] == "qso-graph-interop-cli" {
             shipped_dependency_names(&package_manifest, pkg["name"] == "qso-graph-interop")?;
         }
-        no_native(dir)?;
+        let is_ffi = pkg["name"] == "qso-graph-interop-ffi";
+        if is_ffi {
+            require(
+                dir == root.join("crates/qso-graph-interop-ffi"),
+                "FFI exception requires exact package path",
+            )?;
+            ffi::package_policy(dir, &package_manifest)?;
+        } else {
+            no_native(dir)?;
+        }
         let targets = array(pkg, "targets")?;
         let mut test_roots = BTreeSet::new();
         let mut other_roots = BTreeSet::new();
@@ -703,14 +720,26 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
                 "crate root must be a .rs file in its own crate",
             )?;
             require(
-                forbids_unsafe(&read(source)?),
+                if is_ffi {
+                    ffi::root_policy(&read(source)?).is_ok()
+                } else {
+                    forbids_unsafe(&read(source)?)
+                },
                 format!("{} must say #![forbid(unsafe_code)]", source.display()),
             )?;
         }
         for file in files(dir)? {
             if file.extension().is_some_and(|e| e == "rs") {
                 let tokens = token_file(&file)?;
-                source_tokens(tokens.clone()).map_err(|e| format!("{}: {e}", file.display()))?;
+                if is_ffi {
+                    source_tokens_mode(tokens.clone(), true)?;
+                    ffi::unsafe_comments(&read(&file)?)?;
+                    network_tokens(tokens.clone(), true)?;
+                    native_tokens(tokens.clone())?;
+                } else {
+                    source_tokens(tokens.clone())
+                        .map_err(|e| format!("{}: {e}", file.display()))?;
+                }
                 if pkg["name"] == "qso-graph-interop-cli" {
                     reject_test_root_modules(tokens, &test_names)
                         .map_err(|e| format!("{}: {e}", file.display()))?;
@@ -746,7 +775,11 @@ fn dependency_policy(meta: &Value) -> Check {
     let nodes = array(&meta["resolve"], "nodes")?;
     let mut queue: VecDeque<&Value> = packages
         .iter()
-        .filter(|p| p["name"] == "qso-graph-interop" || p["name"] == "qso-graph-interop-cli")
+        .filter(|p| {
+            p["name"] == "qso-graph-interop"
+                || p["name"] == "qso-graph-interop-cli"
+                || p["name"] == "qso-graph-interop-ffi"
+        })
         .map(|p| &p["id"])
         .collect();
     let mut seen = BTreeSet::new();
@@ -781,7 +814,9 @@ fn dependency_policy(meta: &Value) -> Check {
             // versions that remain explicitly not audited in supply-chain/config.toml.
         } else {
             require(
-                pkg["name"] == "qso-graph-interop" || pkg["name"] == "qso-graph-interop-cli",
+                pkg["name"] == "qso-graph-interop"
+                    || pkg["name"] == "qso-graph-interop-cli"
+                    || pkg["name"] == "qso-graph-interop-ffi",
                 "unexpected path dependency in shipped graph",
             )?;
         }
@@ -1025,7 +1060,7 @@ mod tests {
         let manifest = r#"
 [workspace]
 [workspace.lints.rust]
-unsafe_code = "forbid"
+unsafe_op_in_unsafe_fn = "deny"
 [package]
 name = "qso-graph-interop-cli"
 version = "0.1.0"
@@ -1088,6 +1123,89 @@ fn main() {}
             workspace_policy(&dir, &get_metadata())
                 .unwrap_err()
                 .contains("test target root cannot be imported")
+        );
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn planted_unsafe_exception_is_confined_to_exact_ffi_package() {
+        let dir = std::env::temp_dir().join(format!("qgi-ffi-policy-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::write(
+            dir.join("Cargo.toml"),
+            "[workspace.lints.rust]\nunsafe_op_in_unsafe_fn = \"deny\"\n",
+        )
+        .unwrap();
+        let names = [
+            "qso-graph-interop",
+            "qso-graph-interop-cli",
+            "xtask",
+            "qso-graph-interop-ffi",
+        ];
+        let mut packages = Vec::new();
+        for name in names {
+            let package = dir.join("crates").join(name);
+            std::fs::create_dir_all(package.join("src")).unwrap();
+            let mut manifest = "[lints]\nworkspace = true\n".to_owned();
+            if name == "qso-graph-interop-ffi" {
+                manifest.push_str("[dependencies]\nqso-graph-interop = \"0.1.0\"\nserde_json = { version = \"1.0.145\", features = [\"float_roundtrip\"] }\n");
+            }
+            std::fs::write(package.join("Cargo.toml"), manifest).unwrap();
+            let source = if name == "qso-graph-interop-ffi" {
+                "#![deny(unsafe_op_in_unsafe_fn)]\nfn f() {\n// SAFETY: planted documented empty block\nunsafe {}\n}\n"
+            } else {
+                "#![forbid(unsafe_code)]\n"
+            };
+            std::fs::write(package.join("src/lib.rs"), source).unwrap();
+            packages.push(serde_json::json!({"id":name,"name":name,"manifest_path":package.join("Cargo.toml"),"targets":[{"kind":["lib"],"edition":"2024","src_path":package.join("src/lib.rs") }]}));
+        }
+        let meta = serde_json::json!({"workspace_members": names,"packages":packages});
+        workspace_policy(&dir, &meta).unwrap();
+        for name in &names[..3] {
+            let source = dir.join("crates").join(name).join("src/lib.rs");
+            std::fs::write(
+                &source,
+                "#![forbid(unsafe_code)]\n#[cfg(any())] fn planted() { unsafe {} }\n",
+            )
+            .unwrap();
+            assert!(
+                workspace_policy(&dir, &meta)
+                    .unwrap_err()
+                    .contains("forbidden source token unsafe"),
+                "{name}"
+            );
+            std::fs::write(source, "#![forbid(unsafe_code)]\n").unwrap();
+        }
+        let ffi = dir.join("crates/qso-graph-interop-ffi");
+        std::fs::write(
+            ffi.join("src/lib.rs"),
+            "#![deny(unsafe_op_in_unsafe_fn)]\nfn f() { unsafe {} }\n",
+        )
+        .unwrap();
+        assert!(
+            workspace_policy(&dir, &meta)
+                .unwrap_err()
+                .contains("SAFETY:")
+        );
+        std::fs::write(ffi.join("src/lib.rs"), "#![deny(unsafe_op_in_unsafe_fn)]\n").unwrap();
+        std::fs::write(ffi.join("unreviewed.c"), "int planted;").unwrap();
+        assert!(
+            workspace_policy(&dir, &meta)
+                .unwrap_err()
+                .contains("unapproved FFI native file")
+        );
+        std::fs::remove_file(ffi.join("unreviewed.c")).unwrap();
+        std::fs::rename(&ffi, dir.join("crates/pretend-ffi")).unwrap();
+        let mut moved = meta.clone();
+        moved["packages"][3]["manifest_path"] = dir
+            .join("crates/pretend-ffi/Cargo.toml")
+            .to_string_lossy()
+            .into_owned()
+            .into();
+        assert!(
+            workspace_policy(&dir, &moved)
+                .unwrap_err()
+                .contains("exact package path")
         );
         std::fs::remove_dir_all(dir).unwrap();
     }

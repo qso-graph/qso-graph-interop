@@ -1,10 +1,10 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # Dependencies
 
-Every direct requirement uses a compatible range. Cargo.lock and fuzz/Cargo.lock pin resolution.
+Direct requirements use compatible ranges except the exact cbindgen development-tool pin. Cargo.lock and fuzz/Cargo.lock pin resolution.
 Only crates.io sources are allowed. The library uses serde and serde_json, plus optional sha2-const-stable for conformance. The CLI adds
 clap and the Rust-only signal-hook flag API. xtask adds TOML and Rust-token parsers without entering the shipped graph.
-The isolated fuzz workspace adds libfuzzer-sys and serde_json JSON-path checks and never enters either shipped crate.
+The isolated fuzz workspace adds libfuzzer-sys and serde_json JSON-path checks and never enters a shipped crate.
 
 ## N1MM XML decision
 
@@ -22,7 +22,7 @@ is added or claimed to meet these requirements without workarounds. The tokenize
 DTD processor, I/O, unsafe code, or macro definitions. Only predefined entities and legal numeric
 character references expand. UTF-8 and UTF-16 retain their own units through processing.
 
-The existing dependency graph and both lockfiles remain unchanged. The normal policy, cargo-vet,
+The XML tokenizer adds no dependency. The normal policy, cargo-vet,
 cargo-deny, and cargo-audit checks still apply. Specification vectors plant each limit and XML
 isolation failure; the isolated N1MM fuzz target exercises decoding, command construction, native
 round trips, and strict JSON publication.
@@ -38,9 +38,10 @@ round trips, and strict JSON publication.
 | toml | 1.1.8+spec-1.1.0 | MIT OR Apache-2.0 | Read manifests as TOML in xtask; no display feature. Requirement is `1.1.8`, which resolves this metadata-qualified release. |
 | syn | 3.0.9 | MIT OR Apache-2.0 | Parse actual crate-root attributes in xtask. |
 | proc-macro2 | 1.0.107 | MIT OR Apache-2.0 | Scan all Rust tokens, including disabled code, in xtask. |
+| cbindgen | =0.29.4 (exact tool pin) | MPL-2.0 | Reproducible C header generation and drift detection in xtask only. |
 | libfuzzer-sys | 0.4.13 | (MIT OR Apache-2.0) AND NCSA | Coverage-guided decoder fuzzing, developer tooling only. |
 | sha2-const-stable | 0.1.0 | MIT OR Apache-2.0 | SHA-256 manifest hashes in optional conformance tooling; no dependencies or native code. |
-| qso-graph-interop | 0.1.0 | GPL-3.0-or-later | Internal compatible-range path dependency of the CLI and fuzz workspace. |
+| qso-graph-interop | 0.1.0 | GPL-3.0-or-later | Internal compatible-range path dependency of the CLI, FFI, and fuzz workspace. |
 
 ## Signal handler decision
 
@@ -152,10 +153,12 @@ sources and assembly remain forbidden. See [simulator validation](simulator-vali
 The fuzz harness also links the CLI parsing library to exercise ALL.TXT, so its lockfile includes
 the CLI's Rust dependencies. No developer tooling enters a shipped crate.
 
-## Additional fuzz-only resolution
+## Additional fuzz resolution
 
-These packages exist only in fuzz/Cargo.lock, besides the shared serialization dependencies above.
-They are not covered by the shipped workspace's cargo-vet store or native-code ban. libFuzzer's
+These packages are resolved by fuzz/Cargo.lock, besides the shared serialization dependencies above.
+Some also support the repository-only cbindgen tool as recorded below; those workspace
+versions are covered by its exact cargo-vet exemptions. Fuzz-only packages are not covered
+by the shipped workspace's cargo-vet store or native-code ban. libFuzzer's
 C++ runtime is the same isolated developer-tooling exception used by cargo-fuzz; project Rust
 sources still forbid unsafe code. This exception does not apply to the library or CLI.
 
@@ -165,11 +168,11 @@ sources still forbid unsafe code. This exception does not apply to the library o
 | cc | 1.11.1 | MIT OR Apache-2.0 | Builds libFuzzer in the isolated fuzz workspace only. |
 | cfg-if | 1.0.5 | MIT OR Apache-2.0 | Platform configuration in fuzz tooling. |
 | find-msvc-tools | 0.1.15 | MIT OR Apache-2.0 | Compiler discovery for the fuzz runtime build. |
-| getrandom | 0.4.3 | MIT OR Apache-2.0 | Jobserver support on non-Unix platforms; fuzz tooling only. |
+| getrandom | 0.4.3 | MIT OR Apache-2.0 | Non-Unix jobserver support and cbindgen temporary-file tooling. |
 | jobserver | 0.1.35 | MIT OR Apache-2.0 | Coordinates fuzz runtime compilation. |
 | libc | 0.2.191 | MIT OR Apache-2.0 | OS bindings used by the fuzz runtime build. |
 | libfuzzer-sys | 0.4.13 | (MIT OR Apache-2.0) AND NCSA | Isolated libFuzzer C++ runtime for fuzzing only. |
-| r-efi | 6.0.0 | MIT OR Apache-2.0 OR LGPL-2.1-or-later | EFI bindings in getrandom resolution; fuzz tooling only. |
+| r-efi | 6.0.0 | MIT OR Apache-2.0 OR LGPL-2.1-or-later | EFI bindings in getrandom resolution for developer tooling. |
 | shlex | 2.0.1 | MIT OR Apache-2.0 | Compiler argument parsing for the fuzz runtime build. |
 
 CI installs cargo-vet 0.10.3, cargo-deny 0.20.2, cargo-audit 0.22.2, and cargo-fuzz 0.13.2,
@@ -180,6 +183,45 @@ The optional `conformance` feature adds `sha2-const-stable` 0.1 for SHA-256 mani
 It has no dependencies, build script, native code, or I/O. The local cargo-vet entry records an
 explicit automated source review of all four source files and independent digest checks; it is
 not an independent human audit. The normal codec and CLI dependency graphs omit this feature.
-All manifests now use compatible ranges, with both committed lockfiles retaining resolved versions.
+Manifests use compatible ranges except the exact cbindgen tool pin below; both lockfiles
+retain their resolved versions.
 `serde_json` is also a library dependency for preserved event values and bounded event JSON;
 `float_roundtrip` preserves binary64 and `arbitrary_precision` retains unknown exact numeric values.
+
+## C ABI and header generation
+
+`qso-graph-interop-ffi` ships only the public codec library and serde_json. It adds no
+registry package to the shipped graph. `cbindgen = "=0.29.4"`, with default features
+disabled, is an xtask dependency used to generate and compare the checked-in C header.
+It is never a normal or build dependency of a shipped crate. The exact pin is an
+explicit exception to compatible direct requirements so header output is reproducible.
+Both workspace lockfiles are current; fuzz resolution does not acquire cbindgen.
+
+cargo-deny permits MPL-2.0 only for cbindgen version 0.29.4. Other packages keep the
+existing license policy. The following additional resolved tooling packages have exact,
+labeled `safe-to-run` cargo-vet exemptions. These record pending review, not completed
+audits. Verification uses the cached imported audit store and cached RustSec database
+when networking is restricted; it does not claim a fresh advisory fetch.
+
+| Package | Locked version | Review status |
+| --- | --- | --- |
+| bitflags | 2.13.2 | Not audited yet; exact tooling exemption. |
+| cbindgen | 0.29.4 | Not audited yet; exact tooling exemption. |
+| cfg-if | 1.0.5 | Not audited yet; exact tooling exemption. |
+| fastrand | 2.5.0 | Not audited yet; exact tooling exemption. |
+| getrandom | 0.4.3 | Not audited yet; exact tooling exemption. |
+| linux-raw-sys | 0.12.1 | Not audited yet; exact tooling exemption. |
+| log | 0.4.35 | Not audited yet; exact tooling exemption. |
+| once_cell | 1.21.4 | Not audited yet; exact tooling exemption. |
+| r-efi | 6.0.0 | Not audited yet; exact tooling exemption. |
+| rustix | 1.1.6 | Not audited yet; exact tooling exemption. |
+| syn | 2.0.119 | Not audited yet; exact tooling exemption. |
+| tempfile | 3.27.0 | Not audited yet; exact tooling exemption. |
+| toml | 0.9.12+spec-1.1.0 | Not audited yet; exact tooling exemption. |
+| toml_datetime | 0.7.5+spec-1.1.0 | Not audited yet; exact tooling exemption. |
+| winnow | 0.7.15 | Not audited yet; exact tooling exemption. |
+
+The system `cc` and `c++` commands compile only repository-owned test consumers. No
+native build crate or C runtime source is introduced into the shipped dependency graph.
+The FFI package's only permitted native source paths are its generated header and the
+C and C++ smoke tests; those files are never compiled into the Rust libraries.

@@ -5,6 +5,14 @@
 
 ### Added
 
+- `qso-graph-interop-ffi` C ABI as shared and static libraries for WSJT-X, N1MM,
+  fldigi, and QGI. Includes JSON outcomes, native command requests, re-encoding,
+  caller-buffered stream decoding, owned buffers, thread-safe opaque handles,
+  stable errors, and panic containment.
+- Pinned cbindgen header generation and drift checks, Rust ABI vector tests,
+  linked C consumer and C++ header checks in full verification and CI. Restrict
+  unsafe Rust to the FFI package with checked safety comments and planted failures.
+
 - `sim --fldigi [ADDRESS]`: loopback-only fldigi 4.2.13 XML-RPC stand-in serving all
   50 Annex E mappings, bundled empty-string results and unknown-method faults,
   mutable radio/contact state, timed queued transmission, and seeded synthetic RX text.

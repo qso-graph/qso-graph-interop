@@ -58,6 +58,11 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Pinned Rust
         run: rustup show active-toolchain || rustup toolchain install
+      - run: cargo xtask ffi-header
+      - run: cargo build -p qso-graph-interop-ffi --locked
+      - run: cargo xtask ffi-c-compile
+      - run: cargo xtask ffi-c-run
+      - run: cargo xtask ffi-cxx
       - run: cargo xtask policy
       - run: python3 scripts/generate-fixtures.py --check
       - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2

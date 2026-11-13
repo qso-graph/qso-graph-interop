@@ -3,7 +3,7 @@
 # QG Interop
 <!-- vale Google.Headings = YES -->
 
-QG Interop gives radio app developers a Rust library for specification events and commands,
+QG Interop gives radio app developers Rust and C libraries for specification events and commands,
 and gives operators the `qg-interop` listener, capture decoder, and simulator.
 
 The library implements QGI-SPEC-001 0.1.0 for all 17 WSJT-X message types, schemas 1–3,
@@ -65,6 +65,9 @@ Use `default-features = false` for the core without protocol families or enable 
 third-party codec. The public `Codec` trait decodes observations, encodes commands from common
 fields, and separately re-encodes native evidence. Stream input uses caller-owned buffers.
 
+C and C++ applications can use the [C ABI](docs/C-ABI.md) as shared or static libraries.
+Consumers need no Rust toolchain. The ABI also supports Python, .NET, and Node bindings.
+
 See the [library example](crates/qso-graph-interop/README.md),
 [protocol documentation](docs/PROTOCOL.md), and [contribution guide](CONTRIBUTING.md).
 
@@ -72,7 +75,7 @@ See the [library example](crates/qso-graph-interop/README.md),
 
 The library forbids unsafe Rust and opens no sockets. The command-line tool accepts numeric addresses and defaults
 to loopback. Parser, field, context, and event limits are checked before output is published.
-Dependencies use compatible ranges and committed lockfiles, with cargo-vet, cargo-deny, and
+Shipped dependencies use compatible ranges and committed lockfiles, with cargo-vet, cargo-deny, and
 cargo-audit checks. See [SECURITY.md](SECURITY.md) for private vulnerability reporting.
 
 ## License

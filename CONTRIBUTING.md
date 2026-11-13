@@ -12,13 +12,14 @@ cargo xtask verify
 ```
 
 It runs the same checks as CI (formatting, Clippy, full and core-only tests, policy, fixtures,
+the generated C header, FFI build, linked C test and C++ header compilation,
 the specification vectors with `uv`, cargo-vet, cargo-deny, cargo-audit, and a 60-second fuzz
 smoke on the pinned nightly), prints one pass/fail table, and exits non-zero if any check fails.
 `--fuzz-seconds 0` skips fuzzing, and `--fuzz-seconds N` fuzzes longer. Each check's output is in
 `target/verify/`. A missing tool fails its row with the command that installs it.
 
 Fuzzing uses its own workspace and dated nightly. Its libFuzzer runtime is developer tooling,
-never a dependency of the library or CLI:
+never a dependency of the library, CLI, or FFI:
 
 ```sh
 cargo install cargo-fuzz --version 0.13.2 --locked

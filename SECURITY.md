@@ -4,8 +4,12 @@
 Report vulnerabilities using [private vulnerability reporting](https://github.com/qso-graph/qso-graph-interop/security/advisories/new).
 Do not include private logs or credentials in a public issue.
 
-Our own code forbids unsafe Rust and defines no macros, including code behind inactive
-conditions. Dependencies may use unsafe Rust and define macros. Dependencies must come from
+Our code defines no macros, including code behind inactive conditions. All crate
+roots forbid unsafe Rust except the exact `qso-graph-interop-ffi` package. Its root
+denies unsafe operations in unsafe functions; every unsafe block requires a nearby
+`// SAFETY:` justification, checked in active and inactive code by policy. The
+workspace inherits the unsafe-operation lint; other roots retain their forbids.
+Dependencies may use unsafe Rust and define macros. Dependencies must come from
 crates.io, contain no native code, and pass cargo-vet, cargo-deny, and cargo-audit checks.
 Exemptions in cargo-vet are explicit review status, not completed audits.
 
@@ -89,3 +93,28 @@ operators (U+2060–U+2064), reserved/deprecated format controls (U+2065, U+206A
 BOM (U+FEFF), and interlinear annotation controls (U+FFF9–U+FFFB). These additional invisible
 format controls can hide boundaries or alter presentation. Other printable Unicode is retained.
 The library and JSON retain original text and raw invalid UTF-8 bytes.
+
+## C ABI memory boundary
+
+The C ABI is the sole first-party unsafe exception. Input helpers check null/length,
+alignment of typed outputs, address overflow, and byte limits before creating slices
+or writing outputs. The caller must provide live, correctly sized readable/writable
+allocations and disjoint output slots; Rust cannot validate arbitrary mapped memory,
+foreign data races, or dangling pointers. See [C ABI](docs/C-ABI.md) for the contract.
+Opaque, monotonically assigned integer handles are validated through a mutex-protected
+registry and never dereferenced as pointers. Buffers have independent non-reused tokens;
+free checks the complete descriptor before removing an allocation. Handles and buffers
+can cross threads; freeing a buffer requires all readers to have finished. A process
+has at most 4,096 live handles and 4,096 outstanding buffers; inputs are bounded before
+copying. Callers can still exhaust their own memory by repeatedly retaining large results.
+
+Every exported entry contains unwinding panics. A contained codec panic invalidates
+that handle; the registry recovers its mutex and other handles remain available. OOM,
+process abort, invalid foreign memory and violations of the caller contract are not
+recoverable status failures. Error text is thread-local, borrowed until the next ordinary
+ABI call on that thread, and must never be passed to the buffer release function.
+No callback is invoked. All codec operations are serialized internally; the boundary
+opens no socket or process. Only the exact generated header and two consumer test paths
+are exempt from first-party native-file rejection. Dependency native-code restrictions
+remain unchanged. Planted tests reject undocumented unsafe blocks, fake justifications,
+unsafe code outside FFI, native files outside those paths, and header drift.

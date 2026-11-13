@@ -27,9 +27,11 @@ Public files describe this project only. Use American English and synthetic test
 
 - Invented callsigns use the Q prefix.
 - Rust 1.99.1, edition 2024; compatible dependency ranges; keep both lockfiles current.
-- Every crate root, including tests and fuzz targets, says `#![forbid(unsafe_code)]`.
-  Every workspace member inherits the workspace lints. Our own code has no unsafe Rust
-  and defines no macros. Dependencies may use unsafe Rust and define macros; they must
+- Every crate root, including tests and fuzz targets, says `#![forbid(unsafe_code)]`,
+  except `qso-graph-interop-ffi`, whose root says `#![deny(unsafe_op_in_unsafe_fn)]`.
+  Only that exact package may use unsafe Rust; each unsafe block has a `// SAFETY:`
+  justification checked by policy. Every workspace member inherits the workspace
+  lints. Our own code defines no macros. Dependencies may use unsafe Rust and define macros; they must
   come from crates.io, contain no native code, and pass cargo-vet, cargo-deny, and cargo-audit.
 - Fuzzing is separate developer tooling on nightly-2026-10-30, with libFuzzer's runtime only
   in its isolated workspace. Do not make shipped crates depend on it.

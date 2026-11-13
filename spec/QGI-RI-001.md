@@ -35,8 +35,8 @@ without running) and `Demo` (observable by running).
 | `QGI-RI-0011` | **The seven official families** may ship as feature-gated modules of one crate, using only the core's public API; a family moves to its own crate when its release pace needs it. | Static | Partly Met: four feature-gated families (wsjtx, n1mm, fldigi, qgi; remaining three families Target) |
 | `QGI-RI-0012` | **Features:** one per family, `serde`, one per transport helper, `conformance`. Defaults decided before 1.0. | Test | Partly Met (Default wsjtx/n1mm/fldigi/qgi/serde; conformance optional; other families and library transport helpers Target) |
 | `QGI-RI-0013` | **Crate names chosen before the first crates.io publish** (permanent), fitting the specification's scope, which is no longer UDP alone. | Inspection | Met (D1) |
-| `QGI-RI-0014` | **A separate `-ffi` crate** for the C ABI; the CLI is its own crate. | Static | CLI Met; FFI Target |
-| `QGI-RI-0015` | **The `-ffi` crate generates its C header with cbindgen;** the build and CI verify the generated header matches the ABI code so the two cannot drift. | Static, Test | Target |
+| `QGI-RI-0014` | **A separate `-ffi` crate** for the C ABI; the CLI is its own crate. | Static | Met (separate CLI and cdylib/staticlib FFI crates) |
+| `QGI-RI-0015` | **The `-ffi` crate generates its C header with cbindgen;** the build and CI verify the generated header matches the ABI code so the two cannot drift. | Static, Test | Met (cbindgen 0.29.4; xtask header comparison, planted drift, CI) |
 
 ## 3. Library
 
@@ -71,17 +71,17 @@ without running) and `Demo` (observable by running).
 | `QGI-RI-0046` | **Dependencies from crates.io with compatible version ranges and a committed `Cargo.lock`, no native code in what ships, through `cargo-vet`, `cargo-deny` and `cargo-audit`.** Exact pins only as a recorded exception. | Static | Met (compatible ranges, committed lockfiles, pure Rust shipped graph, deny/vet/audit; optional conformance hash audit recorded) |
 | `QGI-RI-0047` | **The conformance kit is exported** behind `conformance`: the vector runner, round trip, truncation at every prefix, limits, and a fuzz-target template, so a third-party family meets the same standard. | Test | Met (exported runner, hash, round trip, prefixes, limits and fuzz template) |
 | `QGI-RI-0048` | **1.0 requires the core model and public codec interface to carry, without change, a release family of every protocol class and the `qgi` family:** datagram (WSJT-X and N1MM), stream (JS8Call), request/response (fldigi), publish/subscribe (PSK Reporter MQTT), templated (PSK Reporter IPFIX), and `qgi` event carriage over UDP and TCP. Evidence includes partial and multiple frames, faults, unavailable methods, retained publications, template/session boundaries and nested native evidence, as applicable. | Inspection, Test | Target (Request/response class now implemented; stream, publish/subscribe, and templated release-family gates remain) |
-| `QGI-RI-0049` | **The first release (0.x) requires, for WSJT-X, N1MM Logger+ and fldigi:** the codec passing every vector of its family in both directions where defined, `qg-interop listen` and `decode`, the simulator (`QGI-RI-0061`, `QGI-RI-0064`), and the C ABI (`QGI-RI-0050` to `QGI-RI-0054`), with the CLI and simulator shipped as signed standalone programs that need no Rust toolchain. Any further family shipped in it meets every requirement for that family. | Inspection | Target (fldigi codec, decode, poll, and mapped simulator implemented; C ABI, signing, and packaging remain) |
+| `QGI-RI-0049` | **The first release (0.x) requires, for WSJT-X, N1MM Logger+ and fldigi:** the codec passing every vector of its family in both directions where defined, `qg-interop listen` and `decode`, the simulator (`QGI-RI-0061`, `QGI-RI-0064`), and the C ABI (`QGI-RI-0050` to `QGI-RI-0054`), with the CLI and simulator shipped as signed standalone programs that need no Rust toolchain. Any further family shipped in it meets every requirement for that family. | Inspection | Target (fldigi codec, decode, poll, and mapped simulator implemented; C ABI implemented; signing and packaging remain) |
 
 ## 6. Other languages
 
 | ID | Requirement | Verify | Status |
 |---|---|---|---|
-| `QGI-RI-0050` | **A C ABI** for C and C++ programs, which can then use the library without changing their own design (WSJT-X and fldigi are C++), and through it Python, .NET and Node, so the library is not Rust-only; every pointer and length checked; returned memory freed only by the library. | Test | Target |
-| `QGI-RI-0051` | **Foreign-caller ownership and lifetimes** are documented for every input, output and handle, including null/zero-length cases and the matching library release function. | Test, Inspection | Target |
-| `QGI-RI-0052` | **Foreign-caller failures** use stable status codes and an explicit error-message lifetime; Rust panics never unwind across the ABI. | Test | Target |
-| `QGI-RI-0053` | **Foreign-caller data representations** declare byte lengths, string encodings, absent/null/empty distinctions and ABI version negotiation. | Test, Inspection | Target |
-| `QGI-RI-0054` | **Foreign-caller concurrency** declares handle thread safety, reentrancy and any callback lifetimes; callers are never required to infer these from Rust types. | Test, Inspection | Target |
+| `QGI-RI-0050` | **A C ABI** for C and C++ programs, which can then use the library without changing their own design (WSJT-X and fldigi are C++), and through it Python, .NET and Node, so the library is not Rust-only; every pointer and length checked; returned memory freed only by the library. | Test | Met (qso-graph-interop-ffi; Rust vector tests and linked C consumer for all three families) |
+| `QGI-RI-0051` | **Foreign-caller ownership and lifetimes** are documented for every input, output and handle, including null/zero-length cases and the matching library release function. | Test, Inspection | Met (generated header and docs/C-ABI.md; pointer, token, buffer ownership and lifetime tests) |
+| `QGI-RI-0052` | **Foreign-caller failures** use stable status codes and an explicit error-message lifetime; Rust panics never unwind across the ABI. | Test | Met (stable integer categories, thread-local error lifetime, catch_unwind on every export, planted panic) |
+| `QGI-RI-0053` | **Foreign-caller data representations** declare byte lengths, string encodings, absent/null/empty distinctions and ABI version negotiation. | Test, Inspection | Met (length-delimited UTF-8 JSON and raw bytes; ABI 1 equality check; preservation and version tests) |
+| `QGI-RI-0054` | **Foreign-caller concurrency** declares handle thread safety, reentrancy and any callback lifetimes; callers are never required to infer these from Rust types. | Test, Inspection | Met (internally serialized handles; cross-thread calls and buffer release tests; no callbacks) |
 
 ## 7. The proofs
 
@@ -126,6 +126,6 @@ evidence, bounded caller-scoped template state and result events as specificatio
 implementation change is part of that pass. The third pass closes producer conformance through
 `qgi` event carriage (`QGI-VEC-0004`, Annex I), specifies all-family simulator service roles and the
 full 1.0 class gate, and records PSK Reporter submitter obligations. The generated C header and
-foreign-caller contracts (`QGI-RI-0015`, `0050`–`0054`) remain Target. Annexes C, E, G and H still
+foreign-caller contracts (`QGI-RI-0015`, `0050`–`0054`) are now implemented and tested. Annexes C, E, G and H still
 have the profile work marked open in each annex; Annex D specifies N1MM with live-capture questions; implementation alignment and real-peer proofs
 remain Target. D5 and D6 remain as recorded above.
