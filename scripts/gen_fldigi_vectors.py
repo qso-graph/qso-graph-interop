@@ -9,7 +9,7 @@ import math
 import re
 from pathlib import Path
 
-SPEC = '0.1.0'
+SPEC = '0.2.0'
 RELEASE = '4.2.13'
 RETRIEVED = '2026-11-12'
 ARCHIVE_URL = 'https://www.w1hkj.org/files/fldigi/fldigi-4.2.13.tar.gz'
@@ -958,13 +958,13 @@ def boundary_vectors(suite, positive, negative, b64):
 def compatibility_vectors(suite):
     old = copy.deepcopy(suite.vectors['modem-get-name-response']['expected']['event'])
     for name, changes, kind, fields, verification in [
-        ('new-minor', {'spec': '0.2.0', 'fields': {'mode': 'BPSK31', 'future': 1}}, 'radio_state', {'mode': 'BPSK31'}, 'verified'),
+        ('new-minor', {'spec': '0.3.0', 'fields': {'mode': 'BPSK31', 'future': 1}}, 'radio_state', {'mode': 'BPSK31'}, 'verified'),
         ('new-mapping', {'mapping': 2, 'fields': {'mode': 'BPSK31', 'future': 1}}, 'radio_state', {'mode': 'BPSK31'}, 'verified'),
-        ('new-kind', {'spec': '0.2.0', 'kind': 'future_kind', 'fields': {'future': 1}}, 'native', {}, 'unavailable'),
-        ('old-writer', {}, 'radio_state', {'mode': 'BPSK31'}, 'verified')]:
+        ('new-kind', {'spec': '0.3.0', 'kind': 'future_kind', 'fields': {'future': 1}}, 'native', {}, 'unavailable'),
+        ('old-writer', {'spec': '0.1.0'}, 'radio_state', {'mode': 'BPSK31'}, 'verified')]:
         event = {**copy.deepcopy(old), **changes}
         suite.add('compatibility-' + name, {'class': 'compatibility',
-            'input': {'event': event, 'reader_spec': '0.2.0' if name == 'old-writer' else SPEC,
+            'input': {'event': event, 'reader_spec': SPEC,
                       'writer_spec': event['spec'], 'request': {'method': 'modem.get_name'}},
             'expected': {'read': {'kind': kind, 'fields': fields, 'context': event['context'], 'native': event['native']},
                          'verification': {'status': verification}}})
@@ -1154,7 +1154,7 @@ def validate(suite, substrate, root, producer_strict, producer_factory):
         if producer_strict:
             raise SystemExit('--producer-strict requires jsonschema')
         return f'fldigi checked {positives} body/mapping/view oracles and {commands} command sequences; schema unavailable'
-    schema = json.loads((root / 'spec/schema/qgi-event-0.1.0.schema.json').read_text())
+    schema = json.loads((root / 'spec/schema/qgi-event-0.2.0.schema.json').read_text())
     reader = jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
     producer = producer_factory(schema, jsonschema)
     for vector in suite.vectors.values():

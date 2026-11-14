@@ -4,7 +4,7 @@
 <!-- vale Google.Headings = YES -->
 
 QG Interop is a Rust library for applications that exchange amateur radio events and commands.
-It implements QGI-SPEC-001 0.1.0 for WSJT-X schemas 1–3, N1MM Logger+ XML, fldigi XML-RPC, and QGI event carriage over UDP and TCP.
+It implements QGI-SPEC-001 0.2.0 for WSJT-X schemas 1–3, N1MM Logger+ XML, fldigi XML-RPC, and QGI event carriage over UDP and TCP.
 Callers supply native bytes and context, and receive specification events with preserved evidence.
 Applications own transport, destinations, session identity, and control policy.
 

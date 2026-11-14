@@ -6,7 +6,7 @@
 QG Interop gives radio app developers Rust and C libraries for specification events and commands,
 and gives operators the `qg-interop` listener, capture decoder, and simulator.
 
-The library implements QGI-SPEC-001 0.1.0 for all 17 WSJT-X message types, schemas 1–3,
+The library implements QGI-SPEC-001 0.2.0 for all 17 WSJT-X message types, schemas 1–3,
 N1MM Logger+ XML, fldigi XML-RPC, and QGI event carriage over UDP and TCP.
 Events preserve native evidence and distinguish observations from
 commands. Applications supply observer context and own transport and control policy.
@@ -21,7 +21,6 @@ commands. Applications supply observer context and own transport and control pol
 | N1MM Logger+ | XML broadcasts; UDP | ✓ | ✓ | ✓ | `sim --n1mm` | `listen`, `decode` | Supported |
 | fldigi 4.2.13 | XML-RPC; HTTP on loopback | ✓ | ✓ | ✓ | `sim --fldigi` | `poll`, `decode` | Supported |
 | Any of the above | QGI event carriage; UDP or TCP | ✓ | Forwards events | — | `sim --capture --qgi` | — | Supported |
-| JS8Call | JSON API; TCP or UDP | | | | | | Planned |
 | PSK Reporter | Spots; MQTT | | | | | | Planned |
 | PSK Reporter | Spot submission; IPFIX over UDP | | | | | | Planned |
 | rigctld, DX cluster, ADIF over UDP, KISS | Various | | | | | | Designed for, not yet mapped |

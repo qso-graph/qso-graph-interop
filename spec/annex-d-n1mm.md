@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # Annex D: N1MM Logger+, mapping revision 1
 
-This annex is normative for family `n1mm`, specification `0.1.0`. It specifies a
+This annex is normative for family `n1mm`, specification `0.2.0`. It specifies a
 reader and a command writer, not a claim of testing with a running logger.
 
 ## D.1 Source pin and evidence boundaries

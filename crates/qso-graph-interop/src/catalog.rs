@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Annex A catalog, QGI-SPEC-001 0.1.0.
+// Annex A catalog, QGI-SPEC-001 0.2.0.
 #![forbid(unsafe_code)]
 type Shape = (
     &'static [(&'static str, &'static str)],

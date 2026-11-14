@@ -9,8 +9,8 @@ first. Evidence is this repository at `de34f6b` (0.1.0, unpublished).
 **QG Interop is its own product, released on its own schedule.** Applications that use it depend on
 its releases; no application's release is a condition of an Interop release.
 
-**Delivery order:** WSJT-X, then N1MM Logger+, then fldigi, then JS8Call-improved,
-followed by PSK Reporter MQTT and IPFIX, and `qgi` event carriage: seven official families. The first
+**Delivery order:** WSJT-X, then N1MM Logger+, then fldigi,
+followed by PSK Reporter MQTT and IPFIX, and `qgi` event carriage: six official families. The first
 release needs the first three (`QGI-RI-0049`); the others join it as they are ready, and all of them
 gate 1.0 (`QGI-RI-0048`). “Peer” has the meaning defined in `QGI-GEN-0002`.
 
@@ -32,7 +32,7 @@ without running) and `Demo` (observable by running).
 | ID | Requirement | Verify | Status |
 |---|---|---|---|
 | `QGI-RI-0010` | **The library's core** (the event model, the family trait, the error type and the conformance kit) **depends on no family module**; transport helpers sit outside it so the core stays free of I/O. There is no separate `-core` crate: a third party uses `qso-graph-interop` with `default-features = false`. | Static | Met (core imports no family; core-only build and tests) |
-| `QGI-RI-0011` | **The seven official families** may ship as feature-gated modules of one crate, using only the core's public API; a family moves to its own crate when its release pace needs it. | Static | Partly Met: four feature-gated families (wsjtx, n1mm, fldigi, qgi; remaining three families Target) |
+| `QGI-RI-0011` | **The six official families** may ship as feature-gated modules of one crate, using only the core's public API; a family moves to its own crate when its release pace needs it. | Static | Partly Met: four feature-gated families (wsjtx, n1mm, fldigi, qgi; remaining three families Target) |
 | `QGI-RI-0012` | **Features:** one per family, `serde`, one per transport helper, `conformance`. Defaults decided before 1.0. | Test | Partly Met (Default wsjtx/n1mm/fldigi/qgi/serde; conformance optional; other families and library transport helpers Target) |
 | `QGI-RI-0013` | **Crate names chosen before the first crates.io publish** (permanent), fitting the specification's scope, which is no longer UDP alone. | Inspection | Met (D1) |
 | `QGI-RI-0014` | **A separate `-ffi` crate** for the C ABI; the CLI is its own crate. | Static | Met (separate CLI and cdylib/staticlib FFI crates) |
@@ -62,7 +62,7 @@ without running) and `Demo` (observable by running).
 
 | ID | Requirement | Verify | Status |
 |---|---|---|---|
-| `QGI-RI-0040` | **Passes every `QGI-SPEC-001` test vector for its seven families**, both directions where defined. | Test | Partly Met (400 WSJT-X, 1,260 N1MM, 650 fldigi, 35 qgi vectors; 1,654 embedded re-encoding checks; other families Target) |
+| `QGI-RI-0040` | **Passes every `QGI-SPEC-001` test vector for its six families**, both directions where defined. | Test | Partly Met (401 WSJT-X, 1,260 N1MM, 650 fldigi, 35 qgi vectors; 1,654 embedded re-encoding checks; other families Target) |
 | `QGI-RI-0041` | **Every decoder fuzzed with arbitrary input, the event-JSON reader included; fuzz targets assert no panic, hang or unbounded allocation.** | Test | Met for implemented families (Public-API fuzz harnesses; fldigi decode, association, field commands, and exact round trips seeded from vectors) |
 | `QGI-RI-0042` | **Unsafe code is forbidden in every crate except the declared `-ffi` boundary crate,** which denies it and allows each unsafe construct individually with a `SAFETY` comment; proved by a planted case in policy tooling. | Static | Met for both crates; the FFI rule Target |
 | `QGI-RI-0043` | **Semantic versioning checked by `cargo-semver-checks`** against the last published release, in CI. | Static | Target |
@@ -70,7 +70,7 @@ without running) and `Demo` (observable by running).
 | `QGI-RI-0045` | **MSRV stated and tested.** | Test | Partly Met (`rust-version = "1.99"`) |
 | `QGI-RI-0046` | **Dependencies from crates.io with compatible version ranges and a committed `Cargo.lock`, no native code in what ships, through `cargo-vet`, `cargo-deny` and `cargo-audit`.** Exact pins only as a recorded exception. | Static | Met (compatible ranges, committed lockfiles, pure Rust shipped graph, deny/vet/audit; optional conformance hash audit recorded) |
 | `QGI-RI-0047` | **The conformance kit is exported** behind `conformance`: the vector runner, round trip, truncation at every prefix, limits, and a fuzz-target template, so a third-party family meets the same standard. | Test | Met (exported runner, hash, round trip, prefixes, limits and fuzz template) |
-| `QGI-RI-0048` | **1.0 requires the core model and public codec interface to carry, without change, a release family of every protocol class and the `qgi` family:** datagram (WSJT-X and N1MM), stream (JS8Call), request/response (fldigi), publish/subscribe (PSK Reporter MQTT), templated (PSK Reporter IPFIX), and `qgi` event carriage over UDP and TCP. Evidence includes partial and multiple frames, faults, unavailable methods, retained publications, template/session boundaries and nested native evidence, as applicable. | Inspection, Test | Target (Request/response class now implemented; stream, publish/subscribe, and templated release-family gates remain) |
+| `QGI-RI-0048` | **1.0 requires the core model and public codec interface to carry, without change, a release family of every protocol class and the `qgi` family:** datagram (WSJT-X and N1MM), request/response (fldigi), publish/subscribe (PSK Reporter MQTT), templated (PSK Reporter IPFIX), and `qgi` event carriage over UDP and TCP. Evidence includes partial and multiple frames, faults, unavailable methods, retained publications, template/session boundaries and nested native evidence, as applicable. | Inspection, Test | Target (Request/response class now implemented; publish/subscribe and templated release-family gates remain) |
 | `QGI-RI-0049` | **The first release (0.x) requires, for WSJT-X, N1MM Logger+ and fldigi:** the codec passing every vector of its family in both directions where defined, `qg-interop listen` and `decode`, the simulator (`QGI-RI-0061`, `QGI-RI-0064`), and the C ABI (`QGI-RI-0050` to `QGI-RI-0054`), with the CLI and simulator shipped as signed standalone programs that need no Rust toolchain. Any further family shipped in it meets every requirement for that family. | Inspection | Target (fldigi codec, decode, poll, and mapped simulator implemented; C ABI implemented; signing and packaging remain) |
 
 ## 6. Other languages
@@ -96,8 +96,8 @@ against the peers' real wire protocols, without linking the Rust library.
 | `QGI-RI-0060` | **CLI, `qg-interop`:** for each family, `listen` prints events (newline-delimited JSON per `QGI-SER-0004`, or a readable line), and `decode` turns a captured file into events. Proves codec and serialization against real traffic. | Test, Demo | Partly Met (WSJT-X/N1MM listen and decode; fldigi file/stdin decode and HTTP poll print specification NDJSON; live-peer evidence Target) |
 | `QGI-RI-0061` | **Simulator playback, `qg-interop sim`:** for every family in the release, play scripted traffic and captures using the peer's real wire protocol as that peer would send it, including `qgi` UDP and TCP event carriage. | Test, Demo | Met for WSJT-X ALL.TXT/script, N1MM scripted contest/SO2R traffic, fldigi scripted RX text over loopback XML-RPC, native UDP captures, and qgi UDP event carriage; TCP event carriage and remaining family helpers: Target |
 | `QGI-RI-0062` | **QSO Graph Desktop:** consumes the library's events for live monitoring (Desktop 0.8.0's monitor panel and tabs), with Desktop's own policy (transports, senders, display rules) in Desktop. Proves the specification in a real application. Evidence, not a release condition: Desktop depends on Interop, never the reverse. | Test, Demo | Target |
-| `QGI-RI-0063` | **Interoperability is shown against real peers,** in addition to vectors and the simulator: captures from all release families are decoded, including WSJT-X, JS8Call-improved, N1MM Logger+, fldigi, PSK Reporter MQTT publications and IPFIX submissions, and independently produced `qgi` messages. Where a peer sends a response, that response is observed. PSK Reporter evidence uses existing operational captures; tests never connect to the service (`QGI-RI-0067`). | Demo | Target |
-| `QGI-RI-0064` | **Simulator responses:** for every request/response or command-capable release family, answer or react as the peer would: fldigi XML-RPC replies and faults, JS8Call responses, WSJT-X reactions where it sends any, and other mapped family behavior. Do not invent an acknowledgment where the native protocol sends none. | Test, Demo | Met for fldigi Annex E mapped simulator replies/faults and state reactions (serialized loopback poll/controller tests and planted failures); WSJT-X mapped reactions implemented; remaining release-family helpers: Target |
+| `QGI-RI-0063` | **Interoperability is shown against real peers,** in addition to vectors and the simulator: captures from all release families are decoded, including WSJT-X, N1MM Logger+, fldigi, PSK Reporter MQTT publications and IPFIX submissions, and independently produced `qgi` messages. Where a peer sends a response, that response is observed. PSK Reporter evidence uses existing operational captures; tests never connect to the service (`QGI-RI-0067`). | Demo | Target |
+| `QGI-RI-0064` | **Simulator responses:** for every request/response or command-capable release family, answer or react as the peer would: fldigi XML-RPC replies and faults, WSJT-X reactions where it sends any, and other mapped family behavior. Do not invent an acknowledgment where the native protocol sends none. | Test, Demo | Met for fldigi Annex E mapped simulator replies/faults and state reactions (serialized loopback poll/controller tests and planted failures); WSJT-X mapped reactions implemented; remaining release-family helpers: Target |
 | `QGI-RI-0065` | **Local PSK Reporter IPFIX collector:** accept submissions as the service would and report, per record, malformed content and departures from the published submitter rules (`QGI-PSI-0002`). Diagnostics identify record/Set locations and distinguish parse errors, rule violations, recommendations and unconfirmed policy; message-level failures identify affected records when boundaries are known. Session timing and duplicate checks use scripted test state. | Test, Demo | Target |
 | `QGI-RI-0066` | **Local PSK Reporter MQTT spot feed:** provide a local broker/feed that publishes the family's real MQTT topics, payloads and retain behavior to clients under test. | Test, Demo | Target |
 | `QGI-RI-0067` | **Local PSK Reporter testing:** tests never connect to the real PSK Reporter, including its submission, diagnostic-listener and MQTT endpoints; all simulated service roles and test clients use local endpoints. | Test | Target |
@@ -107,8 +107,8 @@ against the peers' real wire protocols, without linking the Rust library.
 
 | # | Decision | State |
 |---|---|---|
-| D1 | **Names.** Product and specification **QG Interop**; repository and crate `qso-graph-interop`, with `-cli` (command `qg-interop`) and later `-ffi`; family names `wsjtx`, `js8call`, `n1mm`, `fldigi`, `pskreporter-mqtt`, `pskreporter-ipfix`, `qgi`. No `-core` crate. | Decided 2026-11-11; qgi added 2026-11-12 |
-| D2 | **JS8Call-improved, fourth; compare it with the original v2.3.1 when the family is mapped** (`QGI-JS8-0001`). | Decided 2026-11-12 |
+| D1 | **Names.** Product and specification **QG Interop**; repository and crate `qso-graph-interop`, with `-cli` (command `qg-interop`) and later `-ffi`; family names `wsjtx`, `n1mm`, `fldigi`, `pskreporter-mqtt`, `pskreporter-ipfix`, `qgi`. No `-core` crate. | Decided 2026-11-11; qgi added 2026-11-12 |
+| D2 | Withdrawn 2026-11-14: JS8Call is out of scope. | Withdrawn |
 | D3 | **Licence:** GPL-3.0-or-later for the library, the specification, its schema and its vectors, like everything in QSO Graph. A closed-source program can implement the specification; it cannot link the library. | Decided 2026-11-11 |
 | D4 | **Round trip:** never lossy; the native message is kept and common-field canonicalizations are listed (`QGI-SPEC-001` `QGI-MOD-0007`). | Decided 2026-11-12 |
 | D5 | **Default features:** what a plain `cargo add` brings. | Open |
@@ -126,6 +126,6 @@ evidence, bounded caller-scoped template state and result events as specificatio
 implementation change is part of that pass. The third pass closes producer conformance through
 `qgi` event carriage (`QGI-VEC-0004`, Annex I), specifies all-family simulator service roles and the
 full 1.0 class gate, and records PSK Reporter submitter obligations. The generated C header and
-foreign-caller contracts (`QGI-RI-0015`, `0050`–`0054`) are now implemented and tested. Annexes C, E, G and H still
+foreign-caller contracts (`QGI-RI-0015`, `0050`–`0054`) are now implemented and tested. Annexes E, G and H still
 have the profile work marked open in each annex; Annex D specifies N1MM with live-capture questions; implementation alignment and real-peer proofs
 remain Target. D5 and D6 remain as recorded above.

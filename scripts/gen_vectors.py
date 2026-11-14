@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Generate QGI 0.1.0 vectors from Annexes B, D, E and I and the pinned released header.
+"""Generate QGI 0.2.0 vectors from Annexes B, D, E and I and the pinned released header.
 
 No implementation imports, subprocesses, third-party generation dependencies or network access.
 The byte packers transcribe wire primitives; expected common fields are explicit test oracles.
@@ -21,7 +21,7 @@ import gen_fldigi_vectors as fldigi
 
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / 'spec/vectors/wsjtx'
-SPEC = '0.1.0'
+SPEC = '0.2.0'
 PIN = 'fd73b7f92fc0f66ea8f12a147b59a6072408c24656735d59df772dc55a5eeb62'
 
 
@@ -418,7 +418,7 @@ def build():
 def compatibility(s):
     old = copy.deepcopy(s.vectors['06-close-s3']['expected']['event'])
 
-    def add(name, event, reader='0.1.0', expected=None, error=None):
+    def add(name, event, reader='0.2.0', expected=None, error=None):
         value = {'class': 'compatibility', 'writer_spec': event['spec'], 'reader_spec': reader, 'input': {'event': event}}
         if error:
             value['expected'] = {'error': {'category': error}}
@@ -426,15 +426,27 @@ def compatibility(s):
             value['expected'] = {'read': expected or {k: event[k] for k in ['kind', 'fields', 'context', 'native']}}
         s.add('compat-' + name, value)
 
-    add('new-reader-old-writer', old, reader='0.2.0')
+    historical = copy.deepcopy(old)
+    historical['spec'] = '0.1.0'
+    add('new-reader-old-writer', historical, reader=SPEC)
+    withdrawn = {
+        'spec': '0.1.0', 'family': 'js8call', 'mapping': 1, 'kind': 'decode',
+        'context': copy.deepcopy(old['context']),
+        'fields': {'text': 'synthetic', 'future_field': True},
+        'native': {'format': 'opaque', 'data': b64(b'opaque\x00\xff')},
+    }
+    add('withdrawn-family', withdrawn, reader=SPEC, expected={
+        'kind': 'native', 'fields': {}, 'context': withdrawn['context'], 'native': withdrawn['native']})
+    s.vectors['compat-withdrawn-family']['expected'].update(
+        verification='unavailable', preserved_event=copy.deepcopy(withdrawn))
     new = copy.deepcopy(old)
-    new['spec'] = '0.2.0'
+    new['spec'] = '0.3.0'
     new['new_member'] = {'test': True}
     new['fields']['x-org.example.extra'] = 'test'
     read = {k: copy.deepcopy(old[k]) for k in ['kind', 'fields', 'context', 'native']}
     add('old-reader-new-members', new, expected=read)
     new = copy.deepcopy(old)
-    new['spec'] = '0.2.0'
+    new['spec'] = '0.3.0'
     new['mapping'] = 2
     new['native']['data'] = b64(header(3, 17))
     new['kind'] = 'future_kind'
@@ -442,20 +454,20 @@ def compatibility(s):
     read_native = dict(read, kind='native', fields={})
     add('old-reader-new-kind', new, expected=dict(read_native, native=new['native']))
     new = copy.deepcopy(old)
-    new['spec'] = '0.2.0'
+    new['spec'] = '0.3.0'
     new['family'] = 'futurefamily'
     new['kind'] = 'native'
     new['fields'] = {'future_field': True}  # Unknown-family fields are not interpreted.
     add('old-reader-new-family', new, expected=read_native)
     new = copy.deepcopy(old)
-    new['spec'] = '0.2.0'
+    new['spec'] = '0.3.0'
     new['native']['data'] = b64(header(3, 0))
     new['fields'] = {'state': 'heartbeat'}
     new['context'] = {'direction': 'future_direction', 'exchange': 'future_exchange'}
     add('old-reader-new-context', new, expected={'kind': 'lifecycle', 'fields': {'state': 'heartbeat'},
         'native': new['native'], 'context': {'direction': 'unknown', 'exchange': 'unknown'}})
     new = copy.deepcopy(old)
-    new['spec'] = '0.2.0'
+    new['spec'] = '0.3.0'
     new['mapping'] = 2
     new['native']['data'] = b64(header(3, 18))
     new['kind'] = 'control'
@@ -490,7 +502,7 @@ def compatibility(s):
     new['spec'] = '1.0.0'
     add('different-major', new, error='unsupported_version')
     for name, event_json, category in [
-        ('duplicate-envelope', '{"spec":"0.1.0","spec":"0.2.0"}', 'malformed'),
+        ('duplicate-envelope', '{"spec":"0.2.0","spec":"0.3.0"}', 'malformed'),
         ('duplicate-nested', '{"fields":{"text":"a","text":"b"}}', 'malformed'),
         ('record-oversized', json.dumps(old)[:-1] + ',"padding":"' + 'a' * 1048576 + '"}', 'oversized'),
     ]:
@@ -645,19 +657,20 @@ def commands(s):
     for schema in (0, 4, '3', True):
         negative('schema-' + str(schema), baselines['close'], {'schema': schema}, 'unsupported_version')
     old_command = copy.deepcopy(baselines['send_text'])
-    s.add('compat-new-reader-old-command', {'class': 'compatibility', 'writer_spec': SPEC,
-        'reader_spec': '0.2.0', 'input': {'event': old_command},
+    old_command['spec'] = '0.1.0'
+    s.add('compat-new-reader-old-command', {'class': 'compatibility', 'writer_spec': old_command['spec'],
+        'reader_spec': SPEC, 'input': {'event': old_command},
         'expected': {'read': {k: copy.deepcopy(old_command[k]) for k in ('kind', 'fields', 'context')}}})
     new_command = copy.deepcopy(old_command)
-    new_command.update(spec='0.2.0', family='futurefamily')
-    s.add('compat-old-reader-new-command-family', {'class': 'compatibility', 'writer_spec': '0.2.0',
+    new_command.update(spec='0.3.0', family='futurefamily')
+    s.add('compat-old-reader-new-command-family', {'class': 'compatibility', 'writer_spec': '0.3.0',
         'reader_spec': SPEC, 'input': {'event': new_command},
         'expected': {'read': {'kind': 'native', 'fields': {}, 'context': new_command['context']},
                      'preserved_command': copy.deepcopy(new_command)}})
     new_command = copy.deepcopy(old_command)
-    new_command.update(spec='0.2.0', mapping=2)
+    new_command.update(spec='0.3.0', mapping=2)
     new_command['fields'] = {'operation': 'wsjtx.future_operation'}
-    s.add('compat-old-reader-new-command-operation', {'class': 'compatibility', 'writer_spec': '0.2.0',
+    s.add('compat-old-reader-new-command-operation', {'class': 'compatibility', 'writer_spec': '0.3.0',
         'reader_spec': SPEC, 'input': {'event': new_command},
         'expected': {'read': {k: copy.deepcopy(new_command[k]) for k in ('kind', 'fields', 'context')},
                      'preserved_command': copy.deepcopy(new_command)}})
@@ -697,7 +710,7 @@ def qgi_vectors(wsjtx):
     positive('stream-decode-lf', observed, 'tcp', b'\n')
     positive('stream-command-crlf', command, 'tcp', b'\r\n')
     newer = copy.deepcopy(observed)
-    newer.update(spec='0.2.0', kind='future_kind')
+    newer.update(spec='0.3.0', kind='future_kind')
     newer['fields'] = {'future_field': 17}
     positive('newer-minor-unknown-kind', newer)
     s.vectors['newer-minor-unknown-kind']['expected']['read'] = {'kind': 'native', 'fields': {}}
@@ -810,7 +823,7 @@ def core_shapes():
     event = copy.deepcopy(observation)
     event['native']['family_extra'] = 1
     add('unknown-native-member', event)
-    event['spec'] = '0.2.0'
+    event['spec'] = '0.3.0'
     add('future-minor-native-member', event)
     for status in ('ok', 'error'):
         event = copy.deepcopy(observation)
@@ -1021,7 +1034,7 @@ def producer_validator(schema, jsonschema):
     strict['additionalProperties'] = False
     strict['properties']['spec'] = {'const': SPEC}
     strict['properties']['mapping'] = {'const': 1}
-    strict['properties']['family'] = {'enum': ['wsjtx', 'n1mm', 'fldigi', 'js8call',
+    strict['properties']['family'] = {'enum': ['wsjtx', 'n1mm', 'fldigi',
         'pskreporter-mqtt', 'pskreporter-ipfix', 'qgi']}
     strict['properties']['kind'] = {'enum': [k for k in strict['$defs']
         if k in ('decode', 'radio_state', 'qso_logged', 'qso_changed', 'qso_deleted', 'spot',
@@ -1198,7 +1211,7 @@ def validate(suite, qgi, producer_strict=False):
         if producer_strict:
             raise SystemExit("--producer-strict requires jsonschema[format-nongpl]==4.26.0")
         return 'jsonschema unavailable; schema validation skipped'
-    schema = json.loads((ROOT / 'spec/schema/qgi-event-0.1.0.schema.json').read_text())
+    schema = json.loads((ROOT / 'spec/schema/qgi-event-0.2.0.schema.json').read_text())
     jsonschema.Draft202012Validator.check_schema(schema)
     validator = jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
     producer = producer_validator(schema, jsonschema) if producer_strict else validator
@@ -1827,12 +1840,12 @@ def n1mm_commands(s):
 def n1mm_compatibility(s):
     base = s.vectors['RadioInfo-full']['expected']['event']
     for label, writer, reader, mutate, kind, verification in [
-        ('new-reader-old-writer', SPEC, '0.2.0', lambda e: None, 'radio_state', 'verified'),
+        ('new-reader-old-writer', '0.1.0', SPEC, lambda e: None, 'radio_state', 'verified'),
         ('newer-program-label', SPEC, SPEC, lambda e: e['native'].update(data=b64(base64.b64decode(e['native']['data']).replace(b'synthetic-logger', b'synthetic-newer-program'))), 'radio_state', 'verified'),
-        ('old-reader-new-member', '0.2.0', SPEC, lambda e: e.update(future_member='synthetic'), 'radio_state', 'verified'),
+        ('old-reader-new-member', '0.3.0', SPEC, lambda e: e.update(future_member='synthetic'), 'radio_state', 'verified'),
         ('known-root-new-revision', SPEC, SPEC, lambda e: e.update(mapping=2), 'radio_state', 'verified'),
         ('unknown-root-known-kind', SPEC, SPEC, lambda e: (e.update(mapping=2), e['native'].update(data=b64(b'<FutureRadio/>'))), 'native', 'unavailable'),
-        ('unknown-kind', '0.2.0', SPEC, lambda e: (e.update(mapping=2, kind='future_kind'), e['native'].update(data=b64(b'<FutureRadio/>'))), 'native', 'unavailable'),
+        ('unknown-kind', '0.3.0', SPEC, lambda e: (e.update(mapping=2, kind='future_kind'), e['native'].update(data=b64(b'<FutureRadio/>'))), 'native', 'unavailable'),
     ]:
         event = copy.deepcopy(base)
         event['spec'] = writer
@@ -1843,8 +1856,8 @@ def n1mm_compatibility(s):
         s.add('compat-' + label, {'class': 'compatibility', 'writer_spec': writer, 'reader_spec': reader,
             'input': {'event': event}, 'expected': {'read': read, 'verification': verification}})
     cmd = copy.deepcopy(s.vectors['command-qsy-2-14053284']['input']['event'])
-    for label, event, reader in [('new-reader-old-command', cmd, '0.2.0'),
-            ('old-reader-new-command', dict(cmd, spec='0.2.0', mapping=2), SPEC)]:
+    for label, event, reader in [('new-reader-old-command', dict(cmd, spec='0.1.0'), SPEC),
+            ('old-reader-new-command', dict(cmd, spec='0.3.0', mapping=2), SPEC)]:
         s.add('compat-' + label, {'class': 'compatibility', 'writer_spec': event['spec'], 'reader_spec': reader,
             'input': {'event': event}, 'expected': {'read': {k: copy.deepcopy(event[k]) for k in ('kind', 'fields', 'context')},
                                                   'preserved_command': copy.deepcopy(event)}})
@@ -2432,7 +2445,7 @@ def validate_n1mm(suite, producer_strict):
         if producer_strict:
             raise SystemExit('--producer-strict requires jsonschema')
         return 'N1MM XML bounds/command checks passed; schema validation skipped'
-    schema = json.loads((ROOT / 'spec/schema/qgi-event-0.1.0.schema.json').read_text())
+    schema = json.loads((ROOT / 'spec/schema/qgi-event-0.2.0.schema.json').read_text())
     reader = jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
     producer = producer_validator(schema, jsonschema) if producer_strict else reader
     for name, vector in suite.vectors.items():
@@ -2898,7 +2911,7 @@ def fldigi_verify(inp, substrate):
             return 'unavailable', None
     # Known common members remain recognized even when absent from the expected
     # event. Unknown additive fields alone can be ignored on newer revisions.
-    schema = json.loads((ROOT / 'spec/schema/qgi-event-0.1.0.schema.json').read_text())
+    schema = json.loads((ROOT / 'spec/schema/qgi-event-0.2.0.schema.json').read_text())
     known_fields = set().union(*(set(v.get('properties', {})) for k, v in schema['$defs'].items()
                                 if k in ('lifecycle', 'radio_state', 'result', 'control', 'decode', 'qso', 'log', 'spectrum', 'n1mm_control', 'fldigi_control')))
     fields = {k: v for k, v in event['fields'].items() if k in known_fields}
@@ -3287,7 +3300,7 @@ def validate_fldigi(suite, substrate, root, producer_strict, producer_factory):
         if producer_strict:
             raise SystemExit('--producer-strict requires jsonschema')
         return f'fldigi checked {positives} body/mapping/view oracles and {commands} command sequences; schema unavailable'
-    schema = json.loads((root / 'spec/schema/qgi-event-0.1.0.schema.json').read_text())
+    schema = json.loads((root / 'spec/schema/qgi-event-0.2.0.schema.json').read_text())
     reader = jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
     producer = producer_factory(schema, jsonschema)
     for vector in suite.vectors.values():
@@ -3369,8 +3382,8 @@ def fldigi_review_contract(suite, document):
     implementation = 'Annex D has an implemented N1MM reader and command writer'
     assert implementation in core_flat
     assert implementation not in core_flat.replace(implementation, 'planted omission')
-    assert 'Annexes C and G reserve scope' in core_flat
-    assert 'Annexes C, E and G' not in core_flat
+    assert 'Annex G reserves scope' in core_flat
+    assert 'Annexes E and G reserve scope' not in core_flat
     # Check every mapping column, not only method/signature, against independent
     # literals. They do not use the builder's MAPPED table or operation function.
     rows = re.findall(r'^\| `([^`]+)` \| `([^`]+)` \| ([^|]+) \| ([^|]+) \| ([^|]+) \|$', document, re.M)

@@ -6,7 +6,7 @@ use crate::{Error, error::invalid};
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
 
-pub const SPEC: &str = "0.1.0";
+pub const SPEC: &str = "0.2.0";
 pub const MAX_RECORD: usize = 1_048_576;
 pub const MAX_CONTEXT: usize = 4_096;
 pub const MAX_INTEGER: i64 = 9_007_199_254_740_991;

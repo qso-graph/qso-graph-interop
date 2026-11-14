@@ -805,7 +805,7 @@ pub(crate) fn known_kind(kind: &str) -> bool {
 pub(crate) fn official(family: &str) -> bool {
     matches!(
         family,
-        "wsjtx" | "qgi" | "n1mm" | "js8call" | "fldigi" | "pskreporter-mqtt" | "pskreporter-ipfix"
+        "wsjtx" | "qgi" | "n1mm" | "fldigi" | "pskreporter-mqtt" | "pskreporter-ipfix"
     )
 }
 pub(crate) fn validate(v: &Value, strict: bool) -> Result<(), Error> {

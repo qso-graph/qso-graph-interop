@@ -202,7 +202,7 @@ mod tests {
     #[test]
     fn tcp_families_malformed_evidence_and_datagram_limits_are_rejected() {
         let mut v: serde_json::Value = serde_json::from_slice(&record(None)).unwrap();
-        for family in ["js8call", "fldigi", "pskreporter-mqtt", "unknown"] {
+        for family in ["fldigi", "pskreporter-mqtt", "unknown"] {
             v["family"] = family.into();
             let bytes = serde_json::to_vec(&v).unwrap();
             assert!(parse(&bytes, false).is_err(), "{family}");

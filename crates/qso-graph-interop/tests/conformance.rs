@@ -114,6 +114,31 @@ fn planted_manifest_and_unknown_class_failures() {
 }
 
 #[test]
+fn withdrawn_family_compatibility_oracles_reject_planted_failures() {
+    let original = read_vector(include_bytes!(
+        "../../../spec/vectors/wsjtx/compat-withdrawn-family.json"
+    ))
+    .unwrap();
+    assert!(run_vector(&mut Wsjtx::default(), &original).is_ok());
+    for (key, value) in [
+        ("read", serde_json::json!({"kind": "decode", "fields": {}})),
+        (
+            "read",
+            serde_json::json!({"kind": "native", "fields": {"text": "synthetic"}}),
+        ),
+        ("verification", serde_json::json!("verified")),
+        ("preserved_event", serde_json::json!({})),
+    ] {
+        let mut mutant = original.clone();
+        mutant["expected"][key] = value;
+        assert!(run_vector(&mut Wsjtx::default(), &mutant).is_err(), "{key}");
+    }
+    let mut mutant = original;
+    mutant["expected"]["read"]["native"]["data"] = "".into();
+    assert!(run_vector(&mut Wsjtx::default(), &mutant).is_err());
+}
+
+#[test]
 fn declared_message_limits() {
     use qso_graph_interop::conformance::check_message_limit;
     assert!(check_message_limit(&mut Wsjtx::default()).is_ok());

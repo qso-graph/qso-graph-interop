@@ -1,5 +1,5 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-# Annex A: common fields, version 0.1.0
+# Annex A: common fields, version 0.2.0
 
 | ID | Requirement | Verify |
 |---|---|---|
@@ -14,7 +14,7 @@ Standard common member names use `snake_case`; extension names follow `QGI-EXT-0
 
 **Catalog scope (informative).** The expected-family column is a core design check, not an unwritten protocol mapping. The completed `wsjtx`, `n1mm` and `fldigi` annexes assign only their explicit mappings; unassigned
 expected-family entries remain capacity, not support claims. Other entries identify intended uses
-to verify when Annexes C, G and H are pinned. They do not authorize guessing a value or its units. In particular, an
+to verify when Annexes G and H are pinned. They do not authorize guessing a value or its units. In particular, an
 XML-RPC result can use common fields only when the caller supplies the associated method; a response
 body alone does not name that method. Extra contest exchange components remain in `native` unless
 a later annex assigns a named common field. Serial numbers are text to preserve leading zeros.
@@ -39,16 +39,16 @@ current `start`; it is not a QSO end time. Each timestamp maps independently.
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|
 | `radio` | radio object (`QGI-MOD-0014`) | — | wsjtx (types in B.3), n1mm; others only when defined by their annex |
-| `time_of_day` | time_of_day | UTC | wsjtx, js8call |
-| `time` | instant | UTC | js8call |
-| `snr_db` | integer | dB | wsjtx, js8call |
-| `dt_seconds` | binary64 | seconds | wsjtx, js8call |
-| `audio_offset_hz` | integer | Hz | wsjtx, js8call |
-| `frequency_hz` | integer | Hz | wsjtx, js8call |
-| `mode` | text | — | wsjtx, js8call |
-| `text` | text | — | wsjtx, fldigi (RX chunks, Annex E), js8call |
-| `call` | text | — | wsjtx, js8call |
-| `grid` | text | — | wsjtx, js8call |
+| `time_of_day` | time_of_day | UTC | wsjtx |
+| `time` | instant | UTC | — |
+| `snr_db` | integer | dB | wsjtx |
+| `dt_seconds` | binary64 | seconds | wsjtx |
+| `audio_offset_hz` | integer | Hz | wsjtx |
+| `frequency_hz` | integer | Hz | wsjtx |
+| `mode` | text | — | wsjtx |
+| `text` | text | — | wsjtx, fldigi (RX chunks, Annex E) |
+| `call` | text | — | wsjtx |
+| `grid` | text | — | wsjtx |
 | `power_dbm` | integer | dBm | wsjtx |
 | `drift_hz` | integer | Hz | wsjtx |
 | `is_new` | boolean | — | wsjtx |
@@ -60,20 +60,20 @@ current `start`; it is not a QSO end time. Each timestamp maps independently.
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|
 | `radio` | radio object (`QGI-MOD-0014`) | — | wsjtx (types in B.3), n1mm; others only when defined by their annex |
-| `dial_frequency_hz` | integer | Hz | wsjtx, n1mm, fldigi, js8call |
-| `rx_offset_hz` | integer | Hz | wsjtx, n1mm, fldigi, js8call |
-| `tx_offset_hz` | integer | Hz | wsjtx, n1mm, fldigi, js8call |
-| `mode` | text | — | wsjtx, n1mm, fldigi, js8call |
-| `tx_mode` | text | — | wsjtx, n1mm, fldigi, js8call |
-| `tx_enabled` | boolean | — | wsjtx, n1mm, fldigi, js8call |
-| `transmitting` | boolean | — | wsjtx, n1mm (Annex D), fldigi, js8call |
+| `dial_frequency_hz` | integer | Hz | wsjtx, n1mm, fldigi |
+| `rx_offset_hz` | integer | Hz | wsjtx, n1mm, fldigi |
+| `tx_offset_hz` | integer | Hz | wsjtx, n1mm, fldigi |
+| `mode` | text | — | wsjtx, n1mm, fldigi |
+| `tx_mode` | text | — | wsjtx, n1mm, fldigi |
+| `tx_enabled` | boolean | — | wsjtx, n1mm, fldigi |
+| `transmitting` | boolean | — | wsjtx, n1mm (Annex D), fldigi |
 | `decoding` | boolean | — | wsjtx |
 | `tx_watchdog` | boolean | — | wsjtx |
 | `fast_mode` | boolean | — | wsjtx |
-| `station_call` | text | — | wsjtx, n1mm, fldigi, js8call |
-| `station_grid` | text | — | wsjtx, n1mm, fldigi, js8call |
-| `dx_call` | text | — | wsjtx, n1mm, fldigi, js8call |
-| `dx_grid` | text | — | wsjtx, n1mm, fldigi, js8call |
+| `station_call` | text | — | wsjtx, n1mm, fldigi |
+| `station_grid` | text | — | wsjtx, n1mm, fldigi |
+| `dx_call` | text | — | wsjtx, n1mm, fldigi |
+| `dx_grid` | text | — | wsjtx, n1mm, fldigi |
 | `report` | text | — | wsjtx |
 | `sub_mode` | text | — | wsjtx |
 | `configuration_name` | text | — | wsjtx |
@@ -92,21 +92,21 @@ current `start`; it is not a QSO end time. Each timestamp maps independently.
 |---|---|---|---|
 | `radio` | radio object (`QGI-MOD-0014`) | — | wsjtx (types in B.3), n1mm; others only when defined by their annex |
 | `record_id` | text | — | n1mm |
-| `call` | text | — | wsjtx (logged only), n1mm, fldigi, js8call |
-| `grid` | text | — | wsjtx (logged only), n1mm, fldigi, js8call |
-| `mode` | text | — | wsjtx (logged only), n1mm, fldigi, js8call |
-| `station_call` | text | — | wsjtx (logged only), n1mm, fldigi, js8call |
-| `station_grid` | text | — | wsjtx (logged only), n1mm, fldigi, js8call |
-| `operator_call` | text | — | wsjtx (logged only), n1mm, fldigi, js8call |
-| `report_sent` | text | — | wsjtx (logged only), n1mm, fldigi, js8call |
-| `report_received` | text | — | wsjtx (logged only), n1mm, fldigi, js8call |
-| `exchange_sent` | text | — | wsjtx (logged only), n1mm, fldigi, js8call |
-| `exchange_received` | text | — | wsjtx (logged only), n1mm, fldigi, js8call |
-| `start` | instant | UTC | wsjtx (logged only), n1mm, fldigi, js8call |
-| `end` | instant | UTC | wsjtx (logged only), n1mm, fldigi, js8call |
+| `call` | text | — | wsjtx (logged only), n1mm, fldigi |
+| `grid` | text | — | wsjtx (logged only), n1mm, fldigi |
+| `mode` | text | — | wsjtx (logged only), n1mm, fldigi |
+| `station_call` | text | — | wsjtx (logged only), n1mm, fldigi |
+| `station_grid` | text | — | wsjtx (logged only), n1mm, fldigi |
+| `operator_call` | text | — | wsjtx (logged only), n1mm, fldigi |
+| `report_sent` | text | — | wsjtx (logged only), n1mm, fldigi |
+| `report_received` | text | — | wsjtx (logged only), n1mm, fldigi |
+| `exchange_sent` | text | — | wsjtx (logged only), n1mm, fldigi |
+| `exchange_received` | text | — | wsjtx (logged only), n1mm, fldigi |
+| `start` | instant | UTC | wsjtx (logged only), n1mm, fldigi |
+| `end` | instant | UTC | wsjtx (logged only), n1mm, fldigi |
 | `previous_start` | instant | UTC | n1mm profile only; prior contact key (Annex D) |
-| `tx_frequency_hz` | integer | Hz | wsjtx (logged: tx only), n1mm, fldigi, js8call |
-| `dial_frequency_hz` | integer | Hz | wsjtx (logged: tx only), n1mm, fldigi, js8call |
+| `tx_frequency_hz` | integer | Hz | wsjtx (logged: tx only), n1mm, fldigi |
+| `dial_frequency_hz` | integer | Hz | wsjtx (logged: tx only), n1mm, fldigi |
 | `band` | text | — | n1mm |
 | `contest_name` | text | — | n1mm |
 | `serial_sent` | text | — | n1mm |
@@ -118,21 +118,21 @@ current `start`; it is not a QSO end time. Each timestamp maps independently.
 | `comments` | text | — | wsjtx (logged only), n1mm, fldigi |
 | `name` | text | — | wsjtx (logged only), n1mm, fldigi |
 | `propagation_mode` | text | — | wsjtx (logged only), n1mm, fldigi |
-| `adif` | text | — | wsjtx (logged only), fldigi, js8call |
+| `adif` | text | — | wsjtx (logged only), fldigi |
 
 ## spot
 
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|
 | `radio` | radio object (`QGI-MOD-0014`) | — | wsjtx (types in B.3), n1mm; others only when defined by their annex |
-| `call` | text | — | n1mm, js8call |
-| `grid` | text | — | n1mm, js8call |
-| `mode` | text | — | n1mm, js8call |
-| `text` | text | — | n1mm, js8call |
-| `spotter_call` | text | — | n1mm, js8call |
-| `source` | text | — | n1mm, js8call |
-| `frequency_hz` | integer | Hz | n1mm, js8call |
-| `time` | instant | UTC | n1mm, js8call |
+| `call` | text | — | n1mm |
+| `grid` | text | — | n1mm |
+| `mode` | text | — | n1mm |
+| `text` | text | — | n1mm |
+| `spotter_call` | text | — | n1mm |
+| `source` | text | — | n1mm |
+| `frequency_hz` | integer | Hz | n1mm |
+| `time` | instant | UTC | n1mm |
 | `time_of_day` | time_of_day | UTC | n1mm |
 | `receiver_call` | text | — | pskreporter-mqtt, pskreporter-ipfix |
 | `receiver_locator` | text | — | pskreporter-mqtt, pskreporter-ipfix |
@@ -170,26 +170,26 @@ onto a sender reception event. These choices specify model capacity, not a compl
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|
 | `radio` | radio object (`QGI-MOD-0016`) | — | n1mm `set_frequency` selector; Annex D |
-| `operation` | operation token | — | wsjtx, n1mm, fldigi, js8call |
+| `operation` | operation token | — | wsjtx, n1mm, fldigi |
 | `window` | integer | — | wsjtx |
 | `time_of_day` | time_of_day | UTC | wsjtx |
 | `snr_db` | integer | dB | wsjtx |
 | `dt_seconds` | binary64 | seconds | wsjtx |
-| `audio_offset_hz` | integer | Hz | wsjtx, n1mm, fldigi, js8call |
-| `rx_offset_hz` | integer | Hz | wsjtx, n1mm, fldigi, js8call |
-| `frequency_tolerance_hz` | integer | Hz | wsjtx, n1mm, fldigi, js8call |
-| `frequency_hz` | integer | Hz | wsjtx, n1mm, fldigi, js8call |
-| `mode` | text | — | wsjtx, n1mm, fldigi, js8call |
-| `text` | text | — | wsjtx, n1mm, fldigi, js8call |
-| `sub_mode` | text | — | wsjtx, n1mm, fldigi, js8call |
-| `dx_call` | text | — | wsjtx, n1mm, fldigi, js8call |
-| `dx_grid` | text | — | wsjtx, n1mm, fldigi, js8call |
-| `location` | text | — | wsjtx, n1mm, fldigi, js8call |
-| `call` | text | — | wsjtx, n1mm, fldigi, js8call |
-| `configuration_name` | text | — | wsjtx, n1mm, fldigi, js8call |
+| `audio_offset_hz` | integer | Hz | wsjtx, n1mm, fldigi |
+| `rx_offset_hz` | integer | Hz | wsjtx, n1mm, fldigi |
+| `frequency_tolerance_hz` | integer | Hz | wsjtx, n1mm, fldigi |
+| `frequency_hz` | integer | Hz | wsjtx, n1mm, fldigi |
+| `mode` | text | — | wsjtx, n1mm, fldigi |
+| `text` | text | — | wsjtx, n1mm, fldigi |
+| `sub_mode` | text | — | wsjtx, n1mm, fldigi |
+| `dx_call` | text | — | wsjtx, n1mm, fldigi |
+| `dx_grid` | text | — | wsjtx, n1mm, fldigi |
+| `location` | text | — | wsjtx, n1mm, fldigi |
+| `call` | text | — | wsjtx, n1mm, fldigi |
+| `configuration_name` | text | — | wsjtx, n1mm, fldigi |
 | `low_confidence` | boolean | — | wsjtx |
 | `auto_tx_only` | boolean | — | wsjtx |
-| `transmit` | boolean | — | wsjtx, fldigi, js8call |
+| `transmit` | boolean | — | wsjtx, fldigi |
 | `highlight_last` | boolean | — | wsjtx |
 | `fast_mode` | boolean | — | wsjtx |
 | `generate_messages` | boolean | — | wsjtx |
@@ -210,14 +210,14 @@ onto a sender reception event. These choices specify model capacity, not a compl
 | `QGI-MOD-0022` | An operation MUST retain the action and argument meanings in the registry below; a family annex MUST define supported argument combinations and reject unsupported combinations as `invalid_value`. Each shared operation's possible side effects are **family-defined; see the family annex** (WSJT-X: B.3). `send_text.text` is the native text argument; it does not guarantee the transmitted content. The operation registry below defines no cross-family guarantee about buffering, timing or RF state. | Test |
 
 This is a capability catalog, not permission to transmit or a claim that the placeholder codecs
-exist. N1MM and fldigi entries are defined in Annexes D and E; JS8Call entries remain provisional. A dash means no
+exist. N1MM and fldigi entries are defined in Annexes D and E. A dash means no
 support established here, not a claim that the program can never offer the action.
 
-| Shared operation | Shared arguments and meaning | WSJT-X | Other capability (Annex D/E or provisional) | Possible side effects |
+| Shared operation | Shared arguments and meaning | WSJT-X | Other capability (Annex D/E) | Possible side effects |
 |---|---|---|---|---|
-| `halt_tx` | Stop transmission; optional `auto_tx_only` restricts automatic TX | HaltTx, requires `auto_tx_only` | fldigi `main.abort` (Annex E); JS8Call-improved `RIG.TX_HALT` — to be confirmed in the family's annex | family-defined; see the family annex |
-| `set_frequency` | `frequency_hz`: absolute radio dial frequency; `radio`: family-defined selection; optional `rx_offset_hz`: audio offset | — (see Configure effects in B.3) | N1MM `radio_setfrequency` (Annex D encodes Hz as decimal kHz); fldigi `rig.set_frequency`, optionally followed by `modem.set_carrier` (Annex E); JS8Call `RIG.SET_FREQ` — to be confirmed in the family's annex | family-defined; see the family annex |
-| `send_text` | `text`: native text argument; `transmit`: request transmission; staging and empty-text behavior are family-defined | FreeText | fldigi `text.add_tx`, followed by `main.tx` only for transmit true (Annex E); JS8Call `TX.SET_TEXT` / `TX.SEND_MESSAGE` — to be confirmed in the family's annex | family-defined; see the family annex |
+| `halt_tx` | Stop transmission; optional `auto_tx_only` restricts automatic TX | HaltTx, requires `auto_tx_only` | fldigi `main.abort` (Annex E) | family-defined; see the family annex |
+| `set_frequency` | `frequency_hz`: absolute radio dial frequency; `radio`: family-defined selection; optional `rx_offset_hz`: audio offset | — (see Configure effects in B.3) | N1MM `radio_setfrequency` (Annex D encodes Hz as decimal kHz); fldigi `rig.set_frequency`, optionally followed by `modem.set_carrier` (Annex E) | family-defined; see the family annex |
+| `send_text` | `text`: native text argument; `transmit`: request transmission; staging and empty-text behavior are family-defined | FreeText | fldigi `text.add_tx`, followed by `main.tx` only for transmit true (Annex E) | family-defined; see the family annex |
 | `reply` | Select a decode to reply to; `time_of_day`, `snr_db`, `dt_seconds`, `audio_offset_hz`, `mode`, `text`; optional `low_confidence`, `modifiers` | Reply | — | family-defined; see the family annex |
 | `clear` | Clear activity display; optional `window` | Clear | — | family-defined; see the family annex |
 | `close` | Request application close; family annex defines shutdown arguments | Close | — | family-defined; see the family annex |
@@ -231,16 +231,14 @@ its observed form remains `lifecycle`. Annex B defines every required and option
 for those operations. Annex D additionally defines `n1mm.spectrum` and its family arguments. Annex E defines
 fldigi method operation tokens and its family-only `rx_start`/`rx_length` control arguments.
 
-Published references consulted 2026-11-12; N1MM and fldigi pins are in Annexes D and E; C remains pending:
+Published references consulted 2026-11-12; N1MM and fldigi pins are in Annexes D and E:
 [N1MM External UDP Messages](https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/),
-[fldigi 4.2.00 XML-RPC methods](https://www.w1hkj.org/FldigiHelp/xmlrpc_control_page.html), and
-[JS8Call-improved API v3.0.0](https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html).
+[fldigi 4.2.00 XML-RPC methods](https://www.w1hkj.org/FldigiHelp/xmlrpc_control_page.html).
 Annex E establishes RF dial frequency separately from the modem audio offset, using released
 handlers in preference to help wording. Its `send_text` and optional-offset `set_frequency`
 return ordered request bodies for caller orchestration, without atomicity. Polled log fields
 map to method-associated results or contact state; they do not assert a newly logged QSO.
 Station call/locator and independent transmit offset are not exposed by this pinned mapping.
-JS8Call still needs a pinned staging/sending distinction and original v2.3.1 comparison.
 
 ## result
 
@@ -259,21 +257,21 @@ native error codes into a universal enum. Unmapped result data remains in native
 
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|
-| `operation` | operation token | — | wsjtx, n1mm, fldigi, js8call |
+| `operation` | operation token | — | wsjtx, n1mm, fldigi |
 | `window` | integer | — | wsjtx |
 
 ## ambiguous
 
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|
-| `operation` | operation token | — | wsjtx, n1mm, fldigi, js8call |
+| `operation` | operation token | — | wsjtx, n1mm, fldigi |
 | `window` | integer | — | wsjtx |
 
 ## lifecycle
 
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|
-| `state` | token | — | wsjtx, n1mm, js8call |
+| `state` | token | — | wsjtx, n1mm |
 | `max_schema` | integer | — | wsjtx |
 | `version` | text | — | wsjtx |
 | `revision` | text | — | wsjtx |

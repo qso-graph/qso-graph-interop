@@ -71,7 +71,7 @@ fn finite_float_json_preserves_boundary_and_10000_random_bits() {
         }
         let mut fields = json!({"operation":"reply","time_of_day":"12:34:56.000","snr_db":-12,"dt_seconds":f,"audio_offset_hz":1234,"mode":"~","text":"CQ Q1AAA FN42"});
         fields["dt_seconds"] = serde_json::to_value(f).unwrap();
-        let command=Event::from_value(json!({"spec":"0.1.0","family":"wsjtx","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"wire_id":"synthetic-instance","fields":fields})).unwrap();
+        let command=Event::from_value(json!({"spec":"0.2.0","family":"wsjtx","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"wire_id":"synthetic-instance","fields":fields})).unwrap();
         let bytes = Wsjtx::default()
             .encode_command(&command, &EncodeOptions::default())
             .unwrap();
@@ -219,7 +219,7 @@ fn strict_structured_output_and_typed_family_causes() {
         .unwrap_err();
     assert!(err.source().unwrap().is::<wsjtx::Error>());
     assert!(!err.to_string().contains("Truncated"));
-    let command=Event::from_value(json!({"spec":"0.1.0","family":"wsjtx","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"wire_id":"synthetic-instance","fields":{"operation":"replay","auto_tx_only":false}})).unwrap();
+    let command=Event::from_value(json!({"spec":"0.2.0","family":"wsjtx","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"wire_id":"synthetic-instance","fields":{"operation":"replay","auto_tx_only":false}})).unwrap();
     let err = Wsjtx::default()
         .encode_command(&command, &EncodeOptions::default())
         .unwrap_err();

@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # Annex B: WSJT-X, mapping revision 1
 
-This annex is normative for family `wsjtx`, specification `0.1.0`. Its pin is
+This annex is normative for family `wsjtx`, specification `0.2.0`. Its pin is
 [WSJT-X v3.0.2, NetworkMessage.hpp](https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp),
 commit `ccdfaf3c1c109010d15399674ce278167cfde848`, SHA-256
 `fd73b7f92fc0f66ea8f12a147b59a6072408c24656735d59df772dc55a5eeb62`.
@@ -412,7 +412,7 @@ argument, with no gaps. Empty heartbeat and Clear are valid historical command s
 Example command using `QGI-MOD-0031` and `QGI-MOD-0035`:
 
 ```json
-{"spec":"0.1.0","family":"wsjtx","mapping":1,"kind":"control","context":{"direction":"to_application","exchange":"request"},"wire_id":"test-instance","fields":{"operation":"send_text","text":"synthetic message","transmit":false}}
+{"spec":"0.2.0","family":"wsjtx","mapping":1,"kind":"control","context":{"direction":"to_application","exchange":"request"},"wire_id":"test-instance","fields":{"operation":"send_text","text":"synthetic message","transmit":false}}
 ```
 
 **`QGI-WSJ-0058` — Encoding boundary.** Encoding with omitted options uses schema 3. Explicit `schema: 1` uses schema 1 even without

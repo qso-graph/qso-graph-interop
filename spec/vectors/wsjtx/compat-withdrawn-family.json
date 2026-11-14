@@ -1,0 +1,62 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "wsjtx",
+  "mapping": 1,
+  "class": "compatibility",
+  "writer_spec": "0.1.0",
+  "reader_spec": "0.2.0",
+  "input": {
+    "event": {
+      "spec": "0.1.0",
+      "family": "js8call",
+      "mapping": 1,
+      "kind": "decode",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "text": "synthetic",
+        "future_field": true
+      },
+      "native": {
+        "format": "opaque",
+        "data": "b3BhcXVlAP8="
+      }
+    }
+  },
+  "expected": {
+    "read": {
+      "kind": "native",
+      "fields": {},
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "native": {
+        "format": "opaque",
+        "data": "b3BhcXVlAP8="
+      }
+    },
+    "verification": "unavailable",
+    "preserved_event": {
+      "spec": "0.1.0",
+      "family": "js8call",
+      "mapping": 1,
+      "kind": "decode",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "text": "synthetic",
+        "future_field": true
+      },
+      "native": {
+        "format": "opaque",
+        "data": "b3BhcXVlAP8="
+      }
+    }
+  }
+}

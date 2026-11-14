@@ -9,7 +9,7 @@ use qso_graph_interop::{
 };
 use serde_json::json;
 fn command(fields: serde_json::Value) -> Event {
-    Event::from_value(json!({"spec":"0.1.0","family":"fldigi","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"fields":fields})).unwrap()
+    Event::from_value(json!({"spec":"0.2.0","family":"fldigi","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"fields":fields})).unwrap()
 }
 #[test]
 fn independent_old_frequency_evidence_and_planted_changes() {

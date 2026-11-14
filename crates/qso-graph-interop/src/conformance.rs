@@ -181,6 +181,11 @@ pub fn run_vector(codec: &mut dyn Codec, vector: &Value) -> Result<(), String> {
         {
             return Err("original command was rewritten".into());
         }
+        if let Some(original) = expected.get("preserved_event")
+            && !crate::json::semantic_eq(e.value(), original)
+        {
+            return Err("original event was rewritten".into());
+        }
         Ok(())
     };
     match class {

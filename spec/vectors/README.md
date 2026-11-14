@@ -1,5 +1,5 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-# QGI 0.1.0 conformance vectors
+# QGI 0.2.0 conformance vectors
 
 The [WSJT-X manifest](wsjtx/manifest.json) lists each WSJT-X vector's base specification version, family,
 mapping revision, class and SHA-256 of its complete file including the final newline. The manifest
@@ -22,7 +22,7 @@ events or state updates. These singleton shorthands do not restrict the core col
 | `negative` with `input.event` | Read/validate the supplied event; reject with the stated category. Schema shape failures are `invalid_value`; the disagreement case also needs the mapping check. |
 | `negative` with `input.event_json` | Parse one serialized NDJSON record excluding its delimiter; apply the byte bound and duplicate-member rule before returning an event. |
 | `skip` | Compare the reason and the readable native version/type in `expected.skip`. No event, ID parsing or reply is expected. |
-| `compatibility` | Read `input.event` with the declared `reader_spec`, supplied by a hypothetical producer of `writer_spec`. `expected.read` is the reader's recognized `kind`, `fields`, `context` and any preserved `native`, not a rewritten stored event. For a command without native evidence, `expected.preserved_command`, when present, checks the original retained command separately. An unsupported MAJOR yields an error. `expected.verification`, when present, is an out-of-band validation report (`QGI-MAP-0015`), never an event member; unsupported command revisions are also exercised as `command_negative` inputs. |
+| `compatibility` | Read `input.event` with the declared `reader_spec`, supplied by a hypothetical producer of `writer_spec`. `expected.read` is the reader's recognized `kind`, `fields`, `context` and any preserved `native`, not a rewritten stored event. `expected.preserved_event`, when present, checks the complete retained event separately. For a command without native evidence, `expected.preserved_command`, when present, checks the original retained command separately. An unsupported MAJOR yields an error. `expected.verification`, when present, is an out-of-band validation report (`QGI-MAP-0015`), never an event member; unsupported command revisions are also exercised as `command_negative` inputs. |
 
 The [qgi manifest](qgi/manifest.json) uses the same per-vector metadata and hashes; its
 `source_sha256` pins the complete Annex I file named by `source`, relative to the manifest.
@@ -112,8 +112,8 @@ is schema-checked, and producer strictness closes the N1MM whole-document view a
 family argument catalog recursively. Reader acceptance and strict-producer
 rejection of added radio/view/argument members are planted explicitly.
 
-The hypothetical 0.2.0 values exercise only the additions permitted by `QGI-GEN-0005`; they do not
-publish version 0.2.0 or add real WSJT-X message types. An unknown operation token remains a string;
+The hypothetical 0.3.0 values exercise only the additions permitted by `QGI-GEN-0005`; they do not
+publish version 0.3.0 or add real WSJT-X message types. An unknown operation token remains a string;
 its presence alone supplies no permission to act. Unknown fields are omitted from the reader's
 recognized view, while the original event remains available to the application. Mapping-revision
 vectors exercise a known kind with a new native type (`unavailable`), a known operation with

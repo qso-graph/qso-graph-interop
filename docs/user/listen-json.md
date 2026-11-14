@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # Event JSON guide
 
-Run `qg-interop listen --wsjtx` to emit one QGI-SPEC-001 0.1.0 JSON event per line. The optional
+Run `qg-interop listen --wsjtx` to emit one QGI-SPEC-001 0.2.0 JSON event per line. The optional
 `--json` flag selects the same output. Read one captured native WSJT-X message with
 `qg-interop decode --wsjtx capture.bin`, or use `-` to read standard input. Each capture contains
 one complete datagram payload, without transport headers.
@@ -15,7 +15,7 @@ input diagnostics go to standard error and produce no event.
 For example, `listen` reports WSJT-X closing like this:
 
 ```json
-{"spec":"0.1.0","family":"wsjtx","mapping":1,"native_version":"3","kind":"lifecycle","wire_id":"test-instance","context":{"direction":"from_application","exchange":"unknown"},"fields":{"state":"closed"},"native":{"format":"wsjtx_datagram","data":"rbzL2gAAAAMAAAAGAAAADXRlc3QtaW5zdGFuY2U="}}
+{"spec":"0.2.0","family":"wsjtx","mapping":1,"native_version":"3","kind":"lifecycle","wire_id":"test-instance","context":{"direction":"from_application","exchange":"unknown"},"fields":{"state":"closed"},"native":{"format":"wsjtx_datagram","data":"rbzL2gAAAAMAAAAGAAAADXRlc3QtaW5zdGFuY2U="}}
 ```
 
 The same datagram through `decode` has unknown direction, so it is `ambiguous` with

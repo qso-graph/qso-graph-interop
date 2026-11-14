@@ -214,7 +214,7 @@ fn planted_memory_read() {
 
 #[test]
 fn qgi_tcp_and_udp_round_trip() {
-    let event = br#"{"spec":"0.1.0","family":"x-synthetic","mapping":1,"kind":"native","context":{"direction":"unknown","exchange":"unknown"},"fields":{},"native":{"format":"synthetic","data":""}}"#;
+    let event = br#"{"spec":"0.2.0","family":"x-synthetic","mapping":1,"kind":"native","context":{"direction":"unknown","exchange":"unknown"},"fields":{},"native":{"format":"synthetic","data":""}}"#;
     for family in ["qgi", "qgi-udp"] {
         let id = new(family);
         let mut count = 0;
@@ -414,7 +414,7 @@ fn minimal_decode_reencode_and_command_for_each_native_family() {
         );
         assert_eq!(take(out), wire);
 
-        let mut command = json!({"spec":"0.1.0","family":family,"mapping":1,"kind":"control",
+        let mut command = json!({"spec":"0.2.0","family":family,"mapping":1,"kind":"control",
             "context":{"direction":"to_application","exchange":"unknown"},"fields":fields});
         if family == "wsjtx" {
             command["wire_id"] = json!("");
@@ -465,7 +465,7 @@ fn minimal_decode_reencode_and_command_for_each_native_family() {
 #[test]
 fn caller_buffer_stream_partial_multiple_eof_and_recovery() {
     let id = new("qgi");
-    let event = br#"{"spec":"0.1.0","family":"x-synthetic","mapping":1,"kind":"native","context":{"direction":"unknown","exchange":"unknown"},"fields":{},"native":{"format":"synthetic","data":""}}"#;
+    let event = br#"{"spec":"0.2.0","family":"x-synthetic","mapping":1,"kind":"native","context":{"direction":"unknown","exchange":"unknown"},"fields":{},"native":{"format":"synthetic","data":""}}"#;
     let mut bytes = event.to_vec();
     let mut out = QgiBuffer::default();
     let mut used = 99;

@@ -3,6 +3,14 @@
 
 ## [Unreleased]
 
+### Removed
+
+- JS8Call family reservation and placeholder Annex C in specification 0.2.0.
+
+### Changed
+
+- Advance QGI-SPEC-001 and generated conformance vectors to specification 0.2.0; retain the published 0.1.0 schema and add the 0.2.0 schema.
+
 ### Added
 
 - IPv4 multicast receive and send on an explicit numeric local interface with

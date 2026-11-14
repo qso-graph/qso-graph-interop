@@ -28,7 +28,7 @@ The implementation is Rust; upstream C++ is not compiled or shipped here.
 
 ## Specification and public API
 
-The implementation follows [QGI-SPEC-001 0.1.0](../spec/QGI-SPEC-001.md), Annex A's common
+The implementation follows [QGI-SPEC-001 0.2.0](../spec/QGI-SPEC-001.md), Annex A's common
 fields, Annex B revision 1 for WSJT-X, Annex D revision 1 for N1MM, Annex E revision 1 for fldigi, and Annex I revision 1 for event carriage. The source pins
 above remain the native-layout evidence. No upstream source was fetched during this alignment.
 

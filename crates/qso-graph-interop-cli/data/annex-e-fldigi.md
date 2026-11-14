@@ -3,7 +3,7 @@
 
 ## E.1 Evidence and scope
 
-This profile covers the request/response family `fldigi` in specification `0.1.0`.
+This profile covers the request/response family `fldigi` in specification `0.2.0`.
 The retrieval date is **2026-11-12**. The latest released version found that day is
 **4.2.13**. The [SourceForge release listing](https://sourceforge.net/projects/fldigi/files/fldigi/)
 shows `fldigi-4.2.13.tar.gz` modified **2026-08-03 14:16:04 UTC**; the
