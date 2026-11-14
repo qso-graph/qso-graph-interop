@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! WSJT-X 3.0.2 (the same protocol as 2.7.0). See docs/PROTOCOL.md for source pins and wire rules.
+//! WSJT-X 3.0.2 and provisional v3.3.0-beta6 additions. See docs/PROTOCOL.md for source pins and wire rules.
 #![forbid(unsafe_code)]
 
 mod codec;
 mod family;
 mod mapping;
+mod printable;
 pub use family::Wsjtx;
 pub(crate) mod float64;
 pub mod qt;
@@ -19,7 +20,9 @@ pub const PULSE_SECONDS: u32 = 15;
 /// Portable maximum UDP payload (IPv4 without options); checked before any allocation.
 pub const MAX_DATAGRAM: usize = 65_507;
 pub const MAX_ID: usize = 256;
-pub const WSJTX_TAG: &str = "v3.0.2";
+pub const WSJTX_TAG: &str = "v3.3.0-beta6";
+pub const MAX_INHIBIT_ID: usize = 1024;
+pub const MAX_INHIBIT_DATAGRAM: usize = 4096;
 /// Raw construction does not establish encodability; encode validates native limits.
 /// The original family payload and all unrecognized trailing bytes remain available.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -134,8 +137,18 @@ pub fn decode(data: &[u8]) -> Result<Outcome, Error> {
             reason: SkipReason::UnknownType,
         });
     }
-    let id = r.id()?;
+    if message_type == 18 && data.len() > MAX_INHIBIT_DATAGRAM {
+        return Err(Error::Length);
+    }
+    let id = if message_type == 18 {
+        r.inhibit_id()?
+    } else {
+        r.id()?
+    };
     let body = codec::read_body(&mut r, message_type)?;
+    if let Body::TxInhibit(command) = &body {
+        validate_inhibit(schema, &id, command)?;
+    }
     Ok(Outcome::Message(Box::new(Packet {
         schema,
         id,
@@ -150,7 +163,24 @@ pub fn encode(packet: &Packet) -> Result<Vec<u8>, Error> {
     if !(1..=MAX_SCHEMA).contains(&packet.schema) {
         return Err(Error::UnsupportedSchema(packet.schema));
     }
-    if packet.id.bytes.as_ref().is_some_and(|b| b.len() > MAX_ID) {
+    let id_limit = if matches!(packet.body, Body::TxInhibit(_)) {
+        MAX_INHIBIT_ID
+    } else {
+        MAX_ID
+    };
+    if let Body::TxInhibit(command) = &packet.body {
+        validate_inhibit(packet.schema, &packet.id, command)?;
+        // 12 header bytes plus four u32 text lengths/TTL: 28 fixed bytes.
+        let text_len = |text: &Utf8| text.bytes.as_ref().map_or(0, Vec::len);
+        let body_len = 28
+            + text_len(&packet.id)
+            + text_len(&command.controller_id)
+            + text_len(&command.station);
+        if body_len.saturating_add(packet.extensions.len()) > MAX_INHIBIT_DATAGRAM {
+            return Err(Error::Length);
+        }
+    }
+    if packet.id.bytes.as_ref().is_some_and(|b| b.len() > id_limit) {
         return Err(Error::Length);
     }
     let mut w = qt::Writer::new(packet.schema);
@@ -164,6 +194,41 @@ pub fn encode(packet: &Packet) -> Result<Vec<u8>, Error> {
     }
     w.put(&packet.extensions)?;
     Ok(w.data)
+}
+
+fn validate_inhibit(schema: u32, id: &Utf8, command: &TxInhibit) -> Result<(), Error> {
+    let invalid = |message: &str| Error::Event {
+        category: crate::Category::InvalidValue,
+        message: message.into(),
+    };
+    if schema < 2 {
+        return Err(Error::UnsupportedSchema(schema));
+    }
+    if id.as_str().is_none() {
+        return Err(invalid("TxInhibit target must be non-null UTF-8"));
+    }
+    for (text, identity) in [(&command.controller_id, true), (&command.station, false)] {
+        if text.bytes.as_ref().is_some_and(|b| b.len() > 128) {
+            return Err(invalid("TxInhibit text exceeds 128 UTF-8 bytes"));
+        }
+        if !identity && text.bytes.is_none() {
+            continue;
+        }
+        let text = text
+            .as_str()
+            .ok_or_else(|| invalid("invalid TxInhibit UTF-8"))?;
+        if (identity && text.is_empty())
+            || text
+                .chars()
+                .any(|c| !printable::is_print(c) || (identity && c.is_whitespace()))
+        {
+            return Err(invalid("invalid TxInhibit text characters"));
+        }
+    }
+    if command.ttl_ms != 0 && !(100..=30000).contains(&command.ttl_ms) {
+        return Err(invalid("TxInhibit TTL must be 0 or 100–30000 ms"));
+    }
+    Ok(())
 }
 
 /// Highest mutually supported schema. A pre-negotiation heartbeat implies schema 2.

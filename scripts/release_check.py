@@ -6,6 +6,7 @@ test (scripts/test_release_check.py) with the cases it must refuse.
 
     release_check.py source REF EVENT BUILD_SHA WORKFLOW_SHA WORKFLOW_REF ACTOR TRIGGERING_ACTOR
                                                 requires a manual main run and its exact commit
+    release_check.py mappings [ROOT]            refuse any provisional family mapping
     release_check.py version VERSION            VERSION is a release or a beta: X.Y.Z or X.Y.Z-beta.N
     release_check.py proving-run REPO TREE      the green pull request run of this repository's CI
                                                 whose own commit holds exactly TREE; reads the runs
@@ -23,6 +24,8 @@ test (scripts/test_release_check.py) with the cases it must refuse.
 A developer and CI tool only, never shipped; standard library and gh only.
 """
 
+from pathlib import Path
+
 import hashlib
 import json
 import re
@@ -35,6 +38,25 @@ import urllib.request
 # Matched whole with fullmatch: `$` would also match before a trailing newline.
 VERSION = re.compile(r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(-beta\.[1-9][0-9]{0,2})?")
 USER_AGENT = "qso-graph-interop release (https://github.com/qso-graph/qso-graph-interop)"
+
+
+PROVISIONAL_MARKER = "QGI-MAPPING-PROVISIONAL"
+
+
+def mappings_releasable(root):
+    """Reject the exact provisional marker in any specification annex or catalog.
+
+    The marker is reserved for live mapping metadata, never explanatory prose.
+    Scan every spec file, including vector catalogs, so a marked entry cannot hide
+    behind a different catalog filename or an accidentally unmarked annex.
+    """
+    spec = Path(root) / "spec"
+    if not spec.is_dir():
+        raise SystemExit(f"missing specification directory: {spec}")
+    marked = [str(path.relative_to(root)) for path in sorted(spec.rglob("*"))
+              if path.is_file() and PROVISIONAL_MARKER.encode() in path.read_bytes()]
+    if marked:
+        raise SystemExit("release refused: provisional family mapping in " + ", ".join(marked))
 
 
 def source_allowed(ref, event, build_sha, workflow_sha, workflow_ref, actor, triggering_actor):
@@ -157,9 +179,13 @@ def _checksum_of(crate, version):
 
 
 def main(argv):
+    if len(argv) in (1, 2) and argv[0] == "mappings":
+        mappings_releasable(Path(argv[1]) if len(argv) == 2 else Path(__file__).resolve().parents[1])
+        return
     if len(argv) == 8 and argv[0] == "source":
         if not source_allowed(*argv[1:]):
             sys.exit("Signing and publication require KI7MT's manual main Release and its exact commit")
+        mappings_releasable(Path(__file__).resolve().parents[1])
         return
     if len(argv) == 2 and argv[0] == "version":
         if not is_version(argv[1]):

@@ -36,17 +36,50 @@ def vectors():
     return result
 
 
+def beta6_vectors():
+    """Separate source transcription, independent of spec/vector builders and Rust."""
+    def packet(kind, payload):
+        return struct.pack('>III', 0xadbccbda, 3, kind) + text('synthetic-instance') + payload
+    inhibit = packet(17, b'\x01\x01' + text('Q3CCC') + struct.pack('>IIII', 7, 11, 13, 17))
+    command = packet(18, text('key-controller') + struct.pack('>I', 30000) + text('Q3CCC'))
+    status = packet(1, struct.pack('>Q', 14074000) + text('JTTY') + text('') + text('-10') + text('JTTY')
+                    + struct.pack('>BBBII', 0, 0, 0, 1500, 1500)
+                    + text('Q2AAA') + text('AA00') + text('') + b'\x00' + text('')
+                    + struct.pack('>BBII', 0, 0, 2**32-1, 2**32-1) + text('Default') + text(''))
+    radio = {'instance': 'synthetic-instance'}
+    return dict(spdx='GPL-3.0-or-later', source_tag='v3.3.0-beta6',
+        source_tarball_sha256='cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be',
+        vectors=[
+            dict(name='inhibit-status', wire_hex=inhibit.hex(), kind='radio_state', mapping=2,
+                 fields=dict(inhibit_supported=True, tx_inhibited=True, source_station='Q3CCC',
+                             hold_rx=7, release_rx=11, expiries=13, invalid=17, radio=radio)),
+            dict(name='tx-inhibit', wire_hex=command.hex(), kind='control', mapping=2,
+                 fields=dict(operation='wsjtx.tx_inhibit', controller_id='key-controller', ttl_ms=30000, station='Q3CCC')),
+            dict(name='jtty-status', wire_hex=status.hex(), kind='radio_state', mapping=1,
+                 fields=dict(dial_frequency_hz=14074000, mode='JTTY', dx_call='', report='-10', tx_mode='JTTY',
+                             tx_enabled=False, transmitting=False, decoding=False, rx_offset_hz=1500, tx_offset_hz=1500,
+                             station_call='Q2AAA', station_grid='AA00', dx_grid='', tx_watchdog=False, sub_mode='',
+                             fast_mode=False,
+                             configuration_name='Default', tx_message='', radio=radio)),
+        ])
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
     data = json.dumps(dict(spdx='GPL-3.0-or-later', vectors=vectors()), indent=2) + '\n'
+    beta_path = DEST.parent / 'wsjtx-beta6.json'
+    beta = json.dumps(beta6_vectors(), indent=2) + '\n'
     if args.check:
+        if beta_path.read_text() != beta:
+            raise SystemExit('wsjtx-beta6.json differs; run scripts/generate-fixtures.py')
         if DEST.read_text() != data:
             raise SystemExit('wire.json differs; run scripts/generate-fixtures.py')
         print(f'{len(vectors())} supplemental synthetic fixtures: pass')
     else:
         DEST.write_text(data)
+        beta_path.write_text(beta)
 
 
 if __name__ == '__main__':

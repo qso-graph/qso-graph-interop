@@ -181,7 +181,10 @@ struct Sim {
     /// Select the legacy fixed QSO script, with this DX callsign.
     #[arg(long, value_parser = sim::call)]
     dx_call: Option<String>,
-    /// Select the legacy fixed QSO script, with this mode.
+    /// Emit an InhibitStatus snapshot: available, held, or withdrawn.
+    #[arg(long, requires = "wsjtx", value_parser = ["available", "held", "withdrawn"], conflicts_with_all = ["capture", "n1mm", "fldigi"])]
+    inhibit_status: Option<String>,
+    /// Select the fixed QSO script or a JTTY status snapshot, with this mode.
     #[arg(long)]
     mode: Option<String>,
     /// Select the legacy fixed QSO script, with this dial frequency in Hz.
@@ -340,19 +343,19 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
     let mode = s.mode.as_deref().unwrap_or("FT8");
     let dx_call = s.dx_call.as_deref().unwrap_or("Q1AW");
     let frequency = s.frequency.unwrap_or(14_074_000);
-    let call = if s.call.is_empty() { "N0CALL" } else { &s.call };
+    let call = if s.call.is_empty() { "Q0CALL" } else { &s.call };
     let grid = if s.grid.is_empty() { "FN31" } else { &s.grid };
     let mut status = {
         let mut value = wsjtx::Status::default();
         value.dial_frequency_hz = frequency;
         value.mode = mode.into();
         value.dx_call = "".into();
-        value.report = "".into();
+        value.report = if mode == "JTTY" { "-15" } else { "" }.into();
         value.tx_mode = mode.into();
         value.tx_enabled = false;
         value.transmitting = false;
         value.decoding = true;
-        value.rx_df_hz = 1200;
+        value.rx_df_hz = if mode == "JTTY" { 1500 } else { 1200 };
         value.tx_df_hz = 1500;
         value.de_call = Some(call.into());
         value.de_grid = Some(grid.into());
@@ -362,7 +365,7 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
         value.fast_mode = Some(false);
         value.special_operation_mode = Some(0);
         value.frequency_tolerance_hz = Some(u32::MAX);
-        value.tr_period_seconds = Some(15);
+        value.tr_period_seconds = Some(if mode == "JTTY" { u32::MAX } else { 15 });
         value.configuration_name = Some("Default".into());
         value.tx_message = Some("".into());
         value
@@ -385,6 +388,22 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
         })),
         make(Body::Status(status.clone())),
     ];
+    if let Some(snapshot) = sim::inhibit_snapshot(s) {
+        messages.insert(1, make(snapshot));
+    }
+    if mode == "JTTY" {
+        // beta6 mainwindow_jtty_receive.cpp never calls postDecode/MessageClient::decode.
+        // beta6 hides the legacy controls and emits unknown period/tolerance sentinels.
+        if let Some(packet) = messages
+            .iter_mut()
+            .find(|p| matches!(p.body, Body::Status(_)))
+            && let Body::Status(status) = &mut packet.body
+        {
+            status.decoding = false;
+        }
+        messages.push(make(Body::Close));
+        return Ok(messages);
+    }
     let time = QTime::new(((seconds % 86_400) * 1000) as u32);
     for (index, text) in [
         format!("CQ {} {}", dx_call, grid),
@@ -596,6 +615,45 @@ mod tests {
                 Body::Decode(v) => assert_eq!(v.mode, Utf8::from("+")),
                 Body::QsoLogged(v) => assert_eq!(v.mode, Utf8::from("FT4")),
                 _ => {}
+            }
+        }
+    }
+    #[test]
+    fn jtty_snapshot_has_no_invented_decode_or_qso() {
+        let cli = Cli::parse_from([
+            "qg-interop",
+            "sim",
+            "--wsjtx",
+            "--to",
+            "127.0.0.1:2237",
+            "--mode",
+            "JTTY",
+            "--inhibit-status",
+            "held",
+        ]);
+        let Command::Sim(s) = cli.command else {
+            panic!("sim");
+        };
+        let packets = script(&s, 43200).unwrap();
+        assert_eq!(
+            packets
+                .iter()
+                .map(|p| p.body.message_type())
+                .collect::<Vec<_>>(),
+            [0, 17, 1, 6]
+        );
+        for packet in packets {
+            let bytes = wsjtx::encode(&packet).unwrap();
+            assert!(matches!(
+                wsjtx::decode(&bytes).unwrap(),
+                wsjtx::Outcome::Message(_)
+            ));
+            if let Body::Status(status) = packet.body {
+                assert_eq!(status.mode.as_str(), Some("JTTY"));
+                assert_eq!(status.tx_mode.as_str(), Some("JTTY"));
+                assert!(!status.decoding);
+                assert_eq!(status.tr_period_seconds, Some(u32::MAX));
+                assert_eq!(status.frequency_tolerance_hz, Some(u32::MAX));
             }
         }
     }

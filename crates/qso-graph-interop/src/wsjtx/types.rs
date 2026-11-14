@@ -202,6 +202,26 @@ pub struct AnnotationInfo {
     pub sort_order: u32,
 }
 
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
+pub struct InhibitStatus {
+    pub supported: bool,
+    pub inhibited: bool,
+    pub source_station: Utf8,
+    pub hold_rx: u32,
+    pub release_rx: u32,
+    pub expiries: u32,
+    pub invalid: u32,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
+pub struct TxInhibit {
+    pub controller_id: Utf8,
+    pub ttl_ms: u32,
+    pub station: Utf8,
+}
+
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum Body {
@@ -220,6 +240,8 @@ pub enum Body {
     SwitchConfiguration(SwitchConfiguration),
     Configure(Configure),
     AnnotationInfo(AnnotationInfo),
+    InhibitStatus(InhibitStatus),
+    TxInhibit(TxInhibit),
     Close,
     Replay,
 }
@@ -242,6 +264,8 @@ impl Body {
             Self::SwitchConfiguration(..) => 14,
             Self::Configure(..) => 15,
             Self::AnnotationInfo(..) => 16,
+            Self::InhibitStatus(..) => 17,
+            Self::TxInhibit(..) => 18,
             Self::Close => 6,
             Self::Replay => 7,
         }

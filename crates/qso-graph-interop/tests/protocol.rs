@@ -261,3 +261,50 @@ fn additive_mapping_checks_only_revision_one_mapped_content() {
         qso_graph_interop::Category::InvalidValue
     );
 }
+
+#[test]
+fn beta6_independent_source_fixtures_and_revision_compatibility() {
+    let fixture: Value = serde_json::from_str(include_str!("fixtures/wsjtx-beta6.json")).unwrap();
+    for vector in fixture["vectors"].as_array().unwrap() {
+        let bytes = unhex(vector["wire_hex"].as_str().unwrap());
+        let event = Wsjtx::default()
+            .decode(&bytes, &DecodeOptions::default())
+            .unwrap()
+            .events
+            .remove(0);
+        assert_eq!(event.value()["kind"], vector["kind"]);
+        assert_eq!(event.value()["mapping"], vector["mapping"]);
+        assert_eq!(event.value()["fields"], vector["fields"]);
+        assert_eq!(
+            Wsjtx::default()
+                .reencode(&event, &EncodeOptions::default(), &Default::default())
+                .unwrap(),
+            bytes
+        );
+        let mut wrong = event.clone().into_value();
+        wrong["mapping"] = 1.into();
+        if vector["mapping"] == 2 {
+            assert!(
+                Wsjtx::default()
+                    .verify(&Event::from_value(wrong).unwrap(), &Default::default())
+                    .is_err()
+            );
+        } else {
+            let mut guessed_period = wrong.clone();
+            guessed_period["fields"]["tr_period_seconds"] = 180.into();
+            assert!(
+                Wsjtx::default()
+                    .verify(
+                        &Event::from_value(guessed_period).unwrap(),
+                        &Default::default()
+                    )
+                    .is_err()
+            );
+            wrong["mapping"] = 2.into();
+            let revision_two = Event::from_value(wrong).unwrap();
+            Wsjtx::default()
+                .validate_authored(&revision_two, &Default::default())
+                .unwrap();
+        }
+    }
+}

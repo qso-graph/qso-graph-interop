@@ -55,6 +55,13 @@ pub(super) fn catalog(name: &str) -> Option<Shape> {
         )),
         "radio_state" => Some((
             &[
+                ("inhibit_supported", "boolean"),
+                ("tx_inhibited", "boolean"),
+                ("source_station", "text"),
+                ("hold_rx", "integer"),
+                ("release_rx", "integer"),
+                ("expiries", "integer"),
+                ("invalid", "integer"),
                 ("dial_frequency_hz", "integer"),
                 ("rx_offset_hz", "integer"),
                 ("tx_offset_hz", "integer"),
@@ -154,6 +161,9 @@ pub(super) fn catalog(name: &str) -> Option<Shape> {
         )),
         "control" => Some((
             &[
+                ("controller_id", "text"),
+                ("ttl_ms", "integer"),
+                ("station", "text"),
                 ("radio", "radio"),
                 ("operation", "operation"),
                 ("window", "integer"),

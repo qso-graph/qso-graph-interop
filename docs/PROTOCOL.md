@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # Protocol evidence and behavior
 
-## Released source pins
+## Source pins
 
 | Application | Released tag | Commit | Definition |
 | --- | --- | --- | --- |
@@ -29,7 +29,7 @@ The implementation is Rust; upstream C++ is not compiled or shipped here.
 ## Specification and public API
 
 The implementation follows [QGI-SPEC-001 0.2.0](../spec/QGI-SPEC-001.md), Annex A's common
-fields, Annex B revision 1 for WSJT-X, Annex D revision 1 for N1MM, Annex E revision 1 for fldigi, and Annex I revision 1 for event carriage. The source pins
+fields, Annex B revisions 1–2 for WSJT-X, Annex D revision 1 for N1MM, Annex E revision 1 for fldigi, and Annex I revision 1 for event carriage. The source pins
 above remain the native-layout evidence. No upstream source was fetched during this alignment.
 
 The family-independent core exports `Event`, `Context`, neutral text/integer/time/binary64 values,
@@ -63,7 +63,7 @@ core error. Use `Error::category()` for inspection; display strings are diagnost
 
 ## WSJT-X mapping
 
-All 17 types and schemas 1–3 use Annex B's wire order, optional contiguous tails, radio identifier,
+The original 17 types and schemas 1–3 use Annex B's wire order, optional contiguous tails, radio identifier,
 text wrappers, time resolution, integer range and sentinels. Unknown versions stop after schema;
 unknown types stop before ID. Admission order is size, magic, schema, type, then body. QString
 length checks distinguish oversized bounds, malformed odd counts and truncated payloads.
@@ -74,7 +74,7 @@ The producer profile checks that complete view against the decoded native repres
 `Profile::verify` returns `verified` or `unavailable` separately from the event and applies the
 mapping-revision outcome table. Unsupported command mappings are never encoded.
 
-The sending types are 0, 3, 4, 6–9, 11 and 13–16. Schema defaults to 3 and accepts integers 1–3.
+The sending types are 0, 3, 4, 6–9, 11, 13–16 and revision 2 type 18. Schema defaults to 3 and accepts integers 1–3.
 Missing arguments or wire IDs, optional-tail holes, incorrect text wrappers, unsupported argument
 combinations and wire-range violations return `invalid_value`. The common view never derives
 callsigns, locators, observer identity or a WSPR mode from text or IDs.
@@ -431,3 +431,14 @@ base64 replies fit the codec's observation budget. A full TX queue or oversized
 response produces a simulator-limit fault. No socket or process capability enters
 the library. Policy tests mutate the listener bind, loopback guards, DNS spelling,
 nonblocking setting, and deadline; each mutation fails the audited token check.
+
+## Provisional WSJT-X 3.3 and JTTY evidence
+
+The downloaded archives were verified offline: `v3.0.2` tarball SHA-256
+`8483a851bcb6455f5787de87b89efdf90e928842debde036e287e93e7f3837bd`; `v3.3.0-beta6` tarball SHA-256
+`cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be`. [Annex B.8](../spec/annex-b-wsjtx.md#b8-provisional-revision-2)
+records exact source paths and line evidence for types 17/18, the unchanged Decode
+marker, the ADIF 3.1.8 header, JTTY Status, absent live UDP Decode emission, and
+QSOLogged versus ADIF mode/submode. Code takes precedence over header commentary.
+The mapping remains provisional and mechanically blocks release until re-pinned
+to general-release source. No source retrieval occurs in generation or verification.

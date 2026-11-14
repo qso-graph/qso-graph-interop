@@ -47,7 +47,9 @@ class Source(unittest.TestCase):
 
     def test_manual_main_release_at_exact_commit(self):
         self.assertTrue(rc.source_allowed(*self.args()))
-        rc.main(["source", *self.args()])
+        with patch.object(rc, "mappings_releasable") as mappings:
+            rc.main(["source", *self.args()])
+            mappings.assert_called_once()
 
     def test_other_branches_tags_and_pr_refs_are_refused(self):
         for ref in ["refs/heads/feature/0.1.0", "refs/heads/0.1.x", "refs/tags/v0.1.0",
@@ -78,6 +80,39 @@ class Source(unittest.TestCase):
                                         (self.SHA + "\n", self.SHA + "\n")]:
             with self.subTest(build_sha=build_sha):
                 self.assertFalse(rc.source_allowed(*self.args(build_sha=build_sha, workflow_sha=workflow_sha)))
+
+
+class ProvisionalMappings(unittest.TestCase):
+    def test_planted_provisional_annex_fails_then_unmarked_passes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "spec").mkdir()
+            annex = root / "spec/annex-b-wsjtx.md"
+            annex.write_text("<!-- " + rc.PROVISIONAL_MARKER + " -->\n")
+            with self.assertRaisesRegex(SystemExit, "provisional.*annex-b"):
+                rc.main(["mappings", directory])
+            annex.write_text("Released mapping revision 2\n")
+            rc.main(["mappings", directory])
+
+    def test_planted_catalog_entry_fails_even_with_unmarked_annex(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            catalog = root / "spec/vectors/wsjtx/manifest.json"
+            catalog.parent.mkdir(parents=True)
+            catalog.write_text(json.dumps({"status": rc.PROVISIONAL_MARKER}))
+            with self.assertRaisesRegex(SystemExit, "provisional.*manifest"):
+                rc.main(["mappings", directory])
+            catalog.write_text(json.dumps({"status": "released"}))
+            rc.main(["mappings", directory])
+
+    def test_missing_spec_refuses_release(self):
+        with tempfile.TemporaryDirectory() as directory, self.assertRaises(SystemExit):
+            rc.main(["mappings", directory])
+
+    def test_source_gate_cannot_bypass_provisional_guard(self):
+        with patch.object(rc, "mappings_releasable", side_effect=SystemExit("provisional")):
+            with self.assertRaisesRegex(SystemExit, "provisional"):
+                rc.main(["source", *Source().args()])
 
 
 class Version(unittest.TestCase):
@@ -273,4 +308,4 @@ class WorkflowPolicy(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=2)

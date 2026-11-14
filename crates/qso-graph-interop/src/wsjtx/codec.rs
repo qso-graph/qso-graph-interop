@@ -6,7 +6,7 @@ use super::{
     types::*,
 };
 pub(super) fn known(n: u32) -> bool {
-    n <= 16
+    n <= 18
 }
 pub(super) fn read_body(r: &mut Reader<'_>, n: u32) -> Result<Body, Error> {
     Ok(match n {
@@ -128,6 +128,20 @@ pub(super) fn read_body(r: &mut Reader<'_>, n: u32) -> Result<Body, Error> {
             dx_call: r.utf8()?,
             sort_order_provided: r.boolean()?,
             sort_order: r.u32()?,
+        }),
+        17 => Body::InhibitStatus(InhibitStatus {
+            supported: r.boolean()?,
+            inhibited: r.boolean()?,
+            source_station: r.utf8()?,
+            hold_rx: r.u32()?,
+            release_rx: r.u32()?,
+            expiries: r.u32()?,
+            invalid: r.u32()?,
+        }),
+        18 => Body::TxInhibit(TxInhibit {
+            controller_id: r.utf8()?,
+            ttl_ms: r.u32()?,
+            station: r.utf8()?,
         }),
         6 => Body::Close,
         7 => Body::Replay,
@@ -256,6 +270,20 @@ pub(super) fn write_body(w: &mut Writer, body: &Body) -> Result<(), Error> {
             w.utf8(&v.dx_call)?;
             w.boolean(v.sort_order_provided)?;
             w.u32(v.sort_order)?;
+        }
+        Body::InhibitStatus(v) => {
+            w.boolean(v.supported)?;
+            w.boolean(v.inhibited)?;
+            w.utf8(&v.source_station)?;
+            w.u32(v.hold_rx)?;
+            w.u32(v.release_rx)?;
+            w.u32(v.expiries)?;
+            w.u32(v.invalid)?;
+        }
+        Body::TxInhibit(v) => {
+            w.utf8(&v.controller_id)?;
+            w.u32(v.ttl_ms)?;
+            w.utf8(&v.station)?;
         }
         Body::Close | Body::Replay => {}
     }

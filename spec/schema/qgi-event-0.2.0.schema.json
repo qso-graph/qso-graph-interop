@@ -1086,6 +1086,27 @@
         },
         "stereo": {
           "type": "boolean"
+        },
+        "inhibit_supported": {
+          "type": "boolean"
+        },
+        "tx_inhibited": {
+          "type": "boolean"
+        },
+        "source_station": {
+          "$ref": "#/$defs/text"
+        },
+        "hold_rx": {
+          "$ref": "#/$defs/integer"
+        },
+        "release_rx": {
+          "$ref": "#/$defs/integer"
+        },
+        "expiries": {
+          "$ref": "#/$defs/integer"
+        },
+        "invalid": {
+          "$ref": "#/$defs/integer"
         }
       }
     },
@@ -1370,6 +1391,15 @@
         },
         "radio": {
           "$ref": "#/$defs/radio"
+        },
+        "controller_id": {
+          "$ref": "#/$defs/text"
+        },
+        "ttl_ms": {
+          "$ref": "#/$defs/integer"
+        },
+        "station": {
+          "$ref": "#/$defs/text"
         }
       },
       "required": [

@@ -8,7 +8,7 @@
     "event": {
       "spec": "0.2.0",
       "family": "wsjtx",
-      "mapping": 2,
+      "mapping": 3,
       "kind": "control",
       "wire_id": "test-instance",
       "context": {

@@ -23,7 +23,7 @@
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAMAAAARAAAADXRlc3QtaW5zdGFuY2U="
+        "data": "rbzL2gAAAAMAAAATAAAADXRlc3QtaW5zdGFuY2U="
       }
     }
   },
@@ -37,7 +37,7 @@
       },
       "native": {
         "format": "wsjtx_datagram",
-        "data": "rbzL2gAAAAMAAAARAAAADXRlc3QtaW5zdGFuY2U="
+        "data": "rbzL2gAAAAMAAAATAAAADXRlc3QtaW5zdGFuY2U="
       }
     }
   }

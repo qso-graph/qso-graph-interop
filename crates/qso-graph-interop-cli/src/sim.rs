@@ -109,6 +109,16 @@ pub fn install_stop() -> Result<()> {
     Ok(())
 }
 
+pub fn inhibit_snapshot(s: &Sim) -> Option<Body> {
+    let state = s.inhibit_status.as_deref()?;
+    let mut snapshot = wsjtx::InhibitStatus::default();
+    snapshot.supported = state != "withdrawn";
+    snapshot.inhibited = state != "available";
+    snapshot.source_station = if snapshot.inhibited { "Q1AAA" } else { "" }.into();
+    snapshot.hold_rx = u32::from(snapshot.inhibited);
+    Some(Body::InhibitStatus(snapshot))
+}
+
 pub struct Player {
     pub status: wsjtx::Status,
     pub window: Vec<wsjtx::Decode>,
@@ -117,6 +127,7 @@ pub struct Player {
     staged: String,
     pub close: bool,
     window_bytes: usize,
+    inhibit: Option<Body>,
 }
 impl Player {
     pub fn new(s: &Sim) -> Self {
@@ -146,6 +157,7 @@ impl Player {
             staged: String::new(),
             close: false,
             window_bytes: 0,
+            inhibit: inhibit_snapshot(s),
         }
     }
     fn packet(&self, body: Body) -> Packet {
@@ -186,6 +198,9 @@ impl Player {
             self.heartbeat(),
             self.packet(Body::Status(self.status.clone())),
         ];
+        if let Some(snapshot) = &self.inhibit {
+            packets.insert(1, self.packet(snapshot.clone()));
+        }
         for l in &c.decodes {
             let mut d = wsjtx::Decode::default();
             d.new = true;

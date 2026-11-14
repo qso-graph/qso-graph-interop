@@ -233,6 +233,8 @@ pub fn steps(fuzz_seconds: u64) -> Vec<Step> {
                 "qso-graph-interop",
                 "-p",
                 "qso-graph-interop-cli",
+                "--config",
+                "patch.crates-io.qso-graph-interop.path=\"crates/qso-graph-interop\"",
             ],
             RUSTUP,
         ),
@@ -395,6 +397,15 @@ pub fn run_step(root: &Path, s: &Step, log: &Path) -> Outcome {
         .stdin(Stdio::null())
         .stdout(file)
         .stderr(stderr);
+    // Cargo's offline setting does not govern these tools' own network clients.
+    if std::env::var("CARGO_NET_OFFLINE").is_ok_and(|value| value == "true") {
+        if s.name == "cargo vet" {
+            command.arg("--frozen");
+        }
+        if s.name == "cargo audit" {
+            command.arg("--no-fetch");
+        }
+    }
     clean_env(&mut command);
     if let Some(tool) = s.requires
         && !on_path(tool)
@@ -571,7 +582,14 @@ pub fn ci_commands(workflow: &str) -> std::collections::BTreeSet<String> {
                     "-max_total_time=N".to_owned()
                 } else {
                     // Shell quoting is not part of the argument.
-                    word.trim_matches(['\'', '"']).to_owned()
+                    if word.len() >= 2
+                        && ((word.starts_with('\'') && word.ends_with('\''))
+                            || (word.starts_with('"') && word.ends_with('"')))
+                    {
+                        word[1..word.len() - 1].to_owned()
+                    } else {
+                        word.to_owned()
+                    }
                 });
             }
             found.insert(normal.join(" "));

@@ -9,9 +9,19 @@
 
 ### Changed
 
+- Verify the packaged CLI against the current workspace library so an older
+  registry crate at the development version cannot hide or reject new APIs.
+
 - Advance QGI-SPEC-001 and generated conformance vectors to specification 0.2.0; retain the published 0.1.0 schema and add the 0.2.0 schema.
 
 ### Added
+
+- Provisional WSJT-X mapping revision 2 pinned to `v3.3.0-beta6`: InhibitStatus
+  snapshots, validated TxInhibit commands, source-verified JTTY Status and logging
+  vectors, independent source fixtures, and JTTY / inhibit simulator snapshots. Preserve Decode mode markers.
+- Offline verification uses cached cargo-vet and advisory data without fetching.
+- Release guard for provisional family annexes and catalog entries, with planted
+  failures that pass only after removing the provisional mark.
 
 - IPv4 multicast receive and send on an explicit numeric local interface with
   `--interface`: shared-port `listen`, WSJT-X and N1MM simulators, and capture replay.
@@ -116,6 +126,9 @@
 
 ### Changed
 
+- Verify the packaged CLI against the current workspace library so an older
+  registry crate at the development version cannot hide or reject new APIs.
+
 - Keep Miri focused on tiny C ABI inputs for every entry point and family,
   including multi-request fldigi output, ownership, invalid arguments, stream
   errors, and panic containment. Run vector sweeps and large stream frames only
@@ -195,6 +208,13 @@
   output while preserving wire and JSON data.
 
 ### Added
+
+- Provisional WSJT-X mapping revision 2 pinned to `v3.3.0-beta6`: InhibitStatus
+  snapshots, validated TxInhibit commands, source-verified JTTY Status and logging
+  vectors, independent source fixtures, and JTTY / inhibit simulator snapshots. Preserve Decode mode markers.
+- Offline verification uses cached cargo-vet and advisory data without fetching.
+- Release guard for provisional family annexes and catalog entries, with planted
+  failures that pass only after removing the provisional mark.
 
 - Support the WSJT-X UDP protocol through a single protocol API.
 

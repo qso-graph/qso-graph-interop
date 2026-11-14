@@ -57,6 +57,18 @@ current `start`; it is not a QSO end time. Each timestamp maps independently.
 
 ## radio_state
 
+The following optional snapshot fields are added in 0.2.0 for WSJT-X revision 2:
+
+| Name | JSON type | Unit | Expected families |
+|---|---|---|---|
+| `inhibit_supported` | boolean | — | wsjtx |
+| `tx_inhibited` | boolean | — | wsjtx |
+| `source_station` | text | — | wsjtx; active holder summary |
+| `hold_rx` | integer | cumulative count | wsjtx |
+| `release_rx` | integer | cumulative count | wsjtx |
+| `expiries` | integer | cumulative count | wsjtx |
+| `invalid` | integer | cumulative count | wsjtx |
+
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|
 | `radio` | radio object (`QGI-MOD-0014`) | — | wsjtx (types in B.3), n1mm; others only when defined by their annex |
@@ -167,6 +179,10 @@ onto a sender reception event. These choices specify model capacity, not a compl
 
 ## control
 
+Optional WSJT-X revision 2 fields: `controller_id` (text identity), `ttl_ms`
+(integer milliseconds), and `station` (descriptive text). Only `wsjtx.tx_inhibit`
+requires them when constructing that operation; existing operations are unchanged.
+
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|
 | `radio` | radio object (`QGI-MOD-0016`) | — | n1mm `set_frequency` selector; Annex D |
@@ -226,7 +242,7 @@ support established here, not a claim that the program can never offer the actio
 **`QGI-MOD-0027` — Registered operations.** The seven shared tokens are reserved core actions even if this revision establishes only one
 family's mapping. A family-specific action uses a prefixed token: WSJT-X registers
 `wsjtx.heartbeat`, `wsjtx.location`, `wsjtx.highlight_callsign`, `wsjtx.switch_configuration`,
-`wsjtx.configure` and `wsjtx.annotation_info`. Heartbeat is a protocol maintenance command;
+`wsjtx.configure`, `wsjtx.annotation_info` and `wsjtx.tx_inhibit`. The last operation creates, refreshes or releases the identified controller's transmit-inhibit lease (Annex B.8), with `controller_id`, `ttl_ms` and `station`. Heartbeat is a protocol maintenance command;
 its observed form remains `lifecycle`. Annex B defines every required and optional argument
 for those operations. Annex D additionally defines `n1mm.spectrum` and its family arguments. Annex E defines
 fldigi method operation tokens and its family-only `rx_start`/`rx_length` control arguments.

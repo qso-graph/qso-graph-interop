@@ -87,7 +87,7 @@ fn datetime_view(t: &QDateTime) -> Value {
 fn metadata(n: u32, direction: &str) -> (&'static str, Option<(&'static str, &'static str)>) {
     match n {
         0 => ("lifecycle", Some(("state", "heartbeat"))),
-        1 => ("radio_state", None),
+        1 | 17 => ("radio_state", None),
         2 | 10 => ("decode", None),
         5 | 12 => ("qso_logged", None),
         3 => (
@@ -120,6 +120,7 @@ fn operation(n: u32) -> Option<&'static str> {
         14 => "wsjtx.switch_configuration",
         15 => "wsjtx.configure",
         16 => "wsjtx.annotation_info",
+        18 => "wsjtx.tx_inhibit",
         _ => return None,
     })
 }
@@ -192,10 +193,10 @@ fn mapped(
             fields.insert(common.into(), v);
         }
     }
-    if matches!(n, 1 | 2 | 5 | 10 | 12) {
+    if matches!(n, 1 | 2 | 5 | 10 | 12 | 17) {
         fields.insert("radio".into(), json!({"instance":text_value(&packet.id)}));
     }
-    let mut v = json!({"spec":crate::model::SPEC,"family":"wsjtx","mapping":1,"kind":kind,"context":options.context,"native_version":packet.schema.to_string(),"wire_id":text_value(&packet.id),"fields":fields,"native":{"format":"wsjtx_datagram","data":crate::base64::encode(bytes)}});
+    let mut v = json!({"spec":crate::model::SPEC,"family":"wsjtx","mapping":if n >= 17 { 2 } else { 1 },"kind":kind,"context":options.context,"native_version":packet.schema.to_string(),"wire_id":text_value(&packet.id),"fields":fields,"native":{"format":"wsjtx_datagram","data":crate::base64::encode(bytes)}});
     if options.structured {
         v["native"]["message"] = json!({"schema":packet.schema,"type":n,"id":text_value(&packet.id),"body":structured,"extensions":crate::base64::encode(&packet.extensions)});
     }
@@ -223,7 +224,7 @@ impl Profile for Wsjtx {
         "wsjtx"
     }
     fn mapping(&self) -> u32 {
-        1
+        2
     }
     fn native_version_supported(&self, event: &Event) -> bool {
         event.is_command()
@@ -265,6 +266,15 @@ impl Profile for Wsjtx {
             let newer = crate::json::integer_u64(&v["mapping"]).is_some_and(|n| n > 1)
                 || v["spec"] != crate::model::SPEC;
             let mut expected = actual.into_value();
+            if crate::json::integer_u64(&v["mapping"]) == Some(2) && packet.body.message_type() < 17
+            {
+                expected["mapping"] = 2.into();
+            }
+            if crate::json::integer_u64(&v["mapping"]) == Some(1)
+                && packet.body.message_type() >= 17
+            {
+                return Err(invalid("native type requires WSJT-X mapping revision 2"));
+            }
             let mut supplied = v.clone();
             for value in [&mut supplied, &mut expected] {
                 if let Some(n) = value.get_mut("native").and_then(Value::as_object_mut) {
@@ -316,7 +326,10 @@ impl Profile for Wsjtx {
         options: &crate::codec::VerifyOptions,
     ) -> Result<(), crate::Error> {
         (|| {
-            if crate::json::integer_u64(&event.value()["mapping"]) != Some(1) {
+            if !matches!(
+                crate::json::integer_u64(&event.value()["mapping"]),
+                Some(1 | 2)
+            ) {
                 return Err(crate::Error::new(
                     Category::UnsupportedVersion,
                     "unsupported WSJT-X mapping revision",
@@ -509,7 +522,8 @@ impl Wsjtx {
             if v["family"] != "wsjtx" || !event.is_command() {
                 return Err(invalid("expected a WSJT-X command"));
             }
-            if crate::json::integer_u64(&v["mapping"]) != Some(1) || v["spec"] != crate::model::SPEC
+            if !matches!(crate::json::integer_u64(&v["mapping"]), Some(1 | 2))
+                || v["spec"] != crate::model::SPEC
             {
                 return Err(crate::Error::new(
                     Category::UnsupportedVersion,
@@ -533,22 +547,21 @@ impl Wsjtx {
             let op = v["fields"]["operation"]
                 .as_str()
                 .ok_or_else(|| invalid("missing command operation"))?;
-            let n = (0..=16)
+            let n = (0..=18)
                 .find(|&n| operation(n) == Some(op))
                 .ok_or_else(|| invalid("unsupported WSJT-X operation"))?;
+            let id_limit = if n == 18 { MAX_INHIBIT_ID } else { MAX_ID };
+            if n == 18 && crate::json::integer_u64(&v["mapping"]) != Some(2) {
+                return Err(invalid("TxInhibit requires mapping revision 2"));
+            }
             let id = utf8(
                 v.get("wire_id")
                     .ok_or_else(|| invalid("missing command wire_id"))?,
-                MAX_ID,
+                id_limit,
             )?;
-            if id.bytes.as_ref().is_some_and(|b| b.len() > MAX_ID) {
+            if id.bytes.as_ref().is_some_and(|b| b.len() > id_limit) {
                 return Err(Error::Length.into());
             }
-            let mut w = Writer::new(schema);
-            w.u32(MAGIC)?;
-            w.u32(schema)?;
-            w.u32(n)?;
-            w.utf8(&id)?;
             let mut omitted = false;
             let allowed = super::mapping::layout(n);
             if v["fields"].as_object().is_some_and(|m| {
@@ -557,6 +570,38 @@ impl Wsjtx {
             }) {
                 return Err(invalid("unsupported command argument combination"));
             }
+            if n == 18 {
+                let text = |key: &str| -> Result<Utf8, crate::Error> {
+                    let value = v["fields"]
+                        .get(key)
+                        .ok_or_else(|| invalid("missing TxInhibit text"))?;
+                    let length = value.as_str().map(str::len).or_else(|| {
+                        value
+                            .get("utf8_bytes")
+                            .and_then(Value::as_array)
+                            .map(Vec::len)
+                    });
+                    if length.is_some_and(|length| length > 128) {
+                        return Err(invalid("TxInhibit text exceeds 128 UTF-8 bytes"));
+                    }
+                    utf8(value, 128)
+                };
+                let command = TxInhibit {
+                    controller_id: text("controller_id")?,
+                    ttl_ms: u32::try_from(unsigned(&v["fields"]["ttl_ms"])?)
+                        .map_err(|_| invalid("TxInhibit TTL out of range"))?,
+                    station: text("station")?,
+                };
+                let mut packet = Packet::new(id, Body::TxInhibit(command));
+                packet.schema = schema;
+                // Native encoding validates the entire command before writing any fields.
+                return super::encode(&packet).map_err(Into::into);
+            }
+            let mut w = Writer::new(schema);
+            w.u32(MAGIC)?;
+            w.u32(schema)?;
+            w.u32(n)?;
+            w.utf8(&id)?;
             for &(_, common, typ, optional) in allowed {
                 let Some(value) = v["fields"].get(common) else {
                     if optional {

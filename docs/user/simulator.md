@@ -4,6 +4,23 @@
 `qg-interop sim` generates N1MM contest traffic and plays WSJT-X decodes without a radio or a Python
 installation. Point it at the numeric address and port where your app listens.
 
+## Simulate `JTTY` and transmit inhibit snapshots
+
+Use `--mode JTTY` to send Heartbeat, an idle Status with Mode and Tx Mode set to
+`JTTY`, and Close. This follows the WSJT-X beta6 receive path, which sends no live
+UDP Decode messages for JTTY. The snapshot reports unknown period and tolerance,
+as beta6 does.
+
+```sh
+qg-interop sim --wsjtx --mode JTTY --to 127.0.0.1:2237
+qg-interop sim --wsjtx --mode JTTY --inhibit-status held --to 127.0.0.1:2237
+```
+
+`--inhibit-status available`, `held`, or `withdrawn` adds a synthetic InhibitStatus
+snapshot after Heartbeat. `held` uses the synthetic holder `Q1AAA`; `withdrawn`
+reports unsupported while a hold remains active. This option also works with
+ALL.TXT playback. The simulator sends snapshots; it does not manage inhibit leases.
+
 ## Play WSJT-X traffic
 
 The built-in synthetic ALL.TXT sample
