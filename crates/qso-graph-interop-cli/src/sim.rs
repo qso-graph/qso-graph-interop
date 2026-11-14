@@ -360,6 +360,9 @@ pub fn wait_capture(socket: &NumericUdp, until: Instant) -> Result<()> {
 }
 
 pub fn run(s: Sim) -> Result<()> {
+    if s.pskreporter_ipfix {
+        return crate::ipfix::simulate(s);
+    }
     if s.fldigi {
         return crate::fldigi_sim::run(&s);
     }

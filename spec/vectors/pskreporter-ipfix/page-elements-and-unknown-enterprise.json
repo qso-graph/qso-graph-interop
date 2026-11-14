@@ -1,0 +1,46 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-ipfix",
+  "mapping": 1,
+  "class": "templated",
+  "input": {
+    "data": "AAoAXGVT8QAAAAAAUUdJAQACADgBAQAGgAH//wAAdo+ABwABAAB2j4AOAAIAAHaPgA8AAgAAdo+AEAABAAB2j4Bj//8ABnkyAQEAFAZRN1RFU1Tfqv+AAIAC//4="
+  },
+  "expected": {
+    "events": [
+      {
+        "spec": "0.2.0",
+        "family": "pskreporter-ipfix",
+        "mapping": 1,
+        "native_version": "10",
+        "kind": "spot",
+        "context": {
+          "direction": "unknown",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "sender_call": "Q7TEST",
+          "imd_db": -33
+        },
+        "native": {
+          "format": "ipfix_record",
+          "data": "BlE3VEVTVN+q/4AAgAL//g==",
+          "template": "AQEABoAB//8AAHaPgAcAAQAAdo+ADgACAAB2j4APAAIAAHaPgBAAAQAAdo+AY///AAZ5Mg==",
+          "header": {
+            "version": 10,
+            "length": 92,
+            "export_time": 1700000000,
+            "sequence_number": 0,
+            "observation_domain_id": 1363626241
+          },
+          "set_id": 257,
+          "set_index": 1,
+          "record_index": 0,
+          "message_data": "AAoAXGVT8QAAAAAAUUdJAQACADgBAQAGgAH//wAAdo+ABwABAAB2j4AOAAIAAHaPgA8AAgAAdo+AEAABAAB2j4Bj//8ABnkyAQEAFAZRN1RFU1Tfqv+AAIAC//4="
+        }
+      }
+    ],
+    "skips": []
+  }
+}

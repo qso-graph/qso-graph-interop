@@ -12,9 +12,9 @@ ASCII lowercase identifier (`[a-z][a-z0-9_]*`); an operation additionally permit
 are defined by `QGI-MOD-0006`; no time field accepts null. No optional field has an implied default.
 Standard common member names use `snake_case`; extension names follow `QGI-EXT-0003`.
 
-**Catalog scope (informative).** The expected-family column is a core design check, not an unwritten protocol mapping. The completed `wsjtx`, `n1mm` and `fldigi` annexes assign only their explicit mappings; unassigned
+**Catalog scope (informative).** The expected-family column is a core design check, not an unwritten protocol mapping. The completed `wsjtx`, `n1mm`, `fldigi` and `pskreporter-ipfix` annexes assign only their explicit mappings; unassigned
 expected-family entries remain capacity, not support claims. Other entries identify intended uses
-to verify when Annexes G and H are pinned. They do not authorize guessing a value or its units. In particular, an
+to verify when Annex G is pinned. They do not authorize guessing a value or its units. In particular, an
 XML-RPC result can use common fields only when the caller supplies the associated method; a response
 body alone does not name that method. Extra contest exchange components remain in `native` unless
 a later annex assigns a named common field. Serial numbers are text to preserve leading zeros.
@@ -163,6 +163,31 @@ Absent locators, SNR or software remain absent; a later metadata lookup cannot s
 Annex H must include supporting receiver records as native dependencies when it maps their fields
 onto a sender reception event. These choices specify model capacity, not a completed PSK mapping.
 
+## receiver_information
+
+Added in 0.2.0 under `QGI-GEN-0005`. This kind describes an independent receiver
+metadata record, not a reception. All fields are optional; absence has no default.
+Annex H defines same-message evidence dependencies when these fields appear on a spot.
+
+| Name | JSON type | Unit | Expected families |
+|---|---|---|---|
+| `receiver_call` | text | — | pskreporter-ipfix |
+| `receiver_locator` | text | — | pskreporter-ipfix |
+| `reporting_software` | text | — | pskreporter-ipfix |
+| `antenna_information` | text | — | pskreporter-ipfix |
+| `rig_information` | text | — | pskreporter-ipfix |
+| `persistent_identifier` | text, including raw bytes | — | pskreporter-ipfix; no authentication meaning |
+
+The following optional `spot` members are also added in 0.2.0:
+
+| Name | JSON type | Unit | Expected families |
+|---|---|---|---|
+| `information_source` | integer | complete native flags byte; 1 automatic, 2 QSO, 3 manual, bit 128 test | pskreporter-ipfix |
+| `imd_db` | integer | dB | pskreporter-ipfix |
+| `antenna_information` | text | — | pskreporter-ipfix; receiver dependency |
+| `rig_information` | text | — | pskreporter-ipfix; receiver dependency |
+| `persistent_identifier` | text, including raw bytes | — | pskreporter-ipfix; receiver dependency |
+
 ## score
 
 | Name | JSON type | Unit | Expected families |
@@ -299,7 +324,8 @@ native error codes into a universal enum. Unmapped result data remains in native
 | `start` | instant | UTC | n1mm profile only; lookup contact timestamp (Annex D) |
 | `previous_start` | instant | UTC | n1mm profile only; lookup prior contact key (Annex D) |
 
-Other families have no defined `native` common members.
+Other families have no defined `native` common members. Annex H uses the separate
+`receiver_information` kind for receiver records and `native` with empty fields for opaque records.
 
 
 ## Consolidating receivers (informative)

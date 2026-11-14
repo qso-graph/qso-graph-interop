@@ -2,7 +2,7 @@
 # QGI-SPEC-001: the QG Interop specification
 
 **Status: draft 0.2.0, 2026-11-14.** The core, WSJT-X, N1MM and fldigi mappings, schema and conformance
-vectors are specified. Annexes G and H remain placeholders; Annex D defines the dated N1MM
+vectors are specified. Annex G remains a placeholder; Annex H defines PSK Reporter IPFIX revision 1; Annex D defines the dated N1MM
 profile and Annex I defines event carriage and its vectors; all six families are planned for the first
 release. Reference implementation alignment and real-peer interoperability remain separate work.
 Nothing here is a promise of compatibility until the first numbered release of this specification.
@@ -63,7 +63,7 @@ cite it. The words MUST, MUST NOT, SHOULD and MAY are used as RFC 2119 defines t
 |---|---|---|
 | `QGI-MOD-0001` | **Envelope.** An event MUST contain `spec` (version string; `0.2.0` here), `family` (registered name), `mapping` (positive annex revision), `kind` (string), `context` (object) and `fields` (object). | Test |
 | `QGI-MOD-0002` | **Context.** `context` MUST contain observer-supplied `direction` (`from_application`, `to_application`, `unknown`) and `exchange` (`notification`, `request`, `response`, `unknown`); observer-supplied `source_id`, `target_id` and `correlation_id` are optional text. An observer without that knowledge MUST supply `unknown` for each enum; a codec MUST preserve the supplied context without inferring identities or exchange roles from the message. | Test |
-| `QGI-MOD-0003` | **Kinds.** The registered kinds are `decode`, `radio_state`, `qso_logged`, `qso_changed`, `qso_deleted`, `spot`, `score`, `control`, `result`, `notification`, `lifecycle`, `ambiguous` and `native`. | Test |
+| `QGI-MOD-0003` | **Kinds.** The registered kinds are `decode`, `radio_state`, `qso_logged`, `qso_changed`, `qso_deleted`, `spot`, `receiver_information`, `score`, `control`, `result`, `notification`, `lifecycle`, `ambiguous` and `native`. | Test |
 | `QGI-MOD-0004` | **Common fields.** A codec MUST map fields according to Annex A and its family annex, without inventing values or deriving them from free text; a native field that is absent MUST leave its common member absent. The representability exceptions are `QGI-MOD-0006` and `QGI-MOD-0013`. | Test |
 | `QGI-MOD-0005` | **Absent, null and empty are distinct** wherever the family distinguishes them, and the event preserves the distinction. | Test |
 | `QGI-MOD-0006` | **Time types.** An `instant` MUST be an RFC 3339 UTC string ending in `Z`; a `time_of_day` MUST be `HH:MM:SS` in UTC without a date. Both carry fractional seconds only to the native precision. A local, unresolved-zone, invalid or null native time MUST leave its common member absent; the original remains in `native`. Annex A assigns a type to each time field. | Test |
@@ -222,7 +222,7 @@ adds event carriage using the existing datagram and stream classes. Annex letter
 | ID | Requirement | Verify |
 |---|---|---|
 | `QGI-PSM-0001` | **PSK Reporter MQTT** (`pskreporter-mqtt`) is reserved for the live spot feed in Annex G; no broker transport is part of the codec. | Inspection |
-| `QGI-PSI-0001` | **PSK Reporter IPFIX** (`pskreporter-ipfix`) is reserved for reception reports in Annex H, using RFC 7011 over UDP and the published PSK Reporter information elements. | Inspection |
+| `QGI-PSI-0001` | **PSK Reporter IPFIX** (`pskreporter-ipfix`) MUST follow Annex H revision 1, using RFC 7011 over UDP and the pinned PSK Reporter information elements. | Inspection |
 | `QGI-QGI-0001` | **QG Interop events** (`qgi`) MUST follow the event-carriage profile in Annex I, mapping revision 1. | Test |
 
 ### 5.1 Family output-budget status (informative)
@@ -233,7 +233,8 @@ adds event carriage using the existing datagram and stream classes. Annex letter
 | `qgi` | UDP: 65,507 bytes. TCP: frame limit 1,048,576 bytes, subject to exact output admission; guaranteed compact-event budget 1,044,444 bytes with a maximal receiving context (Annex I). |
 | `n1mm` | 65,507 bytes; the full common and structured upper bound is 972,500 bytes (D.7). |
 | `fldigi` | 262,144-byte HTTP body; 128-byte method name; 8,192 XML elements; 1,024 array values; 256 struct members; 32 params. E.7 proves the full released list fits 1 MiB; larger inputs also require the actual compact-output check (the sufficient universal body guarantee is 71,155 bytes). |
-| `pskreporter-mqtt`, `pskreporter-ipfix` | Not yet established: their annexes are unpinned/incomplete. Their native limits and largest-observation proofs remain conformance gates under `QGI-MAP-0003`. For IPFIX this includes record, template, message and all supporting-record evidence, rather than message length alone. |
+| `pskreporter-ipfix` | 60,000-byte UDP message; H.3 bounds record, template, message, supporting-record evidence, and structured view to 632,768 bytes and 63,584 JSON elements. |
+| `pskreporter-mqtt` | Not yet established: Annex G remains unpinned/incomplete; native limits and largest-observation proof remain conformance gates under `QGI-MAP-0003`. |
 
 ## 6. Families and fields defined by others
 
@@ -284,16 +285,14 @@ the completed WSJT-X profile or authorize guessing:
 2. Should MQTT receiver software remain a separate metadata event, or should a later class revision
    allow a bounded join carrying both PUBLISH envelopes as evidence? The documented spot example
    does not supply a software member, and receiver metadata is a separate retained publication.
-3. Which receiver Options Data Record kind and association rule should Annex H use without turning
-   receiver-only metadata into a fictitious reception? How do PSK Reporter's older examples differ
-   from RFC 7011 for field naming, Options scope and padding?
-4. What explicit template lifetime and reordering policy should Annex H pin, with caller-provided
-   time and session resets? The existing ordering/eviction constraints are `QGI-CLS-0030` and `QGI-MAP-0014`.
+3. Resolved in Annex H: `receiver_information` is independent of a reception; a spot joins exactly
+   one receiver from its own message with complete dependency evidence. H.0 reconciles old scope
+   and spelling differences; H.3 defines caller session keys, explicit expiry cutoffs and resets.
 
 ## Annexes
 
 **`QGI-GEN-0008` — Incorporated annexes.** The requirements in Annexes A, B, D, E, H and I are normative; their tables are incorporated by reference.
-D defines the N1MM profile and its capture questions; H retains its explicitly open profile work. I defines carriage.
+D defines the N1MM profile and its capture questions; H defines IPFIX decoding, submission profiles, and local observer rules. I defines carriage.
 Annex F is the machine-readable event shape; parsing and mapping rules also apply. Its open string
 registries accept additions from newer MINOR versions. A schema check alone cannot establish that
 a family name is registered, a native version or mapping is supported, a JSON string contains only
@@ -308,7 +307,7 @@ recognized official families; a third-party family publishes its profile constra
 - **F.** [JSON Schema 2020-12](schema/qgi-event-0.2.0.schema.json).
 
 - **G.** [PSK Reporter MQTT placeholder](annex-g-pskreporter-mqtt.md).
-- **H.** [PSK Reporter IPFIX placeholder](annex-h-pskreporter-ipfix.md).
+- **H.** [PSK Reporter IPFIX revision 1](annex-h-pskreporter-ipfix.md).
 - **I.** [QG Interop event carriage](annex-i-qgi.md).
 - **Z.** [Informative extension design check](annex-z-design-check.md).
 
@@ -323,6 +322,9 @@ live-peer conformance.
 ## Version history
 
 ### 0.2.0 (in development)
+
+- Added Annex H revision 1 for PSK Reporter IPFIX, receiver-information catalog events, source indicators, bounded template state, WSJT-X/fldigi submission profiles, local collection diagnostics, vectors, and fuzzing.
+
 
 - Added provisional WSJT-X mapping revision 2 for beta6 transmit inhibit messages and source-verified JTTY coverage, with a mandatory release guard; Decode/Reply mode markers retain their meaning.
 

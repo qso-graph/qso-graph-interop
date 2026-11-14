@@ -793,6 +793,7 @@ pub(crate) fn known_kind(kind: &str) -> bool {
                 | "qso_changed"
                 | "qso_deleted"
                 | "spot"
+                | "receiver_information"
                 | "score"
                 | "control"
                 | "result"

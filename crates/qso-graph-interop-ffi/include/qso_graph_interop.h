@@ -141,7 +141,7 @@ struct QgiError qgi_last_error(void);
 int32_t qgi_version(struct QgiBuffer *out);
 
 /**
- * Creates a codec for UTF-8 bytes "wsjtx", "n1mm", "fldigi", "qgi" (TCP),
+ * Creates a codec for UTF-8 bytes "wsjtx", "n1mm", "fldigi", "pskreporter-ipfix", "qgi" (TCP),
  * or "qgi-udp". Name has explicit byte length, without NUL. Zero is invalid.
  * # Safety
  * Follow the pointer/ownership contract on qgi_version. out is required.

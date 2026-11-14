@@ -844,6 +844,29 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "pskreporter-ipfix"
+          },
+          "kind": {
+            "const": "receiver_information"
+          }
+        },
+        "required": [
+          "family",
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "fields": {
+            "$ref": "#/$defs/receiver_information"
+          }
+        }
+      }
     }
   ],
   "$defs": {
@@ -1255,6 +1278,21 @@
         },
         "radio": {
           "$ref": "#/$defs/radio"
+        },
+        "antenna_information": {
+          "$ref": "#/$defs/text"
+        },
+        "rig_information": {
+          "$ref": "#/$defs/text"
+        },
+        "persistent_identifier": {
+          "$ref": "#/$defs/text"
+        },
+        "information_source": {
+          "$ref": "#/$defs/integer"
+        },
+        "imd_db": {
+          "$ref": "#/$defs/integer"
         }
       }
     },
@@ -1998,6 +2036,29 @@
       "required": [
         "operation"
       ]
+    },
+    "receiver_information": {
+      "type": "object",
+      "properties": {
+        "receiver_call": {
+          "$ref": "#/$defs/text"
+        },
+        "receiver_locator": {
+          "$ref": "#/$defs/text"
+        },
+        "reporting_software": {
+          "$ref": "#/$defs/text"
+        },
+        "antenna_information": {
+          "$ref": "#/$defs/text"
+        },
+        "rig_information": {
+          "$ref": "#/$defs/text"
+        },
+        "persistent_identifier": {
+          "$ref": "#/$defs/text"
+        }
+      }
     }
   }
 }

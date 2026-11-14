@@ -22,7 +22,7 @@ commands. Applications supply observer context and own transport and control pol
 | fldigi 4.2.13 | XML-RPC; HTTP on loopback | ✓ | ✓ | ✓ | `sim --fldigi` | `poll`, `decode` | Supported |
 | These apps | QGI event carriage; UDP or TCP | ✓ | Forwards events | — | `sim --capture --qgi` | — | Supported |
 | PSK Reporter | Spots; MQTT | | | | | | Planned |
-| PSK Reporter | Spot submission; IPFIX over UDP | | | | | | Planned |
+| PSK Reporter IPFIX | Reception submissions; UDP | ✓ | Submission encoder | ✓ | `sim --pskreporter-ipfix` | `collect` | Supported |
 | rigctld, DX cluster, ADIF over UDP, KISS | Various | | | | | | Designed for, not yet mapped |
 
 - **Decode:** native messages become specification events, with the original bytes kept as evidence.
@@ -30,7 +30,7 @@ commands. Applications supply observer context and own transport and control pol
   N1MM frequency and spectrum requests, and fldigi XML-RPC calls.
 - **Exact re-encode:** an event rebuilds the native message, checked against the original bytes.
 - **Simulator:** `qg-interop sim` produces the app's traffic, so you can develop and test
-  without the app running. Every callsign it uses is invented, with a Q prefix.
+  without the app running. See [Collect IPFIX submissions](docs/user/collect.md) for a local PSK Reporter workflow. Every callsign it uses is invented, with a Q prefix.
 
 Every row marked Supported is checked by the specification's test vectors, and also works through
 the C ABI (`qso-graph-interop-ffi`).

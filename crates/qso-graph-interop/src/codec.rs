@@ -327,6 +327,8 @@ pub struct Skip {
     pub native_name: Option<String>,
     pub set_index: Option<usize>,
     pub record_index: Option<usize>,
+    /// Exact evidence for a skipped templated Set, when supplied by the family.
+    pub evidence: Option<Value>,
 }
 impl Skip {
     pub fn new(
@@ -341,6 +343,7 @@ impl Skip {
             native_name: None,
             set_index: None,
             record_index: None,
+            evidence: None,
         }
     }
 }

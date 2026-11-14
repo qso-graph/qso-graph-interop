@@ -80,3 +80,7 @@ support resetting one session or all sessions. No codec opens a socket or reads 
 
 See [the user guides](../../docs/user/) and [protocol documentation](../../docs/PROTOCOL.md).
 Licensed under GPL-3.0-or-later.
+
+The `pskreporter-ipfix` feature provides bounded RFC 7011 UDP template decoding and
+`pskreporter_ipfix::encode_submission` with WSJT-X and fldigi profiles. The caller owns
+transport sessions, destinations, template cadence, scheduling, and duplicate suppression.

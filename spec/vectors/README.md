@@ -282,3 +282,9 @@ no finite application maximum; the annex records that source limitation explicit
 These are synthetic contract tests, not captures. The bundled backend's empty-param
 acknowledgments retain their specified malformed outcome; the review does not claim
 live fldigi interoperability.
+
+The `pskreporter-ipfix` manifest includes `templated` vectors, whose expected `events`
+array is in wire order. Native evidence is one record plus its template, full message,
+and any receiver dependency. Each event is verified and re-encoded independently.
+Negative and unknown-template vectors use the shared error/skip instruction classes.
+Source-program submissions are also checked byte for byte against independent fixtures.

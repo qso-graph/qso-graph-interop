@@ -10,8 +10,8 @@ corpus.mkdir(parents=True,exist_ok=True)
 for vector in json.loads((root/'crates/qso-graph-interop/tests/fixtures/wire.json').read_text())['vectors']:
     (corpus/vector['name']).write_bytes(bytes.fromhex(vector['wire_hex']))
 
-for family in ('wsjtx', 'qgi', 'n1mm', 'fldigi'):
-    corpus = root / 'fuzz/corpus' / (family if family in ('n1mm', 'fldigi') else 'wsjtx')
+for family in ('wsjtx', 'qgi', 'n1mm', 'fldigi', 'pskreporter-ipfix'):
+    corpus = root / 'fuzz/corpus' / ('ipfix' if family == 'pskreporter-ipfix' else family if family in ('n1mm', 'fldigi') else 'wsjtx')
     corpus.mkdir(parents=True, exist_ok=True)
     folder = root / 'spec/vectors' / family
     manifest = json.loads((folder / 'manifest.json').read_text())

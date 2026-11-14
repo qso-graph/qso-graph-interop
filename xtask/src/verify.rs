@@ -328,6 +328,15 @@ pub fn steps(fuzz_seconds: u64) -> Vec<Step> {
             }
         }
         list.push(fldigi);
+        let mut ipfix = list.last().expect("fldigi fuzz step").clone();
+        ipfix.name = "fuzz ipfix";
+        ipfix.args[2] = "ipfix".into();
+        for arg in &mut ipfix.args {
+            if arg.starts_with("-max_len=") {
+                *arg = "-max_len=60001".into();
+            }
+        }
+        list.push(ipfix);
     }
     if !cfg!(all(
         target_os = "linux",
@@ -731,6 +740,7 @@ mod tests {
             "fuzz run",
             "fuzz n1mm",
             "fuzz fldigi",
+            "fuzz ipfix",
         ] {
             assert!(names.contains(&required), "{required} missing");
         }

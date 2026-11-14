@@ -18,6 +18,7 @@ import struct
 import sys
 
 import gen_fldigi_vectors as fldigi
+import gen_ipfix_vectors as ipfix
 
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / 'spec/vectors/wsjtx'
@@ -1203,7 +1204,7 @@ def producer_validator(schema, jsonschema):
         'pskreporter-mqtt', 'pskreporter-ipfix', 'qgi']}
     strict['properties']['kind'] = {'enum': [k for k in strict['$defs']
         if k in ('decode', 'radio_state', 'qso_logged', 'qso_changed', 'qso_deleted', 'spot',
-                 'score', 'control', 'result', 'notification', 'lifecycle', 'ambiguous', 'native')]}
+                 'score', 'control', 'result', 'notification', 'lifecycle', 'ambiguous', 'native', 'receiver_information')]}
     uint = lambda bits: {'type': 'integer', 'minimum': 0, 'maximum': 2**bits - 1}
     sint = lambda bits: {'type': 'integer', 'minimum': -2**(bits - 1), 'maximum': 2**(bits - 1) - 1}
     decimal = {'type': 'string', 'pattern': r'^(?:0|-?[1-9][0-9]*)(?![\s\S])'}
@@ -3741,6 +3742,13 @@ def main():
                     for name, data in sorted(n1mm_outputs.items())]})
     outputs.update({'n1mm/' + name: data for name, data in n1mm_outputs.items()})
     outputs.update(fldigi_manifest(fldigi_suite, dump, ROOT))
+    ipfix_outputs, ipfix_fixture, ipfix_fixture_data = ipfix.outputs(ROOT, dump, producer_validator(json.loads((ROOT / "spec/schema/qgi-event-0.2.0.schema.json").read_text()), __import__("jsonschema")) if args.producer_strict else None)
+    outputs.update(ipfix_outputs)
+    if args.check:
+        if not ipfix_fixture.is_file() or ipfix_fixture.read_bytes() != ipfix_fixture_data:
+            raise SystemExit("PSK Reporter independent fixture differs")
+    else:
+        ipfix_fixture.write_bytes(ipfix_fixture_data)
     vector_root = DEST.parent
     folded = {}
     for name in outputs:

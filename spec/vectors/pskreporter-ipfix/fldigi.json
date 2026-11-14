@@ -1,0 +1,103 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-ipfix",
+  "mapping": 1,
+  "class": "templated",
+  "input": {
+    "data": "AAoAxGVT8QAAAAAAUUdJAQACADQCLAAGgAH//wAAdo8AlgAEgAUABAAAdo+ACv//AAB2j4AD//8AAHaPgAsAAQAAdo8AAwA0AhkABQAAgAL//wAAdo+ABP//AAB2j4AMAAgAAHaPgAj//wAAdo+ACf//AAB2jwAAAhkALAVRMkFBQQZBQTAwYWFRR0kwMDAwMQtzeW50aGV0aWMtMQZkaXBvbGUCLAAgBVExQUFBZVPxAADWwJADRlQ4BkJCMTFiYgEAAA=="
+  },
+  "expected": {
+    "events": [
+      {
+        "spec": "0.2.0",
+        "family": "pskreporter-ipfix",
+        "mapping": 1,
+        "native_version": "10",
+        "kind": "receiver_information",
+        "context": {
+          "direction": "unknown",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "receiver_call": "Q2AAA",
+          "receiver_locator": "AA00aa",
+          "reporting_software": "synthetic-1",
+          "antenna_information": "dipole",
+          "persistent_identifier": "QGI00001"
+        },
+        "native": {
+          "format": "ipfix_record",
+          "message_data": "AAoAxGVT8QAAAAAAUUdJAQACADQCLAAGgAH//wAAdo8AlgAEgAUABAAAdo+ACv//AAB2j4AD//8AAHaPgAsAAQAAdo8AAwA0AhkABQAAgAL//wAAdo+ABP//AAB2j4AMAAgAAHaPgAj//wAAdo+ACf//AAB2jwAAAhkALAVRMkFBQQZBQTAwYWFRR0kwMDAwMQtzeW50aGV0aWMtMQZkaXBvbGUCLAAgBVExQUFBZVPxAADWwJADRlQ4BkJCMTFiYgEAAA==",
+          "set_index": 2,
+          "record_index": 0,
+          "data": "BVEyQUFBBkFBMDBhYVFHSTAwMDAxC3N5bnRoZXRpYy0xBmRpcG9sZQ==",
+          "template": "AhkABQAAgAL//wAAdo+ABP//AAB2j4AMAAgAAHaPgAj//wAAdo+ACf//AAB2jw==",
+          "header": {
+            "version": 10,
+            "length": 196,
+            "export_time": 1700000000,
+            "sequence_number": 0,
+            "observation_domain_id": 1363626241
+          },
+          "set_id": 537
+        }
+      },
+      {
+        "spec": "0.2.0",
+        "family": "pskreporter-ipfix",
+        "mapping": 1,
+        "native_version": "10",
+        "kind": "spot",
+        "context": {
+          "direction": "unknown",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "sender_call": "Q1AAA",
+          "sender_locator": "BB11bb",
+          "frequency_hz": 14074000,
+          "mode": "FT8",
+          "information_source": 1,
+          "time": "2023-11-14T22:13:20Z",
+          "receiver_call": "Q2AAA",
+          "receiver_locator": "AA00aa",
+          "reporting_software": "synthetic-1",
+          "antenna_information": "dipole",
+          "persistent_identifier": "QGI00001"
+        },
+        "native": {
+          "format": "ipfix_record",
+          "message_data": "AAoAxGVT8QAAAAAAUUdJAQACADQCLAAGgAH//wAAdo8AlgAEgAUABAAAdo+ACv//AAB2j4AD//8AAHaPgAsAAQAAdo8AAwA0AhkABQAAgAL//wAAdo+ABP//AAB2j4AMAAgAAHaPgAj//wAAdo+ACf//AAB2jwAAAhkALAVRMkFBQQZBQTAwYWFRR0kwMDAwMQtzeW50aGV0aWMtMQZkaXBvbGUCLAAgBVExQUFBZVPxAADWwJADRlQ4BkJCMTFiYgEAAA==",
+          "set_index": 3,
+          "record_index": 0,
+          "data": "BVExQUFBZVPxAADWwJADRlQ4BkJCMTFiYgE=",
+          "template": "AiwABoAB//8AAHaPAJYABIAFAAQAAHaPgAr//wAAdo+AA///AAB2j4ALAAEAAHaP",
+          "header": {
+            "version": 10,
+            "length": 196,
+            "export_time": 1700000000,
+            "sequence_number": 0,
+            "observation_domain_id": 1363626241
+          },
+          "set_id": 556,
+          "dependencies": [
+            {
+              "data": "BVEyQUFBBkFBMDBhYVFHSTAwMDAxC3N5bnRoZXRpYy0xBmRpcG9sZQ==",
+              "template": "AhkABQAAgAL//wAAdo+ABP//AAB2j4AMAAgAAHaPgAj//wAAdo+ACf//AAB2jw==",
+              "header": {
+                "version": 10,
+                "length": 196,
+                "export_time": 1700000000,
+                "sequence_number": 0,
+                "observation_domain_id": 1363626241
+              },
+              "set_id": 537
+            }
+          ]
+        }
+      }
+    ],
+    "skips": []
+  }
+}

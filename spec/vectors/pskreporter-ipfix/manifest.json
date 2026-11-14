@@ -1,0 +1,227 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-ipfix",
+  "mapping": 1,
+  "source": "../../annex-h-pskreporter-ipfix.md",
+  "source_sha256": "ed67a8a3b1330d496c2137343d10821907ec57321080fdb75770658c2d1a8923",
+  "retrieved": "2026-11-14T17:28:27Z",
+  "vectors": [
+    {
+      "file": "event-overflow.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "afc2379ea73eedc0ea99f24882dff80006c92bd737e7b343422bc254ff393397"
+    },
+    {
+      "file": "fldigi.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "templated",
+      "sha256": "39e8d9a6daeb31e75a2820faa746b4412100808c2ca2be71ea32b04d4f97122c"
+    },
+    {
+      "file": "fldigi-short.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "templated",
+      "sha256": "19da371960684c63cede292c87d98b2202d4e08b1928852ad9534912dbab50f5"
+    },
+    {
+      "file": "header-truncated.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "6ff58046e8cea4d75ec5cbd57b29d30d78b6cbea78f07e3c9c79d3e9769eb5f6"
+    },
+    {
+      "file": "manual-test.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "templated",
+      "sha256": "d66fc9d58d3f4780a9fedbbb779c69f905d01e4a6018883cd48186db2a44d4d0"
+    },
+    {
+      "file": "message-length.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "b06c14bd3a61cb4b7806dc88e1986e0ffae2e4b6b766b11e8b6575589b980657"
+    },
+    {
+      "file": "message-overflow.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "2b1f91a3c86b952ef85779dd8d9ca5c2b78c1b6da2f4760f32b2683b7204acd9"
+    },
+    {
+      "file": "padding-not-shorter-than-record.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "f8413231e8de7eb13fc78531d42e261f18b216c5b8f19bf9a915eff6b9cae1a3"
+    },
+    {
+      "file": "page-elements-and-unknown-enterprise.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "templated",
+      "sha256": "4a092d62598e0106a43f56bff65ace8f17ca66e03e95b2d44a785f1bc4d186f8"
+    },
+    {
+      "file": "qso.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "templated",
+      "sha256": "2a87a29f3dde3beaabbe528f1d03f0ee0147329a9d00fc3d3468d9c0a5c69f77"
+    },
+    {
+      "file": "record-truncated.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "08eb89ada7cfb1204ff9e18495337a9550031c10c8dff74f284dd1cdb525b013"
+    },
+    {
+      "file": "reserved-set.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "807ef8238f0777e8aaa6d04b305b9c44086374cb2069bb1c319c0114059e4c2c"
+    },
+    {
+      "file": "scope-too-large.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "a6ab36a48f8c16f467364f79ea371f977cad971b4662d19c50c8c0a54c60d7b2"
+    },
+    {
+      "file": "scope-zero-unknown.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "8a7d57421a1c7ffd229482c473128d0f35355225411a7341364239866ab90751"
+    },
+    {
+      "file": "set-length-below-header.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "571a9106f64064258bb74845fb2e2ec9006ea00ea74241d2695a5f6d0674ed3c"
+    },
+    {
+      "file": "set-overrun.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "8792352bc9142e39b0942d674e7d5fb0b8b3a45133ee718ad4ddcafaba52186e"
+    },
+    {
+      "file": "set-truncated.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "2050a172290852f2e4e2370d97c8d88cc3f325fb1890a77295cd3037536b6c17"
+    },
+    {
+      "file": "template-fields-overflow.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "42cfa1c3941fcab80ed2e63977b1cc7a88535bce60675e46de94656df819def4"
+    },
+    {
+      "file": "template-only.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "templated",
+      "sha256": "4c7cd5218fba0ec8d1c7f131f169d8aa2a26bd47061ea947339db377394b901c"
+    },
+    {
+      "file": "template-overflow.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "2836dc53e6400e04a362da40c2acd013bfd07f8b6d0e7c73e5df1c7cac24dbcd"
+    },
+    {
+      "file": "template-truncated.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "b85af89ae87ca2c607b8eb8fbf3ac4d912d77d5957df55da4cb7c54b711eda1e"
+    },
+    {
+      "file": "udp-withdrawals-ignored.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "templated",
+      "sha256": "f2434e91a00c8c828d9d28d58a27a5e2cdc21ad472b5ce74ddfccd549b57895a"
+    },
+    {
+      "file": "unknown-template.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "skip",
+      "sha256": "2d911039db2b17f9af36100be89266fb134031b0b36542bd7ee10475cf80027f"
+    },
+    {
+      "file": "variable-length-overrun.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "ec5f5d794c86bd7b7ed2334d1e1eabd5366d55a1a1e8a23ad5383dd220b33777"
+    },
+    {
+      "file": "variable-prefix-truncated.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "5fe3050e19ade301d74c87025b64e484c97c6f57f6aa6fcb1c4b7894e277acb2"
+    },
+    {
+      "file": "wsjtx.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "templated",
+      "sha256": "f8f8eb3237d2c488593c6d7ebc2d7c94a3fbd2dcd563f8493e48fc2d7b5de6ba"
+    },
+    {
+      "file": "zero-record-length.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-ipfix",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "312cc294f5d49ad0fdd66bb9978c78150b3f207293dc035b91c891bd821567b5"
+    }
+  ]
+}

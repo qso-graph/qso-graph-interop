@@ -1,60 +1,227 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-# Annex H: PSK Reporter IPFIX placeholder
+# Annex H: PSK Reporter IPFIX, mapping revision 1
 
-Reserved family: `pskreporter-ipfix`. This is a scope placeholder, not a complete mapping or
-conformance claim.
+This annex defines `pskreporter-ipfix` for specification 0.2.0: one RFC 7011 message
+per UDP datagram. Submission exports station identity, location, and reception data.
+The caller chooses the destination and authorizes disclosure (`QGI-GEN-0004`).
+The codec opens no sockets, schedules no transmissions, and suppresses no duplicates.
+Tests and examples use synthetic Q-prefixed callsigns and local collectors only.
 
-Submission sends the operator's callsign, location and reception data to a third-party service.
-The caller chooses whether to submit (`QGI-GEN-0004`); codec support does not authorize disclosure.
+## H.0 Source pins and authority
+
+All sources were retrieved at **2026-11-14T17:28:27Z**. These local evidence files
+are not redistributed. Hashes for S1, S2, and S5 are from
+`/tmp/qgi-pskr-src/SHA256SUMS`; the WSJT-X archive pins are also in Annex B.
+Each source reference below incorporates this retrieval timestamp and its row's SHA-256.
+
+| Source | Local file and SHA-256 pin |
+|---|---|
+| S1 | `/tmp/qgi-pskr-src/pskreporter.info_pskdev.html`; `9eab5ae2a01dcb840ac674ac694eb99d723a18dab685d939007d5755971af915`. Developer page, element table lines 106–122, reporting rules 80–96, 128–139, 333–334. |
+| S2 | `/tmp/qgi-pskr-src/www.rfc-editor.org_rfc_rfc7011.txt`; `59b7ddb1c0350ae711ba41d771d93f4d440ee04755403446f580bb777b928f73`. RFC 7011, September 2013; §§3–4, 7–9. |
+| S3 | `/tmp/qgi-wsjtx-src/v3.0.2/Network/PSKReporterIPFIX.cpp` and `PSKReporter.cpp`, from the v3.0.2 archive; archive SHA-256 `8483a851bcb6455f5787de87b89efdf90e928842debde036e287e93e7f3837bd`. |
+| S4 | `/tmp/qgi-wsjtx-src/v3.3.0-beta6/Network/PSKReporterIPFIX.cpp` and `PSKReporter.cpp`, from the v3.3.0-beta6 archive; archive SHA-256 `cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be`. |
+| S5 | `/tmp/qgi-pskr-src/fldigi-4.2.13/src/spot/pskrep.cxx`, from `fldigi-4.2.13.tar.gz`; archive SHA-256 `a1e8d990359ce9c0cce3ceb5116fd0cf72c95528969766898640ca6ca2dba8d4` (Annex E). |
+
+**`QGI-PSI-0010` — Authority.** RFC 7011 supersedes the developer page's RFC 5101
+terminology. For the two program profiles, actual S3–S5 bytes govern conflicting
+page examples. S1 calls enterprise element 8 `decoderSoftware` in its table and
+`decodingSoftware` elsewhere; S3/S4 use the latter spelling, S5 the former.
+Both mean PEN 30351, IE 8; neither spelling is transmitted. S1 also misspells
+antenna information in prose; IE 9 identifies it. No sender ID selects an encoding.
+
+S5 writes zero Scope Field Count in both receiver Options Templates (582, 593).
+RFC 7011 §3.4.2 requires a nonzero scope. This mapping admits exactly S5's two
+field definitions as a legacy exception, preserves zero, and diagnoses the departure.
+It does not silently turn zero into one or admit arbitrary zero-scope templates.
 
 ## H.1 Published submitter rules
 
-These facts were read on 2026-11-12 in PSK Reporter's
-[developer page](https://pskreporter.info/pskdev.html), specifically Data Gathering, Data Reporting,
-Technical IPFIX Information, Record Format Descriptor and Field Notes. They describe the service's
-published expectations, not an independently measured acceptance policy.
+These are published expectations (S1), not measured service acceptance. Diagnostic
+rule names below are stable. The collector reports violations, recommendations,
+and notices separately; every diagnostic names a rule and, when known, Set/record indexes.
 
-| Topic | Published guidance |
+| Rule | Published expectation and observer behavior |
 |---|---|
-| Interval | At most one datagram per five minutes unless full; avoid clock-synchronized timers and randomize timers based on last reception. |
-| Duplicates | Report each callsign at most once per five minutes; preferably once per hour while unchanged. The developer defines “changed.” |
-| Sender fields | Nonoptional: `senderCallsign`, `mode`, `informationSource`, `flowStartSeconds`. Optional: frequency, iMD, SNR, sender locator. |
-| Receiver fields | Include receiver information each datagram. The list names callsign, locator, software and optional antenna information, but says to include as much as possible. |
-| Templates | Send at least hourly; first three startup datagrams are recommended. Keep the UDP source port stable. |
-| Source indicator | Field Notes requests `informationSource=1` for automatic reports; value 2 marks QSO records. |
+| `H.1-INTERVAL` | At most one datagram every five minutes unless full (S1:91). Timers must not synchronize to the system clock. If timed from last reception, randomize. A single observer can measure intervals, but cannot prove timer synchronization. The collector flags short intervals only for an exact known program layout when another maximum-sized profile record would fit: WSJT-X message at most 872 bytes; fldigi at most 678 bytes. Larger messages might meet the fullness exception; unknown layouts have no inferred fullness policy. |
+| `H.1-DUPLICATE` | Each sender callsign at most once per five minutes (S1:82–84). Check the literal callsign per exporter/domain with monotonic observer time, including repeats in one message. Do not invent a mode/band key. |
+| `H.1-UNCHANGED` | Prefer once an hour while unchanged (S1:83–84). What constitutes change is explicitly application-defined; the collector does not enforce a threshold. |
+| `H.1-REQUIRED` | Sender callsign, mode, informationSource, flowStartSeconds are nonoptional; frequency, iMD, SNR, sender locator are optional (S1:131). Empty, missing, or uninterpretable required content is diagnosed per record. |
+| `H.1-RECEIVER` | Include receiver information in every datagram (S1:128–129, 133). The receiver list names callsign, locator, software, and optional antenna, while requesting as much information as possible. Its acceptance minimum is unconfirmed; the collector does not invent required receiver members. |
+| `H.1-TEMPLATES` | Repeat definitions at least hourly (S1:94, 139). Check each used definition against observations in this exporter/domain; unknown-template Sets are skipped with evidence. No claim is made about transmissions missed before collection began. |
+| `H.1-STARTUP` | The first three datagrams with templates are recommended (S1:94, 163). The collector can report only its first three observed datagrams. Keep the UDP source port stable (S1:95); a single observer cannot infer that two different source ports belong to one exporter. |
+| `H.1-SOURCE` | 1 means automatically extracted, 2 QSO, 3 other manual; bit 0x80 marks tests (S1:116, 333–334; S5:130, 776). Preserve the whole byte. Undefined source bits are diagnosed; QSO reports remain reception `spot` events with source 2. |
+| `H.1-FIELDS` | Interpret only declared element encodings (H.2). Preserve malformed values and diagnose known content/width errors per record. Unknown elements have no guessed meaning. |
+| `H.1-FRAMING` | RFC 7011 header/Set/record lengths and H.3 resource limits apply. Structural failures discard the whole message and commit no state; diagnostics retain known Set/record locations (S2 §9.1). |
+| `H.1-PADDING` | Exporters must use zero padding shorter than a minimum record (S2 §3.3.1). Collectors accept nonzero padding and diagnose it, as §9.1 explicitly excludes it from malformed-message errors. |
+| `H.1-SCOPE` | Nonzero Options scope required by S2 §3.4.2; the S5 exception above is reported as a departure. |
+| `H.1-WITHDRAWAL` | UDP withdrawals must be ignored (S2 §8.4); diagnose, retaining the cached definition. |
+| `H.1-ASSOCIATION` | More than one receiver record makes a sender's receiver association unavailable; do not choose an arbitrary receiver. This is an evidence notice, not a service acceptance rule. |
 
-Source for every row: [PSK Reporter developer information](https://pskreporter.info/pskdev.html).
-The linked [FAQ](https://pskreporter.info/faq) rendered only a loading placeholder when read.
-Unconfirmed: receiver-field acceptance minimum, exact duplicate key across modes/bands, and a
-required change threshold. These are the unconfirmed policies referenced by `QGI-PSI-0002`.
+**`QGI-PSI-0002` — Responsible submission.** A producer MUST follow the published
+rules above, preserving requirements versus recommendations. Scheduling and
+cross-message duplicates belong to the application. Receiver acceptance minimum,
+exact duplicate key across modes/bands, and required change threshold remain
+unconfirmed and MUST NOT be enforced as invented service policy. No live service
+probe is part of this mapping or its verification.
 
-| ID | Requirement | Verify |
-|---|---|---|
-| `QGI-PSI-0002` | **Responsible submission.** A producer of PSK Reporter IPFIX submissions MUST follow the published submitter rules sourced in H.1, including reporting intervals, duplicate suppression and required fields. It MUST preserve the source's distinctions between requirements and recommendations and MUST NOT invent constraints where H.1 marks the service policy unconfirmed. Scheduling and cross-message duplicate state belong to the submitting application, outside the pure codec. | Test, Inspection |
+## H.2 Information elements and program templates
 
-## H.2 Mapping work remaining
+All multibyte integers are big endian. Strings preserve exact UTF-8 bytes, including
+invalid sequences via `text.utf8_bytes`; empty is distinct from absent. IPFIX has no
+implicit null string. Template length 65535 uses RFC 7011 §7: a one-byte length
+below 255 or marker 255 plus a two-byte length. Length-prefix octets are excluded
+from field content; the extended form can represent 0–65535 (S2:2050–2114).
 
-| Item | Scope to be completed |
+| PEN.IE | Name | Encoding and common mapping | Evidence |
+|---|---|---|---|
+| 30351.1 | senderCallsign | string → `spot.sender_call` | S1:106; S3/S4:86–88, 172; S5:680, 766 |
+| 30351.2 | receiverCallsign | string → `receiver_information.receiver_call` | S1:107; S3/S4:120–122, 146; S5:583, 644 |
+| 30351.3 | senderLocator | string → `spot.sender_locator` | S1:108; S3/S4:98–100, 180; S5:684, 774 |
+| 30351.4 | receiverLocator | string → `receiver_information.receiver_locator` | S1:109; S3/S4:123–125, 147; S5:584, 646 |
+| 30351.5 | frequency | unsigned integer Hz, 1–8 bytes; WSJT-X five, fldigi four → `frequency_hz` when common-integer representable | S1:110, 196–198; S3/S4:89–91, 174–176; S5:682, 770 |
+| 30351.6 | sNR | signed two's complement, 1–8 bytes; program profile one byte → `snr_db` | S1:111, 279; S3/S4:92–94, 177 |
+| 30351.7 | iMD | signed two's complement, 1–8 bytes, normally one → `imd_db` | S1:112, 279 |
+| 30351.8 | decoderSoftware / decodingSoftware | string → `reporting_software` | S1:113, 133; S3/S4:126–128, 148; S5:586, 650 |
+| 30351.9 | antennaInformation | string → `antenna_information` | S1:114; S3/S4:129–131, 149; S5:587, 652 |
+| 30351.10 | mode | string; ADIF MODE or SUBMODE → `mode` | S1:115; S3/S4:95–97, 179; S5:683, 772 |
+| 30351.11 | informationSource | one-byte flags → `information_source`, including 1 versus 2 and test bit | S1:116; S3/S4:101–103, 182; S5:685, 776 |
+| 30351.12 | persistentIdentifier | string/opaque bytes; fldigi fixed eight → `persistent_identifier`, no security interpretation | S1:117; S5:585, 648 |
+| 30351.13 | rigInformation | string → `rig_information` | S1:119; S3/S4:132–134, 150 |
+| 30351.14 | messageBits | raw bytes, surplus trailing bits preserved; no common mapping | S1:120 |
+| 30351.15 | deltaT | signed int16 in 100 µs; 0x8000 is native unknown; preserve raw, no common mapping | S1:121 |
+| 30351.16 | fractionalFrequency | one byte in 1/256 Hz, two in 1/65536 Hz; preserve raw, no guessed addition to frequency | S1:122 |
+| 0.150 | flowStartSeconds | unsigned four-byte epoch seconds → UTC `time`, 1970 through u32 maximum; never observer receipt time | S1:118, 280; S3/S4:104–105, 183–189; S5:681, 768 |
+| Other | Unknown element | Preserve enterprise, ID, declared length, field content, exact template and record; never interpret | S2 §9 |
+
+Integer values beyond the common integer range remain in evidence without a scalar
+common value. Repeated instances of one IE likewise have no guessed scalar value.
+Known elements with invalid widths remain in evidence; the observer diagnoses them.
+
+`v` below means 65535 in a template. Lists are in exact wire order.
+
+| Profile | Set kind / Template ID | Ordered IE(length), enterprise 30351 unless prefixed 0. | Source |
+|---|---|---|---|
+| WSJT-X (both versions) | Template / 0x50e3 | 1(v), 5(5), 6(1), 10(v), 3(v), 11(1), 0.150(4) | S3/S4:73–108 |
+| WSJT-X (both versions) | Options Template / 0x50e2, scope count 1 | 2(v), 4(v), 8(v), 9(v), 13(v) | S3/S4:109–137 |
+| fldigi | Template / 0x022c | 1(v), 0.150(4), 5(4), 10(v), 3(v), 11(1) | S5:677–686 |
+| fldigi long | Options Template / 0x0219, scope count 0 | 2(v), 4(v), 12(8), 8(v), 9(v) | S5:580–589 |
+| fldigi short | Options Template / 0x0218, scope count 0 | 2(v), 4(v), 12(8) | S5:591–598 |
+
+Both writers send sender template, receiver template, receiver data, then sender data,
+with zero Set padding to four-byte boundaries (S3/S4:59–71, 234–292;
+S5:688–780, 817–830). Headers contain version 10, complete length, export seconds,
+sequence number, and observation domain. RFC sequence numbers count all data records;
+S3/S4's split routine counts sender records only (270), and S5 increments per message
+(849). Preserve supplied counters rather than silently correcting source evidence.
+The encoder's counters are explicit caller inputs.
+
+## H.3 Decoder state, evidence, and limits
+
+**`QGI-PSI-0011` — Framing.** Check the complete 16-byte header, message length,
+Set header and Set length, template specifiers and record fields before allocation.
+Reserved Set IDs are malformed. Version 10 is implemented; older versions are
+unsupported and later versions are skipped without interpreting their Sets.
+Templates (Set 2), Options Templates (Set 3), and Data Sets (ID ≥256) are supported.
+Process Sets in wire order; a later template cannot rescue an earlier unknown Set.
+Zero-field template records, including all-template withdrawals, are ignored over UDP.
+A residual suffix shorter than the minimum record is padding. If enough bytes remain
+for a minimum record, they must parse as a record; a supposed padding suffix cannot
+hide an overlong variable field. A zero-minimum-length template is rejected.
+
+**`QGI-PSI-0012` — State.** Scope templates by caller session bytes, observation
+domain, and template ID. The empty session key explicitly means this codec's one
+anonymous exporter. Applications collecting multiple exporters MUST supply distinct
+transport-session keys; the CLI uses the full numeric source socket address.
+Identical definitions refresh; changed definitions replace. Overflow is `oversized`,
+with no eviction. An explicit `DecodeOptions.expiry` discards cached definitions
+whose last observed export time is less than that cutoff. There is no implicit
+clock, timeout, reordering buffer, or sequence-based reconstruction. Reset one
+session or all sessions. All state changes commit only after every event is admitted.
+Caller resets/cutoffs resolve exporter restarts and stale UDP definitions; arrival
+order alone cannot establish export order (S2 §§8.4, 9.3).
+
+| Resource | Admission policy and evidence |
 |---|---|
-| Native message | One complete IPFIX message in a UDP datagram. |
-| Framing | Datagram plus IPFIX message/Set lengths, not one datagram per reception. The templated class uses `native.format: "ipfix_record"` and `QGI-CLS-0020`–`0032`; per-event `native.data` is one record, with full-message evidence retained separately. |
-| Sending direction | Reception-report export toward PSK Reporter is the native sending direction. A possible outbound report encoder is not specified by this placeholder; no generic control operation is assigned. |
-| Source to pin | [RFC 7011](https://www.rfc-editor.org/rfc/rfc7011.txt), September 2013, plus a dated, hashed copy of PSK Reporter's [developer/IPFIX definition and examples](https://pskreporter.info/pskdev.html), consulted 2026-11-12. |
+| Message | 60,000 bytes, below RFC's 65,535-byte header limit (S2 §10.3.3) and ordinary UDP's payload bound; covers the source writers' 952 and 1,454 bytes. This is a QGI resource policy, not a service MTU. |
+| Field | At most 59,980 content bytes within one Data Set; lengths must fit actual remaining bytes. |
+| Templates | 16 sessions, session key ≤128 bytes, 64 templates per session across domains; 64 fields per template, ≤518 template bytes (6 + 64×8). The programs use two live definitions per profile, three fldigi IDs in total; RFC permits IDs 256–65535, not unlimited cache storage. |
+| Cache | At most 1,024 templates, 530,432 raw template bytes; fields and keys have the fixed count bounds above. No cached receiver records. |
+| Dependencies | At most one receiver record and its ≤518-byte template per spot; receiver plus sender record bytes are disjoint portions of this message. |
+| Events | At most 4,096 records and skips combined per message; a further outcome is an explicit error. Empty templates/messages yield no fabricated events. |
 
-**`QGI-PSI-0003` — Evidence and remaining profile gates.** The developer page describes separate receiver information and sender information records, enterprise
-number 30351, template caching and optional template-defined attributes. Candidate `spot` fields
-are Annex A's explicit receiver/sender fields, frequency, mode, SNR, time and reporting software.
-Receiver metadata needs its own record event and evidence when used by a sender's reception event;
-it cannot be reconstructed from sender bytes alone. [PSK Reporter IPFIX definition](https://pskreporter.info/pskdev.html)
+**`QGI-PSI-0003` — Record mapping and evidence.** A template containing IE 30351.1
+identifies sender-information records, which become `spot`. A template containing
+30351.2 without 30351.1 identifies `receiver_information`, a separate 0.2.0 catalog
+kind. Other records become `native` with empty common fields. The IDs do not choose
+the layout. Receiver fields on a spot come only from exactly one receiver record
+in that same message, even when that receiver follows the spot. Zero or multiple
+receiver records leave receiver fields absent. Never retain receiver values across
+messages or reconstruct them from sender bytes.
 
-Still to establish: a stable dated/hash pin; all supported information elements/templates; bounds,
-expiry and reordering policy; Options Data Record kind/receiver association; unknown information
-elements; variable-length fields, padding and signed numeric handling; and native-version behavior.
-The page cites RFC 5101 and uses inconsistent `decoderSoftware`/`decodingSoftware` spellings. Annex H
-must reconcile the examples with RFC 7011, not assume every example is a complete modern profile.
-A receiver-only record is not an invented reception, and a template-only message is not a spot.
-No report was sent to PSK Reporter and no server response was probed.
+Every record carries `native.format: "ipfix_record"`, exact record `data`, exact
+Template Record `template` excluding its Set padding, complete `header`, `set_id`,
+zero-based `set_index`/`record_index`, and exact enclosing `message_data`.
+A joined spot carries `dependencies` with receiver data, template, header and Set ID
+in the class shape (`QGI-CLS-0026`–`0028`, `0034`). Verification requires no session
+cache: validate that evidence against the full message and compare mapped fields.
+A record re-encodes to its exact record bytes; retrieving `message_data` returns
+the original datagram, including unrelated Sets and padding. Unknown-template skips
+carry Set index, template ID, header, opaque Set payload and full-message evidence;
+no record boundaries are guessed. Structured `native.message` contains `options`,
+`scope_fields`, and ordered `elements` with `enterprise`, `id`, `length`, base64 `data`.
+There is no radio-part mapping in revision 1.
 
-Radio parts have no established mapping in this placeholder (`QGI-MOD-0014`); their native
-source and per-kind availability remain annex work. The family output limit and expansion proof
-required by `QGI-MAP-0003` are also unestablished; no conformance is claimed for an assumed limit.
+**`QGI-PSI-0013` — Output expansion proof (`QGI-MAP-0003`).** Let N ≤60,000 be the
+message size. Sender and supporting receiver field content occupy disjoint message
+bytes. The catalog maps each at most once: JSON text costs at most 6N escaped bytes
+(raw byte alternatives cost at most 4N). Record plus dependency base64 costs at most
+4N/3; full-message base64 at most 4N/3; the record's structured element data at most
+4N/3, plus at most 172 bytes of rounding across 64 elements. Two templates, fixed
+headers/indexes, element descriptors, field names, envelope and a maximum 4,096-byte
+context fit a conservative 32,768-byte allowance. Thus the largest observation is
+at most **10N + 32,768 = 632,768 bytes**, below 1,048,576. Element count is at most
+N raw-byte entries + 2,048 context elements + 1,536 envelope/field/element nodes =
+63,584, below 65,536. Both estimates overcount simultaneous expansions. Exact compact
+output admission remains mandatory. The boundary test admits a 60,000-byte message
+with a maximum-size raw-byte sender string, structured view and large context;
+one byte beyond the message cap is rejected. This bound includes supporting evidence,
+rather than treating only the IPFIX length as an observation limit.
+
+## H.4 Encoding and local tools
+
+**`QGI-PSI-0014` — Submission encoding.** `encode_submission` accepts one receiver
+information event, zero or more spot events, and explicit profile/header/template
+options. It validates all supplied fields, integer ranges, representable whole-second
+UTC times, nonempty required text, callsign/locator syntax and mode token syntax;
+unknown or unrepresentable fields are errors, never silently dropped. Mode tokens
+are preserved; the caller chooses a registered ADIF MODE/SUBMODE. Strings are never
+truncated. Every string emitted by the selected fixed layout must be explicitly present:
+use an empty string for an unknown optional value. Missing and null are errors, rather
+than silently becoming empty. Receiver text may be explicitly empty; this writer does
+not invent the unconfirmed receiver acceptance minimum. WSJT-X limits in bytes are callsign 32, locator/mode 16, software 80,
+antenna/rig 128 (S3/S4:16–21). fldigi uses maximum 254 text bytes and fixed eight-byte
+persistent identifier (S5:239, 555–565). The short profile cannot carry software or
+antenna. Receiver values asserted by a spot must agree with its supplied receiver.
+
+The two layouts are H.2's exact templates, field orders, lengths, and padding.
+WSJT-X payloads are at most 952 bytes (S3/S4:9–12); fldigi at most 1,454
+(S5:121–122). An oversized submission fails; caller splitting must retain receiver
+information and schedule descriptor repetition. Templates may be omitted explicitly
+when the receiving session already has them. The fldigi writer rejects receiver-only
+submissions because S5:809–815 does not send them; WSJT-X permits them (S3/S4:250–253).
+There is no generic control operation.
+This API does not grant permission to submit to an outside service.
+
+`qg-interop collect --pskreporter-ipfix [ADDRESS]` defaults to `127.0.0.1:4739`,
+accepts numeric unicast only, emits record NDJSON, and sends H.1 diagnostics to stderr.
+Its state is bounded to 64 exporter/domain histories and 4,096 recent literal sender
+calls per history, using monotonic caller time; overflow is explicit. It does not
+synthesize policy about unconfirmed acceptance. Malformed content does not become
+an invented reception. A malformed message discards all its records atomically.
+
+`qg-interop sim --pskreporter-ipfix --to ADDR --profile wsjtx|fldigi` requires an
+explicit numeric unicast destination. One submission is the default; `--loop`
+uses a stable socket and startup-relative intervals of 301–317 seconds, repeats
+templates every message, and cycles sixteen Q-prefixed callsigns so unchanged calls
+are more than an hour apart. No service hostname or implicit remote destination
+is supplied. The simulator exposes no rate acceleration for this family.

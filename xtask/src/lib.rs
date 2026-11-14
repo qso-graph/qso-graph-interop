@@ -248,6 +248,9 @@ pub fn network_tokens(tokens: TokenStream, library: bool) -> Check {
                         let path = segments.join("::");
                         let allowed = [
                             "path::PathBuf",
+                            "collections::BTreeMap",
+                            "net::IpAddr",
+                            "net::Ipv4Addr",
                             "sync::atomic",
                             "sync::Arc",
                             "sync::OnceLock",
@@ -1128,6 +1131,32 @@ mod tests {
         assert!(source_tokens("#[cfg(feature = \"wsjtx\")] mod family;".parse().unwrap()).is_ok());
         assert!(source_tokens("#![feature(something)]".parse().unwrap()).is_err());
     }
+    #[test]
+    fn collector_standard_types_do_not_open_network_or_process_access() {
+        for source in [
+            "use std::collections::BTreeMap;",
+            "std::net::IpAddr::V4(ip)",
+            "std::net::Ipv4Addr::BROADCAST",
+        ] {
+            assert!(
+                network_tokens(source.parse().unwrap(), false).is_ok(),
+                "{source}"
+            );
+        }
+        for source in [
+            "use std::collections as alias;",
+            "use std::net as alias;",
+            "std::net::ToSocketAddrs",
+            "std::net::UdpSocket::bind(address)",
+            "std::process::Command::new(program)",
+        ] {
+            assert!(
+                network_tokens(source.parse().unwrap(), false).is_err(),
+                "{source}"
+            );
+        }
+    }
+
     #[test]
     fn planted_unsafe_and_macro_cases() {
         for source in [

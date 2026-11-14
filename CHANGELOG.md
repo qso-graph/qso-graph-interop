@@ -3,6 +3,9 @@
 
 ## [Unreleased]
 
+- Add PSK Reporter IPFIX mapping revision 1, bounded template decoding with record evidence, byte-exact WSJT-X and fldigi submission encoders, numeric unicast collector and simulator, source-derived vectors, and decoder fuzzing.
+
+
 ### Removed
 
 - JS8Call family reservation and placeholder Annex C in specification 0.2.0.

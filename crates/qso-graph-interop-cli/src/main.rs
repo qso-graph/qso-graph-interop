@@ -6,6 +6,7 @@ use qso_graph_interop_cli::alltxt;
 mod capture;
 mod fldigi_poll;
 mod fldigi_sim;
+mod ipfix;
 mod loopback_tcp;
 mod n1mm_sim;
 mod numeric_udp;
@@ -55,6 +56,23 @@ enum Command {
         after_help = "Examples:\n  qg-interop poll --fldigi\n  qg-interop poll --fldigi 127.0.0.1:7362 --interval 500 --count 3"
     )]
     Poll(Poll),
+    /// Inspect PSK Reporter IPFIX submissions on a numeric unicast address.
+    #[command(
+        after_help = "Examples:\n  qg-interop collect --pskreporter-ipfix\n  qg-interop collect --pskreporter-ipfix 127.0.0.1:14739 --count 1"
+    )]
+    Collect(Collect),
+}
+
+#[derive(Args)]
+struct Collect {
+    #[arg(long, required = true)]
+    pskreporter_ipfix: bool,
+    /// Numeric unicast bind address; no DNS or multicast.
+    #[arg(default_value="127.0.0.1:4739",value_parser=ipfix::unicast)]
+    address: SocketAddr,
+    /// Exit after this many datagrams (0 listens indefinitely).
+    #[arg(long, default_value_t = 0)]
+    count: u64,
 }
 
 #[derive(Args)]
@@ -124,8 +142,14 @@ fn loopback_address(s: &str) -> Result<SocketAddr, String> {
 }
 #[derive(Args)]
 struct Sim {
-    #[arg(long, required_unless_present_any = ["capture", "n1mm", "fldigi"], conflicts_with_all = ["qgi", "n1mm", "fldigi"])]
+    #[arg(long, required_unless_present_any = ["capture", "n1mm", "fldigi", "pskreporter_ipfix"], conflicts_with_all = ["qgi", "n1mm", "fldigi"])]
     wsjtx: bool,
+    /// Simulate PSK Reporter IPFIX submissions to an explicit numeric unicast destination.
+    #[arg(long, conflicts_with_all=["wsjtx","n1mm","fldigi","capture","qgi","file","interface","address","inhibit_status","count","call","grid","id","dx_call","mode","frequency","from","speed","seed"])]
+    pskreporter_ipfix: bool,
+    /// Source program template layout for IPFIX submissions.
+    #[arg(long, requires="pskreporter_ipfix",default_value="wsjtx",value_parser=["wsjtx","fldigi"])]
+    profile: String,
     /// Serve fldigi 4.2.13 XML-RPC (default 127.0.0.1:7362).
     #[arg(long, conflicts_with_all = ["n1mm", "capture", "qgi", "to", "file", "from", "id", "dx_call", "mode", "frequency", "repeat", "count", "station", "radios", "rate"])]
     fldigi: bool,
@@ -208,6 +232,7 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
         Command::Sim(options) => sim::run(*options),
         Command::Decode(options) => decode_file(options),
         Command::Poll(options) => fldigi_poll::run(options),
+        Command::Collect(options) => ipfix::collect(options),
     }
 }
 

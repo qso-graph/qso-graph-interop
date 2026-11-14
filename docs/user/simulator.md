@@ -187,7 +187,9 @@ qg-interop sim --capture capture.ndjson --qgi --to 127.0.0.1:2237
 
 Native capture playback sends the recorded bytes unchanged. `--qgi` instead sends each complete
 event as one qgi UDP datagram, including carried commands. It doesn't execute those commands.
-The native UDP transport catalog includes WSJT-X, N1MM, and PSK Reporter IPFIX.
+The native UDP transport catalog includes WSJT-X, N1MM, and complete PSK Reporter IPFIX datagrams.
+IPFIX collector events keep one record in `native.data`. Replay those events with `--qgi`
+to preserve their record and full-message evidence.
 TCP and MQTT native captures require their own transport helpers.
 
 An optional top-level `received_at` extension, spelled as `YYYY-MM-DDTHH:MM:SS.mmmZ`, supplies

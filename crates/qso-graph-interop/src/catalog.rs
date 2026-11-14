@@ -124,6 +124,17 @@ pub(super) fn catalog(name: &str) -> Option<Shape> {
             ],
             &[],
         )),
+        "receiver_information" => Some((
+            &[
+                ("receiver_call", "text"),
+                ("receiver_locator", "text"),
+                ("reporting_software", "text"),
+                ("antenna_information", "text"),
+                ("rig_information", "text"),
+                ("persistent_identifier", "text"),
+            ],
+            &[],
+        )),
         "spot" => Some((
             &[
                 ("call", "text"),
@@ -131,6 +142,11 @@ pub(super) fn catalog(name: &str) -> Option<Shape> {
                 ("mode", "text"),
                 ("text", "text"),
                 ("spotter_call", "text"),
+                ("information_source", "integer"),
+                ("imd_db", "integer"),
+                ("antenna_information", "text"),
+                ("rig_information", "text"),
+                ("persistent_identifier", "text"),
                 ("source", "text"),
                 ("frequency_hz", "integer"),
                 ("time", "instant"),

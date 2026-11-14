@@ -213,6 +213,7 @@ pub enum Kind {
     QsoChanged,
     QsoDeleted,
     Spot,
+    ReceiverInformation,
     Score,
     Control,
     Result,
@@ -1374,6 +1375,36 @@ impl<'a> NativeFieldsRef<'a> {
     }
 }
 
+/// Receiver metadata, independent of any reception record.
+#[derive(Clone, Copy, Debug)]
+#[non_exhaustive]
+pub struct ReceiverInformationFieldsRef<'a> {
+    value: &'a Value,
+}
+impl ReceiverInformationFieldsRef<'_> {
+    pub fn as_value(&self) -> &Value {
+        self.value
+    }
+    pub fn receiver_call(&self) -> Option<Text> {
+        self.value.get("receiver_call").map(text_value)
+    }
+    pub fn receiver_locator(&self) -> Option<Text> {
+        self.value.get("receiver_locator").map(text_value)
+    }
+    pub fn reporting_software(&self) -> Option<Text> {
+        self.value.get("reporting_software").map(text_value)
+    }
+    pub fn antenna_information(&self) -> Option<Text> {
+        self.value.get("antenna_information").map(text_value)
+    }
+    pub fn rig_information(&self) -> Option<Text> {
+        self.value.get("rig_information").map(text_value)
+    }
+    pub fn persistent_identifier(&self) -> Option<Text> {
+        self.value.get("persistent_identifier").map(text_value)
+    }
+}
+
 #[derive(Clone, Copy, Debug)]
 #[non_exhaustive]
 pub struct RadioRef<'a> {
@@ -1470,6 +1501,7 @@ pub enum FieldsRef<'a> {
     QsoChanged(QsoFieldsRef<'a>),
     QsoDeleted(QsoFieldsRef<'a>),
     Spot(SpotFieldsRef<'a>),
+    ReceiverInformation(ReceiverInformationFieldsRef<'a>),
     Score(ScoreFieldsRef<'a>),
     Control(ControlFieldsRef<'a>),
     Result(ResultFieldsRef<'a>),
@@ -1487,6 +1519,9 @@ impl<'a> FieldsRef<'a> {
             Kind::QsoChanged => Self::QsoChanged(QsoFieldsRef { value }),
             Kind::QsoDeleted => Self::QsoDeleted(QsoFieldsRef { value }),
             Kind::Spot => Self::Spot(SpotFieldsRef { value }),
+            Kind::ReceiverInformation => {
+                Self::ReceiverInformation(ReceiverInformationFieldsRef { value })
+            }
             Kind::Score => Self::Score(ScoreFieldsRef { value }),
             Kind::Control => Self::Control(ControlFieldsRef { value }),
             Kind::Result => Self::Result(ResultFieldsRef { value }),
@@ -1504,6 +1539,7 @@ impl<'a> FieldsRef<'a> {
             Self::QsoChanged(view) => view.value,
             Self::QsoDeleted(view) => view.value,
             Self::Spot(view) => view.value,
+            Self::ReceiverInformation(view) => view.value,
             Self::Score(view) => view.value,
             Self::Control(view) => view.value,
             Self::Result(view) => view.value,
@@ -1523,6 +1559,7 @@ impl Kind {
             Self::QsoChanged => "qso_changed",
             Self::QsoDeleted => "qso_deleted",
             Self::Spot => "spot",
+            Self::ReceiverInformation => "receiver_information",
             Self::Score => "score",
             Self::Control => "control",
             Self::Result => "result",
@@ -1540,6 +1577,7 @@ impl Kind {
             "qso_changed" => Some(Self::QsoChanged),
             "qso_deleted" => Some(Self::QsoDeleted),
             "spot" => Some(Self::Spot),
+            "receiver_information" => Some(Self::ReceiverInformation),
             "score" => Some(Self::Score),
             "control" => Some(Self::Control),
             "result" => Some(Self::Result),

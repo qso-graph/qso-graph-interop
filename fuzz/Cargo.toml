@@ -46,3 +46,10 @@ path = "fuzz_targets/fldigi.rs"
 test = false
 doc = false
 bench = false
+
+[[bin]]
+name = "ipfix"
+path = "fuzz_targets/ipfix.rs"
+test = false
+doc = false
+bench = false

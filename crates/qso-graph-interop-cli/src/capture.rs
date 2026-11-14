@@ -121,6 +121,13 @@ pub fn parse(bytes: &[u8], carriage: bool) -> io::Result<Vec<Frame>> {
                     "TCP capture playback requires the future stream transport helper",
                 ));
             }
+            if family == "pskreporter-ipfix"
+                && event.native().is_some_and(|n| n.format() == "ipfix_record")
+            {
+                return Err(invalid(
+                    "IPFIX native.data is one record, not a UDP message; use --qgi for record capture playback",
+                ));
+            }
             let data = event.native_bytes().map_err(|e| invalid(&e.to_string()))?;
             if data.len() > 65_507 {
                 return Err(invalid("capture native datagram exceeds 65507 bytes"));

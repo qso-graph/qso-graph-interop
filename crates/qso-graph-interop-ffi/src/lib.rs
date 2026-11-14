@@ -336,7 +336,7 @@ pub unsafe extern "C" fn qgi_version(out: *mut QgiBuffer) -> i32 {
         Ok(())
     })
 }
-/// Creates a codec for UTF-8 bytes "wsjtx", "n1mm", "fldigi", "qgi" (TCP),
+/// Creates a codec for UTF-8 bytes "wsjtx", "n1mm", "fldigi", "pskreporter-ipfix", "qgi" (TCP),
 /// or "qgi-udp". Name has explicit byte length, without NUL. Zero is invalid.
 /// # Safety
 /// Follow the pointer/ownership contract on qgi_version. out is required.
@@ -358,6 +358,9 @@ pub unsafe extern "C" fn qgi_codec_new(
             "wsjtx" => Box::new(qso_graph_interop::wsjtx::Wsjtx::default()),
             "n1mm" => Box::new(qso_graph_interop::n1mm::N1mm::default()),
             "fldigi" => Box::new(qso_graph_interop::fldigi::Fldigi::default()),
+            "pskreporter-ipfix" => {
+                Box::new(qso_graph_interop::pskreporter_ipfix::PskReporterIpfix::default())
+            }
             "qgi" => Box::new(qso_graph_interop::qgi::Qgi::new(
                 qso_graph_interop::qgi::Transport::Tcp,
             )),
@@ -611,6 +614,9 @@ pub unsafe extern "C" fn qgi_encode_event(
                 Some("wsjtx") => Some(Box::new(qso_graph_interop::wsjtx::Wsjtx::default())),
                 Some("n1mm") => Some(Box::new(qso_graph_interop::n1mm::N1mm::default())),
                 Some("fldigi") => Some(Box::new(qso_graph_interop::fldigi::Fldigi::default())),
+                Some("pskreporter-ipfix") => Some(Box::new(
+                    qso_graph_interop::pskreporter_ipfix::PskReporterIpfix::default(),
+                )),
                 _ => None,
             };
         let publication = qso_graph_interop::PublicationOptions::default()

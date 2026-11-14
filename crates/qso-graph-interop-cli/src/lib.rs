@@ -2,3 +2,4 @@
 //! Local simulator input parsing, separate from the protocol library.
 #![forbid(unsafe_code)]
 pub mod alltxt;
+pub mod collector;

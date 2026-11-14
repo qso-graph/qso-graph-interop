@@ -11,13 +11,14 @@ readme = "README.md"
 keywords = ["ham-radio", "wsjt-x", "n1mm", "fldigi", "protocol"]
 categories = ["parser-implementations", "network-programming"]
 # Repository conformance vectors and integration tests stay in the repository.
-include = ["src/**/*.rs", "README.md", "LICENSE", "tests/core.rs", "tests/carriage.rs", "tests/protocol.rs", "tests/n1mm.rs", "tests/fldigi.rs", "tests/fixtures/**"]
+include = ["src/**/*.rs", "README.md", "LICENSE", "tests/core.rs", "tests/carriage.rs", "tests/protocol.rs", "tests/n1mm.rs", "tests/fldigi.rs", "tests/pskreporter_ipfix.rs", "tests/fixtures/**"]
 
 [features]
-default = ["wsjtx", "n1mm", "fldigi", "qgi", "serde"]
+default = ["wsjtx", "n1mm", "fldigi", "pskreporter-ipfix", "qgi", "serde"]
 wsjtx = ["serde"]
 n1mm = ["serde"]
 fldigi = ["serde"]
+pskreporter-ipfix = ["serde"]
 qgi = ["serde"]
 serde = ["dep:serde"]
 conformance = ["serde", "dep:sha2-const-stable"]
@@ -40,8 +41,12 @@ required-features = ["n1mm"]
 
 [[test]]
 name = "conformance"
-required-features = ["conformance", "wsjtx", "n1mm", "fldigi", "qgi"]
+required-features = ["conformance", "wsjtx", "n1mm", "fldigi", "pskreporter-ipfix", "qgi"]
 
 [[test]]
 name = "fldigi"
 required-features = ["fldigi"]
+
+[[test]]
+name = "pskreporter_ipfix"
+required-features = ["pskreporter-ipfix"]
