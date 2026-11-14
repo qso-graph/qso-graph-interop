@@ -384,7 +384,7 @@ pub fn run(s: &Sim) -> Result<()> {
     deadline(Instant::now(), end_ms, s.speed)?;
     timestamp(end_ms)?;
     sim::install_stop()?;
-    let socket = NumericUdp::sender(s.to.ok_or("--to is required")?)?;
+    let socket = NumericUdp::sender(s.to.ok_or("--to is required")?, s.interface)?;
     let mut contest = Contest::new(s);
     let start = Instant::now();
     send(&socket, vec![contest.app_info()])?;

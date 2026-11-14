@@ -183,6 +183,11 @@ version = "1.4.8"
 criteria = "safe-to-deploy"
 notes = "Not audited yet: Rust-only OS signal registration and bindings for simulator shutdown. No bundled native source or assembly. Exact-version review backlog, not an audit. Network-free verification uses the existing imported audit store."
 
+[[exemptions.socket2]]
+version = "0.6.5"
+criteria = "safe-to-deploy"
+notes = "Not audited yet: the CLI's multicast receive (SO_REUSEADDR, IPv4 group join on one named interface), used only inside the audited numeric UDP adapter. Pure Rust over libc 0.2.191 and windows-sys 0.61.2, already in the shipped graph; no bundled native source or assembly. Mozilla and the Bytecode Alliance trust its publisher (Thomas de Zeeuw). Exact-version review backlog, not an audit."
+
 [[exemptions.syn]]
 version = "2.0.119"
 criteria = "safe-to-run"

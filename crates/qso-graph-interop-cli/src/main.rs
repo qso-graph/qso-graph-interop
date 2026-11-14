@@ -37,12 +37,12 @@ struct Cli {
 enum Command {
     /// Print each decoded datagram as one line.
     #[command(
-        after_help = "Examples:\n  qg-interop listen --wsjtx\n  qg-interop listen --n1mm\n  qg-interop listen --n1mm 127.0.0.1:12060 --json"
+        after_help = "Examples:\n  qg-interop listen --wsjtx\n  qg-interop listen --n1mm\n  qg-interop listen --n1mm 127.0.0.1:12060 --json\n  qg-interop listen --wsjtx 239.255.0.1:2237 --interface 192.0.2.10"
     )]
     Listen(Listen),
     /// Simulate UDP traffic or serve fldigi XML-RPC on loopback.
     #[command(
-        after_help = "Examples:\n  qg-interop sim --fldigi\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --n1mm --to 127.0.0.1:12060 --radios 2 --speed 60\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call Q1AW --mode FT4 --frequency 7074000"
+        after_help = "Examples:\n  qg-interop sim --fldigi\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --n1mm --to 127.0.0.1:12060 --radios 2 --speed 60\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call Q1AW --mode FT4 --frequency 7074000\n  qg-interop sim --wsjtx --to 239.255.0.1:2237 --interface 192.0.2.10"
     )]
     Sim(Box<Sim>),
     /// Decode one complete native body from a file or standard input.
@@ -67,6 +67,9 @@ struct Listen {
     n1mm: bool,
     /// Numeric local address to bind (IPv6 uses brackets).
     address: Option<SocketAddr>,
+    /// Numeric local IPv4 interface, required only for an IPv4 multicast group.
+    #[arg(long, value_name = "IPV4", value_parser = numeric_udp::interface)]
+    interface: Option<numeric_udp::Interface>,
     /// Emit specification NDJSON (also the default output).
     #[arg(long)]
     json: bool,
@@ -156,6 +159,9 @@ struct Sim {
     /// Numeric destination; no implicit broadcast or discovery.
     #[arg(long, required_unless_present = "fldigi", value_parser = sim::target)]
     to: Option<SocketAddr>,
+    /// Numeric local IPv4 interface, required only for an IPv4 multicast destination.
+    #[arg(long, value_name = "IPV4", value_parser = numeric_udp::interface, conflicts_with = "fldigi")]
+    interface: Option<numeric_udp::Interface>,
     /// ALL.TXT to play; the built-in synthetic sample is the default.
     #[arg(long, conflicts_with_all = ["dx_call", "mode", "frequency"])]
     file: Option<PathBuf>,
@@ -203,7 +209,7 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn listen(options: Listen) -> Result<(), Box<dyn std::error::Error>> {
-    let socket = NumericUdp::bind(listen_address(&options))?;
+    let socket = NumericUdp::bind(listen_address(&options), options.interface)?;
     let mut codec = selected_codec(options.n1mm);
     let mut bytes = [0_u8; 65_535];
     let stdout = io::stdout();
@@ -448,6 +454,35 @@ mod tests {
     use super::*;
     use clap::CommandFactory;
     use qso_graph_interop::wsjtx::Utf8;
+
+    #[test]
+    fn udp_adapter_rejects_invalid_interfaces_before_opening_sockets() {
+        for (address, interface) in [
+            ("239.255.0.1:2237", None),
+            ("127.0.0.1:2237", Some("127.0.0.1")),
+            ("[ff02::1]:2237", None),
+            ("[ff02::1]:2237", Some("127.0.0.1")),
+            ("239.255.0.1:2237", Some("0.0.0.0")),
+            ("239.255.0.1:2237", Some("224.0.0.1")),
+            ("239.255.0.1:2237", Some("255.255.255.255")),
+        ] {
+            let address = address.parse().unwrap();
+            let interface = interface.map(|value| value.parse().unwrap());
+            for result in [
+                NumericUdp::bind(address, interface),
+                NumericUdp::sender(address, interface),
+            ] {
+                assert_eq!(result.err().unwrap().kind(), io::ErrorKind::InvalidInput);
+            }
+        }
+        assert!(
+            numeric_udp::validate(
+                "239.255.0.1:2237".parse().unwrap(),
+                Some("127.0.0.1".parse().unwrap())
+            )
+            .is_ok()
+        );
+    }
 
     #[test]
     fn help_examples_and_no_color() {

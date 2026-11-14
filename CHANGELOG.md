@@ -5,6 +5,11 @@
 
 ### Added
 
+- IPv4 multicast receive and send on an explicit numeric local interface with
+  `--interface`: shared-port `listen`, WSJT-X and N1MM simulators, and capture replay.
+  Validate group and interface addresses, restrict multicast traffic to that interface,
+  and test two listeners receiving the same stream in Linux, macOS, and Windows CI.
+
 - Manual main-only release checks, signed CLI archives and C library bundles for
   four platforms, Linux packages, crates.io publication, provenance, and release
   setup instructions. Add local and CI release tests, package-content checks,

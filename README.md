@@ -13,6 +13,8 @@ commands. Applications supply observer context and own transport and control pol
 
 ## What it covers
 
+`listen` joins an IPv4 multicast group on a named interface with `--interface <IPV4>`.
+
 | Application | Protocol and transport | Decode | Commands | Exact re-encode | Simulator | CLI | Status |
 |---|---|:-:|:-:|:-:|---|---|---|
 | WSJT-X | Binary messages, schemas 1–3, all 17 types; UDP | ✓ | ✓ | ✓ | `sim --wsjtx` | `listen`, `decode` | Supported |

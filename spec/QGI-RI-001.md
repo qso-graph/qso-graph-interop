@@ -54,7 +54,7 @@ without running) and `Demo` (observable by running).
 
 | ID | Requirement | Verify | Status |
 |---|---|---|---|
-| `QGI-RI-0030` | **Optional features, never required to use a codec:** UDP receive and send, TCP client, HTTP XML-RPC client. A UDP receive helper MAY join a multicast group only when the caller supplies both a numeric multicast group address and a numeric local interface address. It MUST validate those addresses, join only that interface, never all interfaces, and never choose a group itself. | Static | Target for library transport helpers (CLI supplies numeric UDP and loopback HTTP; no library transport introduced) |
+| `QGI-RI-0030` | **Optional features, never required to use a codec:** UDP receive and send, TCP client, HTTP XML-RPC client. A UDP receive helper MAY join a multicast group only when the caller supplies both a numeric multicast group address and a numeric local interface address. It MUST validate those addresses, join only that interface, never all interfaces, and never choose a group itself. | Static | CLI implements numeric UDP receive and send, including IPv4 multicast on an explicit local interface, and loopback HTTP; the library has no transport |
 | `QGI-RI-0031` | **Numeric addresses supplied by the caller;** no DNS, no discovery, no broadcast search; a receiver binds exactly what it is given and nothing defaults to every interface. | Test | Met in the CLI (Numeric addresses; fldigi defaults to 127.0.0.1:7362; only loopback TCP; planted DNS and non-loopback cases) |
 | `QGI-RI-0032` | **Bounded buffers and queues; drops counted by reason;** no sender filtering, rate limiting or replies unless the caller configures them. | Test | Target |
 
