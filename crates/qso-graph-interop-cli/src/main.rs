@@ -91,6 +91,9 @@ struct Listen {
     /// Emit specification NDJSON (also the default output).
     #[arg(long)]
     json: bool,
+    /// Print a readable event summary instead of NDJSON.
+    #[arg(long, conflicts_with = "json")]
+    human: bool,
     /// Exit after this many datagrams (0 listens indefinitely).
     #[arg(long, default_value_t = 0)]
     count: u64,
@@ -208,6 +211,9 @@ struct Sim {
     /// Emit an InhibitStatus snapshot: available, held, or withdrawn.
     #[arg(long, requires = "wsjtx", value_parser = ["available", "held", "withdrawn"], conflicts_with_all = ["capture", "n1mm", "fldigi"])]
     inhibit_status: Option<String>,
+    /// Emit proposed JTTYText updates; requires --mode JTTY.
+    #[arg(long, requires_all = ["wsjtx", "mode"], conflicts_with_all = ["capture", "file", "n1mm", "fldigi", "pskreporter_ipfix"])]
+    jtty_text: bool,
     /// Select the fixed QSO script or a JTTY status snapshot, with this mode.
     #[arg(long)]
     mode: Option<String>,
@@ -246,7 +252,13 @@ fn listen(options: Listen) -> Result<(), Box<dyn std::error::Error>> {
     loop {
         let (n, peer) = socket.recv_from(&mut bytes)?;
         // The observer on the selected application's broadcast/server port supplies direction.
-        match emit(codec.as_mut(), &bytes[..n], &mut output, "from_application") {
+        match emit(
+            codec.as_mut(),
+            &bytes[..n],
+            &mut output,
+            "from_application",
+            options.human,
+        ) {
             Ok(()) => output.flush()?,
             Err(e) => eprintln!("{peer}: {e}"),
         }
@@ -263,12 +275,40 @@ fn emit(
     bytes: &[u8],
     output: &mut impl Write,
     direction: &str,
+    human: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let options = DecodeOptions::new(qso_graph_interop::Context::from_value(
         serde_json::json!({"direction": direction, "exchange": "unknown"}),
     )?);
     let outcome = codec.decode(bytes, &options)?;
     for event in outcome.events {
+        if human {
+            let value = event.value();
+            let fields = &value["fields"];
+            if event.kind_token() == "decode" && fields.get("message_id").is_some() {
+                writeln!(
+                    output,
+                    "JTTYText id={} message={} start={} df={}Hz snr={}dB complete={} off_air={} text={}",
+                    value["wire_id"],
+                    fields["message_id"],
+                    fields["start"],
+                    fields["audio_offset_hz"],
+                    fields["snr_db"],
+                    fields["complete"],
+                    fields["off_air"],
+                    fields["text"]
+                )?;
+            } else {
+                writeln!(
+                    output,
+                    "{} id={} {}",
+                    event.kind_token(),
+                    value["wire_id"],
+                    fields
+                )?;
+            }
+            continue;
+        }
         output.write_all(&qso_graph_interop::json::write(
             &event,
             &qso_graph_interop::PublicationOptions::new(
@@ -329,7 +369,13 @@ fn decode_file(options: Decode) -> Result<(), Box<dyn std::error::Error>> {
         .take((codec.limits().message_bytes + 1) as u64)
         .read_to_end(&mut bytes)?;
     if !options.fldigi {
-        return emit(codec.as_mut(), &bytes, &mut io::stdout().lock(), "unknown");
+        return emit(
+            codec.as_mut(),
+            &bytes,
+            &mut io::stdout().lock(),
+            "unknown",
+            false,
+        );
     }
     let out = codec.decode(&bytes, &decode)?;
     if !decode.metadata().extensions().contains_key("request")
@@ -366,6 +412,12 @@ fn listen_address(options: &Listen) -> SocketAddr {
 fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
     let make = |body| Packet::new(s.id.as_str(), body);
     let mode = s.mode.as_deref().unwrap_or("FT8");
+    if s.jtty_text && mode != "JTTY" {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "--jtty-text requires --mode JTTY",
+        ));
+    }
     let dx_call = s.dx_call.as_deref().unwrap_or("Q1AW");
     let frequency = s.frequency.unwrap_or(14_074_000);
     let call = if s.call.is_empty() { "Q0CALL" } else { &s.call };
@@ -425,6 +477,43 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
             && let Body::Status(status) = &mut packet.body
         {
             status.decoding = false;
+        }
+        if s.jtty_text {
+            let mut elapsed_ms = 0_u64;
+            for (index, text) in ["CQ Q1ABC DN13", "Q1ABC Q2XYZ HELLO", "Q2XYZ Q1ABC 73"]
+                .into_iter()
+                .enumerate()
+            {
+                let start_ms = seconds
+                    .checked_mul(1000)
+                    .and_then(|ms| ms.checked_add(elapsed_ms))
+                    .ok_or_else(|| {
+                        io::Error::new(io::ErrorKind::InvalidInput, "JTTY start overflows")
+                    })?;
+                let mut start = wsjtx::QDateTime::default();
+                start.julian_day = i64::try_from(start_ms / 86_400_000)
+                    .ok()
+                    .and_then(|days| days.checked_add(2_440_588))
+                    .ok_or_else(|| {
+                        io::Error::new(io::ErrorKind::InvalidInput, "JTTY date overflows")
+                    })?;
+                start.time = QTime::new((start_ms % 86_400_000) as u32);
+                start.time_spec = 1;
+                // Five characters per second, one full-text update every two characters.
+                for end in (2..text.len() + 2).step_by(2) {
+                    let end = end.min(text.len());
+                    let mut value = wsjtx::JttyText::default();
+                    value.message_id = index as i64 + 1;
+                    value.start = start.clone();
+                    value.delta_frequency_hz = 1500;
+                    value.snr_db = -12;
+                    value.text = text[..end].into();
+                    value.complete = end == text.len();
+                    value.off_air = false;
+                    messages.push(make(Body::JttyText(value)));
+                }
+                elapsed_ms += text.len() as u64 * 200 + 1500;
+            }
         }
         messages.push(make(Body::Close));
         return Ok(messages);
@@ -643,6 +732,61 @@ mod tests {
             }
         }
     }
+    #[test]
+    fn jtty_listener_formats_human_and_json_without_losing_text() {
+        let mut text = wsjtx::JttyText::default();
+        text.message_id = i64::MAX;
+        text.start.julian_day = 2_440_588;
+        text.start.time = QTime::new(123);
+        text.start.time_spec = 1;
+        text.delta_frequency_hz = 1501;
+        text.snr_db = -12;
+        text.text = "Q1ABC café\n73".into();
+        text.complete = true;
+        let bytes = wsjtx::encode(&Packet::new("instance", Body::JttyText(text))).unwrap();
+        let mut json = Vec::new();
+        emit(
+            &mut wsjtx::Wsjtx::default(),
+            &bytes,
+            &mut json,
+            "from_application",
+            false,
+        )
+        .unwrap();
+        assert_eq!(json.iter().filter(|b| **b == b'\n').count(), 1);
+        let event: serde_json::Value = serde_json::from_slice(&json).unwrap();
+        assert_eq!(event["mapping"], 3);
+        assert_eq!(event["fields"]["text"], "Q1ABC café\n73");
+        assert_eq!(event["fields"]["message_id"], i64::MAX.to_string());
+        let mut human = Vec::new();
+        emit(
+            &mut wsjtx::Wsjtx::default(),
+            &bytes,
+            &mut human,
+            "from_application",
+            true,
+        )
+        .unwrap();
+        let human = String::from_utf8(human).unwrap();
+        assert!(human.starts_with("JTTYText id=\"instance\" message=\"9223372036854775807\""));
+        assert!(human.contains("complete=true off_air=false text=\"Q1ABC café\\n73\""));
+        assert_eq!(human.lines().count(), 1);
+        assert!(
+            Cli::try_parse_from(["qg-interop", "listen", "--wsjtx", "--human", "--json"]).is_err()
+        );
+        assert!(
+            Cli::try_parse_from([
+                "qg-interop",
+                "sim",
+                "--wsjtx",
+                "--jtty-text",
+                "--to",
+                "127.0.0.1:2237"
+            ])
+            .is_err()
+        );
+    }
+
     #[test]
     fn jtty_snapshot_has_no_invented_decode_or_qso() {
         let cli = Cli::parse_from([

@@ -308,3 +308,62 @@ fn beta6_independent_source_fixtures_and_revision_compatibility() {
         }
     }
 }
+
+#[test]
+fn jtty19_installed_builds_preserve_fields_and_reject_planted_changes() {
+    let fixture: Value = serde_json::from_str(include_str!("fixtures/wsjtx-jtty19.json")).unwrap();
+    assert_eq!(fixture["vectors"].as_array().unwrap().len(), 22);
+    for vector in fixture["vectors"].as_array().unwrap() {
+        let bytes = unhex(vector["wire_hex"].as_str().unwrap());
+        let mut codec = Wsjtx::default();
+        let event = codec
+            .decode(&bytes, &DecodeOptions::default())
+            .unwrap()
+            .events
+            .remove(0);
+        assert_eq!(event.value()["fields"], vector["fields"]);
+        assert_eq!(event.value()["wire_id"], vector["wire_id"]);
+        assert_eq!(event.mapping(), 3);
+        assert_eq!(event.kind_token(), "decode");
+        assert_eq!(event.native_bytes().unwrap(), bytes);
+        assert_eq!(
+            codec
+                .reencode(&event, &EncodeOptions::default(), &Default::default())
+                .unwrap(),
+            bytes
+        );
+        for field in [
+            "message_id",
+            "start",
+            "audio_offset_hz",
+            "snr_db",
+            "text",
+            "complete",
+            "off_air",
+            "radio",
+        ] {
+            let mut wrong = event.clone().into_value();
+            wrong["fields"].as_object_mut().unwrap().remove(field);
+            assert!(
+                codec
+                    .verify(&Event::from_value(wrong).unwrap(), &Default::default())
+                    .is_err(),
+                "{field}"
+            );
+        }
+        for revision in [1, 2] {
+            let mut older = event.clone().into_value();
+            older["mapping"] = revision.into();
+            let older = Event::from_value(older).unwrap();
+            assert_eq!(
+                codec.verify(&older, &Default::default()).unwrap(),
+                qso_graph_interop::Verification::Unavailable
+            );
+            assert!(
+                codec
+                    .validate_authored(&older, &Default::default())
+                    .is_err()
+            );
+        }
+    }
+}

@@ -6,7 +6,7 @@ use super::{
     types::*,
 };
 pub(super) fn known(n: u32) -> bool {
-    n <= 18
+    n <= 19
 }
 pub(super) fn read_body(r: &mut Reader<'_>, n: u32) -> Result<Body, Error> {
     Ok(match n {
@@ -142,6 +142,15 @@ pub(super) fn read_body(r: &mut Reader<'_>, n: u32) -> Result<Body, Error> {
             controller_id: r.utf8()?,
             ttl_ms: r.u32()?,
             station: r.utf8()?,
+        }),
+        19 => Body::JttyText(JttyText {
+            message_id: r.i64()?,
+            start: r.qdatetime()?,
+            delta_frequency_hz: r.u32()?,
+            snr_db: r.i32()?,
+            text: r.utf8()?,
+            complete: r.boolean()?,
+            off_air: r.boolean()?,
         }),
         6 => Body::Close,
         7 => Body::Replay,
@@ -284,6 +293,15 @@ pub(super) fn write_body(w: &mut Writer, body: &Body) -> Result<(), Error> {
             w.utf8(&v.controller_id)?;
             w.u32(v.ttl_ms)?;
             w.utf8(&v.station)?;
+        }
+        Body::JttyText(v) => {
+            w.i64(v.message_id)?;
+            w.qdatetime(&v.start)?;
+            w.u32(v.delta_frequency_hz)?;
+            w.i32(v.snr_db)?;
+            w.utf8(&v.text)?;
+            w.boolean(v.complete)?;
+            w.boolean(v.off_air)?;
         }
         Body::Close | Body::Replay => {}
     }

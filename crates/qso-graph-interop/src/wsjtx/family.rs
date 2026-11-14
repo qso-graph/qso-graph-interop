@@ -88,7 +88,7 @@ fn metadata(n: u32, direction: &str) -> (&'static str, Option<(&'static str, &'s
     match n {
         0 => ("lifecycle", Some(("state", "heartbeat"))),
         1 | 17 => ("radio_state", None),
-        2 | 10 => ("decode", None),
+        2 | 10 | 19 => ("decode", None),
         5 | 12 => ("qso_logged", None),
         3 => (
             match direction {
@@ -193,10 +193,10 @@ fn mapped(
             fields.insert(common.into(), v);
         }
     }
-    if matches!(n, 1 | 2 | 5 | 10 | 12 | 17) {
+    if matches!(n, 1 | 2 | 5 | 10 | 12 | 17 | 19) {
         fields.insert("radio".into(), json!({"instance":text_value(&packet.id)}));
     }
-    let mut v = json!({"spec":crate::model::SPEC,"family":"wsjtx","mapping":if n >= 17 { 2 } else { 1 },"kind":kind,"context":options.context,"native_version":packet.schema.to_string(),"wire_id":text_value(&packet.id),"fields":fields,"native":{"format":"wsjtx_datagram","data":crate::base64::encode(bytes)}});
+    let mut v = json!({"spec":crate::model::SPEC,"family":"wsjtx","mapping":if n == 19 { 3 } else if n >= 17 { 2 } else { 1 },"kind":kind,"context":options.context,"native_version":packet.schema.to_string(),"wire_id":text_value(&packet.id),"fields":fields,"native":{"format":"wsjtx_datagram","data":crate::base64::encode(bytes)}});
     if options.structured {
         v["native"]["message"] = json!({"schema":packet.schema,"type":n,"id":text_value(&packet.id),"body":structured,"extensions":crate::base64::encode(&packet.extensions)});
     }
@@ -224,7 +224,7 @@ impl Profile for Wsjtx {
         "wsjtx"
     }
     fn mapping(&self) -> u32 {
-        2
+        3
     }
     fn native_version_supported(&self, event: &Event) -> bool {
         event.is_command()
@@ -247,6 +247,17 @@ impl Profile for Wsjtx {
                 return Ok(Verification::Unavailable);
             }
             let bytes = event.native_bytes()?;
+            // Revisions 1–2 predate type 19. Preserve their opaque compatibility
+            // evidence without claiming to verify a revision 3 payload.
+            if event.mapping() < 3
+                && bytes.get(..4) == Some(&MAGIC.to_be_bytes())
+                && bytes
+                    .get(4..8)
+                    .is_some_and(|s| matches!(s, [0, 0, 0, 1..=3]))
+                && bytes.get(8..12) == Some(&19_u32.to_be_bytes())
+            {
+                return Ok(Verification::Unavailable);
+            }
             let packet = match super::decode(&bytes)? {
                 Outcome::Skipped { .. } => return Ok(Verification::Unavailable),
                 Outcome::Message(p) => p,
@@ -266,14 +277,15 @@ impl Profile for Wsjtx {
             let newer = crate::json::integer_u64(&v["mapping"]).is_some_and(|n| n > 1)
                 || v["spec"] != crate::model::SPEC;
             let mut expected = actual.into_value();
-            if crate::json::integer_u64(&v["mapping"]) == Some(2) && packet.body.message_type() < 17
-            {
-                expected["mapping"] = 2.into();
+            let revision = crate::json::integer_u64(&v["mapping"]).unwrap_or(0);
+            let required = expected["mapping"].as_u64().expect("mapping revision");
+            if revision < required {
+                return Err(invalid(
+                    "native type requires a newer WSJT-X mapping revision",
+                ));
             }
-            if crate::json::integer_u64(&v["mapping"]) == Some(1)
-                && packet.body.message_type() >= 17
-            {
-                return Err(invalid("native type requires WSJT-X mapping revision 2"));
+            if revision <= 3 {
+                expected["mapping"] = revision.into();
             }
             let mut supplied = v.clone();
             for value in [&mut supplied, &mut expected] {
@@ -328,15 +340,17 @@ impl Profile for Wsjtx {
         (|| {
             if !matches!(
                 crate::json::integer_u64(&event.value()["mapping"]),
-                Some(1 | 2)
+                Some(1..=3)
             ) {
                 return Err(crate::Error::new(
                     Category::UnsupportedVersion,
                     "unsupported WSJT-X mapping revision",
                 ));
             }
-            if !event.is_command() {
-                self.verify(event, options)?;
+            if !event.is_command() && self.verify(event, options)? != Verification::Verified {
+                return Err(invalid(
+                    "authored WSJT-X evidence requires a supported mapping and native type",
+                ));
             }
             if event.value()["native"].get("message").is_some() {
                 let bytes = event.native_bytes()?;

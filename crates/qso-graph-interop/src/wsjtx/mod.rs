@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! WSJT-X 3.0.2 and provisional v3.3.0-beta6 additions. See docs/PROTOCOL.md for source pins and wire rules.
+//! WSJT-X 3.0.2, provisional v3.3.0-beta6 additions, and proposed JTTYText. See docs/PROTOCOL.md for source pins and wire rules.
 #![forbid(unsafe_code)]
 
 mod codec;

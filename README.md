@@ -17,7 +17,7 @@ commands. Applications supply observer context and own transport and control pol
 
 | App | Protocol and transport | Decode | Commands | Exact re-encode | Simulator | Command-line tool | Status |
 |---|---|:-:|:-:|:-:|---|---|---|
-| WSJT-X | Types 0–17, schemas 1–3; type 18, schemas 2–3; JTTY (provisional until WSJT-X’s general release); UDP | ✓ | ✓ | ✓ | `sim --wsjtx` | `listen`, `decode` | Supported |
+| WSJT-X | Types 0–17, schemas 1–3; type 18, schemas 2–3; JTTY text (proposed); UDP | ✓ | ✓ | ✓ | `sim --wsjtx` | `listen`, `decode` | Supported |
 | N1MM Logger+ | XML broadcasts; UDP | ✓ | ✓ | ✓ | `sim --n1mm` | `listen`, `decode` | Supported |
 | fldigi 4.2.13 | XML-RPC; HTTP on loopback | ✓ | ✓ | ✓ | `sim --fldigi` | `poll`, `decode` | Supported |
 | These apps | QGI event carriage; UDP or TCP | ✓ | Forwards events | — | `sim --capture --qgi` | — | Supported |

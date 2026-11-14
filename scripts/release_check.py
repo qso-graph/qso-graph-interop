@@ -4,9 +4,10 @@
 """What .github/workflows/release.yml decides before it publishes, kept here so each decision has a
 test (scripts/test_release_check.py) with the cases it must refuse.
 
-    release_check.py source REF EVENT BUILD_SHA WORKFLOW_SHA WORKFLOW_REF ACTOR TRIGGERING_ACTOR
+    release_check.py source REF EVENT BUILD_SHA WORKFLOW_SHA WORKFLOW_REF ACTOR TRIGGERING_ACTOR [VERSION]
                                                 requires a manual main run and its exact commit
-    release_check.py mappings [ROOT]            refuse any provisional family mapping
+    release_check.py mappings [ROOT [VERSION]]  allow listed provisional mappings only in X.Y.Z-beta.N
+    release_check.py notes VERSION              print that version's CHANGELOG release notes
     release_check.py version VERSION            VERSION is a release or a beta: X.Y.Z or X.Y.Z-beta.N
     release_check.py proving-run REPO TREE      the green pull request run of this repository's CI
                                                 whose own commit holds exactly TREE; reads the runs
@@ -36,27 +37,55 @@ import urllib.error
 import urllib.request
 
 # Matched whole with fullmatch: `$` would also match before a trailing newline.
-VERSION = re.compile(r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(-beta\.[1-9][0-9]{0,2})?")
+VERSION = re.compile(r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(-beta\.[1-9][0-9]*)?")
 USER_AGENT = "qso-graph-interop release (https://github.com/qso-graph/qso-graph-interop)"
 
 
 PROVISIONAL_MARKER = "QGI-MAPPING-PROVISIONAL"
 
 
-def mappings_releasable(root):
-    """Reject the exact provisional marker in any specification annex or catalog.
+def changelog_section(root, version):
+    """One exact version's release notes, excluding every neighboring section."""
+    changelog = Path(root) / "CHANGELOG.md"
+    sections = re.split(r"(?m)^## ", changelog.read_text() if changelog.is_file() else "")
+    matches = [part.split("\n", 1)[1] for part in sections[1:]
+               if re.fullmatch(r"\[" + re.escape(version) + r"\](?: - [0-9]{4}-[0-9]{2}-[0-9]{2})?",
+                               part.split("\n", 1)[0]) and "\n" in part]
+    return matches[0] if len(matches) == 1 else None
 
-    The marker is reserved for live mapping metadata, never explanatory prose.
-    Scan every spec file, including vector catalogs, so a marked entry cannot hide
-    behind a different catalog filename or an accidentally unmarked annex.
+
+def mappings_releasable(root, version=None):
+    """Every live marker must have a matching, pinned beta release-note entry.
+
+    Marker: TOKEN family/revision pin (no whitespace inside the pin).
+    Notes: - Provisional mapping: `family/revision`; pin: `pin`.
+    Only the exact version's level-two CHANGELOG section counts.
     """
-    spec = Path(root) / "spec"
+    root = Path(root)
+    spec = root / "spec"
     if not spec.is_dir():
         raise SystemExit(f"missing specification directory: {spec}")
-    marked = [str(path.relative_to(root)) for path in sorted(spec.rglob("*"))
+    marked = [path for path in sorted(spec.rglob("*"))
               if path.is_file() and PROVISIONAL_MARKER.encode() in path.read_bytes()]
-    if marked:
-        raise SystemExit("release refused: provisional family mapping in " + ", ".join(marked))
+    if not marked:
+        return
+    if not isinstance(version, str) or not re.fullmatch(
+            r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)-beta\.[1-9][0-9]*", version):
+        raise SystemExit("release refused: provisional family mapping in " +
+                         ", ".join(str(p.relative_to(root)) for p in marked))
+    section = changelog_section(root, version)
+    if section is None:
+        raise SystemExit(f"beta refused: missing or duplicate CHANGELOG section [{version}]")
+    listed = set(re.findall(r"(?m)^- Provisional mapping: `([a-z0-9.-]+/[1-9][0-9]*)`; pin: `([^`\s]+)`\.$", section))
+    for path in marked:
+        data = path.read_text()
+        declarations = re.findall(re.escape(PROVISIONAL_MARKER) +
+                                  r" ([a-z0-9.-]+/[1-9][0-9]*) ([^\s<>\"]+)", data)
+        if len(declarations) != data.count(PROVISIONAL_MARKER):
+            raise SystemExit(f"beta refused: unpinned provisional marker in {path.relative_to(root)}")
+        for mapping, pin in declarations:
+            if (mapping, pin) not in listed:
+                raise SystemExit(f"beta refused: unlisted provisional mapping {mapping} ({path.relative_to(root)})")
 
 
 def source_allowed(ref, event, build_sha, workflow_sha, workflow_ref, actor, triggering_actor):
@@ -179,13 +208,19 @@ def _checksum_of(crate, version):
 
 
 def main(argv):
-    if len(argv) in (1, 2) and argv[0] == "mappings":
-        mappings_releasable(Path(argv[1]) if len(argv) == 2 else Path(__file__).resolve().parents[1])
+    if len(argv) in (1, 2, 3) and argv[0] == "mappings":
+        mappings_releasable(Path(argv[1]) if len(argv) >= 2 else Path(__file__).resolve().parents[1],
+                            argv[2] if len(argv) == 3 else None)
         return
-    if len(argv) == 8 and argv[0] == "source":
-        if not source_allowed(*argv[1:]):
+    if len(argv) in (8, 9) and argv[0] == "source":
+        if not source_allowed(*argv[1:8]):
             sys.exit("Signing and publication require KI7MT's manual main Release and its exact commit")
-        mappings_releasable(Path(__file__).resolve().parents[1])
+        mappings_releasable(Path(__file__).resolve().parents[1], argv[8] if len(argv) == 9 else None)
+        return
+    if len(argv) == 2 and argv[0] == "notes":
+        notes = changelog_section(Path(__file__).resolve().parents[1], argv[1])
+        if notes is not None:
+            print(notes, end="")
         return
     if len(argv) == 2 and argv[0] == "version":
         if not is_version(argv[1]):

@@ -1,0 +1,66 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "wsjtx",
+  "mapping": 3,
+  "class": "positive",
+  "input": {
+    "data": "rbzL2gAAAAMAAAAT/////wAAAAAAAAAAAAAAAAAlPYwANu77AQAABd3////0/////wEA",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "native_version": "3",
+      "kind": "decode",
+      "wire_id": null,
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "message_id": "0",
+        "start": "1970-01-01T01:00:00.123Z",
+        "audio_offset_hz": 1501,
+        "snr_db": -12,
+        "text": null,
+        "complete": true,
+        "off_air": false,
+        "radio": {
+          "instance": null
+        }
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAMAAAAT/////wAAAAAAAAAAAAAAAAAlPYwANu77AQAABd3////0/////wEA"
+      }
+    }
+  },
+  "expected_message": {
+    "schema": 3,
+    "type": 19,
+    "id": null,
+    "body": {
+      "message_id": "0",
+      "start": {
+        "julian_day": "2440588",
+        "milliseconds": 3600123,
+        "time_spec": 1
+      },
+      "delta_frequency_hz": 1501,
+      "snr_db": -12,
+      "text": null,
+      "complete": true,
+      "off_air": false
+    },
+    "extensions": ""
+  },
+  "reencode": {
+    "data": "rbzL2gAAAAMAAAAT/////wAAAAAAAAAAAAAAAAAlPYwANu77AQAABd3////0/////wEA"
+  }
+}

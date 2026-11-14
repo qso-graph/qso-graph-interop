@@ -9,18 +9,18 @@ Tests and examples use synthetic Q-prefixed callsigns and local collectors only.
 
 ## H.0 Source pins and authority
 
-All sources were retrieved at **2026-11-14T17:28:27Z**. These local evidence files
-are not redistributed. Hashes for S1, S2, and S5 are from
-`/tmp/qgi-pskr-src/SHA256SUMS`; the WSJT-X archive pins are also in Annex B.
+All sources were retrieved at **2026-11-14T17:28:27Z** and are not redistributed. Each
+SHA-256 is of the file as retrieved from the location given; the WSJT-X archive pins are
+also in Annex B.
 Each source reference below incorporates this retrieval timestamp and its row's SHA-256.
 
-| Source | Local file and SHA-256 pin |
+| Source | Location and SHA-256 pin |
 |---|---|
-| S1 | `/tmp/qgi-pskr-src/pskreporter.info_pskdev.html`; `9eab5ae2a01dcb840ac674ac694eb99d723a18dab685d939007d5755971af915`. Developer page, element table lines 106–122, reporting rules 80–96, 128–139, 333–334. |
-| S2 | `/tmp/qgi-pskr-src/www.rfc-editor.org_rfc_rfc7011.txt`; `59b7ddb1c0350ae711ba41d771d93f4d440ee04755403446f580bb777b928f73`. RFC 7011, September 2013; §§3–4, 7–9. |
-| S3 | `/tmp/qgi-wsjtx-src/v3.0.2/Network/PSKReporterIPFIX.cpp` and `PSKReporter.cpp`, from the v3.0.2 archive; archive SHA-256 `8483a851bcb6455f5787de87b89efdf90e928842debde036e287e93e7f3837bd`. |
-| S4 | `/tmp/qgi-wsjtx-src/v3.3.0-beta6/Network/PSKReporterIPFIX.cpp` and `PSKReporter.cpp`, from the v3.3.0-beta6 archive; archive SHA-256 `cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be`. |
-| S5 | `/tmp/qgi-pskr-src/fldigi-4.2.13/src/spot/pskrep.cxx`, from `fldigi-4.2.13.tar.gz`; archive SHA-256 `a1e8d990359ce9c0cce3ceb5116fd0cf72c95528969766898640ca6ca2dba8d4` (Annex E). |
+| S1 | <https://pskreporter.info/pskdev.html>; `9eab5ae2a01dcb840ac674ac694eb99d723a18dab685d939007d5755971af915`. Developer page, element table lines 106–122, reporting rules 80–96, 128–139, 333–334. |
+| S2 | <https://www.rfc-editor.org/rfc/rfc7011.txt>; `59b7ddb1c0350ae711ba41d771d93f4d440ee04755403446f580bb777b928f73`. RFC 7011, September 2013; §§3–4, 7–9. |
+| S3 | `Network/PSKReporterIPFIX.cpp` and `Network/PSKReporter.cpp` in the WSJT-X `v3.0.2` source archive; archive SHA-256 `8483a851bcb6455f5787de87b89efdf90e928842debde036e287e93e7f3837bd`. |
+| S4 | `Network/PSKReporterIPFIX.cpp` and `Network/PSKReporter.cpp` in the WSJT-X `v3.3.0-beta6` source archive; archive SHA-256 `cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be`. |
+| S5 | `src/spot/pskrep.cxx` in <https://www.w1hkj.org/files/fldigi/fldigi-4.2.13.tar.gz>; archive SHA-256 `a1e8d990359ce9c0cce3ceb5116fd0cf72c95528969766898640ca6ca2dba8d4` (Annex E). |
 
 **`QGI-PSI-0010` — Authority.** RFC 7011 supersedes the developer page's RFC 5101
 terminology. For the two program profiles, actual S3–S5 bytes govern conflicting

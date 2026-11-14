@@ -2,8 +2,14 @@
   "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
   "spec": "0.2.0",
   "family": "wsjtx",
-  "mapping": 2,
-  "source_sha256": "b640a632f38b218f97b9c9cf5b5a09b183e1629c613c33d90f39635f9b3fdb3d",
+  "mapping": 3,
+  "source_sha256": "8d38619417ee80853d2e5480bd92143065da1a64d5a33a41969f40086194e065",
+  "previous_provisional_source": {
+    "mapping": 2,
+    "source_tag": "v3.3.0-beta6",
+    "source_tarball_sha256": "cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be",
+    "source_sha256": "b640a632f38b218f97b9c9cf5b5a09b183e1629c613c33d90f39635f9b3fdb3d"
+  },
   "previous_source": {
     "mapping": 1,
     "source_tag": "v3.0.2",
@@ -4557,6 +4563,1254 @@
       "sha256": "a23fb974d9b6a466187c2b73999f36f5740644b663fc33745ec42dc56cb66d29"
     },
     {
+      "file": "jtty19-capture-macos27-line-17.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "a98f8ec2c8773e8a01ddaed1c9e3305a3e19d68c8c5090d227d9cc2a33b4b129"
+    },
+    {
+      "file": "jtty19-capture-macos27-line-18.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "8dcfe9d2c5339b640de454f9036c33bf0cb9acafc9acae4ac90bbdcdc4fe40d4"
+    },
+    {
+      "file": "jtty19-capture-macos27-line-19.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "8c17820c6fcb1d80107a4533066b4bd738557de836fa310eeb2bd33727e31e46"
+    },
+    {
+      "file": "jtty19-capture-macos27-line-21.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "ac98b58975484dc23785d4fc64327eebde4c30f540c6f2d503d87f23a53f78c5"
+    },
+    {
+      "file": "jtty19-capture-macos27-line-23.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "3898bcba42d83ff280ec69662f94f5e6b069ea8c3d8c8cdf2c79beaa803019ba"
+    },
+    {
+      "file": "jtty19-capture-macos27-line-24.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "cce90ecee497c385fa9940083797f41219345da3c18bfd1aa14ab4c414a39eeb"
+    },
+    {
+      "file": "jtty19-capture-macos27-line-25.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "ab3b444169cf7e4635ee996403d230c0ea205e2b72e445e2d94e2162b1c66cfc"
+    },
+    {
+      "file": "jtty19-capture-macos27-line-26.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "ea76ddc63099fba9a95c4f45914a9c4da9b7a140617f35cc6215277b2c0b4d68"
+    },
+    {
+      "file": "jtty19-capture-macos27-line-27.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "516b0bffde0c51deb43f213735d279b6dc2e675dbf39973ea5a752a32c859df4"
+    },
+    {
+      "file": "jtty19-capture-macos27-line-28.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "1eba8f8c9327be89a9e5f53d5e7cbd313545cd03e25e8907c9bb25fd69f72d55"
+    },
+    {
+      "file": "jtty19-capture-macos27-line-29.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "1f78797cfed40bfdbfd5f6aa6ae1168980dc5889a7293d21063ccbc77b5da0b5"
+    },
+    {
+      "file": "jtty19-capture-windows11-line-18.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "ba96f7c25e7c589352ec78b9fc56c3137e84cd169dc50558ff48bfaa7683bc4c"
+    },
+    {
+      "file": "jtty19-capture-windows11-line-19.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "7ee322cd5d8b803924ce6ed8238147e0c8d74a340a4a5dac0a6214552204213f"
+    },
+    {
+      "file": "jtty19-capture-windows11-line-21.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "fdadbcdee912a39777dabbf75fb8c2be38196e93b79ee458223ac5a570e55cdd"
+    },
+    {
+      "file": "jtty19-capture-windows11-line-22.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "7e21e41de164f25aedb4d49fddf45d2e5fc383fa3659b79388831984c657e2a8"
+    },
+    {
+      "file": "jtty19-capture-windows11-line-24.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "01ad04a8bab547e6ff462d7ea001d3fa543865879463810821e9d37003072d87"
+    },
+    {
+      "file": "jtty19-capture-windows11-line-25.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "a57eac1dfd3db3dbd436746e39a8c7887507be0e76ef0e527f7cc117b2e01c06"
+    },
+    {
+      "file": "jtty19-capture-windows11-line-26.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "2a3a873711194a8915603a9318b21b8cbaaa29f4d74e99ab3cab85615e2e1e83"
+    },
+    {
+      "file": "jtty19-capture-windows11-line-27.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "5e5748b0bba2bf31f45733a0f2e45954668c48be8e644e36fae8b70bb7ec9d1f"
+    },
+    {
+      "file": "jtty19-capture-windows11-line-28.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "49a3d951a7000308335530df46eeb4915da0fc8c6dd3a79131e6cb0dad3620d5"
+    },
+    {
+      "file": "jtty19-capture-windows11-line-29.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "aa939fbbeef7246bde44218c91d6c3287d2928e787434853c60e5566791a924f"
+    },
+    {
+      "file": "jtty19-capture-windows11-line-30.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "4a662358ef32927e6dd223c62ec895e92bd80782ea486b8cca01d06ec38a6a78"
+    },
+    {
+      "file": "jtty19-complete-s2.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "2352fe12250be46dca230a797516502b159e81d26cb58edfb8df6cba8223a6ea"
+    },
+    {
+      "file": "jtty19-complete-s3.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "48c1e54ea9d0f6ea9887b48020b6fee013aa85ed5be0e31ea9f86895e9dbba5f"
+    },
+    {
+      "file": "jtty19-growing-s2.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "1dfd1d914d5bf0013c1ab8003eea2fbf4cc343502651bbea30bbdb2caf0a1218"
+    },
+    {
+      "file": "jtty19-growing-s3.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "887659e635225dfebd84d10046faab57082bc9d6c6d26ca89d8a0465727edcfd"
+    },
+    {
+      "file": "jtty19-minimum-id-s2.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "7fe54d93c2f5b5a45154853ba1e45ad2b31b64370c37c822993df7ad916009ed"
+    },
+    {
+      "file": "jtty19-minimum-id-s3.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "bd3809db7a8aa9d62bf86e0d44f3dd8031ce815ac5356a1ebfe65cf934bfb596"
+    },
+    {
+      "file": "jtty19-null-s2.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "e06a5430cfa728c0161bb0dd725692fbf00ff84cd999569167a276eced66f974"
+    },
+    {
+      "file": "jtty19-null-s3.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "493d871e88c4d2ac37bf359bb51020fa8e944f1c311364597ebcecd6a453e626"
+    },
+    {
+      "file": "jtty19-off-air-s2.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "af1bc3f470ceb2b89c66adafa70a0c0f9dba9e34e1a138701f542d613222500f"
+    },
+    {
+      "file": "jtty19-off-air-s3.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "ef7029ad5721d1f969203e8325759ac64f17206e4c110bd2ef86b13e80117267"
+    },
+    {
+      "file": "jtty19-raw-s2.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "356512aa9c35f31c12e95589a32d407a3eaea5eb52b150d81b21d30ed353b8f7"
+    },
+    {
+      "file": "jtty19-raw-s3.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "f006f0bdeb08814170d5698e49fbb0ab8b46d2699455c7fa87fbb6d606024e2a"
+    },
+    {
+      "file": "jtty19-truncated-s2-12.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "0064eaa2337b224e9eda812ad3aa2bc03f5ec1419577f34ec130eafb58423c2b"
+    },
+    {
+      "file": "jtty19-truncated-s2-13.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "708a5427f92d3371310a875c25b33e29a1ff5631c9fe511774cb6224b109cd09"
+    },
+    {
+      "file": "jtty19-truncated-s2-14.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "858729087f0786462422b1d007cb6d7c03e94aa968eadc13dd0d953ccc913950"
+    },
+    {
+      "file": "jtty19-truncated-s2-15.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "e2b4cbe4f8a5cb986a816b9e73b5b8785d6845cdd8d8f9d03cc947eb142bfd14"
+    },
+    {
+      "file": "jtty19-truncated-s2-16.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "e2a944645b80c1de239a3e33ef0e2a211108f77bac963f873ce434a9eb2a227f"
+    },
+    {
+      "file": "jtty19-truncated-s2-17.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "27cb8741a00d366a62b47faa2e8629c8931dce07048cde5bbf8f3c660507c4e2"
+    },
+    {
+      "file": "jtty19-truncated-s2-18.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "d0bd9c8dff8de807f98a054cdc4075fed9a2d11df331d575c310d4c44df0123a"
+    },
+    {
+      "file": "jtty19-truncated-s2-19.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "ac7c648b6f5d515e5ee0bba89db91f6d5c8c8037e2e873a7f8f3b0a2c0a25bab"
+    },
+    {
+      "file": "jtty19-truncated-s2-20.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "91f47e4d2053df757e8381ebd3319dbeb858da1a66d6d04150149e9046aadbce"
+    },
+    {
+      "file": "jtty19-truncated-s2-21.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "5250617b10907170574b7a9aa2177a15e4b3f4d0b6645318355d72ba97b9d082"
+    },
+    {
+      "file": "jtty19-truncated-s2-22.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "bb6d3a697e0f48338eab6e14536e4bb8b89bb3aa59eeb3e899e7292b7b4c2df4"
+    },
+    {
+      "file": "jtty19-truncated-s2-23.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "e26183c0791278fcf1576b85cc95962222014635eaaa673e5567ff8eeb12ad26"
+    },
+    {
+      "file": "jtty19-truncated-s2-24.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "e75588959245973b999fb69491498cdbbe1f2375089b62fd9b4ec37028501e2f"
+    },
+    {
+      "file": "jtty19-truncated-s2-25.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "d9214ee2d826354931337666b59e86d3a51338119f81ddbfbd5f9051d3698759"
+    },
+    {
+      "file": "jtty19-truncated-s2-26.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "ff2914f10fd63303d82bc48b314c9afc3006175978dcd3dba29f2f385a2b948b"
+    },
+    {
+      "file": "jtty19-truncated-s2-27.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "898dc736736186a83e48d0d98eea79a92dcfc18f7458acd84765b0161b9a413d"
+    },
+    {
+      "file": "jtty19-truncated-s2-28.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "b46e2c29c5d97a6554a0a075b8fdf7c2a976c15f54506813a7a1a7389e57279d"
+    },
+    {
+      "file": "jtty19-truncated-s2-29.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "3512025cc2bea44b77354f2ab967dd54170d36fe1d9d8252746529ad7f3f5fde"
+    },
+    {
+      "file": "jtty19-truncated-s2-30.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "2e57132f45e117e9337823bcc5fbee93835174cc3c7fb4169bf3f8fabcd03b0e"
+    },
+    {
+      "file": "jtty19-truncated-s2-31.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "4fe523d4bd923b32378fa775be5772dc08ae63ffb9530b22b3757de1399f5d44"
+    },
+    {
+      "file": "jtty19-truncated-s2-32.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "475b1c7d1fc9ac8336a23dcb6245f72d447e3e83152358ce4c2a387665795907"
+    },
+    {
+      "file": "jtty19-truncated-s2-33.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "e859547f7df45ba72f62021071df176f1ec2885aae466453071b6cf37117ee7b"
+    },
+    {
+      "file": "jtty19-truncated-s2-34.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "a67a03e5dbedff3ae137cb6d6ee66c23ae437db056b8bca46dec36c27e7e1db8"
+    },
+    {
+      "file": "jtty19-truncated-s2-35.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "4c4f6cf4c5fd76c6cadf4a995f70e58d3603f4b970b37e82fc513e650efaf17e"
+    },
+    {
+      "file": "jtty19-truncated-s2-36.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "c65d75dad7c6d27422662105159d96a73d1a64440320b0585891b0c4c3127526"
+    },
+    {
+      "file": "jtty19-truncated-s2-37.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "0db521f4a33f3ff779be34d780322d992ab6a64af11f4d837657c8a5d6306196"
+    },
+    {
+      "file": "jtty19-truncated-s2-38.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "5a487db2d72e1da62a3946596e633bb074810d23ac26d4b8f2e1be8047a68788"
+    },
+    {
+      "file": "jtty19-truncated-s2-39.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "c22d7e21c6256d9601bc6aa55ae9242841078277f2a21d1043ce49a5cd974e06"
+    },
+    {
+      "file": "jtty19-truncated-s2-40.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "b767b72198f9e56e08d01d1cd823c66d96e9388e4ef25c71911672ec1fcefc79"
+    },
+    {
+      "file": "jtty19-truncated-s2-41.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "ca2b272bc5f5163f657921eae3539193393ca16eccf7d7a7828ad9ade2f57601"
+    },
+    {
+      "file": "jtty19-truncated-s2-42.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "f3a7acc871d0061b99b2cd8c3eee514c029f03d7afc09972554a829531dc8440"
+    },
+    {
+      "file": "jtty19-truncated-s2-43.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "362c443ae413c561934e1f19b50dde73077fff3ab48275a1a272ed249fb20075"
+    },
+    {
+      "file": "jtty19-truncated-s2-44.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "b6a5494847f97a1f0ad331524f51a2588519020937c9180c45db7bbc61c5957a"
+    },
+    {
+      "file": "jtty19-truncated-s2-45.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "480dbf3af1f82d0df3830499d5c78cfb5b69ad3e8957a23c70cc2e33826fdbe9"
+    },
+    {
+      "file": "jtty19-truncated-s2-46.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "87a3f0eaf88228fab84a01a7e8791ad82c060e56816d141e5a2e2bd21cb86876"
+    },
+    {
+      "file": "jtty19-truncated-s2-47.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "7d75853494ce7c74a1576cb167f21133ba5c6ad0203f7609cb495e67c998a267"
+    },
+    {
+      "file": "jtty19-truncated-s2-48.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "3edc00911a607ad9f386c4de59109828d8f5a927c91b587f03001aea21298b7d"
+    },
+    {
+      "file": "jtty19-truncated-s2-49.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "d9b9f31c6d94d19b5d6fe56a24d454893b3d183811ff2426fefac800076cbc1f"
+    },
+    {
+      "file": "jtty19-truncated-s2-50.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "ea69be88a7249e599130a9ab5134078c6e256a5f5eb446af316593fcb34dfdaf"
+    },
+    {
+      "file": "jtty19-truncated-s2-51.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "3057a948ba5754fdc374cbdce89e95e05b071c7569398904d9cc343a1ca71475"
+    },
+    {
+      "file": "jtty19-truncated-s2-52.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "f36113ad5113088a47ac3e7c2d75d8c71c0bb6b6e61dcdf998d93701497576fd"
+    },
+    {
+      "file": "jtty19-truncated-s2-53.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "cff09be60cdaaaaf8699e346fdfa3f6fc555ed12093fcd2293f7e1bac882c8bd"
+    },
+    {
+      "file": "jtty19-truncated-s2-54.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "09b2def1a3cb56434a8e8825c422b0b90d8f4eae114a1baef484c23088f3e4cf"
+    },
+    {
+      "file": "jtty19-truncated-s2-55.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "67b12f084c86a4d8ad60fdf7775b145a30639a485601bdc570947ee058bfba53"
+    },
+    {
+      "file": "jtty19-truncated-s2-56.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "60e5c268409218a85c3f0b09ae5141b2576344e4acb8dbb2ef8c6bdb169594c8"
+    },
+    {
+      "file": "jtty19-truncated-s2-57.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "ba0101acc0f04b0822b7fad9e8d920f42ad56373b5c933df70da692fe7c99aae"
+    },
+    {
+      "file": "jtty19-truncated-s2-58.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "b67a0787346034c863d264839aa85e9d3fe8a03b104b93093bbb221dbe23ce86"
+    },
+    {
+      "file": "jtty19-truncated-s2-59.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "0f911ad0bf9fdf0984a19b95803820f8e4ea27ade06a0c0def54f90d6ad21ad0"
+    },
+    {
+      "file": "jtty19-truncated-s2-60.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "abba3e174e4cb5aeb5dab1d29b715bc46708451f8e7704191be99b4e3a9e4573"
+    },
+    {
+      "file": "jtty19-truncated-s2-61.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "6a4ec168f9991cf380d16bf64aba84501a4e37809a19af1e9de47612440cf5fc"
+    },
+    {
+      "file": "jtty19-truncated-s2-62.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "61547595f2be2cb0ba90daae8f0ce6e2058d43c2052cec0ca569a0d22f91088b"
+    },
+    {
+      "file": "jtty19-truncated-s2-63.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "d00f1c9bc6e5e155cd2a917a25b936906b4c58a2c545870ff5a7e4354b8d3105"
+    },
+    {
+      "file": "jtty19-truncated-s2-64.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "b4e9c72b76c0506e3bdab7c7c9d7ce4c7523266214224b65f03122f21a56a1c9"
+    },
+    {
+      "file": "jtty19-truncated-s2-65.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "60262f99d9210b4161f69bf3843f4693a3e1fc79a8a13c6bc07e6d6e7d71df87"
+    },
+    {
+      "file": "jtty19-truncated-s2-66.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "5525e1cee7b9fc0b8696491e11cc32dbbfe39f4839ea35e4cbb62d46a2cae658"
+    },
+    {
+      "file": "jtty19-truncated-s2-67.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "98030b591b2213b920eff4b8a07d86ee4b27ed582966bed26bbb8651a2024f35"
+    },
+    {
+      "file": "jtty19-truncated-s2-68.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "76e5ee7c38859eda8fcc708774bd3b72ec772006159d24d5567f699fc913c843"
+    },
+    {
+      "file": "jtty19-truncated-s2-69.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "f3f62247e6901554981c78a37ad248bea3820e227a955f7b1a9392348d888496"
+    },
+    {
+      "file": "jtty19-truncated-s2-70.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "741e8efec8986550e719cc1eaca4203ad7540233cbf676087e7db99276d466f5"
+    },
+    {
+      "file": "jtty19-truncated-s2-71.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "ded7f7e38a5758242cf7a06d4ccd70534713dfb04524ef1a37eda27fcffb1505"
+    },
+    {
+      "file": "jtty19-truncated-s3-12.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "4c27a197d04623e3965714f6c900fe15f669e4e90ddeeacc4e608227a6b3e3e7"
+    },
+    {
+      "file": "jtty19-truncated-s3-13.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "d594879bda6d5cd12777f01750beacbb334bd8976a8c2ee237a91a32242e6216"
+    },
+    {
+      "file": "jtty19-truncated-s3-14.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "379e0f4f8fd48f772bb5ef40c04f1e9e5346ca78b18b8c92846eeb6ba322ba34"
+    },
+    {
+      "file": "jtty19-truncated-s3-15.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "9d3b3f2edadf227c3d5c9c967eddbf6c58fec4e87cabf17907956c1aac0d5a02"
+    },
+    {
+      "file": "jtty19-truncated-s3-16.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "d72b09efcbd5cee4d3506fe77de7e74305e6074944b8b9b6ce18ee2cd8fdc992"
+    },
+    {
+      "file": "jtty19-truncated-s3-17.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "a3e2a716f3e3b0246b326a5369d6173481dd4b5cb049968eb5e346d9997b99b1"
+    },
+    {
+      "file": "jtty19-truncated-s3-18.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "b1497bffc20c05c2f115a6716619b45639af76346144f856169adf3e08ef77bc"
+    },
+    {
+      "file": "jtty19-truncated-s3-19.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "fed879c254b949fc41ac538ea095e63a83edf42da2baea1f530aa118616c9416"
+    },
+    {
+      "file": "jtty19-truncated-s3-20.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "962da93cfc16a7dfaa1e4d68a04fc9f44de87204a95ab8efe5ebfe9b55152f55"
+    },
+    {
+      "file": "jtty19-truncated-s3-21.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "4d239515d6879920c60ab4fbc076c01d8431f39c82564f4907690d6622d06365"
+    },
+    {
+      "file": "jtty19-truncated-s3-22.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "1ccd8f2d38551f8c80a5729722b78066d5b705378f7c278647e55d2d1c64d02a"
+    },
+    {
+      "file": "jtty19-truncated-s3-23.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "7a8265b3248106460b17cb4fae04452e90fcd3aec2642764b4968d234fdbf773"
+    },
+    {
+      "file": "jtty19-truncated-s3-24.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "dd1befc88f33b502ed65649db331444b3c42e785b01bc4aa4fd2306243fb2402"
+    },
+    {
+      "file": "jtty19-truncated-s3-25.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "da1d1846e4cb78114a9bfa6a6999a962e6902c54fe929e2e957b4c352907db72"
+    },
+    {
+      "file": "jtty19-truncated-s3-26.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "890651e15e321d99768583f42a67964f2a591c243d12eeee88fcaefc47f52fab"
+    },
+    {
+      "file": "jtty19-truncated-s3-27.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "c1fc6a4b18c9274db61cd06ddf5bc45218fd34fd429ab04c932217642a0eda6b"
+    },
+    {
+      "file": "jtty19-truncated-s3-28.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "ca5d763813983728894c32beae580a0336d26692f9a6d22d9608006435873a59"
+    },
+    {
+      "file": "jtty19-truncated-s3-29.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "1f61f2f183df7ecf04dbce50899a0cfe91eae567f26beb604ae6060f30d017fb"
+    },
+    {
+      "file": "jtty19-truncated-s3-30.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "3008ea77ed3607382d9253a8cef109812416c1bc76ef0e98f9960f52f98b27b2"
+    },
+    {
+      "file": "jtty19-truncated-s3-31.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "980397e62f1b573c565f92c1da2d9c6d4322e98ec0ab9ecf645e1cce764e67e5"
+    },
+    {
+      "file": "jtty19-truncated-s3-32.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "7a613b326d35727b366c756266847af6977d0119a0ebb00ec91e375f6fec49e7"
+    },
+    {
+      "file": "jtty19-truncated-s3-33.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "85ed9e7437d29dd6722ba6e8b53b855a2f2ffd98461ec127993579376d72316c"
+    },
+    {
+      "file": "jtty19-truncated-s3-34.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "3c9966ffca65af86baa034de910fee3e73e24de5d36eddfc75c69f272c6f9454"
+    },
+    {
+      "file": "jtty19-truncated-s3-35.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "a01eba5634927c69532d30f389622c57c4851c077a4ae8eb0e2a0bd4e2e16ac1"
+    },
+    {
+      "file": "jtty19-truncated-s3-36.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "199ebe057b9b6da945cf49b940ec5e5a6e873a5a441e5452c8c37163dd62be63"
+    },
+    {
+      "file": "jtty19-truncated-s3-37.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "ffbe4a58c0b57236c45035ed46538a2277189bd18e9315960f7de5b4036c0bd8"
+    },
+    {
+      "file": "jtty19-truncated-s3-38.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "aff8fd310133c77cafbcc7f6f11d6184894da0153f6fafde7be1e4ba02724c08"
+    },
+    {
+      "file": "jtty19-truncated-s3-39.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "5f653822eaf311bd38a8285ea2e66e5caf754e6c5c7afc7691b3bc63ed547dd9"
+    },
+    {
+      "file": "jtty19-truncated-s3-40.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "0baa66820d65e9d2ea9fcb23fc44c5120c1136560a6d2609e5fde89846dfcf71"
+    },
+    {
+      "file": "jtty19-truncated-s3-41.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "a9a7d162f9f6e971e578e7951abc41368d62c8de6b8039130ba1ecfae6870690"
+    },
+    {
+      "file": "jtty19-truncated-s3-42.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "cd8ec94277190c0aa8e90ae7d8e7a1278d3df6b88318176fd11ec8f3b20eda4a"
+    },
+    {
+      "file": "jtty19-truncated-s3-43.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "fa3dedde458f250fc2912a99550916b6a4dc34d907e9bff20c507db41ff3c44a"
+    },
+    {
+      "file": "jtty19-truncated-s3-44.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "58b8108e91ecc8ad6766b5416b57a7c1966a86beb899a0577fa9f02984b2916b"
+    },
+    {
+      "file": "jtty19-truncated-s3-45.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "ee7aefdc121523f44e98c0fd3de2983eff9132418cd873544cb6e1e85e49cd67"
+    },
+    {
+      "file": "jtty19-truncated-s3-46.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "e26296fee73c09e3c82a2404b03f738ebe0c25793ce1e644155c39ab78a5e3a5"
+    },
+    {
+      "file": "jtty19-truncated-s3-47.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "9dc70b6ec5f6720363960be7965659adb398f26890a5914221317d16906be5da"
+    },
+    {
+      "file": "jtty19-truncated-s3-48.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "adea1e514c31a6a2d1c0b801ce3a7a08c703bceec0113307124750a4140e8452"
+    },
+    {
+      "file": "jtty19-truncated-s3-49.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "50444adbfb20d818e751ab1f4064a46f1bcd3065b3e5b36a284430f497c7c8d3"
+    },
+    {
+      "file": "jtty19-truncated-s3-50.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "f4a55aa41e3fcc06a3b971d4cf04bc4cceda64620681d8d5b50109288061e40d"
+    },
+    {
+      "file": "jtty19-truncated-s3-51.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "1d780cf1282f9c7d0b0e62534503321ed6812161d82ed61a53e765f7de079b99"
+    },
+    {
+      "file": "jtty19-truncated-s3-52.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "e7cddca1f1e68bd4a2c8fdb07ae5e3df62525038a19b2b7d2d13aa2f26c3a35b"
+    },
+    {
+      "file": "jtty19-truncated-s3-53.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "2965b9790bc8eca473fd6aa0a5f0b062b1730489816c65b7d9610463af726ee8"
+    },
+    {
+      "file": "jtty19-truncated-s3-54.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "583403a8e6eb744f9966ef0ade3d5f99b2b8a090541ea320a6e5210255fca646"
+    },
+    {
+      "file": "jtty19-truncated-s3-55.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "26f419def2cd36cb66ed30d57d00c8bd1035b319151aa7fc14597d56c5a37a47"
+    },
+    {
+      "file": "jtty19-truncated-s3-56.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "dae76d15b3649eb2b2fb500e6948cc85fd41de902cf7f00fdc012695b76caebf"
+    },
+    {
+      "file": "jtty19-truncated-s3-57.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "93bf3c851462fc0301bcc80c1d1d016343cfe9d5ed708aa8443ad46425d56f5e"
+    },
+    {
+      "file": "jtty19-truncated-s3-58.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "dbf0fe236cc1ef36b799489f5933f6714dfd4627a0725e21531cc65510f636ad"
+    },
+    {
+      "file": "jtty19-truncated-s3-59.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "599b9ab886e1879577f7b0b2b49e2b8f090507afec0a83c5ce0546fd4031d866"
+    },
+    {
+      "file": "jtty19-truncated-s3-60.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "9a37c73592253f5b24681586fd7758cbf473a44244758555ccdd1b09825102d3"
+    },
+    {
+      "file": "jtty19-truncated-s3-61.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "0e28bf8a0fe9511c073305970f37ea1cc6bfac5fd3ab3c965229a71e328cfa79"
+    },
+    {
+      "file": "jtty19-truncated-s3-62.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "b7f19ac99adf0586e2709827c9a3e787d322df33db20099cd7c910b1456c93c5"
+    },
+    {
+      "file": "jtty19-truncated-s3-63.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "587fd17e31b59f3853874d32d6d0c17dde74b06a786060b8ab5851de2167fd52"
+    },
+    {
+      "file": "jtty19-truncated-s3-64.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "da426f79f66d2d4fb829e5f5b58e4b4e013d016c8edb90e3cf3e67dfd0403509"
+    },
+    {
+      "file": "jtty19-truncated-s3-65.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "ba5751e26171fa03666083d7a0114ed918a2b414ae24335aa0cd5b2a630aa5d0"
+    },
+    {
+      "file": "jtty19-truncated-s3-66.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "0dcae252977e118d9615cdbfd802780695d5beb73bcb941979c35656b2eed91e"
+    },
+    {
+      "file": "jtty19-truncated-s3-67.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "097ed8abdac2d15f6d87583846f42ad8f888456ea6726c8f9aa4e3d391cbb273"
+    },
+    {
+      "file": "jtty19-truncated-s3-68.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "dd423c9a5d9e97a4ca8e96a05434fc93a59a2cc036c9a71f5c8a7f1f21cf2071"
+    },
+    {
+      "file": "jtty19-truncated-s3-69.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "832e2273f41c449ce92bfc8bcce730ce9d30af83081677a113f03f5586997218"
+    },
+    {
+      "file": "jtty19-truncated-s3-70.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "39b23ed0c9f87409cc6b0e43ba60e46c67f385c61b85d7f8bcb22d9eeed7d867"
+    },
+    {
+      "file": "jtty19-truncated-s3-71.json",
+      "class": "negative",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "56723e5d58509b6ea7162a3a09c89060bfc68d3f6eeb2b03bfa417b48a8a81cf"
+    },
+    {
+      "file": "jtty19-utf8-s2.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "b2d28813077dcebaf321302460f31b18e94ea3d0d38e07b09abeeef1d9d9ef0b"
+    },
+    {
+      "file": "jtty19-utf8-s3.json",
+      "class": "positive",
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "sha256": "4cd5151e7b87b912dda23622d3e39fd5cb4ef8be38f19f086c5f21b70c13b485"
+    },
+    {
       "file": "output-budget-maximum-text.json",
       "class": "positive",
       "spec": "0.2.0",
@@ -5647,9 +6901,18 @@
   ],
   "mapping_revisions": [
     1,
-    2
+    2,
+    3
   ],
-  "mapping_status": "QGI-MAPPING-PROVISIONAL",
-  "source_tag": "v3.3.0-beta6",
-  "source_tarball_sha256": "cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be"
+  "mapping_status": [
+    "QGI-MAPPING-PROVISIONAL wsjtx/2 tag:v3.3.0-beta6,tarball-sha256:cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be",
+    "QGI-MAPPING-PROVISIONAL wsjtx/3 repo:github.com/qso-graph/wsjtx,commit:53313c109194de1ce8e82e44f6846d8579645e56,patch-sha256:fb245ccea54033ace6b43fce6302bae03e1dc6518a08b455bdf080ef411679bf"
+  ],
+  "proposal": {
+    "mapping": 3,
+    "repository": "github.com/qso-graph/wsjtx",
+    "commit": "53313c109194de1ce8e82e44f6846d8579645e56",
+    "base": "WSJTX/wsjtx release/3.3 7255454d37c4c834dc88869bce810e39df91582b",
+    "patch_sha256": "fb245ccea54033ace6b43fce6302bae03e1dc6518a08b455bdf080ef411679bf"
+  }
 }

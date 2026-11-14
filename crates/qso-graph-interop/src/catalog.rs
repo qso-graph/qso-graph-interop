@@ -34,6 +34,9 @@ pub(super) fn catalog(name: &str) -> Option<Shape> {
         )),
         "decode" => Some((
             &[
+                ("message_id", "text"),
+                ("start", "instant"),
+                ("complete", "boolean"),
                 ("time_of_day", "time_of_day"),
                 ("time", "instant"),
                 ("snr_db", "integer"),

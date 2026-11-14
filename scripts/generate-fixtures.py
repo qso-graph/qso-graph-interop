@@ -64,10 +64,40 @@ def beta6_vectors():
         ])
 
 
+def check_jtty19_capture_fixture():
+    """Read copied datagrams independently of the Rust codec and spec generators."""
+    import datetime
+    fixture = json.loads((DEST.parent / 'wsjtx-jtty19.json').read_text())
+    assert len(fixture['vectors']) == 22
+    counts = {}
+    for vector in fixture['vectors']:
+        data = bytes.fromhex(vector['wire_hex'])
+        magic, schema, typ, length = struct.unpack_from('>IIII', data)
+        assert (magic, schema, typ) == (0xadbccbda, 2, 19)
+        ident = data[16:16+length].decode('utf-8')
+        offset = 16+length
+        mid, jd, ms, ts, df, snr, length = struct.unpack_from('>qqIBIiI', data, offset)
+        assert ts == 1 and ms < 86400000
+        offset += 33
+        text = data[offset:offset+length].decode('utf-8')
+        complete, off_air = data[offset+length:]
+        assert complete in (0, 1) and off_air in (0, 1)
+        start = datetime.datetime.combine(datetime.date.fromordinal(jd-1721425), datetime.time())
+        start += datetime.timedelta(milliseconds=ms)
+        fields = dict(message_id=str(mid), start=start.isoformat(timespec='milliseconds')+'Z',
+                      audio_offset_hz=df, snr_db=snr, text=text, complete=bool(complete),
+                      off_air=bool(off_air), radio=dict(instance=ident))
+        assert vector['fields'] == fields and vector['wire_id'] == ident
+        counts[vector['capture']] = counts.get(vector['capture'], 0)+1
+    assert sorted(counts.values()) == [11, 11]
+    print('22 byte-exact JTTYText captured fixtures: pass')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
+    check_jtty19_capture_fixture()
     data = json.dumps(dict(spdx='GPL-3.0-or-later', vectors=vectors()), indent=2) + '\n'
     beta_path = DEST.parent / 'wsjtx-beta6.json'
     beta = json.dumps(beta6_vectors(), indent=2) + '\n'

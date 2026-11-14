@@ -641,6 +641,21 @@ impl<'a> DecodeFieldsRef<'a> {
     pub fn as_value(&self) -> &Value {
         self.value
     }
+    /// Native signed 64-bit message ID, preserved as decimal text.
+    pub fn message_id(&self) -> Option<Text> {
+        self.value.get("message_id").map(text_value)
+    }
+    /// Transmission start, independent of observer receipt time.
+    pub fn start(&self) -> Option<Instant> {
+        self.value
+            .get("start")
+            .map(|v| Instant(v.as_str().expect("validated instant").into()))
+    }
+    pub fn complete(&self) -> Option<bool> {
+        self.value
+            .get("complete")
+            .map(|v| v.as_bool().expect("validated boolean"))
+    }
     pub fn time_of_day(&self) -> Option<TimeOfDay> {
         self.value
             .get("time_of_day")

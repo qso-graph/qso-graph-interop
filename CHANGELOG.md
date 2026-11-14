@@ -3,6 +3,13 @@
 
 ## [Unreleased]
 
+- Add provisional WSJT-X mapping revision 3 for proposed JTTYText type 19, with
+  exact proposal pins, full-text updates, UTC starts, independent Windows/macOS
+  captures, schema 2/3 vectors, listener human output, and `sim --jtty-text`.
+- Permit provisional mappings only in exactly named beta pre-releases whose
+  versioned CHANGELOG section lists every mapping and identical source pin;
+  enforce this at all publication gates with planted refusal cases.
+
 - Add PSK Reporter IPFIX mapping revision 1, bounded template decoding with record evidence, byte-exact WSJT-X and fldigi submission encoders, numeric unicast collector and simulator, source-derived vectors, and decoder fuzzing.
 
 

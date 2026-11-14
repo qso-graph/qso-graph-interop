@@ -29,7 +29,7 @@ The implementation is Rust; upstream C++ is not compiled or shipped here.
 ## Specification and public API
 
 The implementation follows [QGI-SPEC-001 0.2.0](../spec/QGI-SPEC-001.md), Annex A's common
-fields, Annex B revisions 1–2 for WSJT-X, Annex D revision 1 for N1MM, Annex E revision 1 for fldigi, and Annex I revision 1 for event carriage. The source pins
+fields, Annex B revisions 1–3 for WSJT-X, Annex D revision 1 for N1MM, Annex E revision 1 for fldigi, and Annex I revision 1 for event carriage. The source pins
 above remain the native-layout evidence. No upstream source was fetched during this alignment.
 
 The family-independent core exports `Event`, `Context`, neutral text/integer/time/binary64 values,
@@ -440,7 +440,7 @@ The downloaded archives were verified offline: `v3.0.2` tarball SHA-256
 records exact source paths and line evidence for types 17/18, the unchanged Decode
 marker, the ADIF 3.1.8 header, JTTY Status, absent live UDP Decode emission, and
 QSOLogged versus ADIF mode/submode. Code takes precedence over header commentary.
-The mapping remains provisional and mechanically blocks release until re-pinned
+The mapping remains provisional and mechanically blocks non-beta releases until re-pinned
 to general-release source. No source retrieval occurs in generation or verification.
 
 ## PSK Reporter IPFIX source evidence
@@ -461,3 +461,21 @@ session/domain collisions, replacements, withdrawals, reset/expiry, missing or a
 receiver dependencies, and evidence mutations. The `ipfix` fuzz target exercises message
 and seeded template state, two exporters, message sequences, and record verification.
 No source documents were copied and no service connection was made.
+
+## Proposed JTTYText evidence
+
+[Annex B.9](../spec/annex-b-wsjtx.md#b9-provisional-revision-3) pins type 19 to
+its proposal source and patch, with file hashes and field evidence. It is separate
+from beta6's unchanged JTTY behavior. The independent `wsjtx-jtty19.json` fixture
+retains all 22 type 19 datagrams from the installed Windows and macOS builds,
+including original capture hashes and line numbers. Its wire bytes are copied,
+not re-encoded. The generator consumes these independent oracles to build
+conformance vectors; schema 3, UTF-8, full i64 IDs, null/empty/raw text, truncations
+and trailing extensions also have constructed cases.
+
+To replay recorder NDJSON, convert each original `data_b64` datagram using
+`qg-interop decode --wsjtx`, retain its `native.data`, and attach the recorder's
+`received_at` truncated to millisecond precision. Run
+`qg-interop sim --capture converted.ndjson --to 127.0.0.1:12237 --speed 100`
+against `qg-interop listen --wsjtx 127.0.0.1:12237 --human` (or `--json`).
+Recorder envelopes and QGI event envelopes are distinct formats.

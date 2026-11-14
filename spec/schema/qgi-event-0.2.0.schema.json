@@ -1026,6 +1026,15 @@
         },
         "radio": {
           "$ref": "#/$defs/radio"
+        },
+        "message_id": {
+          "$ref": "#/$defs/text"
+        },
+        "start": {
+          "$ref": "#/$defs/instant"
+        },
+        "complete": {
+          "type": "boolean"
         }
       }
     },

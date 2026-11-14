@@ -111,7 +111,7 @@ class Suite:
         if direction is None:
             direction = 'to_application' if typ in (4, 7, 8, 9, 11, 13, 14, 15, 16, 18) else 'from_application'
         raw = header(schema, typ, identity) + body + extensions
-        event = {'spec': SPEC, 'family': 'wsjtx', 'mapping': 2 if typ >= 17 else 1,
+        event = {'spec': SPEC, 'family': 'wsjtx', 'mapping': 3 if typ == 19 else 2 if typ >= 17 else 1,
                  'native_version': str(schema), 'kind': kind, 'wire_id': text(identity),
                  'context': context(direction), 'fields': fields,
                  'native': {'format': 'wsjtx_datagram', 'data': b64(raw)}}
@@ -125,11 +125,11 @@ class Suite:
         if message is not None:
             value['expected_message'] = {'schema': schema, 'type': typ, 'id': text(identity),
                                          'body': message, 'extensions': b64(extensions)}
-        if typ in (0, 3, 4, 6, 7, 8, 9, 11, 13, 14, 15, 16, 17, 18):
+        if typ in (0, 3, 4, 6, 7, 8, 9, 11, 13, 14, 15, 16, 17, 18, 19):
             encoded = raw if canonical is None else header(schema, typ, identity) + canonical + extensions
             value['reencode'] = {'data': b64(encoded)}
         if typ >= 17:
-            value["mapping"] = 2
+            value["mapping"] = 3 if typ == 19 else 2
         self.add(name, value)
         return event
 
@@ -419,8 +419,47 @@ def build():
     compatibility(s)
     commands(s)
     beta6_vectors(s)
+    jtty19_vectors(s)
     return s
 
+
+
+def jtty19_vectors(s):
+    """Proposal layouts plus byte-for-byte independent installed-build datagrams."""
+    for schema in (2, 3):
+        for label, message_id, txt, complete, off_air in [
+                ('growing', 1, 'CQ Q1', False, False),
+                ('complete', 1, 'CQ Q1ABC', True, False),
+                ('off-air', -7, 'Q1ABC Q2XYZ 73', True, True),
+                ('utf8', 2**63-1, 'Q1ABC café\n73 🌍 ', False, True),
+                ('minimum-id', -2**63, '', False, False),
+                ('null', 0, None, True, False),
+                ('raw', 2**53+1, b'Q1ABC \xff', False, False)]:
+            dt, view = date(schema)
+            body = pack('q', message_id) + dt + pack('Ii', 1501, -12) + utf8(txt) + pack('BB', complete, off_air)
+            fields = dict(message_id=str(message_id), start='1970-01-01T01:00:00.123Z',
+                          audio_offset_hz=1501, snr_db=-12, text=text(txt), complete=complete, off_air=off_air)
+            message = dict(message_id=str(message_id), start=view, delta_frequency_hz=1501,
+                           snr_db=-12, text=text(txt), complete=complete, off_air=off_air)
+            identity = None if label == 'null' else b'instance\xff' if label == 'raw' else 'test-instance'
+            s.positive(f'jtty19-{label}-s{schema}', schema, 19, body, 'decode', fields,
+                       identity=identity, message=message, extensions=b'\x00future\xff' if label == 'utf8' else b'')
+            if label == 'complete':
+                raw = header(schema, 19) + body
+                # Every byte boundary: Id and every body field, including exact field boundaries.
+                for count in range(12, len(raw)):
+                    s.negative(f'jtty19-truncated-s{schema}-{count}', raw[:count], 'truncated')
+                    s.vectors[f'jtty19-truncated-s{schema}-{count}']['mapping'] = 3
+    fixture = json.loads((ROOT / 'crates/qso-graph-interop/tests/fixtures/wsjtx-jtty19.json').read_text())
+    for item in fixture['vectors']:
+        raw = bytes.fromhex(item['wire_hex'])
+        # Use the original bytes and independently reviewed common oracle, never a re-encoded body.
+        event = dict(spec=SPEC, family='wsjtx', mapping=3, native_version=str(item['schema']),
+                     kind='decode', wire_id=item['wire_id'], context=context(), fields=item['fields'],
+                     native=dict(format='wsjtx_datagram', data=b64(raw)))
+        s.add('jtty19-capture-' + item['name'], dict(mapping=3, **{'class': 'positive'},
+              provenance=dict(capture=item['capture'], line=item['line'], sha256=fixture['captures'][item['capture']]),
+              input=dict(data=b64(raw), context=context()), expected=dict(event=event), reencode=dict(data=b64(raw))))
 
 
 def beta6_vectors(s):
@@ -1197,7 +1236,7 @@ def producer_validator(schema, jsonschema):
     strict = copy.deepcopy(schema)
     strict['additionalProperties'] = False
     strict['properties']['spec'] = {'const': SPEC}
-    strict['properties']['mapping'] = {'enum': [1, 2]}
+    strict['properties']['mapping'] = {'enum': [1, 2, 3]}
     strict['allOf'].append({'if': {'properties': {'family': {'not': {'const': 'wsjtx'}}}},
         'then': {'properties': {'mapping': {'const': 1}}}})
     strict['properties']['family'] = {'enum': ['wsjtx', 'n1mm', 'fldigi',
@@ -1222,7 +1261,7 @@ def producer_validator(schema, jsonschema):
         'QColor': {'$ref': '#/$defs/qcolor'}}
     layouts = (ROOT / 'spec/annex-b-wsjtx.md').read_text().split('## B.4 Message layouts')[1].split('## B.5')[0]
     message = {'type': 'object', 'required': ['schema', 'type', 'id', 'body', 'extensions'],
-        'properties': {'schema': {'enum': [1, 2, 3]}, 'type': {'enum': list(range(19))},
+        'properties': {'schema': {'enum': [1, 2, 3]}, 'type': {'enum': list(range(20))},
             'id': {'$ref': '#/$defs/text'}, 'body': {'type': 'object'},
             'extensions': {'$ref': '#/$defs/base64'}}, 'allOf': []}
     for section in layouts.split('### ')[1:]:
@@ -3703,18 +3742,24 @@ def main():
     fldigi_validation = validate_fldigi(fldigi_suite, check_n1mm_xml, ROOT,
                                        args.producer_strict, producer_validator)
     outputs = {name + '.json': dump(vector) for name, vector in suite.vectors.items()}
-    manifest = {'$comment': 'SPDX-License-Identifier: GPL-3.0-or-later', 'spec': SPEC, 'family': 'wsjtx', 'mapping': 2,
-                'source_sha256': 'b640a632f38b218f97b9c9cf5b5a09b183e1629c613c33d90f39635f9b3fdb3d',
+    manifest = {'$comment': 'SPDX-License-Identifier: GPL-3.0-or-later', 'spec': SPEC, 'family': 'wsjtx', 'mapping': 3,
+                'source_sha256': '8d38619417ee80853d2e5480bd92143065da1a64d5a33a41969f40086194e065',
+                'previous_provisional_source': {'mapping': 2, 'source_tag': BETA_TAG,
+                    'source_tarball_sha256': BETA_TARBALL,
+                    'source_sha256': 'b640a632f38b218f97b9c9cf5b5a09b183e1629c613c33d90f39635f9b3fdb3d'},
                 'previous_source': {'mapping': 1, 'source_tag': 'v3.0.2', 'source_sha256': PIN,
                     'source_tarball_sha256': '8483a851bcb6455f5787de87b89efdf90e928842debde036e287e93e7f3837bd'},
                 'hash_scope': 'SHA-256 of each complete vector file, including its final newline',
                 'vectors': [{'file': name, 'class': suite.vectors[name[:-5]]['class'], 'spec': SPEC,
                              'family': 'wsjtx', 'mapping': suite.vectors[name[:-5]]['mapping'], 'sha256': hashlib.sha256(data).hexdigest()}
                             for name, data in sorted(outputs.items())]}
-    manifest['mapping_revisions'] = [1, 2]
-    manifest['mapping_status'] = PROVISIONAL
-    manifest['source_tag'] = BETA_TAG
-    manifest['source_tarball_sha256'] = BETA_TARBALL
+    manifest['mapping_revisions'] = [1, 2, 3]
+    manifest['mapping_status'] = [PROVISIONAL + ' wsjtx/2 tag:v3.3.0-beta6,tarball-sha256:cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be',
+                                  PROVISIONAL + ' wsjtx/3 repo:github.com/qso-graph/wsjtx,commit:53313c109194de1ce8e82e44f6846d8579645e56,patch-sha256:fb245ccea54033ace6b43fce6302bae03e1dc6518a08b455bdf080ef411679bf']
+    manifest['proposal'] = {'mapping': 3, 'repository': 'github.com/qso-graph/wsjtx',
+                            'commit': '53313c109194de1ce8e82e44f6846d8579645e56',
+                            'base': 'WSJTX/wsjtx release/3.3 7255454d37c4c834dc88869bce810e39df91582b',
+                            'patch_sha256': 'fb245ccea54033ace6b43fce6302bae03e1dc6518a08b455bdf080ef411679bf'}
     outputs['manifest.json'] = dump(manifest)
     outputs = {'wsjtx/' + name: data for name, data in outputs.items()}
     shapes = dump(core_shapes())

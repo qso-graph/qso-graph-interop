@@ -214,8 +214,8 @@ adds event carriage using the existing datagram and stream classes. Annex letter
 
 | ID | Requirement | Verify |
 |---|---|---|
-| `QGI-WSJ-0001` | **WSJT-X** (`wsjtx`) MUST follow [Annex B](annex-b-wsjtx.md), mapping revisions 1–2: revision 1 covers types 0–16 and schemas 1–3 at released source `v3.0.2` (tarball SHA-256 `8483a851bcb6455f5787de87b89efdf90e928842debde036e287e93e7f3837bd`); revision 2 adds types 17–18 provisionally at `v3.3.0-beta6` (tarball SHA-256 `cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be`). | Test |
-| `QGI-WSJ-0002` | **Provisional WSJT-X mappings.** A `wsjtx` mapping revision MAY be built from WSJT-X pre-release source only when its annex marks it **provisional** and names the exact tag and tarball SHA-256. A QG Interop release MUST NOT ship while any family mapping is provisional. At the general release, the mapping MUST be re-pinned to that release's source and the provisional mark removed. The reserved exact marker is defined in Annex B.8 and enforced by `scripts/release_check.py`; it applies to every family annex and catalog. | Test |
+| `QGI-WSJ-0001` | **WSJT-X** (`wsjtx`) MUST follow [Annex B](annex-b-wsjtx.md), mapping revisions 1–3: revision 1 covers types 0–16 and schemas 1–3 at released source `v3.0.2` (tarball SHA-256 `8483a851bcb6455f5787de87b89efdf90e928842debde036e287e93e7f3837bd`); revision 2 adds types 17–18 provisionally at `v3.3.0-beta6` (tarball SHA-256 `cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be`); revision 3 adds proposed type 19 at the repository, commit and patch SHA-256 pinned in B.9. | Test |
+| `QGI-WSJ-0002` | **Provisional family mappings.** A `wsjtx` mapping revision MAY be built from WSJT-X pre-release source only when its annex marks it **provisional** and names the exact tag and tarball SHA-256, or from a proposed upstream change pinned by repository, full commit and patch SHA-256. A QG Interop pre-release whose version is exactly `X.Y.Z-beta.N` (N is a positive decimal integer without leading zeros) MAY ship provisional mappings only when the CHANGELOG section for that exact version lists every provisional mapping with its pin in the B.8 format. Any other version MUST NOT ship with a provisional mapping. At the general WSJT-X release, the mapping MUST be checked and re-pinned to that release's source and the provisional mark removed; if the proposal changes or is rejected, the mapping MUST follow WSJT-X. The reserved marker is defined in Annex B.8 and enforced by `scripts/release_check.py`; the release gate applies to every family annex and catalog. | Test |
 | `QGI-N1M-0001` | **N1MM Logger+** (`n1mm`) MUST follow Annex D, mapping revision 1, for the dated External UDP Broadcasts appendix and example layouts, including inbound `radio_setfrequency` and `Spectrum`. | Test |
 | `QGI-FLD-0001` | **fldigi** (`fldigi`) MUST follow Annex E, mapping revision 1, pinned to released `4.2.13`; actual method availability is caller-supplied, never inferred from a version label. | Test |
 
@@ -322,6 +322,8 @@ live-peer conformance.
 ## Version history
 
 ### 0.2.0 (in development)
+
+- Added provisional WSJT-X mapping revision 3 for proposed JTTYText type 19, additive decode fields, captured conformance evidence, and a pinned beta-only release exception.
 
 - Added Annex H revision 1 for PSK Reporter IPFIX, receiver-information catalog events, source indicators, bounded template state, WSJT-X/fldigi submission profiles, local collection diagnostics, vectors, and fuzzing.
 

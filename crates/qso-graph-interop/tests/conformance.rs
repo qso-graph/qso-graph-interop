@@ -25,7 +25,7 @@ fn all_specification_vectors() {
         if family == "wsjtx" {
             assert_eq!(
                 manifest["source_sha256"],
-                "b640a632f38b218f97b9c9cf5b5a09b183e1629c613c33d90f39635f9b3fdb3d"
+                "8d38619417ee80853d2e5480bd92143065da1a64d5a33a41969f40086194e065"
             );
         }
         if let Some(source) = manifest["source"].as_str() {

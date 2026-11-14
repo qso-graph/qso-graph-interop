@@ -378,6 +378,32 @@ pub fn run(s: Sim) -> Result<()> {
         let packets = crate::script(&s, seconds)?;
         install_stop()?;
         let socket = NumericUdp::sender(s.to.ok_or("--to is required")?, s.interface)?;
+        if s.jtty_text {
+            let begin = Instant::now();
+            let mut elapsed_ms = 0;
+            let mut previous_id = None;
+            let mut previous_length = 0;
+            for packet in packets {
+                if let Body::JttyText(text) = &packet.body {
+                    if previous_id != Some(text.message_id) {
+                        if previous_id.is_some() {
+                            elapsed_ms += 1500;
+                        }
+                        previous_id = Some(text.message_id);
+                        previous_length = 0;
+                    }
+                    let length = text.text.as_str().expect("synthetic ASCII text").len();
+                    elapsed_ms += (length - previous_length) as u64 * 200;
+                    previous_length = length;
+                    wait_capture(&socket, deadline(begin, elapsed_ms, s.speed)?)?;
+                }
+                if stopped() {
+                    break;
+                }
+                send(&socket, vec![packet])?;
+            }
+            return Ok(());
+        }
         return send(&socket, packets);
     }
     let name = s

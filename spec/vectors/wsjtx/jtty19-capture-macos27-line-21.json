@@ -1,0 +1,52 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "wsjtx",
+  "mapping": 3,
+  "class": "positive",
+  "provenance": {
+    "capture": "macos27-ibex-installed-udp.ndjson",
+    "line": 21,
+    "sha256": "9aa5b232fcfbae69c74626afa4f5653a5d3c8f574bd5dee75866fcfc695bf868"
+  },
+  "input": {
+    "data": "rbzL2gAAAAIAAAATAAAAGFdTSlQtWCAtIFFHSS1KVFRZIC0gdGVzdAAAAAAAAAABAAAAAAAljq8EqryLAQAABdwAAAAQAAAAIUNRIFExQUJDIFExQUJDIEROMTMgSlRUWSBVRFAgVEVTVAEA",
+    "context": {
+      "direction": "from_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 3,
+      "native_version": "2",
+      "kind": "decode",
+      "wire_id": "WSJT-X - QGI-JTTY - test",
+      "context": {
+        "direction": "from_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "message_id": "1",
+        "start": "2026-11-14T21:44:58.251Z",
+        "audio_offset_hz": 1500,
+        "snr_db": 16,
+        "text": "CQ Q1ABC Q1ABC DN13 JTTY UDP TEST",
+        "complete": true,
+        "off_air": false,
+        "radio": {
+          "instance": "WSJT-X - QGI-JTTY - test"
+        }
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAIAAAATAAAAGFdTSlQtWCAtIFFHSS1KVFRZIC0gdGVzdAAAAAAAAAABAAAAAAAljq8EqryLAQAABdwAAAAQAAAAIUNRIFExQUJDIFExQUJDIEROMTMgSlRUWSBVRFAgVEVTVAEA"
+      }
+    }
+  },
+  "reencode": {
+    "data": "rbzL2gAAAAIAAAATAAAAGFdTSlQtWCAtIFFHSS1KVFRZIC0gdGVzdAAAAAAAAAABAAAAAAAljq8EqryLAQAABdwAAAAQAAAAIUNRIFExQUJDIFExQUJDIEROMTMgSlRUWSBVRFAgVEVTVAEA"
+  }
+}

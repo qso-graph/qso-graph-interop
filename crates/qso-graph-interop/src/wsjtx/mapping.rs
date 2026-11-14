@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! Revisions 1–2 wire-to-common catalog from Annex B.4.
+//! Revisions 1–3 wire-to-common catalog from Annex B.4.
 #![forbid(unsafe_code)]
 pub(super) fn layout(n: u32) -> &'static [(&'static str, &'static str, &'static str, bool)] {
     match n {
@@ -139,6 +139,15 @@ pub(super) fn layout(n: u32) -> &'static [(&'static str, &'static str, &'static 
             ("controller_id", "controller_id", "utf8", false),
             ("ttl_ms", "ttl_ms", "u32", false),
             ("station", "station", "utf8", false),
+        ],
+        19 => &[
+            ("message_id", "message_id", "i64", false),
+            ("start", "start", "QDateTime", false),
+            ("delta_frequency_hz", "audio_offset_hz", "u32", false),
+            ("snr_db", "snr_db", "i32", false),
+            ("text", "text", "utf8", false),
+            ("complete", "complete", "bool", false),
+            ("off_air", "off_air", "bool", false),
         ],
         _ => &[],
     }

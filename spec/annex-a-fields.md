@@ -28,13 +28,21 @@ needs no common members; `{}` is its common view unless a family annex defines o
 **`QGI-MOD-0025` — Field meanings.** `frequency_hz` on a decode or spot is the native reported frequency, not dial plus audio offset.
 `tx_frequency_hz` and `dial_frequency_hz` are distinct on a QSO; no addition is implicit. `tx_power`
 is text (such as the peer's entry), distinct from a decode's numeric `power_dbm`.
-`start` and `end` are QSO instants. `time` is an observation instant, independent of observer receipt
+`start` and `end` on QSO kinds are QSO instants; `decode.start` is the transmission-start instant defined below. `time` is an observation instant, independent of observer receipt
 time. A score is a reported snapshot, not an instruction to increment a counter. A `qso_changed`
 event contains the fields the native change carries, not a reconstructed complete record.
 N1MM `previous_start` is the prior contact-key instant carried with an edit, independent of the
 current `start`; it is not a QSO end time. Each timestamp maps independently.
 
 ## decode
+
+Added in 0.2.0 under `QGI-GEN-0005` for WSJT-X revision 3:
+`message_id` (text, canonical signed decimal preserving every qint64), `start`
+(instant, UTC transmission start), and `complete` (boolean, terminal update).
+All are optional catalog fields; existing mappings are unchanged. A type 19
+mapping supplies them as Annex B specifies. `start` here identifies transmission
+start independently of `time` (observation time); no observer time is substituted.
+
 
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|

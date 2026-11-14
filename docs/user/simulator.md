@@ -230,3 +230,21 @@ and runs immediately. Use these options without `--file` or `--capture`.
 ```sh
 qg-interop sim --wsjtx --to 127.0.0.1:2237 --mode FT4 --frequency 7074000
 ```
+
+## Proposed receive text
+
+`qg-interop sim --wsjtx --mode JTTY --to 127.0.0.1:2237` keeps beta6's behavior.
+It sends Heartbeat, JTTY Status, and Close, without receive-text datagrams.
+
+Add `--jtty-text` to emit proposed type 19 updates for three synthetic Q-callsign
+transmissions:
+
+```sh
+qg-interop sim --wsjtx --mode JTTY --jtty-text --to 127.0.0.1:2237
+```
+
+The script grows whole text at five characters per second, normally two characters
+per update, with a 1.5-second gap between transmissions. Each transmission has one
+message ID and UTC start; only its final update has Complete true, and Off air is
+false throughout. `--speed` scales playback timing. The proposal may change with
+WSJT-X. See the [protocol evidence](../PROTOCOL.md#proposed-jttytext-evidence).
