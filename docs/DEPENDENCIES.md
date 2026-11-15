@@ -41,7 +41,7 @@ round trips, and strict JSON publication.
 | cbindgen | =0.29.4 (exact tool pin) | MPL-2.0 | Reproducible C header generation and drift detection in xtask only. |
 | libfuzzer-sys | 0.4.13 | (MIT OR Apache-2.0) AND NCSA | Coverage-guided decoder fuzzing, developer tooling only. |
 | sha2-const-stable | 0.1.0 | MIT OR Apache-2.0 | SHA-256 manifest hashes in optional conformance tooling; no dependencies or native code. |
-| qso-graph-interop | 0.1.0 | GPL-3.0-or-later | Internal compatible-range path dependency of the CLI, FFI, and fuzz workspace. |
+| qso-graph-interop | 0.2.0-beta.1 | GPL-3.0-or-later | Internal compatible-range path dependency of the CLI, FFI, and fuzz workspace. |
 
 ## Signal handler decision
 

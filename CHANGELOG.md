@@ -3,6 +3,11 @@
 
 ## [Unreleased]
 
+## [0.2.0-beta.1] - 2026-11-15
+
+- Provisional mapping: `wsjtx/2`; pin: `tag:v3.3.0-beta6,tarball-sha256:cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be`.
+- Provisional mapping: `wsjtx/3`; pin: `repo:github.com/qso-graph/wsjtx,commit:53313c109194de1ce8e82e44f6846d8579645e56,patch-sha256:fb245ccea54033ace6b43fce6302bae03e1dc6518a08b455bdf080ef411679bf`.
+
 - Add the byte-exact fldigi 4.2.13 live PSK Reporter IPFIX submission, LF transmitter
   log, SHA-256 provenance, and independent field oracle. Check receiver information,
   three PSK31 spots with literal zero-Hz frequencies and reception times, template
