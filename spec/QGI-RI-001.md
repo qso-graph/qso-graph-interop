@@ -1,10 +1,10 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # QGI-RI-001: the QG Interop reference implementation and its proofs
 
-**Status: draft, 2026-11-12;** review items in issue #5.
+**Status: draft, 2026-11-15;** issue #5's review items are dispositioned in §9.
 The reference implementation of `QGI-SPEC-001`, in Rust, and the deliveries that prove it: the
 `qg-interop` CLI, its simulator, the C ABI, and applications that use the library, QSO Graph Desktop
-first. Evidence is this repository at `de34f6b` (0.1.0, unpublished).
+first. Evidence is this repository at `de34f6b` (0.1.0) unless a row names a later release.
 
 **QG Interop is its own product, released on its own schedule.** Applications that use it depend on
 its releases; no application's release is a condition of an Interop release.
@@ -33,7 +33,7 @@ without running) and `Demo` (observable by running).
 |---|---|---|---|
 | `QGI-RI-0010` | **The library's core** (the event model, the family trait, the error type and the conformance kit) **depends on no family module**; transport helpers sit outside it so the core stays free of I/O. There is no separate `-core` crate: a third party uses `qso-graph-interop` with `default-features = false`. | Static | Met (core imports no family; core-only build and tests) |
 | `QGI-RI-0011` | **The six official families** may ship as feature-gated modules of one crate, using only the core's public API; a family moves to its own crate when its release pace needs it. | Static | Partly Met: four feature-gated families (wsjtx, n1mm, fldigi, qgi; remaining three families Target) |
-| `QGI-RI-0012` | **Features:** one per family, `serde`, one per transport helper, `conformance`. Defaults decided before 1.0. | Test | Partly Met (Default wsjtx/n1mm/fldigi/qgi/serde; conformance optional; other families and library transport helpers Target) |
+| `QGI-RI-0012` | **Features:** one per family, `serde`, `conformance`. The library has no transport features: codecs do no I/O (`QGI-SEC-0005`) and transport is the CLI's (`QGI-RI-0030`). Defaults decided before 1.0. | Test | Met at 0.2.0-beta.1 (default wsjtx/n1mm/fldigi/pskreporter-ipfix/pskreporter-mqtt/qgi/serde; conformance optional); the default set stays open under D5 |
 | `QGI-RI-0013` | **Crate names chosen before the first crates.io publish** (permanent), fitting the specification's scope, which is no longer UDP alone. | Inspection | Met (D1) |
 | `QGI-RI-0014` | **A separate `-ffi` crate** for the C ABI; the CLI is its own crate. | Static | Met (separate CLI and cdylib/staticlib FFI crates) |
 | `QGI-RI-0015` | **The `-ffi` crate generates its C header with cbindgen;** the build and CI verify the generated header matches the ABI code so the two cannot drift. | Static, Test | Met (cbindgen 0.29.4; xtask header comparison, planted drift, CI) |
@@ -46,7 +46,7 @@ without running) and `Demo` (observable by running).
 | `QGI-RI-0021` | **Every public enum and growable struct is `#[non_exhaustive]`.** | Static | Met (public enums and growable structs are non-exhaustive) |
 | `QGI-RI-0022` | **A family is a type implementing an open public trait**: decode to an outcome (zero or more events and skip notices, or one atomic error), encode commands from fields where the family sends, separately re-encode observations from native evidence, and declare framing and limits (datagram, stream, request/reply, publish/subscribe or templated records). Stream families decode from a caller-owned buffer, as `tokio-util`'s `Decoder` does, without depending on an async runtime. Another crate can implement it without forking. | Test | Met for fldigi request/response as well (Open Codec/Profile, ordered encode_commands, caller-supplied verify_with/reencode_with association) |
 | `QGI-RI-0023` | **Codecs meet `QGI-SEC-0005`** (the specification owns the no-I/O rule). | Static, Test | Met for all four implemented families (Sans-I/O library; token policy retains its socket/process ban) |
-| `QGI-RI-0024` | **Family errors are their own types, wrapped by a `#[non_exhaustive]` core error; `Display` is a message, not a debug dump.** | Test | Met for fldigi (FldigiError retained as the source of the core Error) |
+| `QGI-RI-0024` | **Family errors are their own types, wrapped by a `#[non_exhaustive]` core error; `Display` is a message, not a debug dump.** The core error is open: it carries any family's error as its `source()`, recovered with `downcast_ref`, and names no family type itself (`QGI-RI-0010`). | Test | Met after 0.2.0-beta.1 for all six families (`wsjtx::Error`, `N1mmError`, `FldigiError`, `IpfixError`, `MqttError`, `qgi::Error`); `MqttError` added 2026-11-15 with a test of every failure path |
 | `QGI-RI-0025` | **Families are compile-time dependencies;** nothing loads plugins or dynamic libraries. | Static | Met |
 | `QGI-RI-0026` | **An optional strict-validation helper** applies rules an application chooses (encoding, character set, lengths); the library never applies it by itself. | Test | Target |
 
@@ -54,7 +54,7 @@ without running) and `Demo` (observable by running).
 
 | ID | Requirement | Verify | Status |
 |---|---|---|---|
-| `QGI-RI-0030` | **Optional features, never required to use a codec:** UDP receive and send, TCP client, HTTP XML-RPC client. A UDP receive helper MAY join a multicast group only when the caller supplies both a numeric multicast group address and a numeric local interface address. It MUST validate those addresses, join only that interface, never all interfaces, and never choose a group itself. | Static | CLI implements numeric UDP receive and send, including IPv4 multicast on an explicit local interface, and loopback HTTP; the library has no transport |
+| `QGI-RI-0030` | **Transport lives in the CLI, never in the library** (`QGI-SEC-0005`), and no codec requires it: UDP receive and send, TCP client, HTTP XML-RPC client. A UDP receive helper MAY join a multicast group only when the caller supplies both a numeric multicast group address and a numeric local interface address. It MUST validate those addresses, join only that interface, never all interfaces, and never choose a group itself. | Static | CLI implements numeric UDP receive and send, including IPv4 multicast on an explicit local interface, and loopback HTTP; the library has no transport |
 | `QGI-RI-0031` | **Numeric addresses supplied by the caller;** no DNS, no discovery, no broadcast search; a receiver binds exactly what it is given and nothing defaults to every interface. | Test | Met in the CLI (Numeric addresses; fldigi defaults to 127.0.0.1:7362; only loopback TCP; planted DNS and non-loopback cases) |
 | `QGI-RI-0032` | **Bounded buffers and queues; drops counted by reason;** no sender filtering, rate limiting or replies unless the caller configures them. | Test | Target |
 
@@ -64,7 +64,7 @@ without running) and `Demo` (observable by running).
 |---|---|---|---|
 | `QGI-RI-0040` | **Passes every `QGI-SPEC-001` test vector for its six families**, both directions where defined. | Test | Partly Met (401 WSJT-X, 1,260 N1MM, 650 fldigi, 35 qgi vectors; 1,654 embedded re-encoding checks; other families Target) |
 | `QGI-RI-0041` | **Every decoder fuzzed with arbitrary input, the event-JSON reader included; fuzz targets assert no panic, hang or unbounded allocation.** | Test | Met for implemented families (Public-API fuzz harnesses; fldigi decode, association, field commands, and exact round trips seeded from vectors) |
-| `QGI-RI-0042` | **Unsafe code is forbidden in every crate except the declared `-ffi` boundary crate,** which denies it and allows each unsafe construct individually with a `SAFETY` comment; proved by a planted case in policy tooling. | Static | Met for both crates; the FFI rule Target |
+| `QGI-RI-0042` | **Unsafe code is forbidden in every crate except the declared `-ffi` boundary crate,** which denies it and allows each unsafe construct individually with a `SAFETY` comment; proved by a planted case in policy tooling. | Static | Met at 0.2.0-beta.1: every crate root forbids unsafe code except `qso-graph-interop-ffi`, which denies `unsafe_op_in_unsafe_fn` and justifies each block with `SAFETY`; planted policy tests reject unsafe code outside that exact package and undocumented blocks (SECURITY.md) |
 | `QGI-RI-0043` | **Semantic versioning checked by `cargo-semver-checks`** against the last published release, in CI. | Static | Target |
 | `QGI-RI-0044` | **Every public item documented with an example compiled as a test.** | Static | Target |
 | `QGI-RI-0045` | **MSRV stated and tested.** | Test | Partly Met (`rust-version = "1.99"`) |
@@ -148,3 +148,10 @@ full 1.0 class gate, and records PSK Reporter submitter obligations. The generat
 foreign-caller contracts (`QGI-RI-0015`, `0050`–`0054`) are now implemented and tested. Annexes E, G and H still
 have the profile work marked open in each annex; Annex D specifies N1MM with live-capture questions; implementation alignment and real-peer proofs
 remain Target. D5 and D6 remain as recorded above.
+
+**Review pass, 2026-11-15.** Each issue #5 item was checked against this repository after
+0.2.0-beta.1. This pass adds value-domain stability to `QGI-GEN-0005`, states that an fldigi codec
+takes no method list (Annex E, `QGI-FLD-0012`), aligns `QGI-RI-0012`, `0024`, `0030` and `0042` with
+the code and the policy files, gives PSK Reporter MQTT its own family error, and makes
+`docs/NORMALIZATION.md` cite the requirements it describes. A numbered specification release,
+an errata and adoption process, and a migration contract are not specified here.
