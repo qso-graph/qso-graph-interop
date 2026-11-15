@@ -6,6 +6,7 @@
 import sys
 import unittest
 import io
+import re
 import json
 import tarfile
 import tempfile
@@ -359,6 +360,24 @@ class WorkflowPolicy(unittest.TestCase):
                         self.assertRegex(uses, r"^[^ ]+@[0-9a-f]{40} # .+", str(file))
         for file in ["release.yml", "binaries.yml"]:
             self.assertNotIn("secrets: inherit", (root / ".github/workflows" / file).read_text())
+
+    def test_every_signing_source_check_gets_the_version(self):
+        # Without the version, a beta's provisional mappings are refused, so a check that leaves it
+        # out stops the release it should allow (0.2.0-beta.1's first dry run, at binaries.yml).
+        root = Path(__file__).resolve().parent.parent
+        calls = 0
+        for file in sorted((root / ".github/workflows").glob("*.yml")):
+            text = file.read_text()
+            for line in text.splitlines():
+                if "release_check.py source " in line:
+                    calls += 1
+                    self.assertTrue(line.rstrip().endswith('"$TRIGGERING_ACTOR" "$VERSION"'), f"{file.name}: {line.strip()}")
+            if "release_check.py source " in text:
+                self.assertIn("VERSION: ${{ inputs.version }}", text, file.name)
+        self.assertGreaterEqual(calls, 4)
+        release = (root / ".github/workflows/release.yml").read_text()
+        forwarded = re.search(r"uses: ./.github/workflows/binaries.yml\n    with:\n(?:      .+\n)*?      version: \$\{\{ inputs.version \}\}\n", release)
+        self.assertIsNotNone(forwarded, "release.yml does not pass its version to binaries.yml")
 
 
 if __name__ == "__main__":
