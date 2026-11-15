@@ -70,8 +70,9 @@ and creates the GitHub Release last. The FFI crate is never published to crates.
    platform artifacts: four CLI archives, four C bundles, and four Linux packages.
 4. Run the same workflow and version with `dry_run` unchecked. Check both
    crates.io versions, tag `v<version>`, and the GitHub Release. Betas are
-   prereleases. The release verifies all 12 download attestations and adds an
-   attested `SHA256SUMS.txt`. A stopped run can be rerun; an existing package
+   prereleases. The release verifies all 12 download attestations and adds
+   `qgi-spec-<version>.tar.gz`, the release commit's `spec/` (the specification it implements),
+   and an attested `SHA256SUMS.txt` covering every file. A stopped run can be rerun; an existing package
    must match exactly and an existing tag must point to the same commit.
 
 Linux CLI downloads are static musl executables. Linux C bundles use GNU targets

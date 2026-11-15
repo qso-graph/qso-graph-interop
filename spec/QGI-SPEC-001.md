@@ -5,7 +5,9 @@
 vectors are specified. Annex G defines offline PSK Reporter MQTT revision 1; Annex H defines PSK Reporter IPFIX revision 1; Annex D defines the dated N1MM
 profile and Annex I defines event carriage and its vectors; all six families are planned for the first
 release. Reference implementation alignment and real-peer interoperability remain separate work.
-Nothing here is a promise of compatibility until the first numbered release of this specification.
+This specification remains a draft, and promises no compatibility, until QG Interop 1.0 (the gate in
+`QGI-RI-0048`); it becomes 1.0.0 in that same release. Every QG Interop release attaches the exact
+specification it implements (`qgi-spec-<version>.tar.gz`), so a released version never changes.
 
 QG Interop **defines a specification, as ADIF does, and others
 implement it**. QSO Graph proves it with a reference implementation for WSJT-X, N1MM Logger+ and fldigi,
@@ -294,6 +296,17 @@ the completed WSJT-X profile or authorize guessing:
 3. Resolved in Annex H: `receiver_information` is independent of a reception; a spot joins exactly
    one receiver from its own message with complete dependency evidence. H.0 reconciles old scope
    and spelling differences; H.3 defines caller session keys, explicit expiry cutoffs and resets.
+
+## 10. Changes, errata and adoption (informative)
+
+This specification changes only through reviewed pull requests to its repository; anyone may propose
+a change by opening an issue. Versions follow `QGI-GEN-0005` to `QGI-GEN-0007`: an erratum that
+corrects wording without changing a requirement's meaning is a PATCH release (`QGI-GEN-0006`); a new
+family, kind, optional field or value is a MINOR release; anything that breaks a conforming reader
+or writer waits for the next MAJOR. A released version is immutable: its files are attached to the
+QG Interop release that implements it, and a correction is a new release, never an edit. The QSO
+Graph maintainer decides what is adopted. Families defined by others follow §6 and need no adoption
+here.
 
 ## Annexes
 

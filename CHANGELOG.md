@@ -3,6 +3,12 @@
 
 ## [Unreleased]
 
+- Every release attaches `qgi-spec-<version>.tar.gz`, the exact specification it
+  implements, built by `git archive` from the release commit, listed in `SHA256SUMS.txt`
+  and attested. The specification stays a draft until QG Interop 1.0 (`QGI-RI-0048`),
+  when it becomes 1.0.0. New §10 states how it changes: by pull request, errata as PATCH
+  releases, released versions immutable, the maintainer deciding adoption.
+
 - Close the issue #5 review gaps found after 0.2.0-beta.1: a MINOR release may not
   narrow an existing field's value domain (`QGI-GEN-0005`); an fldigi codec takes no
   method list (Annex E); every family's public failures now carry its own error as their
