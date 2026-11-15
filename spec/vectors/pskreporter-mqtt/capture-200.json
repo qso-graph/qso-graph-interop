@@ -1,0 +1,68 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJzcSI6NzQ4NDcwNjU0NjEsImYiOjEwMTM3NDg0LCJtZCI6IkZUOCIsInJwIjotOSwidCI6MTc5NDY3NzE2MCwidF90eCI6MTc5NDY3NzE2MCwic2MiOiJRNUFBVSIsInNsIjoiRk0wOFFLIiwicmMiOiJXL1EyQUFUL1EzQUFUIiwicmwiOiJGTjAybngiLCJzYSI6MjkxLCJyYSI6MjkxLCJiIjoiMzBtIn0=",
+    "mqtt": {
+      "topic": "pskr/filter/v2/30m/FT8/Q5AAU/W.Q2AAT.Q3AAT/FM08/FN02/291/291",
+      "retained": false,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "2",
+      "kind": "spot",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "sender_call": "Q5AAU",
+        "sender_locator": "FM08QK",
+        "receiver_call": "W/Q2AAT/Q3AAT",
+        "receiver_locator": "FN02nx",
+        "mode": "FT8",
+        "band": "30m",
+        "frequency_hz": 10137484,
+        "snr_db": -9,
+        "sender_dxcc": 291,
+        "receiver_dxcc": 291,
+        "time": "2026-11-14T17:26:00Z",
+        "transmission_start": "2026-11-14T17:26:00Z"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJzcSI6NzQ4NDcwNjU0NjEsImYiOjEwMTM3NDg0LCJtZCI6IkZUOCIsInJwIjotOSwidCI6MTc5NDY3NzE2MCwidF90eCI6MTc5NDY3NzE2MCwic2MiOiJRNUFBVSIsInNsIjoiRk0wOFFLIiwicmMiOiJXL1EyQUFUL1EzQUFUIiwicmwiOiJGTjAybngiLCJzYSI6MjkxLCJyYSI6MjkxLCJiIjoiMzBtIn0=",
+        "topic": "pskr/filter/v2/30m/FT8/Q5AAU/W.Q2AAT.Q3AAT/FM08/FN02/291/291",
+        "retained": false,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "sq": 74847065461,
+    "f": 10137484,
+    "md": "FT8",
+    "rp": -9,
+    "t": 1794677160,
+    "t_tx": 1794677160,
+    "sc": "Q5AAU",
+    "sl": "FM08QK",
+    "rc": "W/Q2AAT/Q3AAT",
+    "rl": "FN02nx",
+    "sa": 291,
+    "ra": 291,
+    "b": "30m"
+  },
+  "reencode": {
+    "data": "eyJzcSI6NzQ4NDcwNjU0NjEsImYiOjEwMTM3NDg0LCJtZCI6IkZUOCIsInJwIjotOSwidCI6MTc5NDY3NzE2MCwidF90eCI6MTc5NDY3NzE2MCwic2MiOiJRNUFBVSIsInNsIjoiRk0wOFFLIiwicmMiOiJXL1EyQUFUL1EzQUFUIiwicmwiOiJGTjAybngiLCJzYSI6MjkxLCJyYSI6MjkxLCJiIjoiMzBtIn0="
+  }
+}

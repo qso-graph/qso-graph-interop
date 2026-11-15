@@ -1,0 +1,45 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJtZCI6IkZULjgifQ==",
+    "mqtt": {
+      "topic": "pskr/filter/v2/20m/FT.8/Q1AAA/Q2BBB/AA00/BB11/1/2",
+      "retained": true,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "2",
+      "kind": "spot",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "mode": "FT.8"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJtZCI6IkZULjgifQ==",
+        "topic": "pskr/filter/v2/20m/FT.8/Q1AAA/Q2BBB/AA00/BB11/1/2",
+        "retained": true,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "md": "FT.8"
+  },
+  "reencode": {
+    "data": "eyJtZCI6IkZULjgifQ=="
+  }
+}

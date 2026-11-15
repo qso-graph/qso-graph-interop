@@ -768,6 +768,11 @@
                   "required": [
                     "retained"
                   ]
+                },
+                {
+                  "required": [
+                    "qos"
+                  ]
                 }
               ]
             }
@@ -1302,6 +1307,18 @@
         },
         "imd_db": {
           "$ref": "#/$defs/integer"
+        },
+        "band": {
+          "$ref": "#/$defs/text"
+        },
+        "sender_dxcc": {
+          "$ref": "#/$defs/integer"
+        },
+        "receiver_dxcc": {
+          "$ref": "#/$defs/integer"
+        },
+        "transmission_start": {
+          "$ref": "#/$defs/instant"
         }
       }
     },
@@ -1549,6 +1566,11 @@
           "items": {
             "$ref": "#/$defs/ipfix_dependency"
           }
+        },
+        "qos": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
         }
       },
       "required": [

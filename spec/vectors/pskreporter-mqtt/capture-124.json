@@ -1,0 +1,68 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJzcSI6NzQ4NDcwNjUzODUsImYiOjcwNzU2NTYsIm1kIjoiRlQ4IiwicnAiOi02LCJ0IjoxNzk0Njc3MjM1LCJ0X3R4IjoxNzk0Njc3MjM1LCJzYyI6IkRML1ExQUFOIiwic2wiOiJKTzQwIiwicmMiOiJRMkFBTSIsInJsIjoiSU83NUxDIiwic2EiOjIzMCwicmEiOjI3OSwiYiI6IjQwbSJ9",
+    "mqtt": {
+      "topic": "pskr/filter/v2/40m/FT8/DL.Q1AAN/Q2AAM/JO40/IO75/230/279",
+      "retained": false,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "2",
+      "kind": "spot",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "sender_call": "DL/Q1AAN",
+        "sender_locator": "JO40",
+        "receiver_call": "Q2AAM",
+        "receiver_locator": "IO75LC",
+        "mode": "FT8",
+        "band": "40m",
+        "frequency_hz": 7075656,
+        "snr_db": -6,
+        "sender_dxcc": 230,
+        "receiver_dxcc": 279,
+        "time": "2026-11-14T17:27:15Z",
+        "transmission_start": "2026-11-14T17:27:15Z"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJzcSI6NzQ4NDcwNjUzODUsImYiOjcwNzU2NTYsIm1kIjoiRlQ4IiwicnAiOi02LCJ0IjoxNzk0Njc3MjM1LCJ0X3R4IjoxNzk0Njc3MjM1LCJzYyI6IkRML1ExQUFOIiwic2wiOiJKTzQwIiwicmMiOiJRMkFBTSIsInJsIjoiSU83NUxDIiwic2EiOjIzMCwicmEiOjI3OSwiYiI6IjQwbSJ9",
+        "topic": "pskr/filter/v2/40m/FT8/DL.Q1AAN/Q2AAM/JO40/IO75/230/279",
+        "retained": false,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "sq": 74847065385,
+    "f": 7075656,
+    "md": "FT8",
+    "rp": -6,
+    "t": 1794677235,
+    "t_tx": 1794677235,
+    "sc": "DL/Q1AAN",
+    "sl": "JO40",
+    "rc": "Q2AAM",
+    "rl": "IO75LC",
+    "sa": 230,
+    "ra": 279,
+    "b": "40m"
+  },
+  "reencode": {
+    "data": "eyJzcSI6NzQ4NDcwNjUzODUsImYiOjcwNzU2NTYsIm1kIjoiRlQ4IiwicnAiOi02LCJ0IjoxNzk0Njc3MjM1LCJ0X3R4IjoxNzk0Njc3MjM1LCJzYyI6IkRML1ExQUFOIiwic2wiOiJKTzQwIiwicmMiOiJRMkFBTSIsInJsIjoiSU83NUxDIiwic2EiOjIzMCwicmEiOjI3OSwiYiI6IjQwbSJ9"
+  }
+}

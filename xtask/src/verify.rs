@@ -337,6 +337,15 @@ pub fn steps(fuzz_seconds: u64) -> Vec<Step> {
             }
         }
         list.push(ipfix);
+        let mut mqtt = list.last().expect("IPFIX fuzz step").clone();
+        mqtt.name = "fuzz mqtt";
+        mqtt.args[2] = "mqtt".into();
+        for arg in &mut mqtt.args {
+            if arg.starts_with("-max_len=") {
+                *arg = "-max_len=32769".into();
+            }
+        }
+        list.push(mqtt);
     }
     if !cfg!(all(
         target_os = "linux",
@@ -741,6 +750,7 @@ mod tests {
             "fuzz n1mm",
             "fuzz fldigi",
             "fuzz ipfix",
+            "fuzz mqtt",
         ] {
             assert!(names.contains(&required), "{required} missing");
         }

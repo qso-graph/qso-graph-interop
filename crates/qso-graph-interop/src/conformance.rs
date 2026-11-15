@@ -130,6 +130,11 @@ pub fn run_vector(codec: &mut dyn Codec, vector: &Value) -> Result<(), String> {
     if let Some(value) = input.get("request") {
         options.native.insert("request".into(), value.clone());
     }
+    if let Some(value) = input.get("mqtt") {
+        options
+            .native
+            .extend(value.as_object().ok_or("MQTT association object")?.clone());
+    }
     let encode_options = EncodeOptions {
         native: input
             .get("options")

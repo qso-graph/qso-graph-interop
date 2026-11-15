@@ -248,6 +248,7 @@ pub fn network_tokens(tokens: TokenStream, library: bool) -> Check {
                         let path = segments.join("::");
                         let allowed = [
                             "path::PathBuf",
+                            "path::Path",
                             "collections::BTreeMap",
                             "net::IpAddr",
                             "net::Ipv4Addr",

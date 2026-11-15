@@ -92,3 +92,11 @@ cargo fuzz run ipfix -- -max_total_time=60 -max_len=60001 -timeout=10 -rss_limit
 
 IPFIX tests and examples use only local numeric destinations. Do not contact any PSK Reporter
 host during development or testing. Application submission policy is in Annex H.1.
+
+The offline MQTT payload/topic/capture decoder has a matching fuzz target:
+
+```sh
+cargo +nightly-2026-10-30 fuzz run mqtt -- -max_total_time=60 -max_len=32769
+```
+
+Run this from `fuzz/`, like the other isolated targets.

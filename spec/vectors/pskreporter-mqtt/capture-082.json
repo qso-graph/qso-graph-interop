@@ -1,0 +1,68 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJzcSI6NzQ4NDcwNjUzNDMsImYiOjEwMTQ1MTE0LCJtZCI6IkZUOCIsInJwIjotMTgsInQiOjE3OTQ2NzcyNjMsInRfdHgiOjE3OTQ2NzcyNTAsInNjIjoiUTZBQUkiLCJzbCI6IkpNNjhxYzA0bWEiLCJyYyI6IlEyQUFJIiwicmwiOiJLTjA1cHMiLCJzYSI6MjQ4LCJyYSI6Mjc1LCJiIjoiMzBtIn0=",
+    "mqtt": {
+      "topic": "pskr/filter/v2/30m/FT8/Q6AAI/Q2AAI/JM68/KN05/248/275",
+      "retained": false,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "2",
+      "kind": "spot",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "sender_call": "Q6AAI",
+        "sender_locator": "JM68qc04ma",
+        "receiver_call": "Q2AAI",
+        "receiver_locator": "KN05ps",
+        "mode": "FT8",
+        "band": "30m",
+        "frequency_hz": 10145114,
+        "snr_db": -18,
+        "sender_dxcc": 248,
+        "receiver_dxcc": 275,
+        "time": "2026-11-14T17:27:43Z",
+        "transmission_start": "2026-11-14T17:27:30Z"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJzcSI6NzQ4NDcwNjUzNDMsImYiOjEwMTQ1MTE0LCJtZCI6IkZUOCIsInJwIjotMTgsInQiOjE3OTQ2NzcyNjMsInRfdHgiOjE3OTQ2NzcyNTAsInNjIjoiUTZBQUkiLCJzbCI6IkpNNjhxYzA0bWEiLCJyYyI6IlEyQUFJIiwicmwiOiJLTjA1cHMiLCJzYSI6MjQ4LCJyYSI6Mjc1LCJiIjoiMzBtIn0=",
+        "topic": "pskr/filter/v2/30m/FT8/Q6AAI/Q2AAI/JM68/KN05/248/275",
+        "retained": false,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "sq": 74847065343,
+    "f": 10145114,
+    "md": "FT8",
+    "rp": -18,
+    "t": 1794677263,
+    "t_tx": 1794677250,
+    "sc": "Q6AAI",
+    "sl": "JM68qc04ma",
+    "rc": "Q2AAI",
+    "rl": "KN05ps",
+    "sa": 248,
+    "ra": 275,
+    "b": "30m"
+  },
+  "reencode": {
+    "data": "eyJzcSI6NzQ4NDcwNjUzNDMsImYiOjEwMTQ1MTE0LCJtZCI6IkZUOCIsInJwIjotMTgsInQiOjE3OTQ2NzcyNjMsInRfdHgiOjE3OTQ2NzcyNTAsInNjIjoiUTZBQUkiLCJzbCI6IkpNNjhxYzA0bWEiLCJyYyI6IlEyQUFJIiwicmwiOiJLTjA1cHMiLCJzYSI6MjQ4LCJyYSI6Mjc1LCJiIjoiMzBtIn0="
+  }
+}

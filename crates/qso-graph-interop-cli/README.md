@@ -48,3 +48,13 @@ text. Use `--speed`, `--seed`, `--call`, and `--grid` to choose the script setti
 See the [fldigi simulator guide](../../docs/user/simulator.md#test-fldigi-controllers) for first use.
 
 Licensed under GPL-3.0-or-later.
+
+Decode a local PSK Reporter MQTT capture to QGI NDJSON:
+
+```sh
+qg-interop decode --pskreporter-mqtt capture.json > events.ndjson
+```
+
+The capture can be JSON with a `records` array or NDJSON with one record per line.
+Each record supplies `topic` and `payload_b64`, with optional `retain` and `qos`.
+This command reads captured messages without a broker connection.

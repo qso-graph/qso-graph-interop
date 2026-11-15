@@ -18,7 +18,14 @@ use std::{
 fn all_specification_vectors() {
     let base = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../spec/vectors");
     let mut failures = Vec::new();
-    for family in ["wsjtx", "n1mm", "fldigi", "pskreporter-ipfix", "qgi"] {
+    for family in [
+        "wsjtx",
+        "n1mm",
+        "fldigi",
+        "pskreporter-ipfix",
+        "pskreporter-mqtt",
+        "qgi",
+    ] {
         let dir = base.join(family);
         let manifest: Value =
             serde_json::from_slice(&std::fs::read(dir.join("manifest.json")).unwrap()).unwrap();
@@ -54,6 +61,8 @@ fn all_specification_vectors() {
                 Box::new(N1mm::default())
             } else if family == "fldigi" {
                 Box::new(Fldigi::default())
+            } else if family == "pskreporter-mqtt" {
+                Box::new(qso_graph_interop::pskreporter_mqtt::PskReporterMqtt::default())
             } else if family == "pskreporter-ipfix" {
                 Box::new(qso_graph_interop::pskreporter_ipfix::PskReporterIpfix::default())
             } else {
@@ -146,6 +155,10 @@ fn declared_message_limits() {
     assert!(check_message_limit(&mut Wsjtx::default()).is_ok());
     assert!(check_message_limit(&mut N1mm::default()).is_ok());
     assert!(check_message_limit(&mut Fldigi::default()).is_ok());
+    assert!(
+        check_message_limit(&mut qso_graph_interop::pskreporter_mqtt::PskReporterMqtt::default())
+            .is_ok()
+    );
     assert!(check_message_limit(&mut Qgi::new(Transport::Udp)).is_ok());
     assert!(check_message_limit(&mut Qgi::new(Transport::Tcp)).is_ok());
 }

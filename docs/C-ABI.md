@@ -295,3 +295,15 @@ Install the system sanitizer runtimes (`libasan` and `libubsan` on Fedora/RHEL,
 or your distribution's equivalents) alongside a sanitizer-capable C compiler.
 The shipped compiler remains Rust 1.99.1; Miri, sanitizers, and isolated fuzzing
 use the pinned nightly-2026-10-30 toolchain.
+
+For offline MQTT captures, select `pskreporter-mqtt` and pass the exact payload to
+`qgi_decode`. The options object supplies `native.topic`, `native.retained`, and
+optional `native.qos`, for example:
+
+```json
+{"native":{"topic":"pskr/rxinfo/Q1AAA","retained":true,"qos":0},"structured":true}
+```
+
+The topic is evidence supplied by the caller, separate from payload bytes.
+No MQTT transport is implemented. The C smoke suite checks this codec through
+the same ownership and observation API as the other families.

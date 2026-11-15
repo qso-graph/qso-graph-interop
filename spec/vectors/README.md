@@ -173,8 +173,8 @@ native members, one/eight/nine-hop shapes, common radio labels and SO2R state ca
 There are 53 core shapes; these include invalid radio types and open nested additions.
 The [core manifest](core/manifest.json) hashes their complete file including its
 final newline. These are structural checks only: their empty byte strings are explicit placeholders,
-not valid PSK Reporter captures or complete MQTT/IPFIX decode fixtures. No mapping conformance for
-Annexes G or H is claimed by passing a shape check.
+not valid PSK Reporter captures or complete MQTT/IPFIX decode fixtures. Mapping conformance for
+Annexes G and H is checked separately by their family vectors.
 
 The [fldigi manifest](fldigi/manifest.json) pins release **4.2.13**, retrieval
 **2026-11-12**, the author's source tarball URL/SHA-256, the SourceForge listing's
@@ -288,3 +288,19 @@ array is in wire order. Native evidence is one record plus its template, full me
 and any receiver dependency. Each event is verified and re-encoded independently.
 Negative and unknown-template vectors use the shared error/skip instruction classes.
 Source-program submissions are also checked byte for byte against independent fixtures.
+
+## PSK Reporter MQTT
+
+The [MQTT manifest](pskreporter-mqtt/manifest.json) pins Annex G, the supplied page
+and the anonymized capture. Positive vectors retain exact captured payload bytes;
+literal common-field expectations are independently stored in the capture fixture.
+`input.mqtt` supplies topic, retain and optional QoS association to the codec.
+The generic conformance runner verifies native consistency and exact re-encoding.
+`scripts/gen_mqtt_vectors.py` extends the offline generator with both event kinds,
+all captured bands/modes and 4/6/8/10-character locators. Negative vectors plant
+JSON, Unicode, duplicate-key, every resource bound, known type/range, topic grammar
+and every topic/payload disagreement failure. Callsign vectors cover the observed
+payload `/` to topic `.` substitution in both spot roles and rxinfo. Negatives
+retain strict disagreement checks for bare calls, dropped slashes, misplaced
+periods, and ambiguous literal payload periods. Full-capture tests accept all
+460 corrected records, including 41 slash-bearing spots and one rxinfo record.

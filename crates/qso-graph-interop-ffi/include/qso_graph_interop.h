@@ -141,12 +141,14 @@ struct QgiError qgi_last_error(void);
 int32_t qgi_version(struct QgiBuffer *out);
 
 /**
- * Creates a codec for UTF-8 bytes "wsjtx", "n1mm", "fldigi", "pskreporter-ipfix", "qgi" (TCP),
- * or "qgi-udp". Name has explicit byte length, without NUL. Zero is invalid.
+ * Creates a codec for UTF-8 bytes "wsjtx", "n1mm", "fldigi", "pskreporter-ipfix",
+ * "pskreporter-mqtt", "qgi" (TCP), or "qgi-udp". Name has explicit byte length, without NUL. Zero is invalid.
  * # Safety
  * Follow the pointer/ownership contract on qgi_version. out is required.
  */
-int32_t qgi_codec_new(const uint8_t *family, size_t family_len, QgiCodec *out);
+int32_t qgi_codec_new(const uint8_t *family,
+                      size_t family_len,
+                      QgiCodec *out);
 
 /**
  * Releases a codec. Zero, invented, or already-freed tokens return BAD_HANDLE.

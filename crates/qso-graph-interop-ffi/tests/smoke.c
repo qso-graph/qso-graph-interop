@@ -81,6 +81,11 @@ int main(void) {
     assert(qgi_reset(n, NULL, 0) == QGI_OK);
     assert(qgi_codec_free(n) == QGI_OK);
 
+    QgiCodec mqtt = codec("pskreporter-mqtt");
+    const char mqtt_payload[] = "{\"call\":\"Q1AAA\"}";
+    observe(mqtt, (const uint8_t *)mqtt_payload, strlen(mqtt_payload), "{\"native\":{\"topic\":\"pskr/rxinfo/Q1AAA\",\"retained\":true,\"qos\":0}}", "\"family\":\"pskreporter-mqtt\"");
+    assert(qgi_codec_free(mqtt) == QGI_OK);
+
     QgiCodec f = codec("fldigi");
     const char response[] = "<methodResponse><params><param><value><double>14074000.0</double></value></param></params></methodResponse>";
     observe(f, (const uint8_t *)response, strlen(response), "{\"native\":{\"request\":{\"method\":\"rig.get_frequency\"}},\"context\":{\"direction\":\"from_application\",\"exchange\":\"response\"}}", "\"family\":\"fldigi\"");

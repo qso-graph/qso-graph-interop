@@ -132,6 +132,11 @@ jobs:
         env:
           SECONDS_EACH: ${{ github.event_name == 'schedule' && '600' || '60' }}
         run: cargo fuzz run ipfix -- -max_total_time="$SECONDS_EACH" -max_len=60001 -timeout=10 -rss_limit_mb=2048 -print_final_stats=1
+      - name: Fuzz offline MQTT payloads and captured topics
+        working-directory: fuzz
+        env:
+          SECONDS_EACH: ${{ github.event_name == 'schedule' && '600' || '60' }}
+        run: cargo fuzz run mqtt -- -max_total_time="$SECONDS_EACH" -max_len=32769 -timeout=10 -rss_limit_mb=2048 -print_final_stats=1
       - name: Lockfiles did not change
         run: git diff --exit-code -- Cargo.lock fuzz/Cargo.lock
       - name: Keep failure inputs

@@ -2,7 +2,7 @@
 # QGI-SPEC-001: the QG Interop specification
 
 **Status: draft 0.2.0, 2026-11-14.** The core, WSJT-X, N1MM and fldigi mappings, schema and conformance
-vectors are specified. Annex G remains a placeholder; Annex H defines PSK Reporter IPFIX revision 1; Annex D defines the dated N1MM
+vectors are specified. Annex G defines offline PSK Reporter MQTT revision 1; Annex H defines PSK Reporter IPFIX revision 1; Annex D defines the dated N1MM
 profile and Annex I defines event carriage and its vectors; all six families are planned for the first
 release. Reference implementation alignment and real-peer interoperability remain separate work.
 Nothing here is a promise of compatibility until the first numbered release of this specification.
@@ -167,7 +167,7 @@ revision before introducing native envelope members.
 | `QGI-CLS-0004` | A response whose interpretation depends on its request MUST receive that request's method/operation from the caller; absent that association it MUST remain `native` rather than infer the method. | Test |
 | `QGI-CLS-0005` | Request/response association MUST preserve caller-supplied `correlation_id` without inventing one from message order. | Test |
 | `QGI-CLS-0006` | For HTTP XML-RPC, `native.data` MUST contain exactly one complete request or response body, excluding HTTP headers. | Test |
-| `QGI-CLS-0010` | **Publish/subscribe.** A decoded PUBLISH MUST carry `native.topic` (text), `native.retained` (boolean retain flag) and `native.data` (exact payload bytes). | Test |
+| `QGI-CLS-0010` | **Publish/subscribe.** A decoded PUBLISH MUST carry `native.topic` (text), `native.retained` (boolean retain flag) and `native.data` (exact payload bytes). Optional `native.qos` is an integer 0–2; absent means not supplied, with no implied QoS. | Test |
 | `QGI-CLS-0011` | A retained PUBLISH MUST remain marked retained and MUST NOT be represented as a new observation solely because it was delivered now. | Test |
 | `QGI-CLS-0012` | Broker connections, subscriptions, credentials and delivery acknowledgments MUST remain outside the codec, which decodes one caller-supplied PUBLISH. | Inspection |
 | `QGI-CLS-0013` | Families MUST NOT add native envelope members beyond `format`, `data`, `message` and those listed by their selected class; family-specific structured members belong inside `native.message`. | Test |
@@ -221,7 +221,14 @@ adds event carriage using the existing datagram and stream classes. Annex letter
 
 | ID | Requirement | Verify |
 |---|---|---|
-| `QGI-PSM-0001` | **PSK Reporter MQTT** (`pskreporter-mqtt`) is reserved for the live spot feed in Annex G; no broker transport is part of the codec. | Inspection |
+| `QGI-PSM-0001` | **PSK Reporter MQTT** (`pskreporter-mqtt`) MUST follow Annex G revision 1 for caller-supplied captured messages; no broker transport is part of the codec. | Inspection |
+| `QGI-PSM-0002` | **Input context.** Decode one captured topic/payload with retain and optional QoS; apply Annex G's explicit capture defaults. | Test |
+| `QGI-PSM-0003` | **Topic grammar.** Enforce exact Annex G layouts and all topic/component bounds. | Test |
+| `QGI-PSM-0004` | **Agreement.** Reject topic/payload disagreement atomically; compare four-character locator prefixes without regard to case, preserving full locators. | Test |
+| `QGI-PSM-0005` | **JSON.** Enforce duplicate rejection, exact known types/ranges and all parser bounds; preserve unknown values and null/empty/absent evidence. | Test |
+| `QGI-PSM-0006` | **Mapping.** Use spot and receiver-information kinds, native-only undefined fields, exact bytes and no metadata joins or network. | Test |
+| `QGI-PSM-0007` | **Verification.** Verify against exact topic/payload evidence and reject mapped or structured inconsistencies. | Test |
+| `QGI-PSM-0008` | **Expansion.** Enforce Annex G's output limits and exact event admission. | Test |
 | `QGI-PSI-0001` | **PSK Reporter IPFIX** (`pskreporter-ipfix`) MUST follow Annex H revision 1, using RFC 7011 over UDP and the pinned PSK Reporter information elements. | Inspection |
 | `QGI-QGI-0001` | **QG Interop events** (`qgi`) MUST follow the event-carriage profile in Annex I, mapping revision 1. | Test |
 
@@ -234,7 +241,7 @@ adds event carriage using the existing datagram and stream classes. Annex letter
 | `n1mm` | 65,507 bytes; the full common and structured upper bound is 972,500 bytes (D.7). |
 | `fldigi` | 262,144-byte HTTP body; 128-byte method name; 8,192 XML elements; 1,024 array values; 256 struct members; 32 params. E.7 proves the full released list fits 1 MiB; larger inputs also require the actual compact-output check (the sufficient universal body guarantee is 71,155 bytes). |
 | `pskreporter-ipfix` | 60,000-byte UDP message; H.3 bounds record, template, message, supporting-record evidence, and structured view to 632,768 bytes and 63,584 JSON elements. |
-| `pskreporter-mqtt` | Not yet established: Annex G remains unpinned/incomplete; native limits and largest-observation proof remain conformance gates under `QGI-MAP-0003`. |
+| `pskreporter-mqtt` | 16,384-byte payload, 512-byte topic; Annex G bounds structured/common/evidence output below 235,000 bytes and 16,384 JSON elements. |
 
 ## 6. Families and fields defined by others
 
@@ -282,9 +289,8 @@ the completed WSJT-X profile or authorize guessing:
 
 1. Resolved in Annex E (`QGI-FLD-0051`, `0054`, `0055`): fldigi text insertion and
    transmission use separate ordered bodies with caller orchestration and no atomicity claim.
-2. Should MQTT receiver software remain a separate metadata event, or should a later class revision
-   allow a bounded join carrying both PUBLISH envelopes as evidence? The documented spot example
-   does not supply a software member, and receiver metadata is a separate retained publication.
+2. Resolved in Annex G: receiver information is a separate event. No cross-message
+   software join is admitted. Undefined receiver payload meanings remain native.
 3. Resolved in Annex H: `receiver_information` is independent of a reception; a spot joins exactly
    one receiver from its own message with complete dependency evidence. H.0 reconciles old scope
    and spelling differences; H.3 defines caller session keys, explicit expiry cutoffs and resets.
@@ -306,22 +312,23 @@ recognized official families; a third-party family publishes its profile constra
 - **E.** [fldigi](annex-e-fldigi.md).
 - **F.** [JSON Schema 2020-12](schema/qgi-event-0.2.0.schema.json).
 
-- **G.** [PSK Reporter MQTT placeholder](annex-g-pskreporter-mqtt.md).
+- **G.** [PSK Reporter MQTT revision 1](annex-g-pskreporter-mqtt.md).
 - **H.** [PSK Reporter IPFIX revision 1](annex-h-pskreporter-ipfix.md).
 - **I.** [QG Interop event carriage](annex-i-qgi.md).
 - **Z.** [Informative extension design check](annex-z-design-check.md).
 
-The [vector format and coverage](vectors/README.md) describe the versioned suite. Annex G reserves
-scope; Annex H additionally records submitter obligations. Annexes B, D, E and I define
-normative profiles and vectors. Reference-implementation evidence for B, D and I
-is recorded separately in [QGI-RI-001](QGI-RI-001.md); Annex D has an implemented
-N1MM reader and command writer. Annex E specifies the pinned fldigi profile; its
-implementation remains separate work. Profiles and vectors do not establish
-live-peer conformance.
+The [vector format and coverage](vectors/README.md) describe the versioned suite. Annex G defines offline capture decoding; Annex H additionally records submitter obligations. Annexes B, D, E, G and I define
+normative profiles and vectors. Reference-implementation evidence is recorded
+separately in [QGI-RI-001](QGI-RI-001.md); Annex D has an implemented
+N1MM reader and command writer. Annex E specifies the implemented, pinned fldigi
+profile. Annex G records capture-only MQTT evidence and its source limitations.
+Profiles and vectors do not establish live-peer conformance.
 
 ## Version history
 
 ### 0.2.0 (in development)
+
+- Added Annex G revision 1 for offline PSK Reporter MQTT captures, strict agreement, bounded JSON, additive spot fields and QoS, independent capture vectors and decoder fuzzing.
 
 - Added provisional WSJT-X mapping revision 3 for proposed JTTYText type 19, additive decode fields, captured conformance evidence, and a pinned beta-only release exception.
 

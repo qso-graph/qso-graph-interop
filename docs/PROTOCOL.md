@@ -479,3 +479,22 @@ To replay recorder NDJSON, convert each original `data_b64` datagram using
 `qg-interop sim --capture converted.ndjson --to 127.0.0.1:12237 --speed 100`
 against `qg-interop listen --wsjtx 127.0.0.1:12237 --human` (or `--json`).
 Recorder envelopes and QGI event envelopes are distinct formats.
+
+## PSK Reporter MQTT captures
+
+[Annex G](../spec/annex-g-pskreporter-mqtt.md) revision 1 pins the supplied service
+page (`www.mqtt.pskreporter.info_index.html`, retrieved 2026-11-14T17:28:27Z,
+SHA-256 `d5fd2ea058681ff5f4777d3e7383802e0fa8964ce9b7ad0acdced4c3eb47248d`)
+and anonymized 2026-11-14 capture (`mqtt-capture-q.json`, SHA-256
+`221c57920393bd85a2e8386e28f952f7427db0939f76e7a7fcac504eebb1e09f`).
+No service was contacted. Page lines 1232 and 1329–1341 establish spot topic and
+payload meanings. The page links receiver-information documentation at 1063 but
+does not define its fields: those remain native, with observed types checked.
+The corrected fixture preserves all 460 anonymized records and yields 400 spots
+and 60 receiver-information events without errors. The topic replaces each
+callsign `/` with `.` in all records; 41 spots and one rxinfo record contain slash
+calls. This rule is observed in the capture and reported for all 460 original
+records by the caller; the service page does not document it. Literal payload
+callsign periods are absent from the capture and rejected as ambiguous by QGI
+policy. Independent literal field oracles cover all 42 slash-bearing records;
+generators never import the Rust implementation.

@@ -1,0 +1,51 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJjYWxsIjoiUTRBQUEiLCJhbnRlbm5hIjoiIiwicmlnIjoiIiwiZGVjb2RlciI6Ik5leHVzIHYxLjI0LjAiLCJncmlkIjoiSk8yMnByNDEiLCJ0aW1lX3N0YXJ0IjowLCJ0cyI6MTc5NDY3Njg3NH0=",
+    "mqtt": {
+      "topic": "pskr/rxinfo/Q4AAA",
+      "retained": true,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "rxinfo",
+      "kind": "receiver_information",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "receiver_call": "Q4AAA"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJjYWxsIjoiUTRBQUEiLCJhbnRlbm5hIjoiIiwicmlnIjoiIiwiZGVjb2RlciI6Ik5leHVzIHYxLjI0LjAiLCJncmlkIjoiSk8yMnByNDEiLCJ0aW1lX3N0YXJ0IjowLCJ0cyI6MTc5NDY3Njg3NH0=",
+        "topic": "pskr/rxinfo/Q4AAA",
+        "retained": true,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "call": "Q4AAA",
+    "antenna": "",
+    "rig": "",
+    "decoder": "Nexus v1.24.0",
+    "grid": "JO22pr41",
+    "time_start": 0,
+    "ts": 1794676874
+  },
+  "reencode": {
+    "data": "eyJjYWxsIjoiUTRBQUEiLCJhbnRlbm5hIjoiIiwicmlnIjoiIiwiZGVjb2RlciI6Ik5leHVzIHYxLjI0LjAiLCJncmlkIjoiSk8yMnByNDEiLCJ0aW1lX3N0YXJ0IjowLCJ0cyI6MTc5NDY3Njg3NH0="
+  }
+}

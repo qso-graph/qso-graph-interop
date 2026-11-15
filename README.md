@@ -7,7 +7,8 @@ QG Interop gives radio app developers Rust and C libraries for specification eve
 and gives operators the `qg-interop` listener, capture decoder, and simulator.
 
 The library implements QGI-SPEC-001 0.2.0 for WSJT-X message types 0–18,
-N1MM Logger+ XML, fldigi XML-RPC, and QGI event carriage over UDP and TCP.
+N1MM Logger+ XML, fldigi XML-RPC, PSK Reporter IPFIX submissions and MQTT captures,
+and QGI event carriage over UDP and TCP.
 Events preserve native evidence and distinguish observations from
 commands. Applications supply observer context and own transport and control policy.
 
@@ -21,7 +22,7 @@ commands. Applications supply observer context and own transport and control pol
 | N1MM Logger+ | XML broadcasts; UDP | ✓ | ✓ | ✓ | `sim --n1mm` | `listen`, `decode` | Supported |
 | fldigi 4.2.13 | XML-RPC; HTTP on loopback | ✓ | ✓ | ✓ | `sim --fldigi` | `poll`, `decode` | Supported |
 | These apps | QGI event carriage; UDP or TCP | ✓ | Forwards events | — | `sim --capture --qgi` | — | Supported |
-| PSK Reporter | Spots; MQTT | | | | | | Planned |
+| PSK Reporter MQTT | Captured spots and receiver information | ✓ | — | ✓ | — | `decode --pskreporter-mqtt` | Supported |
 | PSK Reporter IPFIX | Reception submissions; UDP | ✓ | Submission encoder | ✓ | `sim --pskreporter-ipfix` | `collect` | Supported |
 | rigctld, DX cluster, ADIF over UDP, KISS | Various | | | | | | Designed for, not yet mapped |
 
@@ -107,3 +108,6 @@ cargo-audit checks. See [SECURITY.md](SECURITY.md) for private vulnerability rep
 ## License
 
 [GPL-3.0-or-later](LICENSE).
+
+Decode a local MQTT capture with `qg-interop decode --pskreporter-mqtt capture.json`.
+See [PSK Reporter MQTT captures](docs/user/pskreporter-mqtt.md) for JSON and NDJSON input.

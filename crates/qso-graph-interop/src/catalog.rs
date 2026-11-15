@@ -140,6 +140,10 @@ pub(super) fn catalog(name: &str) -> Option<Shape> {
         )),
         "spot" => Some((
             &[
+                ("band", "text"),
+                ("sender_dxcc", "integer"),
+                ("receiver_dxcc", "integer"),
+                ("transmission_start", "instant"),
                 ("call", "text"),
                 ("grid", "text"),
                 ("mode", "text"),
@@ -243,6 +247,7 @@ pub(super) fn catalog(name: &str) -> Option<Shape> {
                 ("message", "object"),
                 ("topic", "text"),
                 ("retained", "boolean"),
+                ("qos", "integer"),
                 ("template", "base64"),
                 ("header", "ipfix_header"),
                 ("message_data", "base64"),

@@ -1,0 +1,1644 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "source": "../../annex-g-pskreporter-mqtt.md",
+  "source_sha256": "6d2fabacfea1296bc7a3a9f388912284e1cdb094fa6a7d631359d967d5ad37f1",
+  "capture_sha256": "221c57920393bd85a2e8386e28f952f7427db0939f76e7a7fcac504eebb1e09f",
+  "page_sha256": "d5fd2ea058681ff5f4777d3e7383802e0fa8964ce9b7ad0acdced4c3eb47248d",
+  "vectors": [
+    {
+      "file": "absent.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "b83d7365a9ffcb6eb785f6e91a39a7d3bd46f00afeed1d07c606c0a0200b391c"
+    },
+    {
+      "file": "boundary-depth.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "6e0c057b5c1cb12e0fb27e90c4dc1241221627e42c56b4f16d87a61c6911a495"
+    },
+    {
+      "file": "boundary-elements.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "14219a5656606dd7073f30ff69d3e02d6f63ccb112d46c1f2e32e1f8c7db6f2c"
+    },
+    {
+      "file": "boundary-field.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "5fd23b00d58991103c16ab59e44c773e8090b908dd9bd663133477ee8f80af2c"
+    },
+    {
+      "file": "boundary-high.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "ee9e3a186db8a269d4e946efa671fec957d24fcd53cef29b8128fcf9f0b83ae7"
+    },
+    {
+      "file": "boundary-key.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "927aad738cad858d5662564a3eae3886a8aa4d2941a7d618b60a636fb7833404"
+    },
+    {
+      "file": "boundary-low.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "831dbf43f3cc2fb9f2e920b3e457259752ff7e0adc577ab16ae1cae7f2946473"
+    },
+    {
+      "file": "boundary-number.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "18402aa60c59c99a7084bef0d28544b82226fc11f150a8e3b41caacfaa6eb2ee"
+    },
+    {
+      "file": "boundary-topic.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "5e940ee432ebfc3119b5eaef4684f2072d3f6a4b0bf07a8b0685ceb4747b01f0"
+    },
+    {
+      "file": "capture-000.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "6e4ca71ac089323143964efaf09fea141f2b21bd6afc0887d7f0efdeaad090a1"
+    },
+    {
+      "file": "capture-001.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "a7ab55e0f92231f5fd3545523d36fe72107dbac85373c84dbe83a4882d62ff6c"
+    },
+    {
+      "file": "capture-002.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "9686b0bb5b60772530b2fd96206e1aa4c880c9c86651b33c43a7723b3e901961"
+    },
+    {
+      "file": "capture-004.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "1e85b3d947c3292971adc7fb0ecdc243b147a536300730eecd1e6de5671ce6c7"
+    },
+    {
+      "file": "capture-048.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "dc300a14639d682840bf0a59ff9e4ad52530118550fdfb9c57af76844df1891c"
+    },
+    {
+      "file": "capture-060.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "22b66ef305ab4468093c035bfaa502bbfa738aadccddb3c23a9dd2ba3f6f718a"
+    },
+    {
+      "file": "capture-061.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "1c26bad32e44e8c7af56dc6e30bc5ad0b307afe4efa60f59238431ee3e56b03f"
+    },
+    {
+      "file": "capture-062.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "ad0805b84635bd4cff043ad9c27882ba01de61b9ce1a9d5b8d425204a160b604"
+    },
+    {
+      "file": "capture-064.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "09d049e66bae5cdce9eb7e74be641daea9b61fe28d5f219e742974dae0edebbd"
+    },
+    {
+      "file": "capture-065.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "9665a409e4707ee39c24a76d05ecfa3e7d049e3dc7f374f5098003dba56531e7"
+    },
+    {
+      "file": "capture-072.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "2407a466b1f08bdcc3ce17583cfd8ac7e4fb82fc4bc962fdf875a34305fef45e"
+    },
+    {
+      "file": "capture-075.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "0f6a7f1d55b7446c9ecdc33d2fb756dd49f870f9b672a68c44d2d32819a033ba"
+    },
+    {
+      "file": "capture-078.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "a28e31d0e82089ae4bcd9d1df206d736fa59258634ef0d7899898fb76ef18d5f"
+    },
+    {
+      "file": "capture-082.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "78f35e59fc3acab0a1321ebe27f943136d1f5e4d9929dad824e7a16b2ec922b4"
+    },
+    {
+      "file": "capture-087.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "367d920d51ca08759cbf0e53fcde8777b8f5cf1e1e6cd547367cbb8e556c01fe"
+    },
+    {
+      "file": "capture-090.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "944df79fc2c565760a312e4ef4df7656c1351caf6eda53139a500e138f1789e3"
+    },
+    {
+      "file": "capture-097.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "d87f790036d3f4dc2486b7152f797feb71ab3653b5b68460d8a28ab2170cbceb"
+    },
+    {
+      "file": "capture-098.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "91dec76656ebf754b998456c52e39f471ff14dd3dac5dde8889665fd7ee1aed6"
+    },
+    {
+      "file": "capture-099.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "de9d076f9d12eb56147e9f2aafd6c5598a0a899f0360841b3b91593926592e1d"
+    },
+    {
+      "file": "capture-112.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "44607d79c94e9168373a14fa06b25fa0364abfa40044adffa6b787ae26f408e1"
+    },
+    {
+      "file": "capture-124.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "e53b3e79d53787a56fddff775bd7fa93fd5954f1008cc835c70a86c9ff486957"
+    },
+    {
+      "file": "capture-143.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "00da29e4cbdffc45fa666a09ef56f5b6d4fa25bc6f095c700eafdaea01c588c0"
+    },
+    {
+      "file": "capture-165.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "a678dfd2174a5c34a7803954c6caaad5744d71fe6478636fc2a6fda59ba8bb1a"
+    },
+    {
+      "file": "capture-188.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "48911da8155439527547f8cce2867a69aa2ff46c78f91434a456cd6bf43826c7"
+    },
+    {
+      "file": "capture-189.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "1a5dd9d0d6da0f5ba375003ab7e01a889b78c55687feb9d85aa4630ff26a2dff"
+    },
+    {
+      "file": "capture-190.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "79967a9d445897dc35683c38e029b9b03b630b11f1b1f0a4eec5c74a8fba2302"
+    },
+    {
+      "file": "capture-191.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "617d368c27c65a4444002c266a2812a66284aca9247ef82ca96626bbc432f618"
+    },
+    {
+      "file": "capture-192.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "b1190a1ecbf08198b6e62b76a5b9c6ddc4c869873b2934cce11ddabdbe67de81"
+    },
+    {
+      "file": "capture-193.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "c2492ad097ed0acce785bff4989fcb8339157c315d865215231e0c39d43611fd"
+    },
+    {
+      "file": "capture-194.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "e95f06edff28a2fa0c309fa9294472b11e4ae2984252a98a4965df4b94e08ad3"
+    },
+    {
+      "file": "capture-195.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "5377c96ec529b72ab5b9192549f4051107cfb29f4eb2a3c3b52da3484de91df5"
+    },
+    {
+      "file": "capture-196.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "fd0fe28053a233a639ae7975137800f2db9d767d81f7406f825cd161d38eed74"
+    },
+    {
+      "file": "capture-197.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "317ed2d066ae3e8e9c4b357a58fba81269a35854b17ca4f8a08691447d494ef6"
+    },
+    {
+      "file": "capture-198.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "0d6ee4e7af3bf4f91bbe1213e96106ad6620b01318390e2cab93eedf3b41611a"
+    },
+    {
+      "file": "capture-199.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "bd1ea1e900961b270d1bd66902bdecb19c7207bc7d4e38eca264cacb2f1ff11d"
+    },
+    {
+      "file": "capture-200.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "56d4d41f6144a20046746e309e8450a925c94fba1bfe69870619e44d4c74eef1"
+    },
+    {
+      "file": "capture-201.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "29ab515b8ff60c6bfcb2f2df7860c5c3ed794c35e87422860252d2888dcebace"
+    },
+    {
+      "file": "capture-202.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "44e60667f05c72d805c8f94bde8a4ce4bc1cee908efd1fccead71e2862062341"
+    },
+    {
+      "file": "capture-203.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "587b27a953f066d6336a18546d8f362b5c3b11c68a397b45f01b8e0f730e6e5a"
+    },
+    {
+      "file": "capture-204.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "8d2a3a033267365cbea4a6cc4b1bb9e399e2a46e3dec23f20fa137863faea821"
+    },
+    {
+      "file": "capture-205.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "3e82729e2cf3d424ac24cd09a2311049aad28dfd0510a92fde52f015dce2a0c4"
+    },
+    {
+      "file": "capture-206.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "ed903d4dd23bb3ca5d120702f4c5bed148fabc8a050bee813999e5c98a3bfa43"
+    },
+    {
+      "file": "capture-207.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "658bd660c52a5cfcffd2c7c8d0e288504648c5cdb268292c956dcf7b82bf4c31"
+    },
+    {
+      "file": "capture-208.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "9b50756ae5f8af6069d5d91bf7e0b09bfdfad2885a3adcd36054d66e5e68f4b9"
+    },
+    {
+      "file": "capture-209.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "547dfa51eaabdccd88982dd3adb0948c1098f10e543a336891ed2b4d662b0aec"
+    },
+    {
+      "file": "capture-210.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "82acf1533bba96b327c1c5b8d87b7c5d3375b7a87d2eea14163faec79cfccf8e"
+    },
+    {
+      "file": "capture-211.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "59a5423d31f701833816dc97326a7855d032582048e70da52232d4396f20ae7c"
+    },
+    {
+      "file": "capture-212.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "fc1cae71dfaf7676bcbb110bec98aec053295106fef834cd84611ba4a8adbaad"
+    },
+    {
+      "file": "capture-213.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "36d671a9d0cf9bc53011ef27d7c6b470fa7b44f315dec6414c8b788378d2e3f6"
+    },
+    {
+      "file": "capture-214.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "7c461917f48c9dfdf25510d8963e0061854d1b04a4d3b9564c163a3c9e5b22ad"
+    },
+    {
+      "file": "capture-215.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "762e6267fbf4fee3429451d32a2f0f44f6e2ba1ede1ab577225f1e843eb83988"
+    },
+    {
+      "file": "capture-216.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "67a53ab4101098676579315e5a42abfb98829c0464a9ec997beeb386e48172b9"
+    },
+    {
+      "file": "capture-217.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "ab7ba8ce24e4a76dc50d41654398116ee067d71dbd1852ca5522a11b92cc0452"
+    },
+    {
+      "file": "capture-218.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "7206300f9b2ff0cc8a683085121dba5edbcf76e1fdcfc3860de2d54a0bc6deaa"
+    },
+    {
+      "file": "capture-233.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "81a9360303c25998cf92e1c9c60625bc75f5a0206304261a0f4db7dc9c294d8d"
+    },
+    {
+      "file": "capture-294.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "df82ebbe59101ab20feaef6d1edd3a7ac8fba3fe1fdc4de3b61a7974ba604a1d"
+    },
+    {
+      "file": "capture-310.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "401788a38d6f7e7b6ca31766c1097c224777602b15a46173bb4393a4be41e16c"
+    },
+    {
+      "file": "capture-311.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "aabb57c6a776d5b47a8e4b6e5e2907ee8f9f3fcf6ebe98e3ace5bee2f3d09c4c"
+    },
+    {
+      "file": "capture-323.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "0c9c3dee838157a26aa145990808c30b2d7e764e36a04f1845a063b4e31128f2"
+    },
+    {
+      "file": "capture-338.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "d8e3fb1e1e5e61d52c5d0c876cae6dad1870f3377d58cd8c9cabb1e206110174"
+    },
+    {
+      "file": "capture-347.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "a4ffa353c869e9b0555b18d0387d35fd8fd0c8460228fb5dbcbaef299313d6a9"
+    },
+    {
+      "file": "capture-425.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "2e91542d81f6ac4355feb9a2568ef78e037de5ba1a0c5eef02d8c6d044121df6"
+    },
+    {
+      "file": "capture-426.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "c4134099997924eac15f6733b462cce6dfb68839581a8e88a773b1c8f5115e61"
+    },
+    {
+      "file": "capture-427.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "cd4556af388c644fbe01e66c2a0b3fdb1115b470bd0ca54f18e42dadb22b7b05"
+    },
+    {
+      "file": "empty-rx-strings.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "46a54ff3d6c503988e885d9ffc0d0f0028722bd47ebb85ce352b0fdf0f4ee623"
+    },
+    {
+      "file": "error-component-size.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "12e4672c6e22c4cccf7629007448a933c6190dfae4c3e4f2ee3b9aa5a7a64c3f"
+    },
+    {
+      "file": "error-depth.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "4efe7fb73982b9c59efdc0d60f23e888670e86053ec8d1c8607f2b86c9155f79"
+    },
+    {
+      "file": "error-duplicate.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "36e7d12fe18629a2dadfcbf15ed4a9f2e1b55cbd82dc5d39de7834087844cac7"
+    },
+    {
+      "file": "error-elements.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "ebe240ba8495ee8e12da18dc5ab92d73220108e31b040aebb8764151504f53f7"
+    },
+    {
+      "file": "error-escaped-duplicate.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "8ccc641c515cec654c0e28962f81f73c0df9c9fe2704683e07083d56218e4867"
+    },
+    {
+      "file": "error-field.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "0c3843c616d8f701fd3488c853b7fd5709174a05bcc94e4eab152fbf6ba0b5f1"
+    },
+    {
+      "file": "error-json.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "ad92ee76808da6e641b6884dcfda057f6c9071046632b1d683c25e786a7811b9"
+    },
+    {
+      "file": "error-key.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "a8add8c84ea9f8c871b0161b75fb0a8c18f7c2e7ceef26b773d1b0a9d5e13e2a"
+    },
+    {
+      "file": "error-literal-dot-receiver.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "17e4d91605b3b1992efc8b5fa95fae5ff9aec83d614645695e68b78245735945"
+    },
+    {
+      "file": "error-literal-dot-rxinfo.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "7f893a64c5f0425f5111cc80581e46bdc6e4c46ae7829583e277ff57dc632cd5"
+    },
+    {
+      "file": "error-literal-dot-sender.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "621450cd71955b07f5b91df583b9e54e6d9cf6b382db4b54e0e1b58437c060cf"
+    },
+    {
+      "file": "error-metadata-member.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "8a7e23f9421314e32023db6fe3f475e86d4c898176e874f9c70e33a74fb70ebb"
+    },
+    {
+      "file": "error-mismatch-b.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "d170f3c1d77d33190eb0cc3cd1cfd2c838c28f8c49ed80967339d3aba62718e6"
+    },
+    {
+      "file": "error-mismatch-md.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "cde867eb280b2a42ab925e00110d039f246faccfa2f1ed5141bac50a4cb63fb3"
+    },
+    {
+      "file": "error-mismatch-ra.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "38f25d81570d399d470d77422636244939fd40b34cb7063d03441f19dff89c29"
+    },
+    {
+      "file": "error-mismatch-rc.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "244351891c328639c0f35c578ab003e16f84c07dce966b5344452cb4e46947b2"
+    },
+    {
+      "file": "error-mismatch-rl.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "af046da6c856eb641dfb343b3676fc67eebba3a2bb7486ff89bf334665b26c38"
+    },
+    {
+      "file": "error-mismatch-sa.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "a15eaadd6a18a78089ad63bac03002656357dd9cb5c5778594f0fd9d0a3bbc25"
+    },
+    {
+      "file": "error-mismatch-sc.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "0b673e755016c637e137fcacee95a839cf83091466399864502c69794c530961"
+    },
+    {
+      "file": "error-mismatch-sl.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "427723887e02b10f861380abdc4a95927b2e2b985b306a634218b99fa1f1cd38"
+    },
+    {
+      "file": "error-mixed-dot-slash-receiver.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "a54bc9a56723087c4fd36aee777b27ab415d602fc36df6542a690179b4e84050"
+    },
+    {
+      "file": "error-mixed-dot-slash-rxinfo.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "f13828c2768d3267b99797b3005afdc163c1d0cd0e566ec5da5b890f81672094"
+    },
+    {
+      "file": "error-mixed-dot-slash-sender.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "6713398c10edb60a830568935c05354b0320781e536daa07b15cd787d99f8e74"
+    },
+    {
+      "file": "error-nested-duplicate.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "b49e463e7c691c0dc4f83125aaa713d290ad201e731abbc3833ec311f8c2eef5"
+    },
+    {
+      "file": "error-number-grammar.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "65c74225780bfff4ace7b58929eee7fa9bce8892ca2b2d641fde7d0c6b592231"
+    },
+    {
+      "file": "error-numeric-token.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "de276d2d87ac941a0aa70a531af11d45dcb83fe275e83f71e51d60a63b217f56"
+    },
+    {
+      "file": "error-old-version.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "1f73c2d04565008666d82c52bc0fad9e71a1ff75e00b2c798dd7b8f4def6f0ca"
+    },
+    {
+      "file": "error-payload.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "390c35616ee3fcc30f88dc3f0df89be972bb2d77785220700b8eea1e6f2aca34"
+    },
+    {
+      "file": "error-qos-null.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "51e89120c7e241527641ccea7acb05da4412a0f11ad64314a217f06b347174d5"
+    },
+    {
+      "file": "error-qos-range.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "da1539f665335c194c1fe43df0b75eb1cc7c40cfa0308bcd31168306340d68a3"
+    },
+    {
+      "file": "error-qos-type.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "ee6414ca431873a4211bf0cfeadd2c3922518a4d58b98d72bbafcbcfcf6da90c"
+    },
+    {
+      "file": "error-range-f-high.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "7999a438cbce2ccdcd4db841be42a6e8aba2018024784721785002095cfb0c7e"
+    },
+    {
+      "file": "error-range-f-low.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "ead0c66890568564517abd5e300e0c3e717fa374c836f1004474afb1649f4c7a"
+    },
+    {
+      "file": "error-range-ra-high.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "33c41e7bf86d9fee9a58b1f33ed8b0e0a5cdb6ef0ae45182ee4e30af770391c1"
+    },
+    {
+      "file": "error-range-ra-low.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "ed2451b3f75bd59aa21e70205aacf179bca7b577d81a39be7caffa750391d95d"
+    },
+    {
+      "file": "error-range-rp-high.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "293ddd38598ca98de461b4566182a5d9c775e33310678b9d8e4504914c5f524c"
+    },
+    {
+      "file": "error-range-rp-low.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "fc721d04fc1c1c18e85845cb8d4fac1e2bd3a77efa5319264dd883fe6ecec2f7"
+    },
+    {
+      "file": "error-range-sa-high.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "6466ff9760f36c768ae4cdda6e8cdb7a84f2629f2fba282f839b28a0c795bff7"
+    },
+    {
+      "file": "error-range-sa-low.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "44a20ccce2efc1ff585df68287c69273222879cb8da0ce2b2a6331d732c314c8"
+    },
+    {
+      "file": "error-range-sq-high.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "d848369f0020924dfba3774c3246b6d1f0df079c4fa30c579d570553819775e1"
+    },
+    {
+      "file": "error-range-sq-low.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "09c742a469e2a40fe3afe4e719e6bb342138a01a816044d2a6ee1fdd34f52319"
+    },
+    {
+      "file": "error-range-t-high.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "774bdb975a52a8053528b1e8155c7f35b0e82f7280528a05411b98ef1ab7da5a"
+    },
+    {
+      "file": "error-range-t-low.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "2242c87a63fe3d6b2a891f3393bb2f664d24911434acbff15e49c953abd06ff2"
+    },
+    {
+      "file": "error-range-t_tx-high.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "b0284aa8961002cd5bf8693b008ed635654c8f63f74c2ea68ac51fdeaa8b9701"
+    },
+    {
+      "file": "error-range-t_tx-low.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "ac436bcddaa9da01de0c8beca91e200f615295731ca38e0c3d9e2d93a63cac8a"
+    },
+    {
+      "file": "error-retain-type.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "15de21a756a6418ac53ac2aaa72f97615614037396983209fa551ff1ae831f97"
+    },
+    {
+      "file": "error-root.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "3ef051850edc59335b2ba3e863bffc99822bd0f8eeb7be37dc4b82d6a3082966"
+    },
+    {
+      "file": "error-root-null.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "e3f004e4779a9e463a98338dec7bdcb4f8178406236144ec0bfdf8788d5db0ec"
+    },
+    {
+      "file": "error-rx-call.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "ff35d8d8bfb923ef92e7b87d64f0c392cb078cdae88f25753ba1aac000fab8a1"
+    },
+    {
+      "file": "error-rx-type-antenna.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "d7bbfd1c9bc944389c1e5b4f36f2d8c3dc044405c3219ae0ebe0b397ac1bdbcc"
+    },
+    {
+      "file": "error-rx-type-call.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "812a8d30327a7fabaac2c0a80ef755e16e9ec8e60170f8fbb890a1cd2b31ba84"
+    },
+    {
+      "file": "error-rx-type-decoder.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "95749d9513619fc6a6af817931cb9702f456bdc94c321cd93ba120e3a9474526"
+    },
+    {
+      "file": "error-rx-type-grid.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "76f55d16b0414d6edc36537bfb3e326743095f4fec0c4dbb6a4f305cfeb13b28"
+    },
+    {
+      "file": "error-rx-type-rig.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "dd4146ea1a2c6a30553ace52e2237a664f7efe1e428612938b01551925f47dec"
+    },
+    {
+      "file": "error-rx-type-time_start-bool.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "55b7bc9ba2243a018ab76afadc5cdc358e1d898d8bd75d1c8e1fb139798edb04"
+    },
+    {
+      "file": "error-rx-type-time_start-fraction.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "15499d6e2c6505981a3019dc676e87063568bea29974657acc4d2c690f213f1c"
+    },
+    {
+      "file": "error-rx-type-time_start-high.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "78e8e168f56cb857b42aa8e9326a43ad60e017e7ceb78152bf4a54febe27cfda"
+    },
+    {
+      "file": "error-rx-type-time_start-low.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "129acd4bb7af8ae956020de28b19c494804d28425badec60e6f77535a9a04044"
+    },
+    {
+      "file": "error-rx-type-time_start-text.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "912379cb875654faba67a6743e0d1e84eb629c56e8573908aada15f8eb4f2dbc"
+    },
+    {
+      "file": "error-rx-type-ts-bool.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "8116c8db242a2c7860c764378bee1042e82472108ee59ac177a5cdf2e5a2cd7a"
+    },
+    {
+      "file": "error-rx-type-ts-fraction.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "be19bdc63431020005a85a476b34dc76a1332f99c0ab5883fe52c39076f89ea1"
+    },
+    {
+      "file": "error-rx-type-ts-high.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "f568950c74c7f19ad5e52c863f49fc61c9c3fe063f1e90a418ef23407c118fc8"
+    },
+    {
+      "file": "error-rx-type-ts-low.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "ccb30a8e267677070431cee581ca5048acb5a801e1edeb47eed72d33630cad6f"
+    },
+    {
+      "file": "error-rx-type-ts-text.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "73773eb6d91285701f0bf6c994cc6ea3775d63f0211c0601411b03c9ba6bf0eb"
+    },
+    {
+      "file": "error-slash-receiver-bare.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "35ce95f3471632fd688c5c5641d1baf0931c00f95e0da074f0c3ea2c48c45d12"
+    },
+    {
+      "file": "error-slash-receiver-dot-position.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "1f60fcd7a6b54cf5ddaa34620405e7be7311601d882b9062f0f2e8493a9d02f7"
+    },
+    {
+      "file": "error-slash-receiver-dropped.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "792041be1457e2c2afdbb40f22c099fcd048ed7ce4e192df4b771b6565538ffc"
+    },
+    {
+      "file": "error-slash-receiver-unescaped.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "4eb20458af112ba1bee309fda456b885981dfa0ec30d910b01fa58eb4c220aed"
+    },
+    {
+      "file": "error-slash-rxinfo-bare.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "4e0a5fc970df917997d0c809f8115f57003e1a026e37d1e64c4d69f9b2c8a2d6"
+    },
+    {
+      "file": "error-slash-rxinfo-dot-position.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "6673b3c9a927a5977e9899002d1aec293cd642efd7f1aa5c6c723d8639226569"
+    },
+    {
+      "file": "error-slash-rxinfo-dropped.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "6a31e76c690dfd011ad2ea50c59c4349df8f7f7945f65cfb4f5b2fd9d1e18577"
+    },
+    {
+      "file": "error-slash-rxinfo-unescaped.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "3f9a552af593674f85af9e669c6c311560ea6a4c4fc93ac85020f174ade71194"
+    },
+    {
+      "file": "error-slash-sender-bare.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "9651d67d4c83063b506d9c310d319ae2dfc33682b0890c484cb15841362dbf6d"
+    },
+    {
+      "file": "error-slash-sender-dot-position.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "7787572e36faed176106a16231a642c19911f673edbf3be3ab06bfb4d77769f9"
+    },
+    {
+      "file": "error-slash-sender-dropped.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "45cd0ca24d0c3db6e71bd85be34610ce22a5170925c8c5b8a0991bc539b64a69"
+    },
+    {
+      "file": "error-slash-sender-unescaped.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "d3488e8d5d66bed94aadf66a8e21925bc76f5b39310ac4c47189420fd791d7dc"
+    },
+    {
+      "file": "error-topic-dxcc-leading-zero.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "74f554d0edfb4ba52a610c06bd2507d6b8b39f7b655d5e575fd73408bd40d297"
+    },
+    {
+      "file": "error-topic-dxcc-negative.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "2f98ac0b8e98174954bea6f3e6175d8031a36319d06843d7fdfe9b05df64c7d6"
+    },
+    {
+      "file": "error-topic-dxcc-range.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "ca3f221bd0139f782f30d532b95a93a140fdfe5113f8dadfa05b0e7b671ab6de"
+    },
+    {
+      "file": "error-topic-empty.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "29e3e457e768200ba301fc8797440b1c8f74707b1241b0047dc83cb69f684741"
+    },
+    {
+      "file": "error-topic-prefix.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "e67e9307f35516d26f4e907c69c922a7d1f7fa91307e58aa523f1f37fd537df6"
+    },
+    {
+      "file": "error-topic-rx-suffix.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "ec575edcc433fc0c5964add290c46b7bd53ef9a2c78aba8d1277d277ddc87c05"
+    },
+    {
+      "file": "error-topic-size.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "9159436ec32360b838fb27407b37de05a4092f091b3cba6e7f1e4285408132a4"
+    },
+    {
+      "file": "error-topic-suffix.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "b18ad7ab96db2c8bf73f33bcd0477d857a4951718c4a1e36e339cb7762a89033"
+    },
+    {
+      "file": "error-topic-topic-locator.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "dfa9d9304f139987ea3f0e432e349f863f6dba4de2cec7d2129ca7e597387142"
+    },
+    {
+      "file": "error-topic-topic-locator-domain.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "b8e2b22df360c5347a56fe7c2a902fe9d11c1b727a213e238589c274c92fd45e"
+    },
+    {
+      "file": "error-topic-wildcard.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "8210f0ce57d64083a78894f43b99ece720223700975d9619965ebc6a9672e5a8"
+    },
+    {
+      "file": "error-trailing.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "df7f3ddf687f63ea6853b5f612b50d00014993089d12955f068f1b0ea99ba9c3"
+    },
+    {
+      "file": "error-type-b.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "bb7d159fce56522cb2e66420bf776f2c58fdd8e5bd06fcf0f1155a72a6a0bf76"
+    },
+    {
+      "file": "error-type-f-bool.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "aa5bb4f8294658b60572a65b5d72ffd37de766104406746c1fe34d9e7a97082c"
+    },
+    {
+      "file": "error-type-f-fraction.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "2fdb42bc4958d0e8f46b0789c25740fdf359cedbf8ed01e4bd7d6dcfffe12fe8"
+    },
+    {
+      "file": "error-type-f-string.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "50264de2e0079cbe304ff983182dac55565bbbad13823774c6d3c025a293f404"
+    },
+    {
+      "file": "error-type-md.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "b04e0df592ad3ac339e593fcf849559de78f4f0512845ebee9767c0dcad018f5"
+    },
+    {
+      "file": "error-type-ra-bool.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "41b8414010c127f0a99a718b913fa08cea9e3e93a80ec88e9715461ef12be87e"
+    },
+    {
+      "file": "error-type-ra-fraction.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "09efebf9329f38985cc83a44f7d25fbf45e08f1ce98166b607838a02048438bf"
+    },
+    {
+      "file": "error-type-ra-string.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "24e3ef417ea4653618c37efbeb465b30094901cf15bc8d4d6033dd5d8e7cca00"
+    },
+    {
+      "file": "error-type-rc.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "4ad07de2370bcf3c06b09b498fc250274be060515f32aa18c4a8e5aa6e3750e5"
+    },
+    {
+      "file": "error-type-rl.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "d1fb89bb71a70c503a8dcb3cb595794e0b74f5566bbe4af52b41ea1c7a41f741"
+    },
+    {
+      "file": "error-type-rp-bool.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "1606bd0794046214852ec34dbc3dc171dbfbfa7dfb05953fead54e909edaacf9"
+    },
+    {
+      "file": "error-type-rp-fraction.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "113dcfb2bf75a5a7abe0a56aa956059dc5f43d95b0ada4aa39bc5478be3eb019"
+    },
+    {
+      "file": "error-type-rp-string.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "bf5a115eecd0a820af4660afa19ec05e8612c1ecae13b6a5996b8359a9b1b971"
+    },
+    {
+      "file": "error-type-sa-bool.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "494669dbf3ebe565a8259ca0b6ffb82bbbda5d9e0e37305a3e82c6193635827a"
+    },
+    {
+      "file": "error-type-sa-fraction.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "5885fdf9ab688c9e25d84eeb7c157106b732344849b47abda1a6189493ab5f3e"
+    },
+    {
+      "file": "error-type-sa-string.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "00ea8a538e41ff76c5fce71e72105fe44db126c9be2c870a2159e8f656e20f05"
+    },
+    {
+      "file": "error-type-sc.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "d703f4c7c76d041ce0aacf25a15d194360e1b1df95a42519ec37f3a7c865b617"
+    },
+    {
+      "file": "error-type-sl.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "87249df5d3d52ecf794d572f9a69908442ee04ec8408aa77de4ea0cf9c865d7a"
+    },
+    {
+      "file": "error-type-sq-bool.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "1c27b7c0a33ccc0e3cbdcfc5089c7f08541f2a42f12def930613097e2abf2bf6"
+    },
+    {
+      "file": "error-type-sq-fraction.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "36c2a3f6f98107fd94c4062d88a0e96cdc79ee19e2ba0c0df3ed3c5674cf8ee2"
+    },
+    {
+      "file": "error-type-sq-string.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "bc540623ae269a6005771fd530922cbc67adc9fc90318ff644f20389b515715b"
+    },
+    {
+      "file": "error-type-t-bool.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "d3a511aee811181c50d597489e0e738394aa375c754b59ab66afc98067157bf4"
+    },
+    {
+      "file": "error-type-t-fraction.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "e08d1471e3e0febe12dc26a4d268bcf1cf330e60c23afcbe867da2b562b22fbe"
+    },
+    {
+      "file": "error-type-t-string.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "a0cf7cd36df2d90ea0420374d3fdabb6a45e11fd59e7c3f9528546d1668ea9d6"
+    },
+    {
+      "file": "error-type-t_tx-bool.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "60ba0d049be9e57097d70ec31fbab8b63417c3807723e14d3d0df8dea5556b62"
+    },
+    {
+      "file": "error-type-t_tx-fraction.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "77024a1ba617b576a79d31a07050692eeb0012c4badc46e6dadc0a211b104f9c"
+    },
+    {
+      "file": "error-type-t_tx-string.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "6600392ef1ccdc2805900b609385cc63b4c9f9587d6fe49eeb67dc8737f7b7ca"
+    },
+    {
+      "file": "error-utf8.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "db9105536866b575c2c60432e9b77c2801e6b894af1242789938e32aa9d4a5c8"
+    },
+    {
+      "file": "error-version-leading-zero.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "ac86e1dd11ff35ff4d794096952f3ccbacb3347359b7c4274eddca7cfbcab6c7"
+    },
+    {
+      "file": "error-version-overflow.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "129f6684e939f2cef6cf0157484f9fdbb503f4f314ff2f7d4d20aa3d7562b42b"
+    },
+    {
+      "file": "error-zero-version.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "negative",
+      "sha256": "47cf2dbc5644239b96cf3e544c154492d888a23be0bbf6c48b478a1e1f821e08"
+    },
+    {
+      "file": "future-mapping.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "compatibility",
+      "sha256": "c9d59d4cca82387a343a3d91274d166d9b737a877e356c13f03c18696e1a2506"
+    },
+    {
+      "file": "future-minor.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "compatibility",
+      "sha256": "0c265660cbdadb953ad7abae368a459333034742cc4f97392c2ad7ea7600327c"
+    },
+    {
+      "file": "future-version.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "skip",
+      "sha256": "bede62d98785972e3ffe833ac6c9449a24d34adf9bcfb3e9230971dff7db0439"
+    },
+    {
+      "file": "literal-dot-mode.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "1177bcbf11fd7948db3e8abe9f75fa4282ba021d82f6fa3ed9c3415844a81828"
+    },
+    {
+      "file": "missing-retain-qos.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "43d250f8429c7641d4e1314cead9c27caecbae33c4c14b61efc6ab871279bb31"
+    },
+    {
+      "file": "slash-receiver.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "88d589eecd2713b6680b82fbedd85bd844e1abca6af7c9433b01372f5aef6c3c"
+    },
+    {
+      "file": "slash-rxinfo.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "597897063cbbfb88f03dda31ab54517a7c571fd0f0c2ee8d3c5e730f6dfc10fc"
+    },
+    {
+      "file": "slash-rxinfo-absent.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "025be276980fb4c2bdd40034c6de3d558d842c3ba63b10de86945fb2d2b9c7e5"
+    },
+    {
+      "file": "slash-rxinfo-null.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "fe113330e51498b98a759a31de671f21046829dbbf25eb3f88a8ff5960bcc8f4"
+    },
+    {
+      "file": "slash-sender.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "2797e358b2f36091553d42fe3da4deecf740bd74b404a3b449c8f3896e7290f9"
+    },
+    {
+      "file": "unknown-empty-null.json",
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "class": "positive",
+      "sha256": "a8c4e2ba118d9d52d9f07a2e1e087a3fbbdc858a1e7213bd54b1a0c10f0d0358"
+    }
+  ]
+}

@@ -12,7 +12,7 @@ ASCII lowercase identifier (`[a-z][a-z0-9_]*`); an operation additionally permit
 are defined by `QGI-MOD-0006`; no time field accepts null. No optional field has an implied default.
 Standard common member names use `snake_case`; extension names follow `QGI-EXT-0003`.
 
-**Catalog scope (informative).** The expected-family column is a core design check, not an unwritten protocol mapping. The completed `wsjtx`, `n1mm`, `fldigi` and `pskreporter-ipfix` annexes assign only their explicit mappings; unassigned
+**Catalog scope (informative).** The expected-family column is a core design check, not an unwritten protocol mapping. The completed `wsjtx`, `n1mm`, `fldigi`, `pskreporter-mqtt` and `pskreporter-ipfix` annexes assign only their explicit mappings; unassigned
 expected-family entries remain capacity, not support claims. Other entries identify intended uses
 to verify when Annex G is pinned. They do not authorize guessing a value or its units. In particular, an
 XML-RPC result can use common fields only when the caller supplies the associated method; a response
@@ -171,6 +171,15 @@ Absent locators, SNR or software remain absent; a later metadata lookup cannot s
 Annex H must include supporting receiver records as native dependencies when it maps their fields
 onto a sender reception event. These choices specify model capacity, not a completed PSK mapping.
 
+Additive MQTT fields (mapping revision 1; Annex G):
+
+| Field | Type | Unit or meaning | Expected families |
+|---|---|---|---|
+| `band` | text | Published band label, never inferred from frequency | pskreporter-mqtt |
+| `sender_dxcc` | integer | Sender ADIF DXCC number | pskreporter-mqtt |
+| `receiver_dxcc` | integer | Receiver ADIF DXCC number | pskreporter-mqtt |
+| `transmission_start` | instant | Derived transmission start, distinct from native report `time` | pskreporter-mqtt |
+
 ## receiver_information
 
 Added in 0.2.0 under `QGI-GEN-0005`. This kind describes an independent receiver
@@ -179,7 +188,7 @@ Annex H defines same-message evidence dependencies when these fields appear on a
 
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|
-| `receiver_call` | text | — | pskreporter-ipfix |
+| `receiver_call` | text | — | pskreporter-mqtt, pskreporter-ipfix |
 | `receiver_locator` | text | — | pskreporter-ipfix |
 | `reporting_software` | text | — | pskreporter-ipfix |
 | `antenna_information` | text | — | pskreporter-ipfix |
@@ -348,3 +357,6 @@ implicit codec join. A serialized instance label is untrusted and does not estab
 The same station heard by three receivers during one period represents three spots, rather than
 duplicate evidence of a single receiver. A `time_of_day` supplies no date; the application supplies
 the date when constructing an instant and handles midnight boundaries using its own policy.
+
+MQTT envelopes additionally admit optional `native.qos`, an integer 0–2 supplied
+by the capture context. Existing native member types and requirements are unchanged.

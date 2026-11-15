@@ -1,0 +1,52 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJmIjogOTAwNzE5OTI1NDc0MDk5MSwgInJwIjogMTI3LCAidCI6IDI1MzQwMjMwMDc5OSwgInRfdHgiOiAyNTM0MDIzMDA3OTksICJzcSI6IDkwMDcxOTkyNTQ3NDA5OTF9",
+    "mqtt": {
+      "topic": "pskr/filter/v2/20m/FT8/Q1AAA/Q2BBB/AA00/BB11/1/2",
+      "retained": true,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "2",
+      "kind": "spot",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "frequency_hz": 9007199254740991,
+        "snr_db": 127,
+        "time": "9999-12-31T23:59:59Z",
+        "transmission_start": "9999-12-31T23:59:59Z"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJmIjogOTAwNzE5OTI1NDc0MDk5MSwgInJwIjogMTI3LCAidCI6IDI1MzQwMjMwMDc5OSwgInRfdHgiOiAyNTM0MDIzMDA3OTksICJzcSI6IDkwMDcxOTkyNTQ3NDA5OTF9",
+        "topic": "pskr/filter/v2/20m/FT8/Q1AAA/Q2BBB/AA00/BB11/1/2",
+        "retained": true,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "f": 9007199254740991,
+    "rp": 127,
+    "t": 253402300799,
+    "t_tx": 253402300799,
+    "sq": 9007199254740991
+  },
+  "reencode": {
+    "data": "eyJmIjogOTAwNzE5OTI1NDc0MDk5MSwgInJwIjogMTI3LCAidCI6IDI1MzQwMjMwMDc5OSwgInRfdHgiOiAyNTM0MDIzMDA3OTksICJzcSI6IDkwMDcxOTkyNTQ3NDA5OTF9"
+  }
+}

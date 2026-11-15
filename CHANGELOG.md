@@ -3,6 +3,12 @@
 
 ## [Unreleased]
 
+- Add PSK Reporter MQTT mapping revision 1 for offline captures, strict topic/payload
+  agreement with capture-observed callsign `/` to topic `.` escaping, bounded JSON,
+  shared spot and receiver-information events, a capture decoder, corrected capture
+  vectors covering all 460 records, and MQTT decoder fuzzing. Reject ambiguous
+  literal payload callsign periods and retain strict disagreement errors.
+
 - Add provisional WSJT-X mapping revision 3 for proposed JTTYText type 19, with
   exact proposal pins, full-text updates, UTC starts, independent Windows/macOS
   captures, schema 2/3 vectors, listener human output, and `sim --jtty-text`.

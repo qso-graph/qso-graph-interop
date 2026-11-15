@@ -1,0 +1,49 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJjYWxsIjoiUTFBQUEiLCJhbnRlbm5hIjoiIiwicmlnIjpudWxsLCJkZWNvZGVyIjoiIiwiZ3JpZCI6IiJ9",
+    "mqtt": {
+      "topic": "pskr/rxinfo/Q1AAA",
+      "retained": true,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "rxinfo",
+      "kind": "receiver_information",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "receiver_call": "Q1AAA"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJjYWxsIjoiUTFBQUEiLCJhbnRlbm5hIjoiIiwicmlnIjpudWxsLCJkZWNvZGVyIjoiIiwiZ3JpZCI6IiJ9",
+        "topic": "pskr/rxinfo/Q1AAA",
+        "retained": true,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "call": "Q1AAA",
+    "antenna": "",
+    "rig": null,
+    "decoder": "",
+    "grid": ""
+  },
+  "reencode": {
+    "data": "eyJjYWxsIjoiUTFBQUEiLCJhbnRlbm5hIjoiIiwicmlnIjpudWxsLCJkZWNvZGVyIjoiIiwiZ3JpZCI6IiJ9"
+  }
+}

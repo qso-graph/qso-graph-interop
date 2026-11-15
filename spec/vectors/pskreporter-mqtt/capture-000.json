@@ -1,0 +1,51 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJjYWxsIjoiUTBBQUEiLCJhbnRlbm5hIjoiRGlwb2xlIiwicmlnIjoiS2Vud29vZCBUUy05NTBTRFgiLCJkZWNvZGVyIjoiTVNIViB2Mi43Ni43IiwiZ3JpZCI6IkpPMjFhYzE5IiwidGltZV9zdGFydCI6MSwidHMiOjE3OTQ2NzY4NzR9",
+    "mqtt": {
+      "topic": "pskr/rxinfo/Q0AAA",
+      "retained": true,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "rxinfo",
+      "kind": "receiver_information",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "receiver_call": "Q0AAA"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJjYWxsIjoiUTBBQUEiLCJhbnRlbm5hIjoiRGlwb2xlIiwicmlnIjoiS2Vud29vZCBUUy05NTBTRFgiLCJkZWNvZGVyIjoiTVNIViB2Mi43Ni43IiwiZ3JpZCI6IkpPMjFhYzE5IiwidGltZV9zdGFydCI6MSwidHMiOjE3OTQ2NzY4NzR9",
+        "topic": "pskr/rxinfo/Q0AAA",
+        "retained": true,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "call": "Q0AAA",
+    "antenna": "Dipole",
+    "rig": "Kenwood TS-950SDX",
+    "decoder": "MSHV v2.76.7",
+    "grid": "JO21ac19",
+    "time_start": 1,
+    "ts": 1794676874
+  },
+  "reencode": {
+    "data": "eyJjYWxsIjoiUTBBQUEiLCJhbnRlbm5hIjoiRGlwb2xlIiwicmlnIjoiS2Vud29vZCBUUy05NTBTRFgiLCJkZWNvZGVyIjoiTVNIViB2Mi43Ni43IiwiZ3JpZCI6IkpPMjFhYzE5IiwidGltZV9zdGFydCI6MSwidHMiOjE3OTQ2NzY4NzR9"
+  }
+}

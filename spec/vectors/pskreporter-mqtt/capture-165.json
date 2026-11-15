@@ -1,0 +1,68 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJzcSI6NzQ4NDcwNjU0MjYsImYiOjUzNTg0NTAsIm1kIjoiRlQ4IiwicnAiOjAsInQiOjE3OTQ2NzcyNzYsInRfdHgiOjE3OTQ2NzcyNjUsInNjIjoiUTNBQVIiLCJzbCI6IktNMThWQSIsInJjIjoiUTRBQVIiLCJybCI6IktQMTFSSyIsInNhIjoyMzYsInJhIjoyMjQsImIiOiI2MG0ifQ==",
+    "mqtt": {
+      "topic": "pskr/filter/v2/60m/FT8/Q3AAR/Q4AAR/KM18/KP11/236/224",
+      "retained": false,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "2",
+      "kind": "spot",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "sender_call": "Q3AAR",
+        "sender_locator": "KM18VA",
+        "receiver_call": "Q4AAR",
+        "receiver_locator": "KP11RK",
+        "mode": "FT8",
+        "band": "60m",
+        "frequency_hz": 5358450,
+        "snr_db": 0,
+        "sender_dxcc": 236,
+        "receiver_dxcc": 224,
+        "time": "2026-11-14T17:27:56Z",
+        "transmission_start": "2026-11-14T17:27:45Z"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJzcSI6NzQ4NDcwNjU0MjYsImYiOjUzNTg0NTAsIm1kIjoiRlQ4IiwicnAiOjAsInQiOjE3OTQ2NzcyNzYsInRfdHgiOjE3OTQ2NzcyNjUsInNjIjoiUTNBQVIiLCJzbCI6IktNMThWQSIsInJjIjoiUTRBQVIiLCJybCI6IktQMTFSSyIsInNhIjoyMzYsInJhIjoyMjQsImIiOiI2MG0ifQ==",
+        "topic": "pskr/filter/v2/60m/FT8/Q3AAR/Q4AAR/KM18/KP11/236/224",
+        "retained": false,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "sq": 74847065426,
+    "f": 5358450,
+    "md": "FT8",
+    "rp": 0,
+    "t": 1794677276,
+    "t_tx": 1794677265,
+    "sc": "Q3AAR",
+    "sl": "KM18VA",
+    "rc": "Q4AAR",
+    "rl": "KP11RK",
+    "sa": 236,
+    "ra": 224,
+    "b": "60m"
+  },
+  "reencode": {
+    "data": "eyJzcSI6NzQ4NDcwNjU0MjYsImYiOjUzNTg0NTAsIm1kIjoiRlQ4IiwicnAiOjAsInQiOjE3OTQ2NzcyNzYsInRfdHgiOjE3OTQ2NzcyNjUsInNjIjoiUTNBQVIiLCJzbCI6IktNMThWQSIsInJjIjoiUTRBQVIiLCJybCI6IktQMTFSSyIsInNhIjoyMzYsInJhIjoyMjQsImIiOiI2MG0ifQ=="
+  }
+}

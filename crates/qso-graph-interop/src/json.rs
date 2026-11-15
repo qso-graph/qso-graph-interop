@@ -231,6 +231,21 @@ pub(crate) fn parse_carriage(bytes: &[u8], limit: usize) -> Result<Event, Error>
     parse_limited(bytes, limit, MAX_ELEMENTS)
 }
 fn parse_limited(bytes: &[u8], limit: usize, max_elements: usize) -> Result<Event, Error> {
+    let v = parse_value_limited(bytes, limit, max_elements)?;
+    if !v.is_object() {
+        return Err(Error::new(
+            Category::Malformed,
+            "event JSON must be one complete object",
+        ));
+    }
+    Event::from_value(v)
+}
+/// Parse bounded JSON data with duplicate-key rejection, without interpreting an event.
+/// This uses the general JSON depth, element, numeric-token and byte limits.
+pub fn parse_value(bytes: &[u8], limit: usize) -> Result<Value, Error> {
+    parse_value_limited(bytes, limit, MAX_ELEMENTS)
+}
+fn parse_value_limited(bytes: &[u8], limit: usize, max_elements: usize) -> Result<Value, Error> {
     let limit = limit.min(MAX_RECORD);
     preflight(bytes, limit)?;
     let mut parser = Parser {
@@ -241,14 +256,14 @@ fn parse_limited(bytes: &[u8], limit: usize, max_elements: usize) -> Result<Even
     };
     let v = parser.value(1)?;
     parser.whitespace();
-    if parser.at != bytes.len() || !v.is_object() {
+    if parser.at != bytes.len() {
         return Err(Error::new(
             Category::Malformed,
-            "event JSON must be one complete object",
+            "JSON must be one complete value",
         ));
     }
     bounds_with_elements(&v, limit, max_elements)?;
-    Event::from_value(v)
+    Ok(v)
 }
 /// Enforce all parser limits against a resulting value (including newly appended hops).
 pub(crate) fn bounds(v: &Value, string_limit: usize) -> Result<(), Error> {
@@ -398,6 +413,11 @@ fn validate_native_profile(n: &Value, strict: bool) -> Result<(), Error> {
             "dependencies",
         ],
     };
+    if let Some(qos) = n.get("qos")
+        && (!integer(qos, 0, 2) || n["format"] != "mqtt_publish")
+    {
+        return Err(invalid("QoS belongs to MQTT and must be 0, 1 or 2"));
+    }
     if forbidden.iter().any(|k| n.get(*k).is_some()) {
         return Err(invalid("native member belongs to a different class"));
     }

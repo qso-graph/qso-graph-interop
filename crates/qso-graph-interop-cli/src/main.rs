@@ -8,6 +8,7 @@ mod fldigi_poll;
 mod fldigi_sim;
 mod ipfix;
 mod loopback_tcp;
+mod mqtt;
 mod n1mm_sim;
 mod numeric_udp;
 mod sim;
@@ -46,9 +47,9 @@ enum Command {
         after_help = "Examples:\n  qg-interop sim --fldigi\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --n1mm --to 127.0.0.1:12060 --radios 2 --speed 60\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call Q1AW --mode FT4 --frequency 7074000\n  qg-interop sim --wsjtx --to 239.255.0.1:2237 --interface 192.0.2.10"
     )]
     Sim(Box<Sim>),
-    /// Decode one complete native body from a file or standard input.
+    /// Decode one native body or a local MQTT capture from a file or standard input.
     #[command(
-        after_help = "Examples:\n  qg-interop decode --wsjtx capture.bin\n  qg-interop decode --n1mm capture.xml\n  qg-interop decode --n1mm -\n  qg-interop decode --fldigi response.xml --request-method rig.get_frequency"
+        after_help = "Examples:\n  qg-interop decode --wsjtx capture.bin\n  qg-interop decode --n1mm capture.xml\n  qg-interop decode --n1mm -\n  qg-interop decode --fldigi response.xml --request-method rig.get_frequency\n  qg-interop decode --pskreporter-mqtt capture.json"
     )]
     Decode(Decode),
     /// Poll fldigi XML-RPC state and RX text on numeric loopback only.
@@ -101,7 +102,10 @@ struct Listen {
 
 #[derive(Args)]
 struct Decode {
-    #[arg(long, required_unless_present_any = ["n1mm", "fldigi"], conflicts_with_all = ["n1mm", "fldigi"])]
+    /// Decode local PSK Reporter MQTT capture JSON or NDJSON.
+    #[arg(long, conflicts_with_all = ["n1mm", "fldigi"])]
+    pskreporter_mqtt: bool,
+    #[arg(long, required_unless_present_any = ["n1mm", "fldigi", "pskreporter_mqtt"], conflicts_with_all = ["n1mm", "fldigi", "pskreporter_mqtt"])]
     wsjtx: bool,
     /// Select the N1MM Logger+ protocol family.
     #[arg(long)]
@@ -115,7 +119,7 @@ struct Decode {
     /// Original XML-RPC request body (also supplies text.get_rx range arguments).
     #[arg(long, requires = "fldigi")]
     request_file: Option<PathBuf>,
-    /// File containing one native body; '-' reads standard input.
+    /// File containing a native body or MQTT capture; '-' reads standard input.
     #[arg(default_value = "-")]
     file: PathBuf,
 }
@@ -327,6 +331,9 @@ fn emit(
     Ok(())
 }
 fn decode_file(options: Decode) -> Result<(), Box<dyn std::error::Error>> {
+    if options.pskreporter_mqtt {
+        return mqtt::file(&options.file);
+    }
     let mut codec: Box<dyn Codec> = if options.fldigi {
         Box::new(qso_graph_interop::fldigi::Fldigi::default())
     } else {

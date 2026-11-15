@@ -19,6 +19,7 @@ import sys
 
 import gen_fldigi_vectors as fldigi
 import gen_ipfix_vectors as ipfix
+import gen_mqtt_vectors as mqtt
 
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / 'spec/vectors/wsjtx'
@@ -3581,7 +3582,7 @@ def fldigi_review_contract(suite, document):
         (flat, 'its name with dots replaced by underscores'),
         (flat, 'MUST accept the complete released `fldigi.list` response'),
         (flat, 'supplied null is `invalid_value`, distinct from an absent association'),
-        (core_flat, 'Annexes B, D, E and I define normative profiles and vectors'),
+        (core_flat, 'Annexes B, D, E, G and I define normative profiles and vectors'),
     ]
     for text, clause in clauses:
         assert clause in text, clause
@@ -3589,7 +3590,7 @@ def fldigi_review_contract(suite, document):
     implementation = 'Annex D has an implemented N1MM reader and command writer'
     assert implementation in core_flat
     assert implementation not in core_flat.replace(implementation, 'planted omission')
-    assert 'Annex G reserves scope' in core_flat
+    assert 'Annex G defines offline capture decoding' in core_flat
     assert 'Annexes E and G reserve scope' not in core_flat
     # Check every mapping column, not only method/signature, against independent
     # literals. They do not use the builder's MAPPED table or operation function.
@@ -3789,6 +3790,7 @@ def main():
     outputs.update(fldigi_manifest(fldigi_suite, dump, ROOT))
     ipfix_outputs, ipfix_fixture, ipfix_fixture_data = ipfix.outputs(ROOT, dump, producer_validator(json.loads((ROOT / "spec/schema/qgi-event-0.2.0.schema.json").read_text()), __import__("jsonschema")) if args.producer_strict else None)
     outputs.update(ipfix_outputs)
+    outputs.update(mqtt.outputs(ROOT, dump, producer_validator(json.loads((ROOT / "spec/schema/qgi-event-0.2.0.schema.json").read_text()), __import__("jsonschema")) if args.producer_strict else None))
     if args.check:
         if not ipfix_fixture.is_file() or ipfix_fixture.read_bytes() != ipfix_fixture_data:
             raise SystemExit("PSK Reporter independent fixture differs")

@@ -39,3 +39,6 @@ mod xml;
 
 #[cfg(feature = "pskreporter-ipfix")]
 pub mod pskreporter_ipfix;
+
+#[cfg(feature = "pskreporter-mqtt")]
+pub mod pskreporter_mqtt;
