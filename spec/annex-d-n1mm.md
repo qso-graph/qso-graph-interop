@@ -47,7 +47,8 @@ frequencies; interpreting the values as Hz or MHz puts none in those bands.
 S1 **Contact notes** explicitly states 10 Hz units for contact and radio
 frequencies. The spot and command examples occupy the same bands at one
 thousandth of the corresponding Hz values. The live captures in D.8 confirm spot and QSY kHz and RadioInfo 10 Hz units
-for the observed values; spectrum units remain derived from the examples.
+for the observed values, and N1MM 1.0.11480's own scope confirms the Spectrum
+scope frequencies are kHz (D.8.1, Q10).
 
 **`QGI-N1M-0051` — Fixed frequency units.** Values below 1,000 kHz MUST use
 the same kHz unit, including 475.0 kHz on 630 m and 137.5 kHz on 2200 m;
@@ -178,6 +179,8 @@ optional D.6 view. No table implies fields absent from the payload.
 S1's Rotator Control section mentions messages to the separate rotor program on
 port 12040 but supplies **no root, fields, or encoding**. There is no invented
 rotator type or writer here; any such XML root follows the unknown-root rule.
+D.8.1 Q10 records N1MM 1.0.11480's rotor command, root `N1MMRotor`, which is
+therefore an `unknown_type` skip.
 S1 names spectrum and frequency inputs on port 13064 and recommends 12060 for
 broadcasts/lookup. Those are application configuration facts, not codec sockets.
 No other accepted input layout is defined by S1/S3.
@@ -606,7 +609,8 @@ evidence only, never a protocol source; it motivates Q11–Q14 below.
 
 Files below are byte-exact recorder NDJSON in
 `crates/qso-graph-interop/tests/fixtures/live-captures/`.
-`U:n` means record n of `n1mm-1.0.11480-udp.ndjson`; `S:n` means record n of
+`U:n` means record n of `n1mm-1.0.11480-udp.ndjson`; `R:n` means record n of
+`n1mm-1.0.11480-rotor.ndjson`; `S:n` means record n of
 `n1mm-1.0.11480-qsy-sent.ndjson`. Record numbers are one-based file lines.
 [Provenance and SHA-256 hashes](../docs/PROTOCOL.md#live-peer-captures-2026-11-1415)
 identify the program, lab setup, and production method.
@@ -631,16 +635,16 @@ non-ASCII text cannot be decoded until N1MM sends their full length.
 
 | Question | Answer and limits | Evidence |
 |---|---|---|
-| Q1 | Spot `14200` is kHz. QSY `14053.284` gives RadioInfo `1405328` (14,053,280 Hz); `21074.1234567` gives `2107412` (21,074,120 Hz). The observed QSY values truncate to 10 Hz. Integer `7074` also works. Spectrum precision/ranges and general limits remain untested. Sub-Hz QSY text stays native because common Hz are integers. | U:15; S:1–3 → U:77,80,83 |
+| Q1 | Spot `14200` is kHz. QSY `14053.284` gives RadioInfo `1405328` (14,053,280 Hz); `21074.1234567` gives `2107412` (21,074,120 Hz). The observed QSY values truncate to 10 Hz. Integer `7074` also works. Spectrum scope frequencies are kHz too (Q10); spectrum precision, ranges and general limits remain untested. Sub-Hz QSY text stays native because common Hz are integers. | U:15; S:1–3 → U:77,80,83 |
 | Q2 | AppInfo emits self-closing `<contestname />`; contactinfo has `<SentExchange />`, and paired empty operator/grid/exchange leaves. These confirm empty text preservation, not requiredness, defaults, null, or empty numeric/boolean semantics. | U:119; U:14 |
 | Q3 | RadioInfo emits `False` for observed flags; contactinfo uses `True` for IsOriginal and numeric `0`/`1` for other flags. No alternative accepted spellings or blank connection semantics established. | U:1,14 |
 | Q4 | UTF-8 declarations, no BOM, and CRLF occur. Q4DEF contains UTF-8 `Zoë`, `ÄÖÜ ß`; Q5GHI contains `Ñandú`. Their enclosing packets are truncated. Japanese text was stored by N1MM as `???` (also seen in its Edit Contact dialog), not encoded Japanese on the wire. Q2XYZ/P's mangled name came from the lab automation before N1MM saw it and establishes nothing about N1MM encoding. The complete Q3KLM packet escapes XML metacharacters. No legacy/invalid encoding or receive-side BOM acceptance established. | U:1,19,23,33,38; caller's GUI/automation observations |
 | Q5 | Largest supplied UDP payload is 1,584 bytes. Four payloads are incomplete XML: N1MM sends each UTF-8 broadcast cut to its length in characters (D.8.1, cause). No combined documents, trailing bytes, spectrum arrays, or maximum acceptance limits established. | U:23 (size); U:19,33,38,51 (incomplete) |
-| Q6 | Contactinfo uses `exchange1`, `ismultiplier1`, and `run1run2`. No lookup root, ContactType semantics, coexistence, or alias precedence established. | U:14,23 |
+| Q6 | Contactinfo uses `exchange1`, `ismultiplier1`, and `run1run2`. No lookup root, ContactType semantics, coexistence, or alias precedence established. **Lookup:** in the 1.0.11480 Configurer, *External Callsign Lookup* stays disabled with every other broadcast enabled, and N1MM's documentation names no condition that enables it, so no `lookupinfo` or `lookup` was captured; R:1–19, recorded on 12060 throughout, contains neither. | U:14,23 |; R:1–19
 | Q7 | All six contact/edit IDs are 32 lowercase ASCII hex digits. Q5GHI edit U:51 keeps U:38's ID and oldtimestamp, changes comment, then spots U:52–53 follow; delete U:66 uses the same ID and original timestamp. Delete includes app, timestamp, call, mycall, band, contestnr, StationName, ID. Edit is truncated, so it produces no event. Forwarding behavior untested. | U:14,19,23,33,38,51,52–53,66 |
 | Q8 | Spot StationName is the computer label `BUILD-BASE`. Only observed radio numbers/topology apply; no universal callsign or topology claim. | U:15; S:6–7, U:93,95 |
 | Q9 | In this SO1V session, radionr 1 without mousebutton changes frequency; mousebutton Left without radionr leaves frequency unchanged. Conflicting radionr 2 + Left leaves frequency unchanged but ActiveRadioNr becomes 2; radionr 2 alone leaves frequency unchanged and ActiveRadioNr returns to 1. Zero leaves frequency unchanged. Frequency changes yield immediate RadioInfo (0–15 ms recorder delta), with periodic reports also present; these are broadcasts, not correlated acknowledgments. Other inbound messages untested. | S:1–9 → U:77,80,83,88,91,93,95,98,102; S/U timestamps |
-| Q10 | No spectrum or rotator capture; unresolved. | No supplied evidence |
+| Q10 | **Rotator:** N1MM's Alt+J (turn the rotor toward the call in the Entry window) sent one datagram to 127.0.0.1:12040, the rotor program's port: `<N1MMRotor><rotor>*</rotor><goazi>314.0</goazi><offset>0.0</offset><bidirectional>0</bidirectional><freqband>14.0</freqband></N1MMRotor>`. It is XML with no declaration and no line breaks, unlike every 12060 broadcast; `goazi` is the target azimuth in degrees, `freqband` the band in MHz, `rotor` `*` every rotor. Root `N1MMRotor` is an `unknown_type` skip under `QGI-N1M-0014`; no rotator mapping is added. The rotor program's own reports were not captured. **Spectrum:** vectors `command-spectrum-normal` and `command-spectrum-4096`, sent to 127.0.0.1:13064 by qg-interop 0.2.0-beta.1 (`sim --capture`, signed Windows build), were accepted: the External source list offered `synthetic-spectrum`, the scope took that name, and its axis showed 14,010–14,050 with a 55 kHz span and 13,750 Hz per bin for the four-level packet (55,000 Hz / 4), confirming kHz scope frequencies and DataCount as encoded. ScalingFactor range and sign, count mismatches, endpoint ordering and rate limits remain untested. | R:3; vectors `command-spectrum-normal`, `command-spectrum-4096`; N1MM screen observations |
 | Q11 | Empty text in complete contacts stays empty. Edited operator and gridsquare are each a single space in the raw incomplete edit packet. There is no justification for trimming or filling defaults; no partial event is inferred from that packet. | U:14,23; U:51 |
 | Q12 | No `yes`, uppercase boolean, or unknown-as-false evidence. Current strict spelling policy is confirmed only for the observed forms. | U:1,14 |
 | Q13 | Score qth uses child elements (`dxcccountry`, `cqzone`, `iaruzone`), not attributes. Radio Freq integers are in 10 Hz units, confirmed by matched QSY inputs. | U:3,18; S:1–4 → U:77,80,83,88 |

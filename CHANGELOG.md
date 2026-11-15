@@ -5,6 +5,13 @@
 
 - Annex B.9: type 19 (JTTYText) is proposed in WSJT-X pull request #171; the pin is unchanged.
 
+- Add a byte-exact N1MM Logger+ 1.0.11480 rotor capture: the `N1MMRotor` command
+  N1MM sends to the rotor program on port 12040 (no XML declaration, no line
+  breaks), decoded as an `unknown_type` skip beside 18 live broadcasts. Record that
+  N1MM accepts and displays QG Interop's encoded Spectrum vectors and confirms kHz
+  scope frequencies, and that External Callsign Lookup cannot be enabled in its
+  Configurer. Annex D.8.1 answers Q10 and updates Q1 and Q6.
+
 ## [0.2.0-beta.1] - 2026-11-15
 
 - Provisional mapping: `wsjtx/2`; pin: `tag:v3.3.0-beta6,tarball-sha256:cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be`.

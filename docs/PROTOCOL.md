@@ -523,6 +523,7 @@ carry SPDX identifiers.
 |---|---|---|---|
 | `n1mm-1.0.11480-udp.ndjson` | N1MM Logger+ 1.0.11480; contacts logged/edited/deleted through its GUI; UDP broadcasts to 127.0.0.1:12060; AppInfo on log open | 2026-11-15 | `68d1aa0e421d4ef765dd4c3343a141bb83b70568ddf5445a67ee56b1c72d67c1` |
 | `n1mm-1.0.11480-qsy-sent.ndjson` | Recorder's nine radio_setfrequency commands sent to N1MM at 127.0.0.1:13064; RadioInfo reactions in UDP file matched by timestamps | 2026-11-15 | `ee3b4af58371c70c27c74d4e0c46c6220753be62a633d6906869ad0c6e64d2c6` |
+| `n1mm-1.0.11480-rotor.ndjson` | N1MM Logger+ 1.0.11480; recorder on 127.0.0.1:12040 (the rotor program's port, rotor program closed) and 127.0.0.1:12060 while Alt+J turned the rotor toward the Entry window call; one `N1MMRotor` command among 18 broadcasts | 2026-11-15 | `4bf51b76e3effc71f7f1a207c515479e54349b27536956e1793f06a6b234bd1a` |
 | `fldigi-4.2.13-xmlrpc.ndjson` | fldigi 4.2.13 XML-RPC reads/writes, unknown-method fault, and slow get_char_rates rerun | 2026-11-14 | `3ec87b797d5617d420add8d652e681820f4ef788bc9bf684befe2475e99d397c` |
 | `wsjtx-3.3.0-pr-ft8-live-udp.ndjson` | WSJT-X 3.3.0 PR build (beta6 + proposed type 19), own --live-audio-test with four ft8sim signals; own validation passed 4/4 | 2026-11-15 | `64db5ea621abfd57480971f0cfe1d207964364189dae0e4db519cf7bd3e66209` |
 | `wsjtx-beta6.ndjson` | Earlier installed WSJT-X 3.3.0-beta6 session; Heartbeat/Status traffic | 2026-11-14 | `7dc562b0850dd269743cb67b5d2cf2eb0052665f7668e3cd2b1cae8b2a985e27` |
