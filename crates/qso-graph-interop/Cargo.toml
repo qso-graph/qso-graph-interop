@@ -46,7 +46,7 @@ required-features = ["conformance", "wsjtx", "n1mm", "fldigi", "pskreporter-ipfi
 
 [[test]]
 name = "live_captures"
-required-features = ["conformance", "wsjtx", "n1mm", "fldigi"]
+required-features = ["conformance", "wsjtx", "n1mm", "fldigi", "pskreporter-ipfix"]
 
 [[test]]
 name = "fldigi"

@@ -510,10 +510,11 @@ NDJSON object per receive (`received_at`, transport, numeric local/peer addresse
 `data_b64`). The fldigi file records method and base64 **whole HTTP** requests and
 responses, with `timed_out` on the empty timeout. Tests remove HTTP framing only
 at the codec boundary; no HTTP/XML/datagram bytes are rewritten in storage.
-All supplied files, including SHA256SUMS, are copied exactly to
+All supplied capture files are copied exactly to
 `crates/qso-graph-interop/tests/fixtures/live-captures/`. Original wire/recorder
 artifacts retain their original formats without added license/header bytes;
-new test code and the independent FT8 field oracle carry SPDX identifiers.
+SHA256SUMS pins each capture. New test code and the independent field oracles
+carry SPDX identifiers.
 
 | File | Program and production method | Date (UTC) | SHA-256 of exact NDJSON |
 |---|---|---|---|
@@ -522,16 +523,47 @@ new test code and the independent FT8 field oracle carry SPDX identifiers.
 | `fldigi-4.2.13-xmlrpc.ndjson` | fldigi 4.2.13 XML-RPC reads/writes, unknown-method fault, and slow get_char_rates rerun | 2026-11-14 | `3ec87b797d5617d420add8d652e681820f4ef788bc9bf684befe2475e99d397c` |
 | `wsjtx-3.3.0-pr-ft8-live-udp.ndjson` | WSJT-X 3.3.0 PR build (beta6 + proposed type 19), own --live-audio-test with four ft8sim signals; own validation passed 4/4 | 2026-11-15 | `64db5ea621abfd57480971f0cfe1d207964364189dae0e4db519cf7bd3e66209` |
 | `wsjtx-beta6.ndjson` | Earlier installed WSJT-X 3.3.0-beta6 session; Heartbeat/Status traffic | 2026-11-14 | `7dc562b0850dd269743cb67b5d2cf2eb0052665f7668e3cd2b1cae8b2a985e27` |
+| `wsjtx-3.0.2-ft8-ipfix-udp.ndjson` | WSJT-X 3.0.2 general release, normal operation, live ft8sim audio through a virtual audio cable; PSK Reporter spotting enabled | 2026-11-15 | `85c4b52b94d209b313b25693dee885cf06ecb7c12e5bc10f06cb46b56cd07fcd` |
+| `wsjtx-3.3.0-beta6-ft8-ipfix-udp.ndjson` | WSJT-X 3.3.0-beta6, same normal live audio and spotting setup | 2026-11-15 | `b294b23ea3ecd3f0f05bd4d889b909e2062f4b0c52f0213d3e0cfb6df61f4a93` |
 
 `tests/live_captures.rs` checks the original file hashes (with planted byte
 mutations), every datagram or XML body, exact observed re-encoding, and independent
-selected field oracles. The two WSJT-X files contain 20 and 40 datagrams; FT8
+selected field oracles. The earlier two WSJT-X files contain 20 and 40 datagrams; FT8
 records 13–16 assert full decoded message, SNR, time, audio offset, delta time,
 mode marker `~`, new/low-confidence/off-air flags. The PR build's Heartbeat still
 reports `3.3.0-beta6` (records 1,11); its build label is caller provenance, not a
 wire-derived stable-release or mapping claim. Status has empty station call/grid;
 no station call is inferred from lab metadata. Existing Windows/macOS JTTYText
 fixtures retain their separate source pins and evidence.
+
+The two IPFIX captures used normal operation, not WSJT-X's audio test mode.
+On the VM, `report.pskreporter.info` resolved to 127.0.0.1, so submissions went
+to the recorder at UDP 127.0.0.1:4739. WSJT-X's UDP server destination was
+127.0.0.1:2238 because another listener held 2237. These are capture provenance;
+verification performs no DNS lookup or service connection.
+
+The 3.0.2 capture has 209 records: two IPFIX submissions (260 and 176 bytes),
+40 Decode, 142 Status, 24 Heartbeat, and one Close. The beta6 capture has 215:
+two IPFIX submissions (272 and 188 bytes), 40 Decode, 149 Status, 24 Heartbeat,
+and no Close. All 424 datagrams decode without errors or skips. Each first
+submission yields receiver information and three spots; each second yields
+receiver information only, repeating both templates and receiver data exactly.
+[Annex H.5](../spec/annex-h-pskreporter-ipfix.md#h5-live-wsjtx-confirmation-2026-11-15)
+records the decoded fields, reception times, export intervals, and ending evidence.
+The beta6 recording ends in Status traffic, without evidence of orderly shutdown;
+the absence of Close does not establish whether one was sent outside the recording
+or lost. It is not evidence of a beta6 protocol change.
+
+`ipfix-oracles.json` was independently unpacked from big-endian recorder bytes,
+without using the Rust codec. It pins headers, Set IDs/lengths, receiver fields,
+all six sender records, and the matching Decode/Status line numbers. Tests compare
+sender call, locator, SNR, mode, dial-plus-audio frequency, and reception time
+against those messages, including raw flowStartSeconds. They check both template
+layouts, scope count, same-session refresh and fresh-session decoding of the second
+submission, byte-exact WSJT-X submission encoding, evidence verification, planted
+field drift, truncation, and missing templates. The existing codec handles these
+captures unchanged. Live fldigi IPFIX was not captured; its submission coverage
+remains source-derived.
 
 FT8 cannot pack a Q-prefixed invented call as a standard callsign message: it
 becomes 13-character free text and does not produce the intended spot. The owner

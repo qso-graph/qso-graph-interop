@@ -4,7 +4,7 @@
   "family": "pskreporter-ipfix",
   "mapping": 1,
   "source": "../../annex-h-pskreporter-ipfix.md",
-  "source_sha256": "ccbc1adeb96dde1979f7eee0d85fb4ca70309a522b982e22bf92ecef8f42f7ac",
+  "source_sha256": "43114060859b944f3a9abb45b0d4ed8c1b142ef76dce89ca1003cfd35ffddeda",
   "retrieved": "2026-11-14T17:28:27Z",
   "vectors": [
     {

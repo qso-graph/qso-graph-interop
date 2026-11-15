@@ -140,6 +140,30 @@ fn check_value(value: &Value) -> Check {
     check_value_at(value, false)
 }
 
+fn check_recorder_bytes(bytes: &[u8], live: bool) -> Check {
+    // WSJT-X Decode: after its length-prefixed ID, the new flag, QTime, SNR,
+    // delta time and audio offset are 21 scalar bytes, not callsign text.
+    // For example, QTime 7,485,000 ms contains ASCII r6H. Keep the ID, mode,
+    // decoded text and trailing extensions in the scan. Incomplete framing
+    // falls back to scanning all supplied bytes rather than hiding text.
+    if bytes.starts_with(&[0xad, 0xbc, 0xcb, 0xda])
+        && bytes
+            .get(4..8)
+            .is_some_and(|schema| schema == [0, 0, 0, 2] || schema == [0, 0, 0, 3])
+        && bytes.get(8..12) == Some(&[0, 0, 0, 2])
+        && let Some(length) = bytes.get(12..16)
+        && let Ok(length) = usize::try_from(u32::from_be_bytes(length.try_into().expect("four")))
+        && let Some(start) = 16_usize.checked_add(length)
+        && let Some(end) = start.checked_add(21)
+        && end <= bytes.len()
+    {
+        let mut text = bytes.to_vec();
+        text[start..end].fill(0);
+        return check_bytes_at(&text, live);
+    }
+    check_bytes_at(bytes, live)
+}
+
 fn check_file(path: &Path, live: bool) -> Check {
     let mut text = read(path)?;
     // Existing release governance names the account owner, not a test QSO.
@@ -186,7 +210,7 @@ fn check_file(path: &Path, live: bool) -> Check {
                         6,
                     )
                     .ok_or("invalid recorder base64")?;
-                    check_bytes_at(&bytes, live)?;
+                    check_recorder_bytes(&bytes, live)?;
                 }
             }
         }
@@ -234,6 +258,40 @@ pub fn check(root: &Path) -> Check {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn wsjtx_decode_scalar_bytes_are_not_callsign_text() {
+        let capture = include_str!(
+            "../../crates/qso-graph-interop/tests/fixtures/live-captures/wsjtx-3.3.0-beta6-ft8-ipfix-udp.ndjson"
+        );
+        let row: Value = serde_json::from_str(capture.lines().nth(137).unwrap()).unwrap();
+        let raw = decoded(
+            row["data_b64"].as_str().unwrap(),
+            b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
+            6,
+        )
+        .unwrap();
+        assert!(check_bytes_at(&raw, true).unwrap_err().contains("R6H"));
+        assert!(check_recorder_bytes(&raw, true).is_ok());
+        assert!(check_recorder_bytes(&raw, false).is_err());
+        let mut future = raw.clone();
+        future[7] = 4;
+        assert!(check_recorder_bytes(&future, true).is_err());
+        let mut planted = raw.clone();
+        let call = planted.windows(3).position(|w| w == b"CQ ").unwrap() + 3;
+        planted[call..call + 5].copy_from_slice(b"W9XYZ");
+        assert!(
+            check_recorder_bytes(&planted, true)
+                .unwrap_err()
+                .contains("W9XYZ")
+        );
+        let mut extension = raw.clone();
+        extension.extend_from_slice(b" W9XYZ ");
+        assert!(check_recorder_bytes(&extension, true).is_err());
+        let mut id = raw;
+        id[16..21].copy_from_slice(b"W9XYZ");
+        assert!(check_recorder_bytes(&id, true).is_err());
+    }
 
     #[test]
     fn live_calls_are_exact_and_confined_to_fixtures() {

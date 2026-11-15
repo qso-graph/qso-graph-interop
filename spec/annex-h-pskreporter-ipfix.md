@@ -225,3 +225,69 @@ uses a stable socket and startup-relative intervals of 301–317 seconds, repeat
 templates every message, and cycles sixteen Q-prefixed callsigns so unchanged calls
 are more than an hour apart. No service hostname or implicit remote destination
 is supplied. The simulator exposes no rate acceleration for this family.
+
+## H.5 Live WSJT-X confirmation (2026-11-15)
+
+The byte-exact `wsjtx-3.0.2-ft8-ipfix-udp.ndjson` and
+`wsjtx-3.3.0-beta6-ft8-ipfix-udp.ndjson` captures confirm S3 and S4 respectively.
+[Provenance and SHA-256 pins](../docs/PROTOCOL.md#live-peer-captures-2026-11-1415)
+describe the Windows 11 VM, normal operation with live ft8sim audio through a
+virtual audio cable, and local redirection of PSK Reporter submissions. Neither
+capture used WSJT-X's audio test mode. Receiver and sender identities are confined
+to the authorized live fixtures; `ipfix-oracles.json` contains their literal values.
+Receiver locator is DN13; antenna is explicitly empty and rig information is
+`No CAT control` in both versions. Decoder software is exactly `WSJT-X v3.0.2`
+and `WSJT-X v3.3.0-beta6 725545`, respectively.
+
+Record numbers below are one-based NDJSON lines. All four submissions decode with
+zero errors or skips, with the existing WSJT-X profile unchanged. Each first
+submission contains Set 2 (60 bytes), Set 3 (52 bytes), receiver Set 0x50e2
+(48 bytes for S3, 60 for S4), and sender Set 0x50e3 (84 bytes). The template
+fields and widths match H.2 exactly, including receiver scope count 1 and five-byte
+frequencies. Each first submission produces one receiver-information event and
+three spots; the second produces one receiver-information event.
+
+| Version | Submission records / bytes | Export UTC / sequence | Observation domain | Matching first grid-bearing Decode records |
+|---|---|---|---|---|
+| 3.0.2 (S3) | 82 / 260; 158 / 176 | 01:57:14 / 0; 01:59:15 / 3 | 3493175687 | 21, 23, 24 (Status 20) |
+| 3.3.0-beta6 (S4) | 81 / 272; 154 / 188 | 02:03:21 / 0; 02:05:22 / 3 | 2439138539 | 29, 31, 32 (Status 28) |
+
+All export dates are 2026-11-15. Each second submission repeats both template
+Sets and the receiver Data Set byte-for-byte, with no sender Data Set. This is a
+template refresh, not cache-only reuse; it decodes even in a fresh collector.
+The source port and domain stay constant within each capture. Export times differ
+by 121 seconds; recorder receipt intervals are 121.010 seconds (S3) and
+121.011 seconds (S4). These match S3/S4 `PSKReporter.cpp`'s 121-second report timer
+(lines 35, 167–169). Descriptor startup sends can contain receiver information
+without spots (lines 283–302). This observed interval is shorter than H.1's published
+five-minute rule; successful parsing does not establish service-policy compliance.
+Sequence 3 after three sender records confirms the source counter behavior in H.2.
+
+The spots use FT8 and informationSource 1 (automatic, test bit clear). In both
+captures, the sender at FN42 is at 14,074,800 Hz; EM86 at 14,075,200 Hz; EM73 at
+14,076,300 Hz. S3 orders them FN42, EM73, EM86 with SNR -13, -16, -15 dB; S4 orders
+FN42, EM86, EM73 with SNR -12, -16, -16 dB. Each frequency is the matching
+Status dial frequency (14,074,000 Hz) plus the Decode audio offset. The Decode mode
+marker is `~`; Status names FT8. All three S3 spots have flowStartSeconds
+1794707730 (`2026-11-15T01:55:30Z`); S4 has 1794708105 (`2026-11-15T02:01:45Z`).
+These match Decode reception times, not export or recorder receipt times. Later
+Decodes include changed SNR/audio offsets, but neither second submission contains
+sender records. The captures establish this observation, not a general duplicate
+suppression policy.
+
+The surrounding UDP traffic also decodes without errors: S3 has 40 Decode,
+142 Status, 24 Heartbeat, and one Close; S4 has 40 Decode, 149 Status,
+24 Heartbeat, and no Close. S3 ends with Close at 02:00:46.697Z; its preceding
+Heartbeat was at 02:00:44.976Z. S4 ends with Status at 02:06:59.391Z, without an
+observed orderly shutdown. The local S4 `Network/MessageClient.cpp` sends Close
+from `impl::closedown()` (lines 745–754), called by its destructor (98–104).
+Close is a shutdown message, not a periodic message. The capture does not prove
+whether Close was sent after recording ended, lost, or never sent; its absence
+alone cannot establish a beta6 protocol difference or a decoding failure.
+
+Offline tests check literal independent field oracles, same-capture correlations,
+raw timestamps, both template definitions, second-message refresh, evidence
+verification, and byte-exact WSJT-X submission encoding. Planted field drift,
+truncation, and missing-template cases must fail verification or skip unknown Sets.
+Live WSJT-X IPFIX evidence is complete for both versions under QGI-RI-0063.
+**Live fldigi IPFIX was not captured**; S5 coverage remains source-derived.

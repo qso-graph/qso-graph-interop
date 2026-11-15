@@ -1081,7 +1081,10 @@ pub fn policy(root: &Path) -> Check {
 /// `text=auto eol=lf` stores LF, so every clone would fail its own checksum (seen twice before this
 /// check existed). Such files need `-text` in .gitattributes.
 fn pinned_files_stored_exactly(root: &Path, tracked: &[String]) -> Check {
-    for sums in tracked.iter().filter(|p| p.rsplit('/').next() == Some("SHA256SUMS")) {
+    for sums in tracked
+        .iter()
+        .filter(|p| p.rsplit('/').next() == Some("SHA256SUMS"))
+    {
         let dir = sums.rsplit_once('/').map_or("", |(d, _)| d);
         let list = std::fs::read_to_string(root.join(sums)).map_err(|e| format!("{sums}: {e}"))?;
         for line in list.lines().filter(|l| !l.trim().is_empty()) {
@@ -1089,7 +1092,11 @@ fn pinned_files_stored_exactly(root: &Path, tracked: &[String]) -> Check {
                 .split_once(char::is_whitespace)
                 .map(|(_, n)| n.trim_start().trim_start_matches('*'))
                 .ok_or_else(|| format!("{sums}: not a sha256sum line: {line}"))?;
-            let path = if dir.is_empty() { name.to_owned() } else { format!("{dir}/{name}") };
+            let path = if dir.is_empty() {
+                name.to_owned()
+            } else {
+                format!("{dir}/{name}")
+            };
             let here = std::fs::read(root.join(&path)).map_err(|e| format!("{path}: {e}"))?;
             let out = std::process::Command::new("git")
                 .arg("-C")
@@ -1097,7 +1104,10 @@ fn pinned_files_stored_exactly(root: &Path, tracked: &[String]) -> Check {
                 .args(["cat-file", "blob", &format!(":{path}")])
                 .output()
                 .map_err(|e| format!("git cat-file: {e}"))?;
-            require(out.status.success(), &format!("{path} is pinned in {sums} but not tracked"))?;
+            require(
+                out.status.success(),
+                format!("{path} is pinned in {sums} but not tracked"),
+            )?;
             stored_exactly(&path, &here, &out.stdout)?;
         }
     }
@@ -1155,7 +1165,10 @@ mod tests {
     fn pinned_bytes_must_be_stored_exactly() {
         assert!(super::stored_exactly("a.ndjson", b"x\r\ny\r\n", b"x\r\ny\r\n").is_ok());
         let e = super::stored_exactly("a.ndjson", b"x\r\ny\r\n", b"x\ny\n").unwrap_err();
-        assert!(e.contains("2 CRLF here") && e.contains("0 CRLF stored") && e.contains("-text"), "{e}");
+        assert!(
+            e.contains("2 CRLF here") && e.contains("0 CRLF stored") && e.contains("-text"),
+            "{e}"
+        );
     }
 
     use super::*;

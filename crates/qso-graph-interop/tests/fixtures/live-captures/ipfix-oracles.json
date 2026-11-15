@@ -1,0 +1,334 @@
+{
+  "_license": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "provenance": "Independent big-endian struct unpacking of recorder bytes, not Rust codec output. One-based recorder line numbers; sender records match the first grid-bearing Decode for that call.",
+  "captures": [
+    {
+      "file": "wsjtx-3.0.2-ft8-ipfix-udp.ndjson",
+      "records": 209,
+      "submissions": [
+        {
+          "record": 82,
+          "received_at": "2026-11-15T01:57:14.242Z",
+          "peer": "127.0.0.1:50418",
+          "header": {
+            "version": 10,
+            "length": 260,
+            "export_time": 1794707834,
+            "sequence_number": 0,
+            "observation_domain_id": 3493175687
+          },
+          "set_ids": [
+            2,
+            3,
+            20706,
+            20707
+          ],
+          "set_lengths": [
+            60,
+            52,
+            48,
+            84
+          ],
+          "receiver": {
+            "receiver_call": "KI7MT",
+            "receiver_locator": "DN13",
+            "reporting_software": "WSJT-X v3.0.2",
+            "antenna_information": "",
+            "rig_information": "No CAT control"
+          },
+          "spots": [
+            {
+              "decode_record": 21,
+              "flow_start_seconds": 1794707730,
+              "fields": {
+                "sender_call": "KE1HA",
+                "frequency_hz": 14074800,
+                "snr_db": -13,
+                "mode": "FT8",
+                "sender_locator": "FN42",
+                "information_source": 1,
+                "time": "2026-11-15T01:55:30Z"
+              }
+            },
+            {
+              "decode_record": 23,
+              "flow_start_seconds": 1794707730,
+              "fields": {
+                "sender_call": "KC4QPQ",
+                "frequency_hz": 14076300,
+                "snr_db": -16,
+                "mode": "FT8",
+                "sender_locator": "EM73",
+                "information_source": 1,
+                "time": "2026-11-15T01:55:30Z"
+              }
+            },
+            {
+              "decode_record": 24,
+              "flow_start_seconds": 1794707730,
+              "fields": {
+                "sender_call": "KN4YU",
+                "frequency_hz": 14075200,
+                "snr_db": -15,
+                "mode": "FT8",
+                "sender_locator": "EM86",
+                "information_source": 1,
+                "time": "2026-11-15T01:55:30Z"
+              }
+            }
+          ]
+        },
+        {
+          "record": 158,
+          "received_at": "2026-11-15T01:59:15.252Z",
+          "peer": "127.0.0.1:50418",
+          "header": {
+            "version": 10,
+            "length": 176,
+            "export_time": 1794707955,
+            "sequence_number": 3,
+            "observation_domain_id": 3493175687
+          },
+          "set_ids": [
+            2,
+            3,
+            20706
+          ],
+          "set_lengths": [
+            60,
+            52,
+            48
+          ],
+          "receiver": {
+            "receiver_call": "KI7MT",
+            "receiver_locator": "DN13",
+            "reporting_software": "WSJT-X v3.0.2",
+            "antenna_information": "",
+            "rig_information": "No CAT control"
+          },
+          "spots": []
+        }
+      ],
+      "decodes": [
+        {
+          "record": 21,
+          "status_record": 20,
+          "fields": {
+            "is_new": true,
+            "time_of_day": "01:55:30.000",
+            "snr_db": -13,
+            "dt_seconds": 0.30000001192092896,
+            "audio_offset_hz": 800,
+            "mode": "~",
+            "text": "CQ KE1HA FN42",
+            "low_confidence": false,
+            "off_air": false,
+            "radio": {
+              "instance": "WSJT-X - QGI-IPFIX-302"
+            }
+          }
+        },
+        {
+          "record": 23,
+          "status_record": 20,
+          "fields": {
+            "is_new": true,
+            "time_of_day": "01:55:30.000",
+            "snr_db": -16,
+            "dt_seconds": 0.8999999761581421,
+            "audio_offset_hz": 2300,
+            "mode": "~",
+            "text": "CQ DX KC4QPQ EM73",
+            "low_confidence": false,
+            "off_air": false,
+            "radio": {
+              "instance": "WSJT-X - QGI-IPFIX-302"
+            }
+          }
+        },
+        {
+          "record": 24,
+          "status_record": 20,
+          "fields": {
+            "is_new": true,
+            "time_of_day": "01:55:30.000",
+            "snr_db": -15,
+            "dt_seconds": 0.6000000238418579,
+            "audio_offset_hz": 1200,
+            "mode": "~",
+            "text": "KE1HA KN4YU EM86",
+            "low_confidence": false,
+            "off_air": false,
+            "radio": {
+              "instance": "WSJT-X - QGI-IPFIX-302"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "file": "wsjtx-3.3.0-beta6-ft8-ipfix-udp.ndjson",
+      "records": 215,
+      "submissions": [
+        {
+          "record": 81,
+          "received_at": "2026-11-15T02:03:21.918Z",
+          "peer": "127.0.0.1:50420",
+          "header": {
+            "version": 10,
+            "length": 272,
+            "export_time": 1794708201,
+            "sequence_number": 0,
+            "observation_domain_id": 2439138539
+          },
+          "set_ids": [
+            2,
+            3,
+            20706,
+            20707
+          ],
+          "set_lengths": [
+            60,
+            52,
+            60,
+            84
+          ],
+          "receiver": {
+            "receiver_call": "KI7MT",
+            "receiver_locator": "DN13",
+            "reporting_software": "WSJT-X v3.3.0-beta6 725545",
+            "antenna_information": "",
+            "rig_information": "No CAT control"
+          },
+          "spots": [
+            {
+              "decode_record": 29,
+              "flow_start_seconds": 1794708105,
+              "fields": {
+                "sender_call": "KE1HA",
+                "frequency_hz": 14074800,
+                "snr_db": -12,
+                "mode": "FT8",
+                "sender_locator": "FN42",
+                "information_source": 1,
+                "time": "2026-11-15T02:01:45Z"
+              }
+            },
+            {
+              "decode_record": 31,
+              "flow_start_seconds": 1794708105,
+              "fields": {
+                "sender_call": "KN4YU",
+                "frequency_hz": 14075200,
+                "snr_db": -16,
+                "mode": "FT8",
+                "sender_locator": "EM86",
+                "information_source": 1,
+                "time": "2026-11-15T02:01:45Z"
+              }
+            },
+            {
+              "decode_record": 32,
+              "flow_start_seconds": 1794708105,
+              "fields": {
+                "sender_call": "KC4QPQ",
+                "frequency_hz": 14076300,
+                "snr_db": -16,
+                "mode": "FT8",
+                "sender_locator": "EM73",
+                "information_source": 1,
+                "time": "2026-11-15T02:01:45Z"
+              }
+            }
+          ]
+        },
+        {
+          "record": 154,
+          "received_at": "2026-11-15T02:05:22.929Z",
+          "peer": "127.0.0.1:50420",
+          "header": {
+            "version": 10,
+            "length": 188,
+            "export_time": 1794708322,
+            "sequence_number": 3,
+            "observation_domain_id": 2439138539
+          },
+          "set_ids": [
+            2,
+            3,
+            20706
+          ],
+          "set_lengths": [
+            60,
+            52,
+            60
+          ],
+          "receiver": {
+            "receiver_call": "KI7MT",
+            "receiver_locator": "DN13",
+            "reporting_software": "WSJT-X v3.3.0-beta6 725545",
+            "antenna_information": "",
+            "rig_information": "No CAT control"
+          },
+          "spots": []
+        }
+      ],
+      "decodes": [
+        {
+          "record": 29,
+          "status_record": 28,
+          "fields": {
+            "is_new": true,
+            "time_of_day": "02:01:45.000",
+            "snr_db": -12,
+            "dt_seconds": 0.30000001192092896,
+            "audio_offset_hz": 800,
+            "mode": "~",
+            "text": "CQ KE1HA FN42",
+            "low_confidence": false,
+            "off_air": false,
+            "radio": {
+              "instance": "WSJT-X - QGI-IPFIX-beta6"
+            }
+          }
+        },
+        {
+          "record": 31,
+          "status_record": 28,
+          "fields": {
+            "is_new": true,
+            "time_of_day": "02:01:45.000",
+            "snr_db": -16,
+            "dt_seconds": 0.6000000238418579,
+            "audio_offset_hz": 1200,
+            "mode": "~",
+            "text": "KE1HA KN4YU EM86",
+            "low_confidence": false,
+            "off_air": false,
+            "radio": {
+              "instance": "WSJT-X - QGI-IPFIX-beta6"
+            }
+          }
+        },
+        {
+          "record": 32,
+          "status_record": 28,
+          "fields": {
+            "is_new": true,
+            "time_of_day": "02:01:45.000",
+            "snr_db": -16,
+            "dt_seconds": 0.8999999761581421,
+            "audio_offset_hz": 2300,
+            "mode": "~",
+            "text": "CQ DX KC4QPQ EM73",
+            "low_confidence": false,
+            "off_air": false,
+            "radio": {
+              "instance": "WSJT-X - QGI-IPFIX-beta6"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

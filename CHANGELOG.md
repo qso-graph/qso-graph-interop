@@ -3,12 +3,22 @@
 
 ## [Unreleased]
 
+- Add byte-exact normal-operation WSJT-X 3.0.2 and 3.3.0-beta6 live FT8/IPFIX
+  captures with SHA-256 provenance and independent field oracles. Verify all four
+  submissions and 420 WSJT-X UDP messages, correlate six spots with Decode/Status
+  messages, and check receiver-only template refreshes and exact submission encoding.
+  Confirm Annex H's WSJT-X profiles without codec changes and mark live WSJT-X
+  IPFIX evidence done for QGI-RI-0063. Exclude WSJT-X Decode scalar bytes from
+  the recorder callsign scan while preserving text, ID, and extension checks;
+  fix a Clippy error in the pinned-file storage check. Live fldigi IPFIX was
+  not captured.
+
 - Store byte-exact live WSJT-X, N1MM Logger+, and fldigi lab captures with SHA-256
   provenance, offline codec conformance tests, QSY/RadioInfo comparisons, and
   numbered Annex D/E findings. Preserve and test four truncated N1MM payloads;
   record fldigi's empty timeout, slow get_char_rates, and XML-RPC fault. Track
-  live-peer evidence without claiming pending live WSJT-X IPFIX or independent
-  qgi captures. Confine the five owner-authorized FT8 calls to live fixtures and
+  live-peer evidence without claiming independent qgi captures. Confine the five
+  owner-authorized FT8 calls to live fixtures and
   plant policy failures for other calls and locations. Existing mappings remain
   unchanged.
 
