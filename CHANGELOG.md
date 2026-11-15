@@ -3,6 +3,17 @@
 
 ## [Unreleased]
 
+- Close the issue #5 review gaps found after 0.2.0-beta.1: a MINOR release may not
+  narrow an existing field's value domain (`QGI-GEN-0005`); an fldigi codec takes no
+  method list (Annex E); every family's public failures now carry its own error as their
+  source (`QGI-RI-0024`): PSK Reporter MQTT gains `MqttError`, PSK Reporter IPFIX wraps
+  every `Codec`/`Profile` boundary and `encode_submission`, `recognize()` wraps
+  projection failures in all six families, and `qgi::Error` is now public so callers can
+  recover it;
+  `QGI-RI-0012`, `0030` and `0042` now match the library (no transport features) and
+  the enforced unsafe-code policy; `docs/NORMALIZATION.md` cites the requirements it
+  describes.
+
 - Annex B.9: type 19 (JTTYText) is proposed in WSJT-X pull request #171; the pin is unchanged.
 
 - Add a byte-exact N1MM Logger+ 1.0.11480 rotor capture: the `N1MMRotor` command

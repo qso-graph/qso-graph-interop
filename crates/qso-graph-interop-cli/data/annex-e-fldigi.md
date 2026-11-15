@@ -251,7 +251,10 @@ unassociated version-looking strings (`QGI-MOD-0034`).
 
 **`QGI-FLD-0012` — No session inference.** A codec MUST NOT copy a prior version
 query into later events, identify a protocol revision from an XML declaration,
-or infer a method's availability from a version label.
+or infer a method's availability from a version label. A codec takes no method list:
+which methods a running fldigi offers is the caller's knowledge (for example from its own
+`fldigi.list` call). A codec decodes a catalog method by its E.4 row whether or not that
+build offers it, and any other method as `native` under `QGI-FLD-0013`.
 
 **`QGI-FLD-0013` — Outcome dispatch.** After E.3 validation, a reader MUST apply this
 table; no outcome updates implicit session state.

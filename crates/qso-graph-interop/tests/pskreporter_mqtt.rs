@@ -75,7 +75,24 @@ fn tampered_evidence_cannot_be_verified_or_authored() {
         let mut v = event.value().clone();
         v[key] = value;
         let e = Event::from_value(v).unwrap();
-        assert!(codec.verify(&e, &VerifyOptions::default()).is_err());
+        // Each failure carries the family error, whichever entry point reports it.
+        for error in [
+            codec.verify(&e, &VerifyOptions::default()).unwrap_err(),
+            codec
+                .reencode(&e, &EncodeOptions::default(), &VerifyOptions::default())
+                .unwrap_err(),
+            codec
+                .validate_authored(&e, &VerifyOptions::default())
+                .unwrap_err(),
+        ] {
+            use std::error::Error as _;
+            assert!(
+                error
+                    .source()
+                    .is_some_and(|s| s.is::<pskreporter_mqtt::MqttError>()),
+                "{key}: {error}"
+            );
+        }
     }
     for (key, value) in [
         ("message", json!({})),
@@ -123,4 +140,41 @@ fn maximal_payload_context_and_structured_unknown_data_fit_output() {
     );
     payload.push(' ');
     assert!(codec.decode(payload.as_bytes(), &opts).is_err());
+}
+
+#[test]
+fn every_failure_carries_the_family_error_as_its_source() {
+    use qso_graph_interop::{Category, DecodeOptions, Error};
+    use std::error::Error as _;
+    fn cause(error: &Error) -> Category {
+        error
+            .source()
+            .and_then(|e| e.downcast_ref::<pskreporter_mqtt::MqttError>())
+            .unwrap_or_else(|| panic!("no MqttError source: {error}"))
+            .category()
+    }
+    let mut codec = PskReporterMqtt::default();
+    let decoded = codec
+        .decode(b"not mqtt", &DecodeOptions::default())
+        .unwrap_err();
+    assert_eq!(cause(&decoded), decoded.category());
+    let record = pskreporter_mqtt::decode_record(&json!([])).unwrap_err();
+    assert_eq!(cause(&record), Category::InvalidValue);
+    let command = Event::from_value(json!({"spec":"0.2.0","family":"pskreporter-mqtt","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"fields":{"operation":"x"}})).unwrap();
+    let encoded = codec
+        .encode_commands(&command, &EncodeOptions::default())
+        .unwrap_err();
+    assert_eq!(cause(&encoded), Category::InvalidValue);
+    let reencoded = codec
+        .reencode(
+            &command,
+            &EncodeOptions::default(),
+            &VerifyOptions::default(),
+        )
+        .unwrap_err();
+    assert_eq!(cause(&reencoded), Category::InvalidValue);
+    let authored = codec
+        .validate_authored(&command, &VerifyOptions::default())
+        .unwrap_err();
+    assert_eq!(cause(&authored), Category::InvalidValue);
 }

@@ -2,7 +2,7 @@
 //! Offline PSK Reporter MQTT message decoding, Annex G revision 1.
 #![forbid(unsafe_code)]
 use crate::{
-    Codec, DecodeOptions, EncodeOptions, Error, Event, Outcome, Profile, Verification,
+    Category, Codec, DecodeOptions, EncodeOptions, Error, Event, Outcome, Profile, Verification,
     VerifyOptions,
     codec::{EncodedCommands, Framing, Limits},
     error::{invalid, oversized},
@@ -16,6 +16,39 @@ pub const MAX_FIELD: usize = 4096;
 pub const MAX_DEPTH: usize = 16;
 pub const MAX_ELEMENTS: usize = 4096;
 const MAX_INTEGER: i64 = 9_007_199_254_740_991;
+
+/// The family's own failure, carried as the source of every core `Error` this module returns
+/// (`QGI-RI-0024`); recover it with `source().downcast_ref::<MqttError>()`.
+#[derive(Debug)]
+#[non_exhaustive]
+pub struct MqttError {
+    pub category: Category,
+    message: String,
+}
+impl std::fmt::Display for MqttError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.message)
+    }
+}
+impl std::error::Error for MqttError {}
+impl MqttError {
+    pub fn category(&self) -> Category {
+        self.category
+    }
+}
+fn family_failure(error: Error) -> Error {
+    use std::error::Error as _;
+    if error.source().is_some_and(|e| e.is::<MqttError>()) {
+        return error;
+    }
+    Error::family(
+        error.category(),
+        MqttError {
+            category: error.category(),
+            message: error.to_string(),
+        },
+    )
+}
 
 #[derive(Clone, Debug, Default)]
 #[non_exhaustive]
@@ -40,6 +73,9 @@ pub fn options(
 
 /// Decode one capture record. Additional capture-wrapper members are not wire payload.
 pub fn decode_record(record: &Value) -> Result<Outcome, Error> {
+    decode_record_value(record).map_err(family_failure)
+}
+fn decode_record_value(record: &Value) -> Result<Outcome, Error> {
     let record = record
         .as_object()
         .ok_or_else(|| invalid("MQTT capture record must be an object"))?;
@@ -372,13 +408,25 @@ impl Profile for PskReporterMqtt {
         event: &Event,
         options: &VerifyOptions,
     ) -> Result<crate::model::ProfileView, Error> {
-        crate::json::compatible_view(
-            event,
-            self.native_version_supported(event),
-            self.verify(event, options)?,
-        )
+        let verified = self.verify(event, options)?;
+        crate::json::compatible_view(event, self.native_version_supported(event), verified)
+            .map_err(family_failure)
     }
-    fn verify(&self, event: &Event, _: &VerifyOptions) -> Result<Verification, Error> {
+    fn verify(&self, event: &Event, options: &VerifyOptions) -> Result<Verification, Error> {
+        self.verify_evidence(event, options).map_err(family_failure)
+    }
+    fn validate_authored(&self, event: &Event, options: &VerifyOptions) -> Result<(), Error> {
+        if self.verify(event, options)? == Verification::Verified {
+            Ok(())
+        } else {
+            Err(family_failure(invalid(
+                "MQTT authored evidence unavailable",
+            )))
+        }
+    }
+}
+impl PskReporterMqtt {
+    fn verify_evidence(&self, event: &Event, _: &VerifyOptions) -> Result<Verification, Error> {
         let v = event.value();
         if v["family"] != self.family()
             || !self.native_version_supported(event)
@@ -426,13 +474,6 @@ impl Profile for PskReporterMqtt {
         }
         Ok(Verification::Verified)
     }
-    fn validate_authored(&self, event: &Event, options: &VerifyOptions) -> Result<(), Error> {
-        if self.verify(event, options)? == Verification::Verified {
-            Ok(())
-        } else {
-            Err(invalid("MQTT authored evidence unavailable"))
-        }
-    }
 }
 impl Codec for PskReporterMqtt {
     fn framing(&self) -> Framing {
@@ -446,10 +487,12 @@ impl Codec for PskReporterMqtt {
         l
     }
     fn decode(&mut self, bytes: &[u8], options: &DecodeOptions<'_>) -> Result<Outcome, Error> {
-        self.message(bytes, options)
+        self.message(bytes, options).map_err(family_failure)
     }
     fn encode_commands(&self, _: &Event, _: &EncodeOptions) -> Result<EncodedCommands, Error> {
-        Err(invalid("MQTT capture decoding has no commands"))
+        Err(family_failure(invalid(
+            "MQTT capture decoding has no commands",
+        )))
     }
     fn reencode(
         &self,
@@ -459,9 +502,11 @@ impl Codec for PskReporterMqtt {
     ) -> Result<Vec<u8>, Error> {
         if !encode.extensions().is_empty() || self.verify(event, verify)? != Verification::Verified
         {
-            return Err(invalid("MQTT reencode evidence unavailable"));
+            return Err(family_failure(invalid(
+                "MQTT reencode evidence unavailable",
+            )));
         }
-        event.native_bytes()
+        event.native_bytes().map_err(family_failure)
     }
     fn reset(&mut self, _: Option<&[u8]>) {}
 }

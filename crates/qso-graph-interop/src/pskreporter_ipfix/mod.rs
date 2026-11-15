@@ -55,6 +55,15 @@ fn failure(category: Category, message: &str) -> Error {
         },
     )
 }
+/// Every public failure carries an `IpfixError` source (`QGI-RI-0024`); one already
+/// carrying its Set/record location is kept as it is.
+pub(crate) fn family_failure(error: Error) -> Error {
+    use std::error::Error as _;
+    if error.source().is_some_and(|e| e.is::<IpfixError>()) {
+        return error;
+    }
+    failure(error.category(), &error.to_string())
+}
 fn located(e: Error, set: usize, record: Option<usize>) -> Error {
     Error::family(
         e.category(),
@@ -377,13 +386,25 @@ impl Profile for PskReporterIpfix {
         event: &Event,
         options: &VerifyOptions,
     ) -> Result<crate::model::ProfileView, Error> {
-        crate::json::compatible_view(
-            event,
-            self.native_version_supported(event),
-            self.verify(event, options)?,
-        )
+        let verified = self.verify(event, options)?;
+        crate::json::compatible_view(event, self.native_version_supported(event), verified)
+            .map_err(family_failure)
     }
-    fn verify(&self, event: &Event, _: &VerifyOptions) -> Result<Verification, Error> {
+    fn verify(&self, event: &Event, options: &VerifyOptions) -> Result<Verification, Error> {
+        self.verify_evidence(event, options).map_err(family_failure)
+    }
+
+    fn validate_authored(&self, event: &Event, options: &VerifyOptions) -> Result<(), Error> {
+        if self.verify(event, options)? != Verification::Verified {
+            return Err(family_failure(invalid(
+                "IPFIX authored evidence unavailable",
+            )));
+        }
+        Ok(())
+    }
+}
+impl PskReporterIpfix {
+    fn verify_evidence(&self, event: &Event, _: &VerifyOptions) -> Result<Verification, Error> {
         let v = event.value();
         if v["family"] != self.family()
             || !self.native_version_supported(event)
@@ -478,13 +499,6 @@ impl Profile for PskReporterIpfix {
             "IPFIX evidence/common mismatch or record location unavailable",
         ))
     }
-
-    fn validate_authored(&self, event: &Event, options: &VerifyOptions) -> Result<(), Error> {
-        if self.verify(event, options)? != Verification::Verified {
-            return Err(invalid("IPFIX authored evidence unavailable"));
-        }
-        Ok(())
-    }
 }
 impl Codec for PskReporterIpfix {
     fn framing(&self) -> Framing {
@@ -500,12 +514,12 @@ impl Codec for PskReporterIpfix {
         limits
     }
     fn decode(&mut self, bytes: &[u8], options: &DecodeOptions<'_>) -> Result<Outcome, Error> {
-        self.decode_message(bytes, options)
+        self.decode_message(bytes, options).map_err(family_failure)
     }
     fn encode_commands(&self, _: &Event, _: &EncodeOptions) -> Result<EncodedCommands, Error> {
-        Err(invalid(
+        Err(family_failure(invalid(
             "IPFIX has no control operations; use encode_submission",
-        ))
+        )))
     }
     fn reencode(
         &self,
@@ -514,9 +528,9 @@ impl Codec for PskReporterIpfix {
         verify: &VerifyOptions,
     ) -> Result<Vec<u8>, Error> {
         if !options.native.is_empty() || self.verify(event, verify)? != Verification::Verified {
-            return Err(invalid("IPFIX reencode evidence"));
+            return Err(family_failure(invalid("IPFIX reencode evidence")));
         }
-        event.native_bytes()
+        event.native_bytes().map_err(family_failure)
     }
     fn reset(&mut self, session: Option<&[u8]>) {
         if let Some(session) = session {
