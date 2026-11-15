@@ -34,7 +34,7 @@
     "fldigi-4.2.13/src/xmlrpcpp/XmlRpcUtil.cpp": "14310e98508a7c767a0277c403264fe2db46b8440f8d55acd242afd57118f5de",
     "fldigi-4.2.13/src/xmlrpcpp/XmlRpcBase64.h": "2d245271c5aaa47966f12a9002adb6200900eec715a28b8781fa6277df99a1b4"
   },
-  "profile_sha256": "457f13cdc694cb76e197a7c04356ba342f1aa3b3de878b58e3dec6a50e0343f0",
+  "profile_sha256": "6094d09ab024a54d78629f250705171acac8148a14835a2d9ed63c355c831334",
   "hash_scope": "SHA-256 of each complete vector file, including its final newline",
   "vectors": [
     {

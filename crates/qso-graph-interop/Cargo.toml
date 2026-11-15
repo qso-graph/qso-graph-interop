@@ -11,7 +11,7 @@ readme = "README.md"
 keywords = ["ham-radio", "wsjt-x", "n1mm", "fldigi", "protocol"]
 categories = ["parser-implementations", "network-programming"]
 # Repository conformance vectors and integration tests stay in the repository.
-include = ["src/**/*.rs", "README.md", "LICENSE", "tests/core.rs", "tests/carriage.rs", "tests/protocol.rs", "tests/n1mm.rs", "tests/fldigi.rs", "tests/pskreporter_ipfix.rs", "tests/pskreporter_mqtt.rs", "tests/fixtures/**"]
+include = ["src/**/*.rs", "README.md", "LICENSE", "tests/core.rs", "tests/carriage.rs", "tests/protocol.rs", "tests/n1mm.rs", "tests/fldigi.rs", "tests/live_captures.rs", "tests/pskreporter_ipfix.rs", "tests/pskreporter_mqtt.rs", "tests/fixtures/**"]
 
 [features]
 default = ["wsjtx", "n1mm", "fldigi", "pskreporter-ipfix", "pskreporter-mqtt", "qgi", "serde"]
@@ -43,6 +43,10 @@ required-features = ["n1mm"]
 [[test]]
 name = "conformance"
 required-features = ["conformance", "wsjtx", "n1mm", "fldigi", "pskreporter-ipfix", "pskreporter-mqtt", "qgi"]
+
+[[test]]
+name = "live_captures"
+required-features = ["conformance", "wsjtx", "n1mm", "fldigi"]
 
 [[test]]
 name = "fldigi"

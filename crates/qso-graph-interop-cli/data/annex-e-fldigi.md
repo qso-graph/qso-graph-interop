@@ -898,5 +898,46 @@ responses can outgrow both finite input bounds and the 1 MiB output bound.
 4. How do queued text, macros and empty appends affect on-air content in each mode?
 5. What HTTP status/content-type conventions and fault codes occur across builds?
 
-These questions do not weaken the deterministic profile rules above or claim
-live interoperability. Rust implementation work and captures are separate work.
+These questions do not weaken the deterministic profile rules above. E.8.1
+records the live evidence now available; untested cases remain open.
+
+
+### E.8.1 fldigi 4.2.13 on lab Windows 11 (2026-11-14)
+
+The byte-exact `fldigi-4.2.13-xmlrpc.ndjson` fixture and its SHA-256 are cataloged
+in [live capture provenance](../docs/PROTOCOL.md#live-peer-captures-2026-11-1415).
+Record numbers are one-based NDJSON lines. There are **61 calls**, including the
+empty timeout at record 19 and 60 complete HTTP responses. Tests validate HTTP
+Content-Length, then pass each XML body to the family codec with the independently
+captured request association. All 61 request bodies and all 60 response bodies
+decode and re-encode exactly, including unlisted/native methods.
+
+- Q1: Record 1 reports `4.2.13`. Records 6 and 21 return the full `fldigi.list`
+  (42,903-byte body) and `modem.get_names` (4,013-byte body). Ordinary strings use
+  untyped `<value>text</value>`; numeric replies include i4 and double. Empty
+  writes in records 48–52 and 57 use `<value></value>`, consistent with the
+  released backend's empty-string behavior, not invented nil coercion.
+- Q2: Records 42–43 show RX length and base64 RX bytes; record 57 clears RX.
+  These do not establish editing, multi-client, non-ASCII boundary, or negative
+  range behavior.
+- Q3: The first `main.get_char_rates` (record 19) timed out after 10 seconds with
+  no bytes. The rerun at record 59 took approximately 19 seconds and returned
+  3,237 HTTP bytes, including a 3,150-byte XML body. The handler simulates
+  modulating 256 characters. Duration is a lab observation supplied with the
+  capture; `received_at` alone does not encode request start or elapsed time.
+  This is not a protocol deadline or a new codec timeout. The lab server was
+  observed listening on **0.0.0.0:7362**, not just loopback. This bind observation
+  does not change the CLI's numeric-loopback client policy or prescribe a
+  server bind for users. Other rig/audio/platform limits remain untested.
+- Q4: Setter replies, getters after setters, and RX clearing are captured, but
+  no on-air transmission or macro semantics are established.
+- Q5: Record 58 (`no.such_method`) returns HTTP **200 OK**, `Content-Type:
+  text/xml`, with XML `methodResponse/fault/value/struct` containing exactly
+  `faultCode` (`i4`, `-1`) and `faultString` (untyped string,
+  `no.such_method: unknown method name`). The mapping yields `status: "error"`,
+  lexical `native_code: "-1"`, and that text. A fault is a response, not a decode
+  error. Successful responses also use HTTP 200 and text/xml. Other builds and
+  fault codes remain untested.
+
+No codec correction or mapping revision is needed for these responses; Annex E
+revision 1 remains unchanged.

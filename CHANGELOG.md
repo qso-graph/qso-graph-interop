@@ -3,6 +3,15 @@
 
 ## [Unreleased]
 
+- Store byte-exact live WSJT-X, N1MM Logger+, and fldigi lab captures with SHA-256
+  provenance, offline codec conformance tests, QSY/RadioInfo comparisons, and
+  numbered Annex D/E findings. Preserve and test four truncated N1MM payloads;
+  record fldigi's empty timeout, slow get_char_rates, and XML-RPC fault. Track
+  live-peer evidence without claiming pending live WSJT-X IPFIX or independent
+  qgi captures. Confine the five owner-authorized FT8 calls to live fixtures and
+  plant policy failures for other calls and locations. Existing mappings remain
+  unchanged.
+
 - Add PSK Reporter MQTT mapping revision 1 for offline captures, strict topic/payload
   agreement with capture-observed callsign `/` to topic `.` escaping, bounded JSON,
   shared spot and receiver-information events, a capture decoder, corrected capture

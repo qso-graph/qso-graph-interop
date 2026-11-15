@@ -195,8 +195,9 @@ matching invalid-text wrappers. Strict publication checks that entire view and r
 N1MM-only field capacities are scoped by family in the neutral JSON validator, including core-only
 builds; the core imports no codec. Independent `n1mm-radio.xml` evidence plants SO2R swaps, and
 process tests exercise numeric binds, malformed/unknown input, listener context, file/stdin decoding,
-and oversized capture rejection. Live-peer captures and command acceptance remain unverified;
-Annex D.8's numbered capture questions remain open.
+and oversized capture rejection. The 2026-11-15 live captures below add QSY
+response evidence and answer Annex D.8 questions within the observed build;
+four incomplete XML payloads remain rejected.
 
 ## Acceptance and supplemental evidence
 
@@ -310,7 +311,8 @@ Annex E records the archive-member hashes and the complete handler audit. No sou
 was retrieved for this implementation. Independent synthetic RF evidence is in
 `tests/fixtures/fldigi-frequency-response.xml`; the unchanged specification suite
 provides 650 cases and 455 exact re-encoding checks. These are profile tests, not
-captures from a live fldigi instance.
+captures from a live fldigi instance. The separate 2026-11-14 live evidence below
+now checks all received responses from that build.
 
 The shared XML tokenizer in `src/xml.rs` retains Annex D's encoding, namespaces,
 DTD isolation, line-ending/entity handling, invalid-unit preservation, document-order
@@ -498,3 +500,66 @@ records by the caller; the service page does not document it. Literal payload
 callsign periods are absent from the capture and rejected as ambiguous by QGI
 policy. Independent literal field oracles cover all 42 slash-bearing records;
 generators never import the Rust implementation.
+
+
+## Live peer captures (2026-11-14/15)
+
+The lab Windows 11 VM ran the real programs below. The recorder produced one
+NDJSON object per receive (`received_at`, transport, numeric local/peer addresses,
+`data_b64`); the QSY file records sent commands (`sent_at`, transport, peer, case,
+`data_b64`). The fldigi file records method and base64 **whole HTTP** requests and
+responses, with `timed_out` on the empty timeout. Tests remove HTTP framing only
+at the codec boundary; no HTTP/XML/datagram bytes are rewritten in storage.
+All supplied files, including SHA256SUMS, are copied exactly to
+`crates/qso-graph-interop/tests/fixtures/live-captures/`. Original wire/recorder
+artifacts retain their original formats without added license/header bytes;
+new test code and the independent FT8 field oracle carry SPDX identifiers.
+
+| File | Program and production method | Date (UTC) | SHA-256 of exact NDJSON |
+|---|---|---|---|
+| `n1mm-1.0.11480-udp.ndjson` | N1MM Logger+ 1.0.11480; contacts logged/edited/deleted through its GUI; UDP broadcasts to 127.0.0.1:12060; AppInfo on log open | 2026-11-15 | `68d1aa0e421d4ef765dd4c3343a141bb83b70568ddf5445a67ee56b1c72d67c1` |
+| `n1mm-1.0.11480-qsy-sent.ndjson` | Recorder's nine radio_setfrequency commands sent to N1MM at 127.0.0.1:13064; RadioInfo reactions in UDP file matched by timestamps | 2026-11-15 | `ee3b4af58371c70c27c74d4e0c46c6220753be62a633d6906869ad0c6e64d2c6` |
+| `fldigi-4.2.13-xmlrpc.ndjson` | fldigi 4.2.13 XML-RPC reads/writes, unknown-method fault, and slow get_char_rates rerun | 2026-11-14 | `3ec87b797d5617d420add8d652e681820f4ef788bc9bf684befe2475e99d397c` |
+| `wsjtx-3.3.0-pr-ft8-live-udp.ndjson` | WSJT-X 3.3.0 PR build (beta6 + proposed type 19), own --live-audio-test with four ft8sim signals; own validation passed 4/4 | 2026-11-15 | `64db5ea621abfd57480971f0cfe1d207964364189dae0e4db519cf7bd3e66209` |
+| `wsjtx-beta6.ndjson` | Earlier installed WSJT-X 3.3.0-beta6 session; Heartbeat/Status traffic | 2026-11-14 | `7dc562b0850dd269743cb67b5d2cf2eb0052665f7668e3cd2b1cae8b2a985e27` |
+
+`tests/live_captures.rs` checks the original file hashes (with planted byte
+mutations), every datagram or XML body, exact observed re-encoding, and independent
+selected field oracles. The two WSJT-X files contain 20 and 40 datagrams; FT8
+records 13–16 assert full decoded message, SNR, time, audio offset, delta time,
+mode marker `~`, new/low-confidence/off-air flags. The PR build's Heartbeat still
+reports `3.3.0-beta6` (records 1,11); its build label is caller provenance, not a
+wire-derived stable-release or mapping claim. Status has empty station call/grid;
+no station call is inferred from lab metadata. Existing Windows/macOS JTTYText
+fixtures retain their separate source pins and evidence.
+
+FT8 cannot pack a Q-prefixed invented call as a standard callsign message: it
+becomes 13-character free text and does not produce the intended spot. The owner
+authorized exactly five of his current/former calls, checked not reissued, for
+live-capture fixtures. Their exact names and rationale are in the policy check;
+no suffix or other real-format call is excepted. Tests plant an unrelated call
+inside base64 NDJSON and move an allowed call outside the fixture directory to
+prove both restrictions. This exception does not authorize invented non-Q QSOs.
+
+The N1MM file contains 130 records (61 RadioInfo, 51 score, 10 spot, 5 contact,
+1 edit, 1 delete, 1 AppInfo). **126 decode successfully; records 19,33,38,51 are
+incomplete XML and correctly fail as truncated.** Those bytes are preserved and
+never repaired or partially mapped. Thus zero decode errors across the supplied
+N1MM file cannot be claimed. UTF-8 names/comments in the incomplete records are
+raw-byte evidence only. Q2XYZ/P's mangled name originated in the lab automation;
+it is not evidence of an N1MM encoding conversion. The GUI stored Japanese as
+`???`. [Annex D.8.1](../spec/annex-d-n1mm.md#d81-answers-from-n1mm-logger-1011480-2026-11-15)
+answers all 17 numbered questions and identifies the remaining limits.
+
+The fldigi file contains 61 records: all 61 request XML bodies and 60 received
+response XML bodies decode successfully. Record 19 has no response bytes after a
+10-second timeout; no XML message is fabricated. Record 59's rerun returned
+3,237 HTTP bytes in approximately 19 seconds (3,150-byte XML body). Record 58 is
+an ordinary HTTP 200 XML-RPC fault with code -1, not a codec failure.
+[Annex E.8.1](../spec/annex-e-fldigi.md#e81-fldigi-4213-on-lab-windows-11-2026-11-14)
+records the fault shape, timings, and observed 0.0.0.0 server bind.
+
+No codec behavior changed: all complete traffic confirms the existing mappings,
+including N1MM frequency scaling and fldigi lexical fault codes. No mapping
+revision is required to document these observations. Tests run offline through
+the public family codec API and never start or contact these peers.

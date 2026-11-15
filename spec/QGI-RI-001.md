@@ -93,15 +93,33 @@ against the peers' real wire protocols, without linking the Rust library.
 
 | ID | Requirement | Verify | Status |
 |---|---|---|---|
-| `QGI-RI-0060` | **CLI, `qg-interop`:** for each family, `listen` prints events (newline-delimited JSON per `QGI-SER-0004`, or a readable line), and `decode` turns a captured file into events. Proves codec and serialization against real traffic. | Test, Demo | Partly Met (WSJT-X/N1MM listen and decode; fldigi file/stdin decode and HTTP poll print specification NDJSON; live-peer evidence Target) |
+| `QGI-RI-0060` | **CLI, `qg-interop`:** for each family, `listen` prints events (newline-delimited JSON per `QGI-SER-0004`, or a readable line), and `decode` turns a captured file into events. Proves codec and serialization against real traffic. | Test, Demo | Partly Met (WSJT-X/N1MM listen and decode; fldigi file/stdin decode and HTTP poll print specification NDJSON; live-peer capture evidence in QGI-RI-0063) |
 | `QGI-RI-0061` | **Simulator playback, `qg-interop sim`:** for every family in the release, play scripted traffic and captures using the peer's real wire protocol as that peer would send it, including `qgi` UDP and TCP event carriage. | Test, Demo | Met for WSJT-X ALL.TXT/script, N1MM scripted contest/SO2R traffic, fldigi scripted RX text over loopback XML-RPC, native UDP captures, and qgi UDP event carriage; TCP event carriage and remaining family helpers: Target |
 | `QGI-RI-0062` | **QSO Graph Desktop:** consumes the library's events for live monitoring (Desktop 0.8.0's monitor panel and tabs), with Desktop's own policy (transports, senders, display rules) in Desktop. Proves the specification in a real application. Evidence, not a release condition: Desktop depends on Interop, never the reverse. | Test, Demo | Target |
-| `QGI-RI-0063` | **Interoperability is shown against real peers,** in addition to vectors and the simulator: captures from all release families are decoded, including WSJT-X, N1MM Logger+, fldigi, PSK Reporter MQTT publications and IPFIX submissions, and independently produced `qgi` messages. Where a peer sends a response, that response is observed. PSK Reporter evidence uses existing operational captures; tests never connect to the service (`QGI-RI-0067`). | Demo | Target |
+| `QGI-RI-0063` | **Interoperability is shown against real peers,** in addition to vectors and the simulator: captures from all release families are decoded, including WSJT-X, N1MM Logger+, fldigi, PSK Reporter MQTT publications and IPFIX submissions, and independently produced `qgi` messages. Where a peer sends a response, that response is observed. PSK Reporter evidence uses existing operational captures; tests never connect to the service (`QGI-RI-0067`). | Demo | Partly Met: WSJT-X, N1MM, fldigi, MQTT, and JTTYText evidence captured; live WSJT-X IPFIX and independent qgi evidence remain pending (table below) |
 | `QGI-RI-0064` | **Simulator responses:** for every request/response or command-capable release family, answer or react as the peer would: fldigi XML-RPC replies and faults, WSJT-X reactions where it sends any, and other mapped family behavior. Do not invent an acknowledgment where the native protocol sends none. | Test, Demo | Met for fldigi Annex E mapped simulator replies/faults and state reactions (serialized loopback poll/controller tests and planted failures); WSJT-X mapped reactions implemented; remaining release-family helpers: Target |
 | `QGI-RI-0065` | **Local PSK Reporter IPFIX collector:** accept submissions as the service would and report, per record, malformed content and departures from the published submitter rules (`QGI-PSI-0002`). Diagnostics identify record/Set locations and distinguish parse errors, rule violations, recommendations and unconfirmed policy; message-level failures identify affected records when boundaries are known. Session timing and duplicate checks use scripted test state. | Test, Demo | Implemented; source-derived vectors and scripted observer state, no live service probe |
 | `QGI-RI-0066` | **Local PSK Reporter MQTT spot feed:** provide a local broker/feed that publishes the family's real MQTT topics, payloads and retain behavior to clients under test. | Test, Demo | Target |
 | `QGI-RI-0067` | **Local PSK Reporter testing:** tests never connect to the real PSK Reporter, including its submission, diagnostic-listener and MQTT endpoints; all simulated service roles and test clients use local endpoints. | Test | Target |
 | `QGI-RI-0068` | **Desktop simulator integration:** replacing `qso-graph-sim` in QSO Graph Desktop's suites is a coordinated change to `QGD-INT-0024`. | Test | Simulator side ready: drop-in options and independent Desktop capture checks; Desktop suite swap: Target in Desktop |
+
+
+### QGI-RI-0063 live-peer evidence
+
+[Capture provenance and test counts](../docs/PROTOCOL.md#live-peer-captures-2026-11-1415)
+separate received bytes from synthetic vectors. “Done” below means the peer's
+supplied capture evidence is stored and checked, not that all wire inputs are
+valid or all release-family evidence is complete.
+
+| Peer evidence | Status | Evidence and limits |
+|---|---|---|
+| WSJT-X | Done | 3.3.0 PR build live FT8 audio path: 20 datagrams, four Decode messages, own 4/4 validation; earlier beta6: 40 Heartbeat/Status datagrams. All decode without errors. |
+| N1MM Logger+ | Done (capture audit) | 1.0.11480: 126 complete broadcasts decode, nine sent QSY commands checked, subsequent RadioInfo observed. Four incomplete XML payloads are explicitly rejected; the requested zero-error capture criterion remains unmet. Annex D.8.1 gives record evidence. |
+| fldigi | Done | 4.2.13: 61 requests, 60 received replies including unknown-method fault; one empty timeout, slow get_char_rates rerun recorded. Annex E.8.1. |
+| PSK Reporter MQTT | Done | Existing anonymized 460-record capture, all records decoded; Annex G and pskreporter-mqtt.json fixture. |
+| JTTYText | Done | Existing 22 type 19 datagrams from installed Windows/macOS builds; Annex B.9 and wsjtx-jtty19.json fixture. |
+| PSK Reporter IPFIX from live WSJT-X | **Pending** | Needs a live audio path; lab VM capture planned. Existing source-derived IPFIX fixtures do not establish live interoperability. |
+| Independently produced qgi messages | Pending | Existing profile/vector/carriage tests are synthetic (Annex I); no new independent peer capture supplied here. |
 
 ## 8. Decisions
 
