@@ -15,6 +15,11 @@ on:
         description: 'Sign, notarize and attest (a release); otherwise an unsigned trial build'
         required: true
         type: boolean
+      version:
+        description: 'The version being released: a beta may carry the provisional mappings its CHANGELOG section lists'
+        required: false
+        default: ''
+        type: string
     secrets:
       CSC_LINK:
         required: false
@@ -57,12 +62,13 @@ jobs:
         env:
           REF: ${{ github.ref }}
           EVENT: ${{ github.event_name }}
+          VERSION: ${{ inputs.version }}
           BUILD_SHA: ${{ inputs.sha }}
           WORKFLOW_SHA: ${{ github.sha }}
           WORKFLOW_REF: ${{ github.workflow_ref }}
           ACTOR: ${{ github.actor }}
           TRIGGERING_ACTOR: ${{ github.triggering_actor }}
-        run: python3 -I scripts/release_check.py source "$REF" "$EVENT" "$BUILD_SHA" "$WORKFLOW_SHA" "$WORKFLOW_REF" "$ACTOR" "$TRIGGERING_ACTOR"
+        run: python3 -I scripts/release_check.py source "$REF" "$EVENT" "$BUILD_SHA" "$WORKFLOW_SHA" "$WORKFLOW_REF" "$ACTOR" "$TRIGGERING_ACTOR" "$VERSION"
 
   build:
     name: qg-interop (${{ matrix.name }})

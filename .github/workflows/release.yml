@@ -115,6 +115,7 @@ jobs:
     with:
       sha: ${{ needs.check.outputs.sha }}
       sign: true
+      version: ${{ inputs.version }}
     # The nine signing secrets, by name, through each workflow (GitHub passes a secret only to the
     # workflow called directly). Publication credentials never reach the builds.
     secrets:
