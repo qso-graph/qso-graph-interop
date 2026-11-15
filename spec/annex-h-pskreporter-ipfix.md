@@ -20,7 +20,7 @@ Each source reference below incorporates this retrieval timestamp and its row's 
 | S2 | <https://www.rfc-editor.org/rfc/rfc7011.txt>; `59b7ddb1c0350ae711ba41d771d93f4d440ee04755403446f580bb777b928f73`. RFC 7011, September 2013; §§3–4, 7–9. |
 | S3 | `Network/PSKReporterIPFIX.cpp` and `Network/PSKReporter.cpp` in the WSJT-X `v3.0.2` source archive; archive SHA-256 `8483a851bcb6455f5787de87b89efdf90e928842debde036e287e93e7f3837bd`. |
 | S4 | `Network/PSKReporterIPFIX.cpp` and `Network/PSKReporter.cpp` in the WSJT-X `v3.3.0-beta6` source archive; archive SHA-256 `cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be`. |
-| S5 | `src/spot/pskrep.cxx` in <https://www.w1hkj.org/files/fldigi/fldigi-4.2.13.tar.gz>; archive SHA-256 `a1e8d990359ce9c0cce3ceb5116fd0cf72c95528969766898640ca6ca2dba8d4` (Annex E). |
+| S5 | `src/spot/pskrep.cxx`, `src/include/pskrep.h`, and `src/dialogs/fl_digi.cxx` in <https://www.w1hkj.org/files/fldigi/fldigi-4.2.13.tar.gz>; archive SHA-256 `a1e8d990359ce9c0cce3ceb5116fd0cf72c95528969766898640ca6ca2dba8d4` (Annex E). |
 
 **`QGI-PSI-0010` — Authority.** RFC 7011 supersedes the developer page's RFC 5101
 terminology. For the two program profiles, actual S3–S5 bytes govern conflicting
@@ -290,4 +290,62 @@ raw timestamps, both template definitions, second-message refresh, evidence
 verification, and byte-exact WSJT-X submission encoding. Planted field drift,
 truncation, and missing-template cases must fail verification or skip unknown Sets.
 Live WSJT-X IPFIX evidence is complete for both versions under QGI-RI-0063.
-**Live fldigi IPFIX was not captured**; S5 coverage remains source-derived.
+
+## H.6 Live fldigi confirmation (2026-11-15)
+
+The byte-exact `fldigi-4.2.13-ipfix.ndjson` capture confirms S5's long receiver
+profile. The lab's Windows ham station ran receiving and transmitting fldigi
+4.2.13 instances through a virtual audio cable. Both used BPSK31, dial
+14,070,000 Hz, and audio carrier 1,500 Hz. Spot was on at the receiver. The
+LF-normalized `fldigi-4.2.13-ipfix-tx.txt` preserves the six transmitted CQ lines,
+their times, and the receiver's verbatim decoded text. [Provenance and hashes](../docs/PROTOCOL.md#live-peer-captures-2026-11-1415)
+pin both artifacts. Literal authorized calls and independent fields are confined
+to the live fixtures, including `fldigi-ipfix-oracle.json`.
+
+The single 256-byte datagram arrived at UDP 127.0.0.1:4739 from
+127.0.0.1:50422 at 02:55:15.884Z. Its IPFIX header has version 10, export time
+1794711315 (`2026-11-15T02:55:15Z`), sequence 0, and observation domain 1210219340
+(0x48227b4c). Sets in order are 2 (52 bytes), 3 (52), 0x0219 (64), and 0x022c
+(72). The templates exactly match H.2: sender 0x022c with four-byte frequency,
+long receiver 0x0219 with fixed eight-byte persistentIdentifier and zero scope.
+The latter is H.0's diagnosed legacy exception, not a decode error. Short receiver
+0x0218 does not occur in this datagram; its exact ID/layout coverage remains the
+independent source-derived short-profile fixture. Options Template padding is two
+zero bytes, receiver Data Set padding three, and sender Data Set padding one.
+
+The receiver record contains the station's six-character locator, `Dipole`,
+decoder software exactly `fldigi-4.2.13/windows32-ix86`, and persistentIdentifier
+bytes `48 22 7b 4c 69 74 69 68`. The three sender records, in wire order, have
+flowStartSeconds 1794711166, 1794711106, and 1794711046: respectively
+02:52:46Z, 02:51:46Z, and 02:50:46Z on 2026-11-15. Each matches a different
+transmitted call seven seconds after its first CQ line. Each call appears twice
+in the six-line decoded text, but only once in the submission. The last transmitted
+line is at 02:55:39Z, after this datagram; no later submission was captured.
+All spots carry mode `PSK31`, empty sender locator, informationSource 1 (automatic,
+test bit clear), and **frequency 0 Hz**. The codec preserves these zero bytes;
+it does not substitute dial plus offset (14,071,500 Hz). S5 `pskrep::append`
+(lines 412–413) sets frequency to zero when `pskrep_qrg` is disabled. The capture
+does not independently establish that configuration flag's value.
+
+The following are S5 sender behavior and setup observations, not additional
+IPFIX or service requirements:
+
+- `pskrep_check` requires nonempty call, locator, and antenna information;
+  its locator expression requires six characters (`pskrep.cxx`:236, 245–266).
+- Received text reaches `spot_recv` only with Spot on (`progStatus.spot_recv`;
+  controlled by XML-RPC `spot.set_auto`). The receive path excludes control
+  characters below space (`fl_digi.cxx`:9425–9426). Thus a newline alone cannot
+  satisfy `PSKREP_RE`'s trailing `[^[:alnum:]]+$` (`pskrep.h`:33); a printable
+  non-alphanumeric delimiter after the repeated call, such as the space before
+  `PSE K`, lets the spotter match.
+- `SEND_INTERVAL` is 300 seconds (`pskrep.cxx`:107–108, 334); one observed
+  datagram cannot measure the interval. `DUP_INTERVAL` is 1800 seconds
+  (110–113, 418–419), keyed by call and band, consistent with the single report
+  per repeated call here. This is separate from H.1's five-minute published rule.
+
+Offline conformance decodes all four records with zero errors or skips, verifies
+their evidence, and re-encodes the complete submission byte for byte with the fldigi
+profile. Independent fields, raw timestamps, templates, and transmitter text are
+checked; planted frequency/mode/time/receiver drift, truncation, and missing-template
+cases fail verification or skip unknown Sets. The existing codec handles the live
+traffic unchanged. Live fldigi IPFIX evidence is done under QGI-RI-0063.

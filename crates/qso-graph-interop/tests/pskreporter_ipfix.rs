@@ -65,6 +65,17 @@ fn options() -> DecodeOptions<'static> {
 fn program_profiles_exact_both_directions_and_evidence() {
     for name in ["wsjtx", "fldigi", "fldigi-short"] {
         let (raw, expected) = fixture(name);
+        let receiver_id: u16 = match name {
+            "fldigi" => 0x0219,
+            "fldigi-short" => 0x0218,
+            _ => 0x50e2,
+        };
+        let sender_id: u16 = if name == "wsjtx" { 0x50e3 } else { 0x022c };
+        let profile_sets = sets(&raw);
+        assert_eq!(&profile_sets[0][4..6], &sender_id.to_be_bytes());
+        assert_eq!(&profile_sets[1][4..6], &receiver_id.to_be_bytes());
+        assert_eq!(&profile_sets[2][..2], &receiver_id.to_be_bytes());
+        assert_eq!(&profile_sets[3][..2], &sender_id.to_be_bytes());
         for structured in [false, true] {
             let mut codec = PskReporterIpfix::default();
             let actual = codec

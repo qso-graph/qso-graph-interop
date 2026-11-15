@@ -6,12 +6,18 @@ use qso_graph_interop::{
     conformance::check_hash,
     fldigi::{Fldigi, RequestAssociation},
     n1mm::N1mm,
-    pskreporter_ipfix::{PskReporterIpfix, SubmissionOptions, encode_submission},
+    pskreporter_ipfix::{
+        PskReporterIpfix, SubmissionOptions, SubmissionProfile, encode_submission,
+    },
     wsjtx::Wsjtx,
 };
 use serde_json::{Value, json};
 
-const CAPTURES: [(&str, &str); 7] = [
+const TRANSMITTER_LOG: (&str, &str) = (
+    "fldigi-4.2.13-ipfix-tx.txt",
+    include_str!("fixtures/live-captures/fldigi-4.2.13-ipfix-tx.txt"),
+);
+const CAPTURES: [(&str, &str); 8] = [
     (
         "fldigi-4.2.13-xmlrpc.ndjson",
         include_str!("fixtures/live-captures/fldigi-4.2.13-xmlrpc.ndjson"),
@@ -39,6 +45,10 @@ const CAPTURES: [(&str, &str); 7] = [
     (
         "wsjtx-3.3.0-beta6-ft8-ipfix-udp.ndjson",
         include_str!("fixtures/live-captures/wsjtx-3.3.0-beta6-ft8-ipfix-udp.ndjson"),
+    ),
+    (
+        "fldigi-4.2.13-ipfix.ndjson",
+        include_str!("fixtures/live-captures/fldigi-4.2.13-ipfix.ndjson"),
     ),
 ];
 fn records(index: usize) -> Vec<Value> {
@@ -90,8 +100,8 @@ fn leaf<'a>(xml: &'a str, name: &str) -> &'a str {
 #[test]
 fn recorder_files_match_original_sha256sums() {
     let sums = include_str!("fixtures/live-captures/SHA256SUMS");
-    assert_eq!(sums.lines().count(), CAPTURES.len());
-    for (name, text) in CAPTURES {
+    assert_eq!(sums.lines().count(), CAPTURES.len() + 1);
+    for (name, text) in CAPTURES.into_iter().chain([TRANSMITTER_LOG]) {
         let hash = sums
             .lines()
             .find_map(|line| {
@@ -388,6 +398,165 @@ fn ipfix_sets(wire: &[u8]) -> Vec<&[u8]> {
     }
     assert_eq!(offset, wire.len());
     sets
+}
+
+#[test]
+fn fldigi_live_ipfix_matches_transmitter_log_and_exact_submission() {
+    let oracle: Value = serde_json::from_str(include_str!(
+        "fixtures/live-captures/fldigi-ipfix-oracle.json"
+    ))
+    .unwrap();
+    let rows = records(7);
+    assert_eq!(CAPTURES[7].0, oracle["file"]);
+    assert_eq!(rows.len(), 1);
+    let row = &rows[0];
+    assert_eq!(row["received_at"], oracle["received_at"]);
+    assert_eq!(row["transport"], "udp");
+    assert_eq!(row["local"], "127.0.0.1:4739");
+    assert_eq!(row["peer"], oracle["peer"]);
+    let wire = bytes(row, "data_b64");
+    assert_eq!(wire.len(), 256);
+    let sets = ipfix_sets(&wire);
+    assert_eq!(
+        json!(
+            sets.iter()
+                .map(|s| u16::from_be_bytes([s[0], s[1]]))
+                .collect::<Vec<_>>()
+        ),
+        oracle["set_ids"]
+    );
+    assert_eq!(
+        json!(sets.iter().map(|s| s.len()).collect::<Vec<_>>()),
+        oracle["set_lengths"]
+    );
+    let options = DecodeOptions::default()
+        .with_session(row["peer"].as_str().unwrap().as_bytes())
+        .with_structured(true);
+    let mut codec = PskReporterIpfix::default();
+    let outcome = codec.decode(&wire, &options).unwrap();
+    assert!(outcome.skips.is_empty());
+    assert_eq!(outcome.events.len(), 4);
+    let receiver = &outcome.events[0];
+    assert_eq!(receiver.kind_token(), "receiver_information");
+    assert_eq!(receiver.value()["fields"], oracle["receiver"]);
+    assert_eq!(receiver.value()["native"]["set_id"], 0x0219);
+    let log = TRANSMITTER_LOG.1;
+    assert!(!log.contains('\r'));
+    assert_eq!(
+        log.lines().filter(|line| line.contains("Z sent '")).count(),
+        6
+    );
+    assert!(log.contains("rx spot auto: 1\n"));
+    assert!(log.contains("modem BPSK31 carrier 1500 dial 14070000.0\n"));
+    let decoded_text = log.split_once("rx decoded (166 chars): b'").unwrap().1;
+    for (event, expected) in outcome.events[1..]
+        .iter()
+        .zip(oracle["spots"].as_array().unwrap())
+    {
+        assert_eq!(event.kind_token(), "spot");
+        let mut fields = expected["fields"].clone();
+        fields
+            .as_object_mut()
+            .unwrap()
+            .extend(oracle["receiver"].as_object().unwrap().clone());
+        assert_eq!(event.value()["fields"], fields);
+        assert_eq!(event.value()["native"]["set_id"], 0x022c);
+        let elements = &event.value()["native"]["message"]["elements"];
+        let seconds = u32::from_be_bytes(bytes(&elements[1], "data").try_into().unwrap());
+        assert_eq!(u64::from(seconds), expected["flow_start_seconds"]);
+        assert!((1_794_711_039..=1_794_711_339).contains(&seconds));
+        assert!(seconds < oracle["header"]["export_time"].as_u64().unwrap() as u32);
+        // The transmitted frequency is zero; station settings do not override evidence.
+        assert_eq!(bytes(&elements[2], "data"), [0; 4]);
+        let call = expected["fields"]["sender_call"].as_str().unwrap();
+        let cq = format!("CQ CQ DE {call} {call} PSE K\\n");
+        assert!(log.contains(&format!(
+            "{}Z sent '{cq}'\n",
+            expected["sent_utc"].as_str().unwrap()
+        )));
+        assert_eq!(decoded_text.matches(&cq).count(), 2);
+        for key in ["frequency_hz", "mode", "time", "receiver_locator"] {
+            let mut planted = event.value().clone();
+            planted["fields"][key] = match key {
+                "frequency_hz" => json!(14_071_500),
+                "mode" => json!("BPSK31"),
+                "time" => json!("2026-11-15T02:55:15Z"),
+                _ => json!("DN13"),
+            };
+            assert!(
+                codec
+                    .verify(
+                        &Event::from_value(planted).unwrap(),
+                        &VerifyOptions::default()
+                    )
+                    .is_err()
+            );
+        }
+    }
+    for event in &outcome.events {
+        let native = &event.value()["native"];
+        assert_eq!(event.value()["family"], "pskreporter-ipfix");
+        assert_eq!(native["header"], oracle["header"]);
+        assert_eq!(bytes(native, "message_data"), wire);
+        let template =
+            &oracle["templates"][usize::from(event.kind_token() == "receiver_information")];
+        let template_bytes = bytes(native, "template");
+        let hex = template_bytes
+            .iter()
+            .map(|b| format!("{b:02x}"))
+            .collect::<String>();
+        assert_eq!(hex, template["hex"]);
+        assert_eq!(native["set_id"], template["id"]);
+        let message = &native["message"];
+        let receiver_record = event.kind_token() == "receiver_information";
+        assert_eq!(message["options"], receiver_record);
+        assert_eq!(message["scope_fields"], 0);
+        let elements = message["elements"].as_array().unwrap();
+        let expected_elements = template["elements"].as_array().unwrap();
+        assert_eq!(elements.len(), expected_elements.len());
+        for (element, expected) in elements.iter().zip(expected_elements) {
+            assert_eq!(
+                json!([element["enterprise"], element["id"], element["length"]]),
+                *expected
+            );
+        }
+        assert_eq!(
+            codec.verify(event, &VerifyOptions::default()).unwrap(),
+            Verification::Verified
+        );
+        assert_eq!(
+            codec
+                .reencode(event, &EncodeOptions::default(), &VerifyOptions::default())
+                .unwrap(),
+            event.native_bytes().unwrap()
+        );
+    }
+    let mut encode = SubmissionOptions::default();
+    encode.profile = SubmissionProfile::Fldigi;
+    encode.export_time = oracle["header"]["export_time"].as_u64().unwrap() as u32;
+    encode.sequence_number = oracle["header"]["sequence_number"].as_u64().unwrap() as u32;
+    encode.observation_domain_id =
+        oracle["header"]["observation_domain_id"].as_u64().unwrap() as u32;
+    assert_eq!(
+        encode_submission(receiver, &outcome.events[1..], &encode).unwrap(),
+        wire
+    );
+    assert!(
+        PskReporterIpfix::default()
+            .decode(&wire[..255], &options)
+            .is_err()
+    );
+    let mut data_only = wire[..16].to_vec();
+    for set in &sets[2..] {
+        data_only.extend_from_slice(set);
+    }
+    let length = u16::try_from(data_only.len()).unwrap();
+    data_only[2..4].copy_from_slice(&length.to_be_bytes());
+    let missing = PskReporterIpfix::default()
+        .decode(&data_only, &options)
+        .unwrap();
+    assert!(missing.events.is_empty());
+    assert_eq!(missing.skips.len(), 2);
 }
 
 #[test]

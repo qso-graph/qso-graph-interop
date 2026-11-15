@@ -140,7 +140,84 @@ fn check_value(value: &Value) -> Check {
     check_value_at(value, false)
 }
 
+fn fldigi_ipfix_boundaries(bytes: &[u8]) -> Option<Vec<u8>> {
+    if bytes.get(..2)? != [0, 10]
+        || usize::from(u16::from_be_bytes(bytes.get(2..4)?.try_into().ok()?)) != bytes.len()
+    {
+        return None;
+    }
+    // Recognize S5's exact sender definition, not its usual ID. Insert separators
+    // around its variable fields without removing any bytes from the policy view.
+    // Otherwise a call followed by flowStartSeconds 0x6af91e7e reads as KC4QPQj.
+    let definition = b"\x00\x06\x80\x01\xff\xff\x00\x00\x76\x8f\x00\x96\x00\x04\x80\x05\x00\x04\x00\x00\x76\x8f\x80\x0a\xff\xff\x00\x00\x76\x8f\x80\x03\xff\xff\x00\x00\x76\x8f\x80\x0b\x00\x01\x00\x00\x76\x8f";
+    let mut sender_id = None;
+    let mut boundaries = std::collections::BTreeSet::new();
+    let mut offset = 16;
+    while offset < bytes.len() {
+        let header = bytes.get(offset..offset.checked_add(4)?)?;
+        let id = u16::from_be_bytes([header[0], header[1]]);
+        let length = usize::from(u16::from_be_bytes([header[2], header[3]]));
+        if length < 4 {
+            return None;
+        }
+        let end = offset.checked_add(length)?;
+        let set = bytes.get(offset + 4..end)?;
+        if id == 2 {
+            // Any other definition disables this special view, including replacement.
+            sender_id = if set.get(2..)? == definition {
+                Some(u16::from_be_bytes(set.get(..2)?.try_into().ok()?))
+            } else {
+                None
+            };
+        } else if sender_id == Some(id) {
+            let mut cursor = 0;
+            // Minimum record: three length prefixes, eight scalar bytes, source byte.
+            while set.len().checked_sub(cursor)? >= 12 {
+                for fixed in [None, Some(8), None, None, Some(1)] {
+                    let size = if let Some(size) = fixed {
+                        size
+                    } else {
+                        let prefix = *set.get(cursor)?;
+                        cursor += 1;
+                        if prefix == 255 {
+                            let size = u16::from_be_bytes(
+                                set.get(cursor..cursor.checked_add(2)?)?.try_into().ok()?,
+                            );
+                            cursor += 2;
+                            usize::from(size)
+                        } else {
+                            usize::from(prefix)
+                        }
+                    };
+                    let next = cursor.checked_add(size)?;
+                    set.get(cursor..next)?;
+                    if fixed.is_none() {
+                        boundaries.insert(offset + 4 + cursor);
+                        boundaries.insert(offset + 4 + next);
+                    }
+                    cursor = next;
+                }
+            }
+        }
+        offset = end;
+    }
+    if boundaries.is_empty() {
+        return None;
+    }
+    let mut view = Vec::with_capacity(bytes.len() + boundaries.len());
+    for (index, byte) in bytes.iter().enumerate() {
+        if boundaries.contains(&index) {
+            view.push(b' ');
+        }
+        view.push(*byte);
+    }
+    Some(view)
+}
+
 fn check_recorder_bytes(bytes: &[u8], live: bool) -> Check {
+    if let Some(view) = fldigi_ipfix_boundaries(bytes) {
+        return check_bytes_at(&view, live);
+    }
     // WSJT-X Decode: after its length-prefixed ID, the new flag, QTime, SNR,
     // delta time and audio offset are 21 scalar bytes, not callsign text.
     // For example, QTime 7,485,000 ms contains ASCII r6H. Keep the ID, mode,
@@ -236,7 +313,7 @@ pub fn check(root: &Path) -> Check {
             if path.extension().is_some_and(|ext| {
                 matches!(
                     ext.to_str(),
-                    Some("rs" | "py" | "json" | "ndjson" | "xml" | "TXT" | "md")
+                    Some("rs" | "py" | "json" | "ndjson" | "xml" | "txt" | "TXT" | "md")
                 )
             }) {
                 check_file(
@@ -258,6 +335,59 @@ pub fn check(root: &Path) -> Check {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn fldigi_ipfix_call_and_timestamp_are_separate_fields() {
+        let capture = include_str!(
+            "../../crates/qso-graph-interop/tests/fixtures/live-captures/fldigi-4.2.13-ipfix.ndjson"
+        );
+        let row: Value = serde_json::from_str(capture).unwrap();
+        let raw = decoded(
+            row["data_b64"].as_str().unwrap(),
+            b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
+            6,
+        )
+        .unwrap();
+        assert!(check_bytes_at(&raw, true).unwrap_err().contains("KC4QPQJ"));
+        assert!(check_recorder_bytes(&raw, true).is_ok());
+        assert!(check_recorder_bytes(&raw, false).is_err());
+        let call = raw.windows(6).position(|w| w == b"KC4QPQ").unwrap();
+        let mut planted = raw.clone();
+        planted[call..call + 6].copy_from_slice(b"AB1CDE");
+        assert!(
+            check_recorder_bytes(&planted, true)
+                .unwrap_err()
+                .contains("AB1CDE")
+        );
+        let mut suffix = raw.clone();
+        suffix.insert(call + 6, b'A');
+        suffix[call - 1] = 7;
+        suffix[3] += 1;
+        suffix[187] += 1; // Sender Set length at offset 184.
+        assert!(
+            check_recorder_bytes(&suffix, true)
+                .unwrap_err()
+                .contains("KC4QPQA")
+        );
+        let mut mode = raw.clone();
+        let start = mode.windows(5).position(|w| w == b"PSK31").unwrap();
+        mode[start..start + 5].copy_from_slice(b"W9XYZ");
+        assert!(
+            check_recorder_bytes(&mode, true)
+                .unwrap_err()
+                .contains("W9XYZ")
+        );
+        let mut extension = raw.clone();
+        extension.extend_from_slice(b" W9XYZ ");
+        assert!(check_recorder_bytes(&extension, true).is_err());
+        let mut changed = raw.clone();
+        changed[39] = 8; // Change the declared frequency width: no known layout.
+        assert!(fldigi_ipfix_boundaries(&changed).is_none());
+        assert!(check_recorder_bytes(&changed, true).is_err());
+        for length in [15, 19, 180, 255] {
+            assert!(fldigi_ipfix_boundaries(&raw[..length]).is_none());
+        }
+    }
 
     #[test]
     fn wsjtx_decode_scalar_bytes_are_not_callsign_text() {
@@ -314,6 +444,15 @@ mod tests {
         }
         std::fs::write(root.join("README.md"), "Q1ABC").unwrap();
         std::fs::write(root.join("fuzz/seed.py"), "Q1ABC").unwrap();
+        let log = fixtures.join("planted.txt");
+        std::fs::write(&log, "CQ KE1HA KE1HA PSE K\n").unwrap();
+        assert!(check(&root).is_ok());
+        std::fs::write(&log, "CQ W9XYZ W9XYZ PSE K\n").unwrap();
+        assert!(check(&root).unwrap_err().contains("W9XYZ"));
+        std::fs::write(&log, "CQ KE1HA KE1HA PSE K\n").unwrap();
+        std::fs::rename(&log, root.join("crates/planted.txt")).unwrap();
+        assert!(check(&root).unwrap_err().contains("outside live-capture"));
+        std::fs::remove_file(root.join("crates/planted.txt")).unwrap();
         let path = fixtures.join("planted.ndjson");
         std::fs::write(&path, r#"{"data_b64":"S0UxSEE="}"#).unwrap();
         assert!(check(&root).is_ok());

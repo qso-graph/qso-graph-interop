@@ -3,6 +3,17 @@
 
 ## [Unreleased]
 
+- Add the byte-exact fldigi 4.2.13 live PSK Reporter IPFIX submission, LF transmitter
+  log, SHA-256 provenance, and independent field oracle. Check receiver information,
+  three PSK31 spots with literal zero-Hz frequencies and reception times, template
+  IDs, evidence verification, and byte-exact fldigi submission encoding. Confirm
+  Annex H's fldigi profile without codec changes and complete its QGI-RI-0063
+  live evidence. Document sender setup, Spot gating, printable call delimiter,
+  queue timing, and duplicate suppression separately from protocol requirements.
+  Fix the fixture callsign scan to separate fldigi's variable fields from adjacent
+  timestamps without discarding bytes; check lowercase `.txt` evidence too.
+  Plant unauthorized calls, suffixes, mode text, and framing failures.
+
 - Add byte-exact normal-operation WSJT-X 3.0.2 and 3.3.0-beta6 live FT8/IPFIX
   captures with SHA-256 provenance and independent field oracles. Verify all four
   submissions and 420 WSJT-X UDP messages, correlate six spots with Decode/Status
@@ -10,8 +21,7 @@
   Confirm Annex H's WSJT-X profiles without codec changes and mark live WSJT-X
   IPFIX evidence done for QGI-RI-0063. Exclude WSJT-X Decode scalar bytes from
   the recorder callsign scan while preserving text, ID, and extension checks;
-  fix a Clippy error in the pinned-file storage check. Live fldigi IPFIX was
-  not captured.
+  fix a Clippy error in the pinned-file storage check.
 
 - Store byte-exact live WSJT-X, N1MM Logger+, and fldigi lab captures with SHA-256
   provenance, offline codec conformance tests, QSY/RadioInfo comparisons, and
