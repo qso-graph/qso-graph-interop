@@ -515,3 +515,41 @@ fn submission_presence_is_explicit_and_receiver_minimum_is_not_invented() {
     options.profile = SubmissionProfile::Fldigi;
     assert!(encode_submission(&fldigi[0], &[], &options).is_err());
 }
+
+#[test]
+fn verification_failures_carry_the_family_error() {
+    use std::error::Error as _;
+    let family = |e: &qso_graph_interop::Error| {
+        e.source()
+            .is_some_and(|s| s.is::<qso_graph_interop::pskreporter_ipfix::IpfixError>())
+    };
+    let codec = PskReporterIpfix::default();
+    let options = VerifyOptions::default();
+    let mut checked = 0;
+    for event in fixture("wsjtx").1 {
+        // A genuine observation verifies; the same one with a mapped number changed must not.
+        assert!(codec.verify(&event, &options).is_ok());
+        let mut v = event.value().clone();
+        let Some((key, n)) = v["fields"]
+            .as_object()
+            .unwrap()
+            .iter()
+            .find_map(|(k, n)| n.as_i64().map(|n| (k.clone(), n)))
+        else {
+            continue;
+        };
+        v["fields"][key] = json!(n + 1);
+        let tampered = Event::from_value(v).unwrap();
+        let verified = codec.verify(&tampered, &options).unwrap_err();
+        assert_eq!(verified.category(), Category::InvalidValue);
+        assert!(family(&verified), "verify: {verified}");
+        let reencoded = codec
+            .reencode(&tampered, &EncodeOptions::default(), &options)
+            .unwrap_err();
+        assert!(family(&reencoded), "reencode: {reencoded}");
+        let authored = codec.validate_authored(&tampered, &options).unwrap_err();
+        assert!(family(&authored), "validate_authored: {authored}");
+        checked += 1;
+    }
+    assert!(checked > 0);
+}

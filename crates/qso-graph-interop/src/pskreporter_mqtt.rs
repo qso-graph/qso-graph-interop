@@ -408,11 +408,9 @@ impl Profile for PskReporterMqtt {
         event: &Event,
         options: &VerifyOptions,
     ) -> Result<crate::model::ProfileView, Error> {
-        crate::json::compatible_view(
-            event,
-            self.native_version_supported(event),
-            self.verify(event, options)?,
-        )
+        let verified = self.verify(event, options)?;
+        crate::json::compatible_view(event, self.native_version_supported(event), verified)
+            .map_err(family_failure)
     }
     fn verify(&self, event: &Event, options: &VerifyOptions) -> Result<Verification, Error> {
         self.verify_evidence(event, options).map_err(family_failure)

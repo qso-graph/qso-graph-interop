@@ -335,11 +335,9 @@ impl Profile for Fldigi {
         event: &Event,
         options: &crate::codec::VerifyOptions,
     ) -> Result<crate::model::ProfileView, crate::Error> {
-        crate::json::compatible_view(
-            event,
-            self.native_version_supported(event),
-            self.verify(event, options)?,
-        )
+        let verified = self.verify(event, options)?;
+        crate::json::compatible_view(event, self.native_version_supported(event), verified)
+            .map_err(family_failure)
     }
 
     fn native_version_supported(&self, _: &Event) -> bool {

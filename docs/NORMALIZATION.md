@@ -20,7 +20,7 @@ action (`QGI-MOD-0008`, `QGI-MAP-0010`, `QGI-MAP-0012`).
 WSJT-X Clear maps to notification from the application, control to it, and ambiguous with unknown
 direction (`QGI-WSJ-0021`). Close maps to closed lifecycle from the application, control to it, and
 ambiguous with unknown direction (`QGI-WSJ-0022`). Heartbeat is lifecycle in every direction
-(`QGI-WSJ-0023`). No message type supplies observer identity or exchange role (`QGI-MAP-0004`).
+(`QGI-WSJ-0023`). No message type supplies observer identity or exchange role (`QGI-MOD-0002`, `QGI-MAP-0004`).
 Native version and mapping revision remain independent (`QGI-MOD-0034`, `QGI-MOD-0039`).
 
 `Event::recognized` returns known common fields and context separately from the preserved event.
@@ -33,7 +33,7 @@ verification or authorization (`QGI-MAP-0015`, `QGI-SEC-0001`).
 `qgi` appends only a receiving hop (`QGI-MOD-0015`). Forwarding preserves the original envelope,
 context, command form, native evidence, and unknown additions (`QGI-QGI-0004`). Original-family
 verification requires its supported profile; carriage never supplies that proof itself
-(`QGI-QGI-0005`). See [protocol behavior](PROTOCOL.md) and the
+(`QGI-QGI-0008`, `QGI-SEC-0010`). See [protocol behavior](PROTOCOL.md) and the
 [specification outcome table](../spec/QGI-SPEC-001.md#4-mapping-rules-for-every-family).
 
 ## JSON float preservation

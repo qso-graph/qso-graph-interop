@@ -59,3 +59,7 @@ required-features = ["pskreporter-ipfix"]
 [[test]]
 name = "pskreporter_mqtt"
 required-features = ["pskreporter-mqtt"]
+
+[[test]]
+name = "family_errors"
+required-features = ["wsjtx", "n1mm", "fldigi", "pskreporter-ipfix", "pskreporter-mqtt", "qgi"]

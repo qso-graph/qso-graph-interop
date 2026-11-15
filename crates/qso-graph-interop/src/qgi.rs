@@ -22,7 +22,7 @@ pub enum Delimiter {
 }
 #[derive(Debug)]
 #[non_exhaustive]
-struct Error {
+pub struct Error {
     cause: CoreError,
 }
 impl std::fmt::Display for Error {
@@ -148,7 +148,8 @@ impl Profile for Qgi {
         event: &Event,
         options: &VerifyOptions,
     ) -> Result<crate::model::ProfileView, CoreError> {
-        crate::json::compatible_view(event, true, self.verify(event, options)?)
+        let verified = self.verify(event, options)?;
+        crate::json::compatible_view(event, true, verified).map_err(family)
     }
 
     fn family(&self) -> &str {

@@ -46,7 +46,7 @@ without running) and `Demo` (observable by running).
 | `QGI-RI-0021` | **Every public enum and growable struct is `#[non_exhaustive]`.** | Static | Met (public enums and growable structs are non-exhaustive) |
 | `QGI-RI-0022` | **A family is a type implementing an open public trait**: decode to an outcome (zero or more events and skip notices, or one atomic error), encode commands from fields where the family sends, separately re-encode observations from native evidence, and declare framing and limits (datagram, stream, request/reply, publish/subscribe or templated records). Stream families decode from a caller-owned buffer, as `tokio-util`'s `Decoder` does, without depending on an async runtime. Another crate can implement it without forking. | Test | Met for fldigi request/response as well (Open Codec/Profile, ordered encode_commands, caller-supplied verify_with/reencode_with association) |
 | `QGI-RI-0023` | **Codecs meet `QGI-SEC-0005`** (the specification owns the no-I/O rule). | Static, Test | Met for all four implemented families (Sans-I/O library; token policy retains its socket/process ban) |
-| `QGI-RI-0024` | **Family errors are their own types, wrapped by a `#[non_exhaustive]` core error; `Display` is a message, not a debug dump.** The core error is open: it carries any family's error as its `source()`, recovered with `downcast_ref`, and names no family type itself (`QGI-RI-0010`). | Test | Met after 0.2.0-beta.1 for all six families (`wsjtx::Error`, `N1mmError`, `FldigiError`, `IpfixError`, `MqttError`, `qgi::Error`); `MqttError` added 2026-11-15 with a test of every failure path |
+| `QGI-RI-0024` | **Family errors are their own types, wrapped by a `#[non_exhaustive]` core error; `Display` is a message, not a debug dump.** The core error is open: it carries any family's error as its `source()`, recovered with `downcast_ref`, and names no family type itself (`QGI-RI-0010`). | Test | Met after 0.2.0-beta.1 for all six families (`wsjtx::Error`, `N1mmError`, `FldigiError`, `IpfixError`, `MqttError`, `qgi::Error`, now public), at every `Codec`/`Profile` boundary and `encode_submission`; `tests/family_errors.rs` checks `recognize()` in each family, and the MQTT and IPFIX tests check failed verification, re-encoding and authoring |
 | `QGI-RI-0025` | **Families are compile-time dependencies;** nothing loads plugins or dynamic libraries. | Static | Met |
 | `QGI-RI-0026` | **An optional strict-validation helper** applies rules an application chooses (encoding, character set, lengths); the library never applies it by itself. | Test | Target |
 
@@ -64,7 +64,7 @@ without running) and `Demo` (observable by running).
 |---|---|---|---|
 | `QGI-RI-0040` | **Passes every `QGI-SPEC-001` test vector for its six families**, both directions where defined. | Test | Partly Met (401 WSJT-X, 1,260 N1MM, 650 fldigi, 35 qgi vectors; 1,654 embedded re-encoding checks; other families Target) |
 | `QGI-RI-0041` | **Every decoder fuzzed with arbitrary input, the event-JSON reader included; fuzz targets assert no panic, hang or unbounded allocation.** | Test | Met for implemented families (Public-API fuzz harnesses; fldigi decode, association, field commands, and exact round trips seeded from vectors) |
-| `QGI-RI-0042` | **Unsafe code is forbidden in every crate except the declared `-ffi` boundary crate,** which denies it and allows each unsafe construct individually with a `SAFETY` comment; proved by a planted case in policy tooling. | Static | Met at 0.2.0-beta.1: every crate root forbids unsafe code except `qso-graph-interop-ffi`, which denies `unsafe_op_in_unsafe_fn` and justifies each block with `SAFETY`; planted policy tests reject unsafe code outside that exact package and undocumented blocks (SECURITY.md) |
+| `QGI-RI-0042` | **Unsafe code is forbidden in every crate except the declared `-ffi` boundary crate,** whose root denies `unsafe_op_in_unsafe_fn` and whose every `unsafe` block carries a `SAFETY` comment; proved by planted cases in policy tooling. | Static | Met at 0.2.0-beta.1: every crate root forbids unsafe code except `qso-graph-interop-ffi`, which denies `unsafe_op_in_unsafe_fn` and justifies each block with `SAFETY`; planted policy tests reject unsafe code outside that exact package and undocumented blocks (SECURITY.md) |
 | `QGI-RI-0043` | **Semantic versioning checked by `cargo-semver-checks`** against the last published release, in CI. | Static | Target |
 | `QGI-RI-0044` | **Every public item documented with an example compiled as a test.** | Static | Target |
 | `QGI-RI-0045` | **MSRV stated and tested.** | Test | Partly Met (`rust-version = "1.99"`) |
@@ -136,7 +136,7 @@ valid or all release-family evidence is complete.
 ## 9. Issue #5 review disposition
 
 This task closes the specification review items for native protocol version versus mapping revision
-(`QGI-MOD-0001`), a notification kind for Clear (`QGI-MOD-0003`, Annex B), distinct instant and
+(`QGI-MOD-0039`), a notification kind for Clear (`QGI-MOD-0003`, Annex B), distinct instant and
 time-of-day types (`QGI-MOD-0006`), and required versus omitted versus null text (`QGI-SER-0002`,
 Annex A). It supplies the core field catalog, WSJT-X mapping, event schema and independent versioned
 vectors needed to implement those decisions. These are specification closures, not evidence that
@@ -152,6 +152,7 @@ remain Target. D5 and D6 remain as recorded above.
 **Review pass, 2026-11-15.** Each issue #5 item was checked against this repository after
 0.2.0-beta.1. This pass adds value-domain stability to `QGI-GEN-0005`, states that an fldigi codec
 takes no method list (Annex E, `QGI-FLD-0012`), aligns `QGI-RI-0012`, `0024`, `0030` and `0042` with
-the code and the policy files, gives PSK Reporter MQTT its own family error, and makes
+the code and the policy files, gives PSK Reporter MQTT its own family error and wraps every
+family's public failures (including `recognize()`) in its family error, and makes
 `docs/NORMALIZATION.md` cite the requirements it describes. A numbered specification release,
 an errata and adoption process, and a migration contract are not specified here.

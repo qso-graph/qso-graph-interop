@@ -169,6 +169,13 @@ pub fn encode_submission(
     spots: &[Event],
     options: &SubmissionOptions,
 ) -> Result<Vec<u8>, Error> {
+    submission(receiver, spots, options).map_err(super::family_failure)
+}
+fn submission(
+    receiver: &Event,
+    spots: &[Event],
+    options: &SubmissionOptions,
+) -> Result<Vec<u8>, Error> {
     if receiver.value()["family"] != "pskreporter-ipfix"
         || receiver.kind_token() != "receiver_information"
         || receiver.mapping() != 1

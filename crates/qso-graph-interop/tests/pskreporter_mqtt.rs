@@ -75,7 +75,24 @@ fn tampered_evidence_cannot_be_verified_or_authored() {
         let mut v = event.value().clone();
         v[key] = value;
         let e = Event::from_value(v).unwrap();
-        assert!(codec.verify(&e, &VerifyOptions::default()).is_err());
+        // Each failure carries the family error, whichever entry point reports it.
+        for error in [
+            codec.verify(&e, &VerifyOptions::default()).unwrap_err(),
+            codec
+                .reencode(&e, &EncodeOptions::default(), &VerifyOptions::default())
+                .unwrap_err(),
+            codec
+                .validate_authored(&e, &VerifyOptions::default())
+                .unwrap_err(),
+        ] {
+            use std::error::Error as _;
+            assert!(
+                error
+                    .source()
+                    .is_some_and(|s| s.is::<pskreporter_mqtt::MqttError>()),
+                "{key}: {error}"
+            );
+        }
     }
     for (key, value) in [
         ("message", json!({})),
