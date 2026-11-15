@@ -154,5 +154,8 @@ remain Target. D5 and D6 remain as recorded above.
 takes no method list (Annex E, `QGI-FLD-0012`), aligns `QGI-RI-0012`, `0024`, `0030` and `0042` with
 the code and the policy files, gives PSK Reporter MQTT its own family error and wraps every
 family's public failures (including `recognize()`) in its family error, and makes
-`docs/NORMALIZATION.md` cite the requirements it describes. A numbered specification release,
-an errata and adoption process, and a migration contract are not specified here.
+`docs/NORMALIZATION.md` cite the requirements it describes. Publication is settled in
+`QGI-SPEC-001`: its status paragraph keeps the specification a draft until QG Interop 1.0, when it
+becomes 1.0.0, and every release attaches the exact specification; §10 gives the change, errata and
+adoption process. The migration contract is complete: the library, CLI and C ABI moved to the
+specification's JSON before 0.1.0, and QSO Graph Desktop's move onto the library is tracked there.
