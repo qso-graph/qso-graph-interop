@@ -18,7 +18,19 @@ impl Drop for Process {
     }
 }
 fn socket() -> UdpSocket {
-    let socket = UdpSocket::bind("127.0.0.1:0").unwrap();
+    // A large receive buffer: Windows loopback UDP drops datagrams that arrive faster than the
+    // test reads them, which made exact packet-sequence comparisons fail on a dropped report.
+    let socket = socket2::Socket::new(
+        socket2::Domain::IPV4,
+        socket2::Type::DGRAM,
+        Some(socket2::Protocol::UDP),
+    )
+    .unwrap();
+    socket.set_recv_buffer_size(4 << 20).unwrap();
+    socket
+        .bind(&std::net::SocketAddr::from(([127, 0, 0, 1], 0)).into())
+        .unwrap();
+    let socket: UdpSocket = socket.into();
     socket
         .set_read_timeout(Some(Duration::from_millis(50)))
         .unwrap();
