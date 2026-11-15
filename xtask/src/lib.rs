@@ -1067,9 +1067,57 @@ pub fn policy(root: &Path) -> Check {
     println!("policy: isolated, pinned fuzz target: pass");
     synthetic_calls::check(root)?;
     println!("policy: Q-prefixed invented calls in sources, fixtures and vectors: pass");
-    portable_names(&tracked_files(root)?)?;
+    let tracked = tracked_files(root)?;
+    portable_names(&tracked)?;
     println!("policy: no tracked paths that differ only by case: pass");
+    pinned_files_stored_exactly(root, &tracked)?;
+    println!("policy: every SHA256SUMS-pinned file is stored byte for byte: pass");
     Ok(())
+}
+
+/// A file pinned in a tracked `SHA256SUMS` must be stored by Git exactly as it is here: a fresh
+/// checkout (CI's, anyone's) gets the stored bytes, and the pin was taken from these. End-of-line
+/// conversion is the usual way they part: a capture written on Windows has CRLF lines, and
+/// `text=auto eol=lf` stores LF, so every clone would fail its own checksum (seen twice before this
+/// check existed). Such files need `-text` in .gitattributes.
+fn pinned_files_stored_exactly(root: &Path, tracked: &[String]) -> Check {
+    for sums in tracked.iter().filter(|p| p.rsplit('/').next() == Some("SHA256SUMS")) {
+        let dir = sums.rsplit_once('/').map_or("", |(d, _)| d);
+        let list = std::fs::read_to_string(root.join(sums)).map_err(|e| format!("{sums}: {e}"))?;
+        for line in list.lines().filter(|l| !l.trim().is_empty()) {
+            let name = line
+                .split_once(char::is_whitespace)
+                .map(|(_, n)| n.trim_start().trim_start_matches('*'))
+                .ok_or_else(|| format!("{sums}: not a sha256sum line: {line}"))?;
+            let path = if dir.is_empty() { name.to_owned() } else { format!("{dir}/{name}") };
+            let here = std::fs::read(root.join(&path)).map_err(|e| format!("{path}: {e}"))?;
+            let out = std::process::Command::new("git")
+                .arg("-C")
+                .arg(root)
+                .args(["cat-file", "blob", &format!(":{path}")])
+                .output()
+                .map_err(|e| format!("git cat-file: {e}"))?;
+            require(out.status.success(), &format!("{path} is pinned in {sums} but not tracked"))?;
+            stored_exactly(&path, &here, &out.stdout)?;
+        }
+    }
+    Ok(())
+}
+
+fn stored_exactly(path: &str, here: &[u8], stored: &[u8]) -> Check {
+    if here == stored {
+        return Ok(());
+    }
+    let crlf = |b: &[u8]| b.windows(2).filter(|w| w == b"\r\n").count();
+    Err(format!(
+        "{path}: Git stores different bytes than this pinned file ({} bytes, {} CRLF here; {} bytes, \
+         {} CRLF stored), so a checkout fails its SHA256SUMS; add `{path} -text` (or its folder) to \
+         .gitattributes and re-add it",
+        here.len(),
+        crlf(here),
+        stored.len(),
+        crlf(stored)
+    ))
 }
 
 fn tracked_files(root: &Path) -> Result<Vec<String>, String> {
@@ -1103,6 +1151,13 @@ fn portable_names(paths: &[String]) -> Check {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn pinned_bytes_must_be_stored_exactly() {
+        assert!(super::stored_exactly("a.ndjson", b"x\r\ny\r\n", b"x\r\ny\r\n").is_ok());
+        let e = super::stored_exactly("a.ndjson", b"x\r\ny\r\n", b"x\ny\n").unwrap_err();
+        assert!(e.contains("2 CRLF here") && e.contains("0 CRLF stored") && e.contains("-text"), "{e}");
+    }
+
     use super::*;
 
     #[test]
