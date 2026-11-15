@@ -18,7 +18,7 @@ name = "qg-interop"
 path = "src/main.rs"
 
 [dependencies]
-qso-graph-interop = { version = "0.1.0", path = "../qso-graph-interop" }
+qso-graph-interop = { version = "0.2.0-beta.1", path = "../qso-graph-interop" }
 clap = { version = "4.6.7", default-features = false, features = ["std", "derive", "help", "usage", "error-context", "suggestions"] }
 serde_json = { version = "1.0.145", features = ["float_roundtrip"] }
 signal-hook = { version = "~0.1.17", default-features = false }
