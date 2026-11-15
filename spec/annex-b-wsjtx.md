@@ -603,7 +603,7 @@ InhibitStatus snapshots describe synthetic state independently of JTTY reception
 
 <!-- QGI-MAPPING-PROVISIONAL wsjtx/3 repo:github.com/qso-graph/wsjtx,commit:53313c109194de1ce8e82e44f6846d8579645e56,patch-sha256:fb245ccea54033ace6b43fce6302bae03e1dc6518a08b455bdf080ef411679bf -->
 
-**Provisional: proposed (WSJT-X pull request, number assigned when opened).**
+**Provisional: proposed in [WSJT-X pull request #171](https://github.com/WSJTX/wsjtx/pull/171).**
 Revision 3 adds type 19 only. Its authority is repository `github.com/qso-graph/wsjtx`,
 branch `jtty-udp-text`, commit `53313c109194de1ce8e82e44f6846d8579645e56`, based on
 `WSJTX/wsjtx` `release/3.3` at `7255454d37c4c834dc88869bce810e39df91582b`. The change alone is

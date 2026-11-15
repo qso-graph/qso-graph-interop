@@ -3,6 +3,8 @@
 
 ## [Unreleased]
 
+- Annex B.9: type 19 (JTTYText) is proposed in WSJT-X pull request #171; the pin is unchanged.
+
 ## [0.2.0-beta.1] - 2026-11-15
 
 - Provisional mapping: `wsjtx/2`; pin: `tag:v3.3.0-beta6,tarball-sha256:cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be`.
