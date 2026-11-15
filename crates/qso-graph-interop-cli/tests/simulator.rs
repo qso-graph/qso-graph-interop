@@ -72,18 +72,7 @@ fn matches_capture(actual: &[Packet], expected: &[Packet]) -> bool {
     normalized(actual) == normalized(expected)
 }
 fn socket() -> UdpSocket {
-    // A large receive buffer: Windows loopback UDP drops datagrams that arrive faster than the
-    // test reads them, which made exact packet-sequence comparisons fail on a dropped report.
-    let s = socket2::Socket::new(
-        socket2::Domain::IPV4,
-        socket2::Type::DGRAM,
-        Some(socket2::Protocol::UDP),
-    )
-    .unwrap();
-    s.set_recv_buffer_size(4 << 20).unwrap();
-    s.bind(&std::net::SocketAddr::from(([127, 0, 0, 1], 0)).into())
-        .unwrap();
-    let s: UdpSocket = s.into();
+    let s = UdpSocket::bind("127.0.0.1:0").unwrap();
     s.set_read_timeout(Some(Duration::from_secs(5))).unwrap();
     s
 }

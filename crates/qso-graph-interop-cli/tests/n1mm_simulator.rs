@@ -18,19 +18,7 @@ impl Drop for Process {
     }
 }
 fn socket() -> UdpSocket {
-    // A large receive buffer: Windows loopback UDP drops datagrams that arrive faster than the
-    // test reads them, which made exact packet-sequence comparisons fail on a dropped report.
-    let socket = socket2::Socket::new(
-        socket2::Domain::IPV4,
-        socket2::Type::DGRAM,
-        Some(socket2::Protocol::UDP),
-    )
-    .unwrap();
-    socket.set_recv_buffer_size(4 << 20).unwrap();
-    socket
-        .bind(&std::net::SocketAddr::from(([127, 0, 0, 1], 0)).into())
-        .unwrap();
-    let socket: UdpSocket = socket.into();
+    let socket = UdpSocket::bind("127.0.0.1:0").unwrap();
     socket
         .set_read_timeout(Some(Duration::from_millis(50)))
         .unwrap();
@@ -90,34 +78,62 @@ fn collect(
     socket: &UdpSocket,
     mut react: impl FnMut(&[u8], SocketAddr),
 ) -> Vec<Vec<u8>> {
+    // Receive on a thread of its own, so the socket keeps draining while packets are decoded
+    // and reacted to: Windows loopback UDP drops datagrams that a busy reader leaves to fill
+    // its receive buffer, and one dropped report fails an exact run-to-run comparison.
+    let reader = socket.try_clone().unwrap();
+    let exited = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
+    let stop = exited.clone();
+    let (sender, received) = std::sync::mpsc::channel();
+    let receiving = std::thread::spawn(move || {
+        let mut buffer = [0; 65_535];
+        loop {
+            match reader.recv_from(&mut buffer) {
+                Ok((n, peer)) => {
+                    if sender.send((buffer[..n].to_vec(), peer)).is_err() {
+                        break;
+                    }
+                }
+                // Only after the simulator has exited does a quiet socket mean the end.
+                Err(e)
+                    if matches!(
+                        e.kind(),
+                        std::io::ErrorKind::WouldBlock | std::io::ErrorKind::TimedOut
+                    ) =>
+                {
+                    if stop.load(std::sync::atomic::Ordering::SeqCst) {
+                        break;
+                    }
+                }
+                Err(e) => panic!("{e}"),
+            }
+        }
+    });
     let start = Instant::now();
     let mut packets = Vec::new();
-    let mut buffer = [0; 65_535];
     loop {
         assert!(
             start.elapsed() < Duration::from_secs(15),
             "simulator did not exit"
         );
-        match socket.recv_from(&mut buffer) {
-            Ok((n, peer)) => {
-                fields(&buffer[..n]);
-                react(&buffer[..n], peer);
-                packets.push(buffer[..n].to_vec());
+        match received.recv_timeout(Duration::from_millis(50)) {
+            Ok((bytes, peer)) => {
+                fields(&bytes);
+                react(&bytes, peer);
+                packets.push(bytes);
             }
-            Err(e)
-                if matches!(
-                    e.kind(),
-                    std::io::ErrorKind::WouldBlock | std::io::ErrorKind::TimedOut
-                ) =>
-            {
-                if let Some(status) = process.0.try_wait().unwrap() {
+            Err(std::sync::mpsc::RecvTimeoutError::Timeout) => {
+                if !exited.load(std::sync::atomic::Ordering::SeqCst)
+                    && let Some(status) = process.0.try_wait().unwrap()
+                {
                     assert!(status.success());
-                    break;
+                    exited.store(true, std::sync::atomic::Ordering::SeqCst);
                 }
             }
-            Err(e) => panic!("{e}"),
+            Err(std::sync::mpsc::RecvTimeoutError::Disconnected) => break,
         }
     }
+    receiving.join().unwrap();
     packets
 }
 fn run(args: &[&str]) -> Vec<Vec<u8>> {
