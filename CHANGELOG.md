@@ -3,7 +3,75 @@
 
 ## [Unreleased]
 
+- Add the byte-exact fldigi 4.2.13 live PSK Reporter IPFIX submission, LF transmitter
+  log, SHA-256 provenance, and independent field oracle. Check receiver information,
+  three PSK31 spots with literal zero-Hz frequencies and reception times, template
+  IDs, evidence verification, and byte-exact fldigi submission encoding. Confirm
+  Annex H's fldigi profile without codec changes and complete its QGI-RI-0063
+  live evidence. Document sender setup, Spot gating, printable call delimiter,
+  queue timing, and duplicate suppression separately from protocol requirements.
+  Fix the fixture callsign scan to separate fldigi's variable fields from adjacent
+  timestamps without discarding bytes; check lowercase `.txt` evidence too.
+  Plant unauthorized calls, suffixes, mode text, and framing failures.
+
+- Add byte-exact normal-operation WSJT-X 3.0.2 and 3.3.0-beta6 live FT8/IPFIX
+  captures with SHA-256 provenance and independent field oracles. Verify all four
+  submissions and 420 WSJT-X UDP messages, correlate six spots with Decode/Status
+  messages, and check receiver-only template refreshes and exact submission encoding.
+  Confirm Annex H's WSJT-X profiles without codec changes and mark live WSJT-X
+  IPFIX evidence done for QGI-RI-0063. Exclude WSJT-X Decode scalar bytes from
+  the recorder callsign scan while preserving text, ID, and extension checks;
+  fix a Clippy error in the pinned-file storage check.
+
+- Store byte-exact live WSJT-X, N1MM Logger+, and fldigi lab captures with SHA-256
+  provenance, offline codec conformance tests, QSY/RadioInfo comparisons, and
+  numbered Annex D/E findings. Preserve and test four truncated N1MM payloads;
+  record fldigi's empty timeout, slow get_char_rates, and XML-RPC fault. Track
+  live-peer evidence without claiming independent qgi captures. Confine the five
+  owner-authorized FT8 calls to live fixtures and
+  plant policy failures for other calls and locations. Existing mappings remain
+  unchanged.
+
+- Add PSK Reporter MQTT mapping revision 1 for offline captures, strict topic/payload
+  agreement with capture-observed callsign `/` to topic `.` escaping, bounded JSON,
+  shared spot and receiver-information events, a capture decoder, corrected capture
+  vectors covering all 460 records, and MQTT decoder fuzzing. Reject ambiguous
+  literal payload callsign periods and retain strict disagreement errors.
+
+- Add provisional WSJT-X mapping revision 3 for proposed JTTYText type 19, with
+  exact proposal pins, full-text updates, UTC starts, independent Windows/macOS
+  captures, schema 2/3 vectors, listener human output, and `sim --jtty-text`.
+- Permit provisional mappings only in exactly named beta pre-releases whose
+  versioned CHANGELOG section lists every mapping and identical source pin;
+  enforce this at all publication gates with planted refusal cases.
+
+- Add PSK Reporter IPFIX mapping revision 1, bounded template decoding with record evidence, byte-exact WSJT-X and fldigi submission encoders, numeric unicast collector and simulator, source-derived vectors, and decoder fuzzing.
+
+
+### Removed
+
+- JS8Call family reservation and placeholder Annex C in specification 0.2.0.
+
+### Changed
+
+- Verify the packaged CLI against the current workspace library so an older
+  registry crate at the development version cannot hide or reject new APIs.
+
+- Advance QGI-SPEC-001 and generated conformance vectors to specification 0.2.0; retain the published 0.1.0 schema and add the 0.2.0 schema.
+
 ### Added
+
+- Provisional WSJT-X mapping revision 2 pinned to `v3.3.0-beta6`: InhibitStatus
+  snapshots, validated TxInhibit commands, source-verified JTTY Status and logging
+  vectors, independent source fixtures, and JTTY / inhibit simulator snapshots. Preserve Decode mode markers.
+- Offline verification uses cached cargo-vet and advisory data without fetching.
+- Release guard for provisional family annexes and catalog entries, with planted
+  failures that pass only after removing the provisional mark.
+
+- IPv4 multicast receive and send on an explicit numeric local interface with
+  `--interface`: shared-port `listen`, WSJT-X and N1MM simulators, and capture replay.
+  Validate group and interface addresses, restrict multicast traffic to that interface,
+  and test two listeners receiving the same stream in Linux, macOS, and Windows CI.
 
 - Manual main-only release checks, signed CLI archives and C library bundles for
   four platforms, Linux packages, crates.io publication, provenance, and release
@@ -103,6 +171,9 @@
 
 ### Changed
 
+- Verify the packaged CLI against the current workspace library so an older
+  registry crate at the development version cannot hide or reject new APIs.
+
 - Keep Miri focused on tiny C ABI inputs for every entry point and family,
   including multi-request fldigi output, ownership, invalid arguments, stream
   errors, and panic containment. Run vector sweeps and large stream frames only
@@ -182,6 +253,13 @@
   output while preserving wire and JSON data.
 
 ### Added
+
+- Provisional WSJT-X mapping revision 2 pinned to `v3.3.0-beta6`: InhibitStatus
+  snapshots, validated TxInhibit commands, source-verified JTTY Status and logging
+  vectors, independent source fixtures, and JTTY / inhibit simulator snapshots. Preserve Decode mode markers.
+- Offline verification uses cached cargo-vet and advisory data without fetching.
+- Release guard for provisional family annexes and catalog entries, with planted
+  failures that pass only after removing the provisional mark.
 
 - Support the WSJT-X UDP protocol through a single protocol API.
 

@@ -4,6 +4,23 @@
 `qg-interop sim` generates N1MM contest traffic and plays WSJT-X decodes without a radio or a Python
 installation. Point it at the numeric address and port where your app listens.
 
+## Simulate `JTTY` and transmit inhibit snapshots
+
+Use `--mode JTTY` to send Heartbeat, an idle Status with Mode and Tx Mode set to
+`JTTY`, and Close. This follows the WSJT-X beta6 receive path, which sends no live
+UDP Decode messages for JTTY. The snapshot reports unknown period and tolerance,
+as beta6 does.
+
+```sh
+qg-interop sim --wsjtx --mode JTTY --to 127.0.0.1:2237
+qg-interop sim --wsjtx --mode JTTY --inhibit-status held --to 127.0.0.1:2237
+```
+
+`--inhibit-status available`, `held`, or `withdrawn` adds a synthetic InhibitStatus
+snapshot after Heartbeat. `held` uses the synthetic holder `Q1AAA`; `withdrawn`
+reports unsupported while a hold remains active. This option also works with
+ALL.TXT playback. The simulator sends snapshots; it does not manage inhibit leases.
+
 ## Play WSJT-X traffic
 
 The built-in synthetic ALL.TXT sample
@@ -170,7 +187,9 @@ qg-interop sim --capture capture.ndjson --qgi --to 127.0.0.1:2237
 
 Native capture playback sends the recorded bytes unchanged. `--qgi` instead sends each complete
 event as one qgi UDP datagram, including carried commands. It doesn't execute those commands.
-The native UDP transport catalog includes WSJT-X, N1MM, and PSK Reporter IPFIX.
+The native UDP transport catalog includes WSJT-X, N1MM, and complete PSK Reporter IPFIX datagrams.
+IPFIX collector events keep one record in `native.data`. Replay those events with `--qgi`
+to preserve their record and full-message evidence.
 TCP and MQTT native captures require their own transport helpers.
 
 An optional top-level `received_at` extension, spelled as `YYYY-MM-DDTHH:MM:SS.mmmZ`, supplies
@@ -211,3 +230,21 @@ and runs immediately. Use these options without `--file` or `--capture`.
 ```sh
 qg-interop sim --wsjtx --to 127.0.0.1:2237 --mode FT4 --frequency 7074000
 ```
+
+## Proposed receive text
+
+`qg-interop sim --wsjtx --mode JTTY --to 127.0.0.1:2237` keeps beta6's behavior.
+It sends Heartbeat, JTTY Status, and Close, without receive-text datagrams.
+
+Add `--jtty-text` to emit proposed type 19 updates for three synthetic Q-callsign
+transmissions:
+
+```sh
+qg-interop sim --wsjtx --mode JTTY --jtty-text --to 127.0.0.1:2237
+```
+
+The script grows whole text at five characters per second, normally two characters
+per update, with a 1.5-second gap between transmissions. Each transmission has one
+message ID and UTC start; only its final update has Complete true, and Off air is
+false throughout. `--speed` scales playback timing. The proposal may change with
+WSJT-X. See the [protocol evidence](../PROTOCOL.md#proposed-jttytext-evidence).

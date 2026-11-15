@@ -1,6 +1,6 @@
 {
   "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
-  "spec": "0.1.0",
+  "spec": "0.2.0",
   "family": "fldigi",
   "mapping": 1,
   "class": "positive",
@@ -18,7 +18,7 @@
   },
   "expected": {
     "event": {
-      "spec": "0.1.0",
+      "spec": "0.2.0",
       "family": "fldigi",
       "mapping": 1,
       "kind": "radio_state",

@@ -1,12 +1,12 @@
 {
   "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
-  "spec": "0.1.0",
+  "spec": "0.2.0",
   "family": "fldigi",
   "mapping": 1,
   "class": "compatibility",
   "input": {
     "event": {
-      "spec": "0.1.0",
+      "spec": "0.2.0",
       "family": "fldigi",
       "mapping": 1,
       "kind": "native",
@@ -21,8 +21,8 @@
         "data": "PGZ1dHVyZT5RMUFBQTwvZnV0dXJlPg=="
       }
     },
-    "reader_spec": "0.1.0",
-    "writer_spec": "0.1.0"
+    "reader_spec": "0.2.0",
+    "writer_spec": "0.2.0"
   },
   "expected": {
     "read": {

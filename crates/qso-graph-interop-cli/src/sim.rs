@@ -109,6 +109,16 @@ pub fn install_stop() -> Result<()> {
     Ok(())
 }
 
+pub fn inhibit_snapshot(s: &Sim) -> Option<Body> {
+    let state = s.inhibit_status.as_deref()?;
+    let mut snapshot = wsjtx::InhibitStatus::default();
+    snapshot.supported = state != "withdrawn";
+    snapshot.inhibited = state != "available";
+    snapshot.source_station = if snapshot.inhibited { "Q1AAA" } else { "" }.into();
+    snapshot.hold_rx = u32::from(snapshot.inhibited);
+    Some(Body::InhibitStatus(snapshot))
+}
+
 pub struct Player {
     pub status: wsjtx::Status,
     pub window: Vec<wsjtx::Decode>,
@@ -117,6 +127,7 @@ pub struct Player {
     staged: String,
     pub close: bool,
     window_bytes: usize,
+    inhibit: Option<Body>,
 }
 impl Player {
     pub fn new(s: &Sim) -> Self {
@@ -146,6 +157,7 @@ impl Player {
             staged: String::new(),
             close: false,
             window_bytes: 0,
+            inhibit: inhibit_snapshot(s),
         }
     }
     fn packet(&self, body: Body) -> Packet {
@@ -186,6 +198,9 @@ impl Player {
             self.heartbeat(),
             self.packet(Body::Status(self.status.clone())),
         ];
+        if let Some(snapshot) = &self.inhibit {
+            packets.insert(1, self.packet(snapshot.clone()));
+        }
         for l in &c.decodes {
             let mut d = wsjtx::Decode::default();
             d.new = true;
@@ -345,9 +360,13 @@ pub fn wait_capture(socket: &NumericUdp, until: Instant) -> Result<()> {
 }
 
 pub fn run(s: Sim) -> Result<()> {
+    if s.pskreporter_ipfix {
+        return crate::ipfix::simulate(s);
+    }
     if s.fldigi {
         return crate::fldigi_sim::run(&s);
     }
+    crate::numeric_udp::validate(s.to.ok_or("--to is required")?, s.interface)?;
     if s.n1mm {
         return crate::n1mm_sim::run(&s);
     }
@@ -358,7 +377,33 @@ pub fn run(s: Sim) -> Result<()> {
         let seconds = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
         let packets = crate::script(&s, seconds)?;
         install_stop()?;
-        let socket = NumericUdp::sender(s.to.ok_or("--to is required")?)?;
+        let socket = NumericUdp::sender(s.to.ok_or("--to is required")?, s.interface)?;
+        if s.jtty_text {
+            let begin = Instant::now();
+            let mut elapsed_ms = 0;
+            let mut previous_id = None;
+            let mut previous_length = 0;
+            for packet in packets {
+                if let Body::JttyText(text) = &packet.body {
+                    if previous_id != Some(text.message_id) {
+                        if previous_id.is_some() {
+                            elapsed_ms += 1500;
+                        }
+                        previous_id = Some(text.message_id);
+                        previous_length = 0;
+                    }
+                    let length = text.text.as_str().expect("synthetic ASCII text").len();
+                    elapsed_ms += (length - previous_length) as u64 * 200;
+                    previous_length = length;
+                    wait_capture(&socket, deadline(begin, elapsed_ms, s.speed)?)?;
+                }
+                if stopped() {
+                    break;
+                }
+                send(&socket, vec![packet])?;
+            }
+            return Ok(());
+        }
         return send(&socket, packets);
     }
     let name = s
@@ -416,7 +461,7 @@ pub fn run(s: Sim) -> Result<()> {
         }
     );
     install_stop()?;
-    let socket = NumericUdp::sender(s.to.ok_or("--to is required")?)?;
+    let socket = NumericUdp::sender(s.to.ok_or("--to is required")?, s.interface)?;
     let mut player = Player::new(&s);
     let period = alltxt::period_ms(&log.cycles[0].mode)?;
     let now = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis() as u64;

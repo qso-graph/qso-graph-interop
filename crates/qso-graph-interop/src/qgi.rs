@@ -68,7 +68,7 @@ impl Qgi {
         let mut v = e.into_value();
         // Receiving context is newly authored, even when the preserved content is newer.
         let hop = json!({"family":"qgi","context":options.context});
-        let test = json!({"spec":"0.1.0","family":"qgi","mapping":1,"kind":"native","context":options.context,"fields":{},"native":{"format":"datagram","data":""}});
+        let test = json!({"spec":"0.2.0","family":"qgi","mapping":1,"kind":"native","context":options.context,"fields":{},"native":{"format":"datagram","data":""}});
         crate::json::validate(&test, true)?;
         let m = v
             .as_object_mut()
@@ -99,7 +99,7 @@ impl Qgi {
     ) -> Result<Vec<u8>, CoreError> {
         let profile = options.profile();
         let v = event.value();
-        let newer = v["spec"] != "0.1.0"
+        let newer = v["spec"] != "0.2.0"
             || v["mapping"].as_u64().is_some_and(|r| r > 1)
             || profile.is_some_and(|p| {
                 v["family"] == p.family()

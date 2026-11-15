@@ -206,6 +206,7 @@ fn native_tokens_with_system_bindings(tokens: TokenStream, system_bindings: bool
 /// numeric addresses, plus the audited loopback TCP adapter for fldigi HTTP.
 /// General TCP, DNS and process creation remain forbidden.
 pub fn network_tokens(tokens: TokenStream, library: bool) -> Check {
+    unreviewed_socket_tokens(tokens.clone())?;
     let trees: Vec<_> = tokens.into_iter().collect();
     for (i, token) in trees.iter().enumerate() {
         match token {
@@ -247,6 +248,10 @@ pub fn network_tokens(tokens: TokenStream, library: bool) -> Check {
                         let path = segments.join("::");
                         let allowed = [
                             "path::PathBuf",
+                            "path::Path",
+                            "collections::BTreeMap",
+                            "net::IpAddr",
+                            "net::Ipv4Addr",
                             "sync::atomic",
                             "sync::Arc",
                             "sync::OnceLock",
@@ -298,27 +303,118 @@ pub fn network_tokens(tokens: TokenStream, library: bool) -> Check {
     Ok(())
 }
 
+// These APIs are forbidden even in CLI integration tests, whose standard-library
+// sockets are otherwise allowed. Only the exact audited adapter may use socket2.
+fn unreviewed_socket_tokens(tokens: TokenStream) -> Check {
+    for token in tokens {
+        match token {
+            TokenTree::Ident(id) => {
+                let name = id.to_string();
+                require(
+                    !matches!(
+                        name.trim_start_matches("r#"),
+                        "socket2" | "Socket" | "SockAddr"
+                    ),
+                    format!("network API {name} belongs only in the audited numeric UDP adapter"),
+                )?;
+            }
+            TokenTree::Group(group) => unreviewed_socket_tokens(group.stream())?,
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
 // This exact token template is the audited exception to the CLI socket ban.
 // Changes to either the interface or implementation require updating this policy oracle.
 const AUDITED_NUMERIC_UDP: &str = r#"// SPDX-License-Identifier: GPL-3.0-or-later
-//! Audited socket boundary: address-taking operations accept only SocketAddr.
+//! Audited socket boundary: numeric destinations and explicit multicast interfaces only.
+#![forbid(unsafe_code)]
+use socket2::{Domain, Protocol, Socket, Type};
 use std::io;
-use std::net::{Ipv6Addr, SocketAddr, UdpSocket};
+use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr, UdpSocket};
+
+pub type Interface = Ipv4Addr;
+
+fn validate_interface(interface: Interface) -> io::Result<()> {
+    if interface.is_unspecified() || interface.is_multicast() || interface.is_broadcast() {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "--interface must be a numeric local IPv4 address other than 0.0.0.0, multicast, or 255.255.255.255",
+        ));
+    }
+    Ok(())
+}
+
+pub fn interface(value: &str) -> Result<Interface, String> {
+    let interface = value
+        .parse()
+        .map_err(|_| "--interface must be a numeric local IPv4 address".to_owned())?;
+    validate_interface(interface).map_err(|error| error.to_string())?;
+    Ok(interface)
+}
+
+pub fn validate(address: SocketAddr, interface: Option<Interface>) -> io::Result<()> {
+    if let IpAddr::V6(group) = address.ip()
+        && group.is_multicast()
+    {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "IPv6 multicast is not supported; use an IPv4 group",
+        ));
+    }
+    match (address.ip().is_multicast(), interface) {
+        (true, Some(interface)) => validate_interface(interface),
+        (true, None) => Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "an IPv4 multicast group requires --interface <IPV4>; supply a numeric local interface address",
+        )),
+        (false, Some(_)) => Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "--interface requires an IPv4 multicast address; use a multicast group or remove --interface",
+        )),
+        (false, None) => Ok(()),
+    }
+}
 
 pub struct NumericUdp(UdpSocket);
 
 impl NumericUdp {
-    pub fn bind(address: SocketAddr) -> io::Result<Self> {
+    pub fn bind(address: SocketAddr, interface: Option<Interface>) -> io::Result<Self> {
+        validate(address, interface)?;
+        if let (IpAddr::V4(group), Some(interface)) = (address.ip(), interface) {
+            let socket = Socket::new(Domain::IPV4, Type::DGRAM, Some(Protocol::UDP))?;
+            socket.set_reuse_address(true)?;
+            // Windows cannot bind a multicast group; other targets filter by group at bind.
+            let local = if cfg!(windows) {
+                SocketAddr::from((Ipv4Addr::UNSPECIFIED, address.port()))
+            } else {
+                address
+            };
+            socket.bind(&local.into())?;
+            socket.join_multicast_v4(&group, &interface)?;
+            return Ok(Self(socket.into()));
+        }
         UdpSocket::bind(address).map(Self)
     }
 
-    pub fn sender(peer: SocketAddr) -> io::Result<Self> {
+    pub fn sender(peer: SocketAddr, interface: Option<Interface>) -> io::Result<Self> {
+        validate(peer, interface)?;
+        if let Some(interface) = interface {
+            let socket = Socket::new(Domain::IPV4, Type::DGRAM, Some(Protocol::UDP))?;
+            socket.bind(&SocketAddr::from((Ipv4Addr::UNSPECIFIED, 0)).into())?;
+            socket.set_multicast_if_v4(&interface)?;
+            socket.set_multicast_ttl_v4(1)?;
+            socket.set_multicast_loop_v4(true)?;
+            socket.connect(&peer.into())?;
+            return Ok(Self(socket.into()));
+        }
         let local = if peer.is_ipv4() {
             SocketAddr::from(([0, 0, 0, 0], 0))
         } else {
             SocketAddr::from((Ipv6Addr::UNSPECIFIED, 0))
         };
-        let socket = Self::bind(local)?;
+        let socket = Self::bind(local, None)?;
         socket.0.connect(peer)?;
         Ok(socket)
     }
@@ -590,9 +686,13 @@ fn shipped_dependency_names(table: &toml::Table, library: bool) -> Check {
                     let allowed: &[&str] = match (library, key.as_str()) {
                         (true, "dependencies") => &["serde", "serde_json", "sha2-const-stable"],
                         (true, "dev-dependencies") => &["serde_json"],
-                        (false, "dependencies") => {
-                            &["clap", "qso-graph-interop", "serde_json", "signal-hook"]
-                        }
+                        (false, "dependencies") => &[
+                            "clap",
+                            "qso-graph-interop",
+                            "serde_json",
+                            "signal-hook",
+                            "socket2",
+                        ],
                         _ => &[],
                     };
                     require(
@@ -742,6 +842,9 @@ fn workspace_policy(root: &Path, meta: &Value) -> Check {
                         .map_err(|e| format!("{}: {e}", file.display()))?;
                 }
                 if pkg["name"] == "qso-graph-interop-cli" {
+                    if file != dir.join("src/numeric_udp.rs") {
+                        unreviewed_socket_tokens(tokens.clone())?;
+                    }
                     reject_test_root_modules(tokens, &test_names)
                         .map_err(|e| format!("{}: {e}", file.display()))?;
                 }
@@ -964,9 +1067,67 @@ pub fn policy(root: &Path) -> Check {
     println!("policy: isolated, pinned fuzz target: pass");
     synthetic_calls::check(root)?;
     println!("policy: Q-prefixed invented calls in sources, fixtures and vectors: pass");
-    portable_names(&tracked_files(root)?)?;
+    let tracked = tracked_files(root)?;
+    portable_names(&tracked)?;
     println!("policy: no tracked paths that differ only by case: pass");
+    pinned_files_stored_exactly(root, &tracked)?;
+    println!("policy: every SHA256SUMS-pinned file is stored byte for byte: pass");
     Ok(())
+}
+
+/// A file pinned in a tracked `SHA256SUMS` must be stored by Git exactly as it is here: a fresh
+/// checkout (CI's, anyone's) gets the stored bytes, and the pin was taken from these. End-of-line
+/// conversion is the usual way they part: a capture written on Windows has CRLF lines, and
+/// `text=auto eol=lf` stores LF, so every clone would fail its own checksum (seen twice before this
+/// check existed). Such files need `-text` in .gitattributes.
+fn pinned_files_stored_exactly(root: &Path, tracked: &[String]) -> Check {
+    for sums in tracked
+        .iter()
+        .filter(|p| p.rsplit('/').next() == Some("SHA256SUMS"))
+    {
+        let dir = sums.rsplit_once('/').map_or("", |(d, _)| d);
+        let list = std::fs::read_to_string(root.join(sums)).map_err(|e| format!("{sums}: {e}"))?;
+        for line in list.lines().filter(|l| !l.trim().is_empty()) {
+            let name = line
+                .split_once(char::is_whitespace)
+                .map(|(_, n)| n.trim_start().trim_start_matches('*'))
+                .ok_or_else(|| format!("{sums}: not a sha256sum line: {line}"))?;
+            let path = if dir.is_empty() {
+                name.to_owned()
+            } else {
+                format!("{dir}/{name}")
+            };
+            let here = std::fs::read(root.join(&path)).map_err(|e| format!("{path}: {e}"))?;
+            let out = std::process::Command::new("git")
+                .arg("-C")
+                .arg(root)
+                .args(["cat-file", "blob", &format!(":{path}")])
+                .output()
+                .map_err(|e| format!("git cat-file: {e}"))?;
+            require(
+                out.status.success(),
+                format!("{path} is pinned in {sums} but not tracked"),
+            )?;
+            stored_exactly(&path, &here, &out.stdout)?;
+        }
+    }
+    Ok(())
+}
+
+fn stored_exactly(path: &str, here: &[u8], stored: &[u8]) -> Check {
+    if here == stored {
+        return Ok(());
+    }
+    let crlf = |b: &[u8]| b.windows(2).filter(|w| w == b"\r\n").count();
+    Err(format!(
+        "{path}: Git stores different bytes than this pinned file ({} bytes, {} CRLF here; {} bytes, \
+         {} CRLF stored), so a checkout fails its SHA256SUMS; add `{path} -text` (or its folder) to \
+         .gitattributes and re-add it",
+        here.len(),
+        crlf(here),
+        stored.len(),
+        crlf(stored)
+    ))
 }
 
 fn tracked_files(root: &Path) -> Result<Vec<String>, String> {
@@ -1000,6 +1161,16 @@ fn portable_names(paths: &[String]) -> Check {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn pinned_bytes_must_be_stored_exactly() {
+        assert!(super::stored_exactly("a.ndjson", b"x\r\ny\r\n", b"x\r\ny\r\n").is_ok());
+        let e = super::stored_exactly("a.ndjson", b"x\r\ny\r\n", b"x\ny\n").unwrap_err();
+        assert!(
+            e.contains("2 CRLF here") && e.contains("0 CRLF stored") && e.contains("-text"),
+            "{e}"
+        );
+    }
+
     use super::*;
 
     #[test]
@@ -1029,6 +1200,32 @@ mod tests {
         assert!(source_tokens("#[cfg(feature = \"wsjtx\")] mod family;".parse().unwrap()).is_ok());
         assert!(source_tokens("#![feature(something)]".parse().unwrap()).is_err());
     }
+    #[test]
+    fn collector_standard_types_do_not_open_network_or_process_access() {
+        for source in [
+            "use std::collections::BTreeMap;",
+            "std::net::IpAddr::V4(ip)",
+            "std::net::Ipv4Addr::BROADCAST",
+        ] {
+            assert!(
+                network_tokens(source.parse().unwrap(), false).is_ok(),
+                "{source}"
+            );
+        }
+        for source in [
+            "use std::collections as alias;",
+            "use std::net as alias;",
+            "std::net::ToSocketAddrs",
+            "std::net::UdpSocket::bind(address)",
+            "std::process::Command::new(program)",
+        ] {
+            assert!(
+                network_tokens(source.parse().unwrap(), false).is_err(),
+                "{source}"
+            );
+        }
+    }
+
     #[test]
     fn planted_unsafe_and_macro_cases() {
         for source in [
@@ -1161,6 +1358,24 @@ fn main() {}
         std::fs::write(dir.join("Cargo.toml"), format!("{manifest}\n[[bin]]\nname = \"policy-probe\"\npath = \"policy_probe.rs\"\n[[test]]\nname = \"integration\"\npath = \"integration.rs\"\n")).unwrap();
         std::fs::write(dir.join("integration.rs"), probe).unwrap();
         assert!(workspace_policy(&dir, &get_metadata()).is_ok());
+        for source in [
+            "use socket2 as transport;",
+            "fn probe() { let _ = Socket::new(); }",
+            "fn probe() { let _ = SockAddr::from(peer); }",
+        ] {
+            std::fs::write(
+                dir.join("integration.rs"),
+                format!("#![forbid(unsafe_code)]\n{source}\n"),
+            )
+            .unwrap();
+            assert!(
+                workspace_policy(&dir, &get_metadata())
+                    .unwrap_err()
+                    .contains("audited numeric UDP adapter")
+            );
+        }
+        std::fs::write(dir.join("integration.rs"), probe).unwrap();
+        assert!(workspace_policy(&dir, &get_metadata()).is_ok());
         std::fs::write(
             dir.join("policy_probe.rs"),
             "#![forbid(unsafe_code)]\nmod integration;\nfn main() {}\n",
@@ -1276,6 +1491,25 @@ fn main() {}
         }
         assert!(network_tokens("use std::net::SocketAddr;".parse().unwrap(), false).is_ok());
     }
+
+    #[test]
+    fn socket2_outside_numeric_udp_is_rejected() {
+        for library in [true, false] {
+            for source in [
+                "use socket2 as transport;",
+                "use socket2::{Socket as S, SockAddr as Address};",
+                "extern crate socket2 as transport;",
+                "let socket = Socket::new(domain, kind, protocol);",
+                "let address = SockAddr::from(peer);",
+                "use r#socket2 as transport;",
+            ] {
+                assert!(
+                    network_tokens(source.parse().unwrap(), library).is_err(),
+                    "{source}"
+                );
+            }
+        }
+    }
     #[test]
     fn review_process_alias_and_implicit_dns_are_rejected() {
         for source in [
@@ -1325,11 +1559,28 @@ fn main() {}
                 "socket.0.connect(\"example.com:2237\")",
             ),
             AUDITED_NUMERIC_UDP.replace(
-                "SocketAddr) -> io::Result<Self>",
-                "impl std::net::ToSocketAddrs) -> io::Result<Self>",
+                "address: SocketAddr",
+                "address: impl std::net::ToSocketAddrs",
             ),
+            AUDITED_NUMERIC_UDP.replace(
+                "join_multicast_v4(&group, &interface)",
+                "join_multicast_v4(&group, &Ipv4Addr::UNSPECIFIED)",
+            ),
+            AUDITED_NUMERIC_UDP.replace("set_reuse_address(true)", "set_reuse_port(true)"),
+            AUDITED_NUMERIC_UDP.replace(
+                "set_reuse_address(true)?;",
+                "set_reuse_address(true)?; socket.set_reuse_port(true)?;",
+            ),
+            AUDITED_NUMERIC_UDP.replace("validate_interface(interface)", "Ok(())"),
+            AUDITED_NUMERIC_UDP.replace("validate(address, interface)?;", ""),
+            AUDITED_NUMERIC_UDP.replace("validate(peer, interface)?;", ""),
+            AUDITED_NUMERIC_UDP.replace("if cfg!(windows)", "if false"),
             format!("{AUDITED_NUMERIC_UDP} pub fn extra() {{}}"),
         ] {
+            assert_ne!(
+                mutant, AUDITED_NUMERIC_UDP,
+                "mutant must change the adapter"
+            );
             assert!(numeric_udp_tokens(mutant.parse().unwrap()).is_err());
         }
     }
@@ -1413,6 +1664,8 @@ fn main() {}
             "[target.'cfg(unix)'.dependencies]\nresolver='1.0.0'",
             "[dev-dependencies]\nprocess_wrapper='1.0.0'",
             "[build-dependencies]\nprocess_wrapper='1.0.0'",
+            "[dependencies]\nsocket2={package='duct',version='0.13.0'}",
+            "[dev-dependencies]\nsocket2='0.6.5'",
         ] {
             assert!(shipped_dependency_names(&toml::from_str(source).unwrap(), false).is_err());
         }
@@ -1429,7 +1682,7 @@ fn main() {}
         assert!(
             shipped_dependency_names(
                 &toml::from_str(
-                    "[dependencies]\nclap='4.6.7'\nserde_json='1.0.145'\nqso-graph-interop='0.1.0'"
+                    "[dependencies]\nclap='4.6.7'\nserde_json='1.0.145'\nqso-graph-interop='0.1.0'\nsocket2='0.6.5'"
                 )
                 .unwrap(),
                 false
@@ -1439,6 +1692,13 @@ fn main() {}
         assert!(
             shipped_dependency_names(
                 &toml::from_str("[dependencies]\nwrapper='1.0.0'").unwrap(),
+                true
+            )
+            .is_err()
+        );
+        assert!(
+            shipped_dependency_names(
+                &toml::from_str("[dependencies]\nsocket2='0.6.5'").unwrap(),
                 true
             )
             .is_err()

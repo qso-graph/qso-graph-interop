@@ -36,3 +36,9 @@ pub mod wsjtx;
 pub mod fldigi;
 #[cfg(any(feature = "n1mm", feature = "fldigi"))]
 mod xml;
+
+#[cfg(feature = "pskreporter-ipfix")]
+pub mod pskreporter_ipfix;
+
+#[cfg(feature = "pskreporter-mqtt")]
+pub mod pskreporter_mqtt;

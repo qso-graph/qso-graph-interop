@@ -166,7 +166,7 @@ pub fn run(options: Poll) -> Result<(), Box<dyn std::error::Error>> {
             let mut codec = Fldigi::default();
             let op = format!("fldigi.{}", method.replace('.', "_"));
             let command = Event::from_value(
-                json!({"spec":"0.1.0","family":"fldigi","mapping":1,"kind":"control","context":{"direction":"to_application","exchange":"request"},"fields":{"operation":op}}),
+                json!({"spec":"0.2.0","family":"fldigi","mapping":1,"kind":"control","context":{"direction":"to_application","exchange":"request"},"fields":{"operation":op}}),
             )?;
             let commands = codec.encode_commands(&command, &EncodeOptions::default())?;
             let planned = &commands.requests()[0];

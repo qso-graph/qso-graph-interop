@@ -1,0 +1,21 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "skip",
+  "input": {
+    "data": "bm90IGludGVycHJldGVk",
+    "mqtt": {
+      "topic": "pskr/filter/v3/20m/FT8/Q1AAA/Q2BBB/AA00/BB11/1/2",
+      "retained": true,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "skip": {
+      "reason": "future_version",
+      "native_version": "3"
+    }
+  }
+}

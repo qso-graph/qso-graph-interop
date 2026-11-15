@@ -1,0 +1,68 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJzcSI6NzQ4NDcwNjUzNzMsImYiOjI4MDc0ODgwLCJtZCI6IkZUOCIsInJwIjo2LCJ0IjoxNzk0Njc3Mjk1LCJ0X3R4IjoxNzk0Njc3Mjk1LCJzYyI6IlE4QUFMIiwic2wiOiJFTjUzd2MiLCJyYyI6IlE5QUFMIiwicmwiOiJJTjUwUlUiLCJzYSI6MjkxLCJyYSI6MjcyLCJiIjoiMTBtIn0=",
+    "mqtt": {
+      "topic": "pskr/filter/v2/10m/FT8/Q8AAL/Q9AAL/EN53/IN50/291/272",
+      "retained": false,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "2",
+      "kind": "spot",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "sender_call": "Q8AAL",
+        "sender_locator": "EN53wc",
+        "receiver_call": "Q9AAL",
+        "receiver_locator": "IN50RU",
+        "mode": "FT8",
+        "band": "10m",
+        "frequency_hz": 28074880,
+        "snr_db": 6,
+        "sender_dxcc": 291,
+        "receiver_dxcc": 272,
+        "time": "2026-11-14T17:28:15Z",
+        "transmission_start": "2026-11-14T17:28:15Z"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJzcSI6NzQ4NDcwNjUzNzMsImYiOjI4MDc0ODgwLCJtZCI6IkZUOCIsInJwIjo2LCJ0IjoxNzk0Njc3Mjk1LCJ0X3R4IjoxNzk0Njc3Mjk1LCJzYyI6IlE4QUFMIiwic2wiOiJFTjUzd2MiLCJyYyI6IlE5QUFMIiwicmwiOiJJTjUwUlUiLCJzYSI6MjkxLCJyYSI6MjcyLCJiIjoiMTBtIn0=",
+        "topic": "pskr/filter/v2/10m/FT8/Q8AAL/Q9AAL/EN53/IN50/291/272",
+        "retained": false,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "sq": 74847065373,
+    "f": 28074880,
+    "md": "FT8",
+    "rp": 6,
+    "t": 1794677295,
+    "t_tx": 1794677295,
+    "sc": "Q8AAL",
+    "sl": "EN53wc",
+    "rc": "Q9AAL",
+    "rl": "IN50RU",
+    "sa": 291,
+    "ra": 272,
+    "b": "10m"
+  },
+  "reencode": {
+    "data": "eyJzcSI6NzQ4NDcwNjUzNzMsImYiOjI4MDc0ODgwLCJtZCI6IkZUOCIsInJwIjo2LCJ0IjoxNzk0Njc3Mjk1LCJ0X3R4IjoxNzk0Njc3Mjk1LCJzYyI6IlE4QUFMIiwic2wiOiJFTjUzd2MiLCJyYyI6IlE5QUFMIiwicmwiOiJJTjUwUlUiLCJzYSI6MjkxLCJyYSI6MjcyLCJiIjoiMTBtIn0="
+  }
+}

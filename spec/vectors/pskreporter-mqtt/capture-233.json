@@ -1,0 +1,68 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJzcSI6NzQ4NDcwNjU0OTQsImYiOjM1NzQ5NjMsIm1kIjoiRlQ4IiwicnAiOi0xNiwidCI6MTc5NDY3NzI0NiwidF90eCI6MTc5NDY3NzIzNSwic2MiOiJRNUFBWCIsInNsIjoiSk40OUtOIiwicmMiOiJRNkFBWCIsInJsIjoiSk85NERPIiwic2EiOjIzMCwicmEiOjI2OSwiYiI6IjgwbSJ9",
+    "mqtt": {
+      "topic": "pskr/filter/v2/80m/FT8/Q5AAX/Q6AAX/JN49/JO94/230/269",
+      "retained": false,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "2",
+      "kind": "spot",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "sender_call": "Q5AAX",
+        "sender_locator": "JN49KN",
+        "receiver_call": "Q6AAX",
+        "receiver_locator": "JO94DO",
+        "mode": "FT8",
+        "band": "80m",
+        "frequency_hz": 3574963,
+        "snr_db": -16,
+        "sender_dxcc": 230,
+        "receiver_dxcc": 269,
+        "time": "2026-11-14T17:27:26Z",
+        "transmission_start": "2026-11-14T17:27:15Z"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJzcSI6NzQ4NDcwNjU0OTQsImYiOjM1NzQ5NjMsIm1kIjoiRlQ4IiwicnAiOi0xNiwidCI6MTc5NDY3NzI0NiwidF90eCI6MTc5NDY3NzIzNSwic2MiOiJRNUFBWCIsInNsIjoiSk40OUtOIiwicmMiOiJRNkFBWCIsInJsIjoiSk85NERPIiwic2EiOjIzMCwicmEiOjI2OSwiYiI6IjgwbSJ9",
+        "topic": "pskr/filter/v2/80m/FT8/Q5AAX/Q6AAX/JN49/JO94/230/269",
+        "retained": false,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "sq": 74847065494,
+    "f": 3574963,
+    "md": "FT8",
+    "rp": -16,
+    "t": 1794677246,
+    "t_tx": 1794677235,
+    "sc": "Q5AAX",
+    "sl": "JN49KN",
+    "rc": "Q6AAX",
+    "rl": "JO94DO",
+    "sa": 230,
+    "ra": 269,
+    "b": "80m"
+  },
+  "reencode": {
+    "data": "eyJzcSI6NzQ4NDcwNjU0OTQsImYiOjM1NzQ5NjMsIm1kIjoiRlQ4IiwicnAiOi0xNiwidCI6MTc5NDY3NzI0NiwidF90eCI6MTc5NDY3NzIzNSwic2MiOiJRNUFBWCIsInNsIjoiSk40OUtOIiwicmMiOiJRNkFBWCIsInJsIjoiSk85NERPIiwic2EiOjIzMCwicmEiOjI2OSwiYiI6IjgwbSJ9"
+  }
+}

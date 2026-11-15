@@ -19,7 +19,26 @@ const OLD_CALLS: &[&str] = &[
     "W1AW", "W1BBB", "W1ZZZ",
 ];
 
-fn check_bytes(bytes: &[u8]) -> Check {
+// FT8 cannot pack Q-prefixed synthetic calls as standard messages. KI7MT authorized
+// exactly his current/former, checked-not-reissued calls for live-capture fixtures.
+const LIVE_CALLS: &[&str] = &["KI7MT", "KE1HA", "KN4YU", "KC4QPQ", "M0EHA"];
+
+fn real_call(token: &str) -> bool {
+    let bytes = token.as_bytes();
+    let prefix = if bytes.first().is_some_and(u8::is_ascii_digit)
+        && bytes.get(1).is_some_and(u8::is_ascii_uppercase)
+    {
+        2
+    } else {
+        bytes.iter().take_while(|b| b.is_ascii_uppercase()).count()
+    };
+    (1..=2).contains(&prefix)
+        && bytes.get(prefix).is_some_and(u8::is_ascii_digit)
+        && (1..=4).contains(&bytes.len().saturating_sub(prefix + 1))
+        && bytes[prefix + 1..].iter().all(u8::is_ascii_uppercase)
+}
+
+fn check_bytes_at(bytes: &[u8], live: bool) -> Check {
     // UTF-16 examples have NULs between ASCII letters. Also inspect that view.
     let text = String::from_utf8_lossy(bytes).to_ascii_uppercase();
     let compact = text.replace('\0', "");
@@ -30,7 +49,34 @@ fn check_bytes(bytes: &[u8]) -> Check {
             ));
         }
     }
+    // Remove only the known software label in its XML app/database context.
+    // N1MM has the lexical shape of a call, but these two strings name the program.
+    let calls = compact
+        .replace("<APP>N1MM</APP>", "")
+        .replace("N1MM DXLOG.S3DB", "");
+    for token in calls.split(|c: char| !c.is_ascii_alphanumeric() && c != '/') {
+        if LIVE_CALLS.contains(&token) {
+            if !live {
+                return Err(format!(
+                    "live callsign {token} outside live-capture fixtures"
+                ));
+            }
+        } else if live
+            && token
+                .split('/')
+                .any(|part| !part.starts_with('Q') && real_call(part))
+        {
+            return Err(format!(
+                "non-Q callsign {token} is not an authorized live call"
+            ));
+        }
+    }
     Ok(())
+}
+
+#[cfg(test)]
+fn check_bytes(bytes: &[u8]) -> Check {
+    check_bytes_at(bytes, false)
 }
 
 fn decoded(text: &str, alphabet: &[u8], bits: u32) -> Option<Vec<u8>> {
@@ -52,10 +98,10 @@ fn decoded(text: &str, alphabet: &[u8], bits: u32) -> Option<Vec<u8>> {
     Some(out)
 }
 
-fn check_value(value: &Value) -> Check {
+fn check_value_at(value: &Value, live: bool) -> Check {
     match value {
         Value::String(s) => {
-            check_bytes(s.as_bytes())?;
+            check_bytes_at(s.as_bytes(), live)?;
             for (alphabet, bits) in [
                 (b"0123456789abcdef".as_slice(), 4),
                 (
@@ -64,24 +110,24 @@ fn check_value(value: &Value) -> Check {
                 ),
             ] {
                 if let Some(bytes) = decoded(s, alphabet, bits) {
-                    check_bytes(&bytes)?;
+                    check_bytes_at(&bytes, live)?;
                 }
             }
             // event_json and stream examples can themselves contain native.data.
             if let Ok(nested) = serde_json::from_str::<Value>(s)
                 && (nested.is_object() || nested.is_array())
             {
-                check_value(&nested)?;
+                check_value_at(&nested, live)?;
             }
         }
         Value::Array(values) => {
             for value in values {
-                check_value(value)?;
+                check_value_at(value, live)?;
             }
         }
         Value::Object(values) => {
             for value in values.values() {
-                check_value(value)?;
+                check_value_at(value, live)?;
             }
         }
         _ => {}
@@ -89,17 +135,171 @@ fn check_value(value: &Value) -> Check {
     Ok(())
 }
 
-fn check_file(path: &Path) -> Check {
-    let text = read(path)?;
-    check_bytes(text.as_bytes())?;
+#[cfg(test)]
+fn check_value(value: &Value) -> Check {
+    check_value_at(value, false)
+}
+
+fn fldigi_ipfix_boundaries(bytes: &[u8]) -> Option<Vec<u8>> {
+    if bytes.get(..2)? != [0, 10]
+        || usize::from(u16::from_be_bytes(bytes.get(2..4)?.try_into().ok()?)) != bytes.len()
+    {
+        return None;
+    }
+    // Recognize S5's exact sender definition, not its usual ID. Insert separators
+    // around its variable fields without removing any bytes from the policy view.
+    // Otherwise a call followed by flowStartSeconds 0x6af91e7e reads as KC4QPQj.
+    let definition = b"\x00\x06\x80\x01\xff\xff\x00\x00\x76\x8f\x00\x96\x00\x04\x80\x05\x00\x04\x00\x00\x76\x8f\x80\x0a\xff\xff\x00\x00\x76\x8f\x80\x03\xff\xff\x00\x00\x76\x8f\x80\x0b\x00\x01\x00\x00\x76\x8f";
+    let mut sender_id = None;
+    let mut boundaries = std::collections::BTreeSet::new();
+    let mut offset = 16;
+    while offset < bytes.len() {
+        let header = bytes.get(offset..offset.checked_add(4)?)?;
+        let id = u16::from_be_bytes([header[0], header[1]]);
+        let length = usize::from(u16::from_be_bytes([header[2], header[3]]));
+        if length < 4 {
+            return None;
+        }
+        let end = offset.checked_add(length)?;
+        let set = bytes.get(offset + 4..end)?;
+        if id == 2 {
+            // Any other definition disables this special view, including replacement.
+            sender_id = if set.get(2..)? == definition {
+                Some(u16::from_be_bytes(set.get(..2)?.try_into().ok()?))
+            } else {
+                None
+            };
+        } else if sender_id == Some(id) {
+            let mut cursor = 0;
+            // Minimum record: three length prefixes, eight scalar bytes, source byte.
+            while set.len().checked_sub(cursor)? >= 12 {
+                for fixed in [None, Some(8), None, None, Some(1)] {
+                    let size = if let Some(size) = fixed {
+                        size
+                    } else {
+                        let prefix = *set.get(cursor)?;
+                        cursor += 1;
+                        if prefix == 255 {
+                            let size = u16::from_be_bytes(
+                                set.get(cursor..cursor.checked_add(2)?)?.try_into().ok()?,
+                            );
+                            cursor += 2;
+                            usize::from(size)
+                        } else {
+                            usize::from(prefix)
+                        }
+                    };
+                    let next = cursor.checked_add(size)?;
+                    set.get(cursor..next)?;
+                    if fixed.is_none() {
+                        boundaries.insert(offset + 4 + cursor);
+                        boundaries.insert(offset + 4 + next);
+                    }
+                    cursor = next;
+                }
+            }
+        }
+        offset = end;
+    }
+    if boundaries.is_empty() {
+        return None;
+    }
+    let mut view = Vec::with_capacity(bytes.len() + boundaries.len());
+    for (index, byte) in bytes.iter().enumerate() {
+        if boundaries.contains(&index) {
+            view.push(b' ');
+        }
+        view.push(*byte);
+    }
+    Some(view)
+}
+
+fn check_recorder_bytes(bytes: &[u8], live: bool) -> Check {
+    if let Some(view) = fldigi_ipfix_boundaries(bytes) {
+        return check_bytes_at(&view, live);
+    }
+    // WSJT-X Decode: after its length-prefixed ID, the new flag, QTime, SNR,
+    // delta time and audio offset are 21 scalar bytes, not callsign text.
+    // For example, QTime 7,485,000 ms contains ASCII r6H. Keep the ID, mode,
+    // decoded text and trailing extensions in the scan. Incomplete framing
+    // falls back to scanning all supplied bytes rather than hiding text.
+    if bytes.starts_with(&[0xad, 0xbc, 0xcb, 0xda])
+        && bytes
+            .get(4..8)
+            .is_some_and(|schema| schema == [0, 0, 0, 2] || schema == [0, 0, 0, 3])
+        && bytes.get(8..12) == Some(&[0, 0, 0, 2])
+        && let Some(length) = bytes.get(12..16)
+        && let Ok(length) = usize::try_from(u32::from_be_bytes(length.try_into().expect("four")))
+        && let Some(start) = 16_usize.checked_add(length)
+        && let Some(end) = start.checked_add(21)
+        && end <= bytes.len()
+    {
+        let mut text = bytes.to_vec();
+        text[start..end].fill(0);
+        return check_bytes_at(&text, live);
+    }
+    check_bytes_at(bytes, live)
+}
+
+fn check_file(path: &Path, live: bool) -> Check {
+    let mut text = read(path)?;
+    // Existing release governance names the account owner, not a test QSO.
+    // Mask only those identity phrases; a callsign in a new fixture still fails.
+    if path.ends_with("scripts/release_check.py") {
+        text = text
+            .replace(
+                "KI7MT's manual main Release",
+                "the owner's manual main Release",
+            )
+            .replace("actor.casefold() == \"ki7mt\"", "actor identity check");
+    }
+    if path.ends_with("scripts/test_release_check.py") {
+        text = text
+            .replace("actor=\"KI7MT\"", "actor=\"owner\"")
+            .replace("actor=\"ki7mt\"", "actor=\"owner\"")
+            .replace("\"KI7MT-other\"", "\"owner-other\"");
+    }
+    if path.ends_with("docs/RELEASING.md") {
+        text = text
+            .replace("KI7MT runs", "The owner runs")
+            .replace("be KI7MT.", "be the owner.");
+    }
+    if !path.extension().is_some_and(|ext| ext == "ndjson") {
+        check_bytes_at(text.as_bytes(), live)?;
+    }
+    if path.extension().is_some_and(|ext| ext == "ndjson") {
+        for line in text.lines() {
+            let value: Value = serde_json::from_str(line).map_err(|e| e.to_string())?;
+            for (key, value) in value.as_object().ok_or("recorder object required")? {
+                if !["data_b64", "request_b64", "response_b64"].contains(&key.as_str()) {
+                    // Recorder labels such as SO1V are not on-wire callsigns.
+                    check_value_at(value, false)?;
+                }
+            }
+            for key in ["data_b64", "request_b64", "response_b64"] {
+                if let Some(encoded) = value.get(key).and_then(Value::as_str) {
+                    if encoded.is_empty() {
+                        continue; // A timed-out recorder exchange has no response bytes.
+                    }
+                    let bytes = decoded(
+                        encoded,
+                        b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
+                        6,
+                    )
+                    .ok_or("invalid recorder base64")?;
+                    check_recorder_bytes(&bytes, live)?;
+                }
+            }
+        }
+    }
     if path.extension().is_some_and(|ext| ext == "json") {
         if let Ok(value) = serde_json::from_str::<Value>(&text) {
-            check_value(&value)?;
+            check_value_at(&value, live)?;
         } else {
             // Some rejection vectors deliberately contain unpaired surrogates.
             // Still inspect their encoded payloads without validating their JSON.
             for part in text.split('"') {
-                check_value(&Value::String(part.into()))?;
+                check_value_at(&Value::String(part.into()), live)?;
             }
         }
     }
@@ -113,15 +313,21 @@ pub fn check(root: &Path) -> Check {
             if path.extension().is_some_and(|ext| {
                 matches!(
                     ext.to_str(),
-                    Some("rs" | "py" | "json" | "xml" | "TXT" | "md")
+                    Some("rs" | "py" | "json" | "ndjson" | "xml" | "txt" | "TXT" | "md")
                 )
             }) {
-                check_file(&path).map_err(|e| format!("{}: {e}", path.display()))?;
+                check_file(
+                    &path,
+                    path.starts_with(
+                        root.join("crates/qso-graph-interop/tests/fixtures/live-captures"),
+                    ),
+                )
+                .map_err(|e| format!("{}: {e}", path.display()))?;
             }
         }
     }
     for file in ["README.md", "fuzz/seed.py"] {
-        check_file(&root.join(file))?;
+        check_file(&root.join(file), false)?;
     }
     Ok(())
 }
@@ -129,6 +335,135 @@ pub fn check(root: &Path) -> Check {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn fldigi_ipfix_call_and_timestamp_are_separate_fields() {
+        let capture = include_str!(
+            "../../crates/qso-graph-interop/tests/fixtures/live-captures/fldigi-4.2.13-ipfix.ndjson"
+        );
+        let row: Value = serde_json::from_str(capture).unwrap();
+        let raw = decoded(
+            row["data_b64"].as_str().unwrap(),
+            b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
+            6,
+        )
+        .unwrap();
+        assert!(check_bytes_at(&raw, true).unwrap_err().contains("KC4QPQJ"));
+        assert!(check_recorder_bytes(&raw, true).is_ok());
+        assert!(check_recorder_bytes(&raw, false).is_err());
+        let call = raw.windows(6).position(|w| w == b"KC4QPQ").unwrap();
+        let mut planted = raw.clone();
+        planted[call..call + 6].copy_from_slice(b"AB1CDE");
+        assert!(
+            check_recorder_bytes(&planted, true)
+                .unwrap_err()
+                .contains("AB1CDE")
+        );
+        let mut suffix = raw.clone();
+        suffix.insert(call + 6, b'A');
+        suffix[call - 1] = 7;
+        suffix[3] += 1;
+        suffix[187] += 1; // Sender Set length at offset 184.
+        assert!(
+            check_recorder_bytes(&suffix, true)
+                .unwrap_err()
+                .contains("KC4QPQA")
+        );
+        let mut mode = raw.clone();
+        let start = mode.windows(5).position(|w| w == b"PSK31").unwrap();
+        mode[start..start + 5].copy_from_slice(b"W9XYZ");
+        assert!(
+            check_recorder_bytes(&mode, true)
+                .unwrap_err()
+                .contains("W9XYZ")
+        );
+        let mut extension = raw.clone();
+        extension.extend_from_slice(b" W9XYZ ");
+        assert!(check_recorder_bytes(&extension, true).is_err());
+        let mut changed = raw.clone();
+        changed[39] = 8; // Change the declared frequency width: no known layout.
+        assert!(fldigi_ipfix_boundaries(&changed).is_none());
+        assert!(check_recorder_bytes(&changed, true).is_err());
+        for length in [15, 19, 180, 255] {
+            assert!(fldigi_ipfix_boundaries(&raw[..length]).is_none());
+        }
+    }
+
+    #[test]
+    fn wsjtx_decode_scalar_bytes_are_not_callsign_text() {
+        let capture = include_str!(
+            "../../crates/qso-graph-interop/tests/fixtures/live-captures/wsjtx-3.3.0-beta6-ft8-ipfix-udp.ndjson"
+        );
+        let row: Value = serde_json::from_str(capture.lines().nth(137).unwrap()).unwrap();
+        let raw = decoded(
+            row["data_b64"].as_str().unwrap(),
+            b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
+            6,
+        )
+        .unwrap();
+        assert!(check_bytes_at(&raw, true).unwrap_err().contains("R6H"));
+        assert!(check_recorder_bytes(&raw, true).is_ok());
+        assert!(check_recorder_bytes(&raw, false).is_err());
+        let mut future = raw.clone();
+        future[7] = 4;
+        assert!(check_recorder_bytes(&future, true).is_err());
+        let mut planted = raw.clone();
+        let call = planted.windows(3).position(|w| w == b"CQ ").unwrap() + 3;
+        planted[call..call + 5].copy_from_slice(b"W9XYZ");
+        assert!(
+            check_recorder_bytes(&planted, true)
+                .unwrap_err()
+                .contains("W9XYZ")
+        );
+        let mut extension = raw.clone();
+        extension.extend_from_slice(b" W9XYZ ");
+        assert!(check_recorder_bytes(&extension, true).is_err());
+        let mut id = raw;
+        id[16..21].copy_from_slice(b"W9XYZ");
+        assert!(check_recorder_bytes(&id, true).is_err());
+    }
+
+    #[test]
+    fn live_calls_are_exact_and_confined_to_fixtures() {
+        for call in LIVE_CALLS {
+            assert!(check_bytes_at(call.as_bytes(), true).is_ok());
+            assert!(check_bytes_at(call.as_bytes(), false).is_err());
+            for changed in [format!("{call}/P"), format!("{call}A")] {
+                assert!(check_bytes_at(changed.as_bytes(), true).is_err());
+            }
+        }
+        for call in ["W9XYZ", "AB1CD", "G4XYZ", "K1AAA", "3D2XYZ"] {
+            assert!(check_bytes_at(call.as_bytes(), true).is_err(), "{call}");
+        }
+        assert!(check_bytes_at(b"CQ Q1ABC FN42", true).is_ok());
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../target/policy-live-planted");
+        let fixtures = root.join("crates/qso-graph-interop/tests/fixtures/live-captures");
+        std::fs::create_dir_all(&fixtures).unwrap();
+        for directory in ["scripts", "spec", "docs", "fuzz/fuzz_targets"] {
+            std::fs::create_dir_all(root.join(directory)).unwrap();
+        }
+        std::fs::write(root.join("README.md"), "Q1ABC").unwrap();
+        std::fs::write(root.join("fuzz/seed.py"), "Q1ABC").unwrap();
+        let log = fixtures.join("planted.txt");
+        std::fs::write(&log, "CQ KE1HA KE1HA PSE K\n").unwrap();
+        assert!(check(&root).is_ok());
+        std::fs::write(&log, "CQ W9XYZ W9XYZ PSE K\n").unwrap();
+        assert!(check(&root).unwrap_err().contains("W9XYZ"));
+        std::fs::write(&log, "CQ KE1HA KE1HA PSE K\n").unwrap();
+        std::fs::rename(&log, root.join("crates/planted.txt")).unwrap();
+        assert!(check(&root).unwrap_err().contains("outside live-capture"));
+        std::fs::remove_file(root.join("crates/planted.txt")).unwrap();
+        let path = fixtures.join("planted.ndjson");
+        std::fs::write(&path, r#"{"data_b64":"S0UxSEE="}"#).unwrap();
+        assert!(check(&root).is_ok());
+        // A new, non-retired real-format call hidden in base64 must fail.
+        std::fs::write(&path, r#"{"data_b64":"VzlYWVo="}"#).unwrap();
+        assert!(check(&root).unwrap_err().contains("W9XYZ"));
+        std::fs::write(&path, r#"{"data_b64":"S0UxSEE="}"#).unwrap();
+        std::fs::rename(&path, root.join("crates/planted.ndjson")).unwrap();
+        assert!(check(&root).unwrap_err().contains("outside live-capture"));
+        std::fs::remove_dir_all(root).unwrap();
+    }
 
     #[test]
     fn planted_retired_calls_are_caught_in_text_hex_and_base64() {

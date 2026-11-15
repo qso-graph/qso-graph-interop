@@ -1,6 +1,6 @@
 {
   "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
-  "spec": "0.1.0",
+  "spec": "0.2.0",
   "family": "n1mm",
   "mapping": 1,
   "class": "positive",
@@ -13,7 +13,7 @@
   },
   "expected": {
     "event": {
-      "spec": "0.1.0",
+      "spec": "0.2.0",
       "family": "n1mm",
       "mapping": 1,
       "kind": "qso_changed",

@@ -1,0 +1,68 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJzcSI6NzQ4NDcwNjUzMzksImYiOjEwMTQ0NDQwLCJtZCI6IkZUOCIsInJwIjotMiwidCI6MTc5NDY3NzA2OSwidF90eCI6MTc5NDY3NzA1NSwic2MiOiJRMUFBSSIsInNsIjoiSUwxOHBkIiwicmMiOiJRMkFBSSIsInJsIjoiS04wNXBzIiwic2EiOjI5LCJyYSI6Mjc1LCJiIjoiMzBtIn0=",
+    "mqtt": {
+      "topic": "pskr/filter/v2/30m/FT8/Q1AAI/Q2AAI/IL18/KN05/29/275",
+      "retained": false,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "2",
+      "kind": "spot",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "sender_call": "Q1AAI",
+        "sender_locator": "IL18pd",
+        "receiver_call": "Q2AAI",
+        "receiver_locator": "KN05ps",
+        "mode": "FT8",
+        "band": "30m",
+        "frequency_hz": 10144440,
+        "snr_db": -2,
+        "sender_dxcc": 29,
+        "receiver_dxcc": 275,
+        "time": "2026-11-14T17:24:29Z",
+        "transmission_start": "2026-11-14T17:24:15Z"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJzcSI6NzQ4NDcwNjUzMzksImYiOjEwMTQ0NDQwLCJtZCI6IkZUOCIsInJwIjotMiwidCI6MTc5NDY3NzA2OSwidF90eCI6MTc5NDY3NzA1NSwic2MiOiJRMUFBSSIsInNsIjoiSUwxOHBkIiwicmMiOiJRMkFBSSIsInJsIjoiS04wNXBzIiwic2EiOjI5LCJyYSI6Mjc1LCJiIjoiMzBtIn0=",
+        "topic": "pskr/filter/v2/30m/FT8/Q1AAI/Q2AAI/IL18/KN05/29/275",
+        "retained": false,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "sq": 74847065339,
+    "f": 10144440,
+    "md": "FT8",
+    "rp": -2,
+    "t": 1794677069,
+    "t_tx": 1794677055,
+    "sc": "Q1AAI",
+    "sl": "IL18pd",
+    "rc": "Q2AAI",
+    "rl": "KN05ps",
+    "sa": 29,
+    "ra": 275,
+    "b": "30m"
+  },
+  "reencode": {
+    "data": "eyJzcSI6NzQ4NDcwNjUzMzksImYiOjEwMTQ0NDQwLCJtZCI6IkZUOCIsInJwIjotMiwidCI6MTc5NDY3NzA2OSwidF90eCI6MTc5NDY3NzA1NSwic2MiOiJRMUFBSSIsInNsIjoiSUwxOHBkIiwicmMiOiJRMkFBSSIsInJsIjoiS04wNXBzIiwic2EiOjI5LCJyYSI6Mjc1LCJiIjoiMzBtIn0="
+  }
+}

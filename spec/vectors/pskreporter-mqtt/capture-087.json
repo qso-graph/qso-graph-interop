@@ -1,0 +1,68 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJzcSI6NzQ4NDcwNjUzNDgsImYiOjcwNTAxMDgsIm1kIjoiRlQ0IiwicnAiOi0xLCJ0IjoxNzk0Njc3MTMwLCJ0X3R4IjoxNzk0Njc3MTMwLCJzYyI6IlExQUFKIiwic2wiOiJKTjc2R0QiLCJyYyI6IlExQUFHLTEwIiwicmwiOiJJTjcweGoiLCJzYSI6NDk5LCJyYSI6MjgxLCJiIjoiNDBtIn0=",
+    "mqtt": {
+      "topic": "pskr/filter/v2/40m/FT4/Q1AAJ/Q1AAG-10/JN76/IN70/499/281",
+      "retained": false,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "2",
+      "kind": "spot",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "sender_call": "Q1AAJ",
+        "sender_locator": "JN76GD",
+        "receiver_call": "Q1AAG-10",
+        "receiver_locator": "IN70xj",
+        "mode": "FT4",
+        "band": "40m",
+        "frequency_hz": 7050108,
+        "snr_db": -1,
+        "sender_dxcc": 499,
+        "receiver_dxcc": 281,
+        "time": "2026-11-14T17:25:30Z",
+        "transmission_start": "2026-11-14T17:25:30Z"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJzcSI6NzQ4NDcwNjUzNDgsImYiOjcwNTAxMDgsIm1kIjoiRlQ0IiwicnAiOi0xLCJ0IjoxNzk0Njc3MTMwLCJ0X3R4IjoxNzk0Njc3MTMwLCJzYyI6IlExQUFKIiwic2wiOiJKTjc2R0QiLCJyYyI6IlExQUFHLTEwIiwicmwiOiJJTjcweGoiLCJzYSI6NDk5LCJyYSI6MjgxLCJiIjoiNDBtIn0=",
+        "topic": "pskr/filter/v2/40m/FT4/Q1AAJ/Q1AAG-10/JN76/IN70/499/281",
+        "retained": false,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "sq": 74847065348,
+    "f": 7050108,
+    "md": "FT4",
+    "rp": -1,
+    "t": 1794677130,
+    "t_tx": 1794677130,
+    "sc": "Q1AAJ",
+    "sl": "JN76GD",
+    "rc": "Q1AAG-10",
+    "rl": "IN70xj",
+    "sa": 499,
+    "ra": 281,
+    "b": "40m"
+  },
+  "reencode": {
+    "data": "eyJzcSI6NzQ4NDcwNjUzNDgsImYiOjcwNTAxMDgsIm1kIjoiRlQ0IiwicnAiOi0xLCJ0IjoxNzk0Njc3MTMwLCJ0X3R4IjoxNzk0Njc3MTMwLCJzYyI6IlExQUFKIiwic2wiOiJKTjc2R0QiLCJyYyI6IlExQUFHLTEwIiwicmwiOiJJTjcweGoiLCJzYSI6NDk5LCJyYSI6MjgxLCJiIjoiNDBtIn0="
+  }
+}

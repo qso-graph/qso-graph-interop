@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # Protocol evidence and behavior
 
-## Released source pins
+## Source pins
 
 | Application | Released tag | Commit | Definition |
 | --- | --- | --- | --- |
@@ -28,8 +28,8 @@ The implementation is Rust; upstream C++ is not compiled or shipped here.
 
 ## Specification and public API
 
-The implementation follows [QGI-SPEC-001 0.1.0](../spec/QGI-SPEC-001.md), Annex A's common
-fields, Annex B revision 1 for WSJT-X, Annex D revision 1 for N1MM, Annex E revision 1 for fldigi, and Annex I revision 1 for event carriage. The source pins
+The implementation follows [QGI-SPEC-001 0.2.0](../spec/QGI-SPEC-001.md), Annex A's common
+fields, Annex B revisions 1–3 for WSJT-X, Annex D revision 1 for N1MM, Annex E revision 1 for fldigi, and Annex I revision 1 for event carriage. The source pins
 above remain the native-layout evidence. No upstream source was fetched during this alignment.
 
 The family-independent core exports `Event`, `Context`, neutral text/integer/time/binary64 values,
@@ -63,7 +63,7 @@ core error. Use `Error::category()` for inspection; display strings are diagnost
 
 ## WSJT-X mapping
 
-All 17 types and schemas 1–3 use Annex B's wire order, optional contiguous tails, radio identifier,
+The original 17 types and schemas 1–3 use Annex B's wire order, optional contiguous tails, radio identifier,
 text wrappers, time resolution, integer range and sentinels. Unknown versions stop after schema;
 unknown types stop before ID. Admission order is size, magic, schema, type, then body. QString
 length checks distinguish oversized bounds, malformed odd counts and truncated payloads.
@@ -74,7 +74,7 @@ The producer profile checks that complete view against the decoded native repres
 `Profile::verify` returns `verified` or `unavailable` separately from the event and applies the
 mapping-revision outcome table. Unsupported command mappings are never encoded.
 
-The sending types are 0, 3, 4, 6–9, 11 and 13–16. Schema defaults to 3 and accepts integers 1–3.
+The sending types are 0, 3, 4, 6–9, 11, 13–16 and revision 2 type 18. Schema defaults to 3 and accepts integers 1–3.
 Missing arguments or wire IDs, optional-tail holes, incorrect text wrappers, unsupported argument
 combinations and wire-range violations return `invalid_value`. The common view never derives
 callsigns, locators, observer identity or a WSPR mode from text or IDs.
@@ -195,8 +195,9 @@ matching invalid-text wrappers. Strict publication checks that entire view and r
 N1MM-only field capacities are scoped by family in the neutral JSON validator, including core-only
 builds; the core imports no codec. Independent `n1mm-radio.xml` evidence plants SO2R swaps, and
 process tests exercise numeric binds, malformed/unknown input, listener context, file/stdin decoding,
-and oversized capture rejection. Live-peer captures and command acceptance remain unverified;
-Annex D.8's numbered capture questions remain open.
+and oversized capture rejection. The 2026-11-15 live captures below add QSY
+response evidence and answer Annex D.8 questions within the observed build;
+four incomplete XML payloads remain rejected.
 
 ## Acceptance and supplemental evidence
 
@@ -310,7 +311,8 @@ Annex E records the archive-member hashes and the complete handler audit. No sou
 was retrieved for this implementation. Independent synthetic RF evidence is in
 `tests/fixtures/fldigi-frequency-response.xml`; the unchanged specification suite
 provides 650 cases and 455 exact re-encoding checks. These are profile tests, not
-captures from a live fldigi instance.
+captures from a live fldigi instance. The separate 2026-11-14 live evidence below
+now checks all received responses from that build.
 
 The shared XML tokenizer in `src/xml.rs` retains Annex D's encoding, namespaces,
 DTD isolation, line-ending/entity handling, invalid-unit preservation, document-order
@@ -431,3 +433,202 @@ base64 replies fit the codec's observation budget. A full TX queue or oversized
 response produces a simulator-limit fault. No socket or process capability enters
 the library. Policy tests mutate the listener bind, loopback guards, DNS spelling,
 nonblocking setting, and deadline; each mutation fails the audited token check.
+
+## Provisional WSJT-X 3.3 and JTTY evidence
+
+The downloaded archives were verified offline: `v3.0.2` tarball SHA-256
+`8483a851bcb6455f5787de87b89efdf90e928842debde036e287e93e7f3837bd`; `v3.3.0-beta6` tarball SHA-256
+`cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be`. [Annex B.8](../spec/annex-b-wsjtx.md#b8-provisional-revision-2)
+records exact source paths and line evidence for types 17/18, the unchanged Decode
+marker, the ADIF 3.1.8 header, JTTY Status, absent live UDP Decode emission, and
+QSOLogged versus ADIF mode/submode. Code takes precedence over header commentary.
+The mapping remains provisional and mechanically blocks non-beta releases until re-pinned
+to general-release source. No source retrieval occurs in generation or verification.
+
+## PSK Reporter IPFIX source evidence
+
+[Annex H](../spec/annex-h-pskreporter-ipfix.md#h0-source-pins-and-authority) pins the local
+RFC 7011, developer page, WSJT-X v3.0.2 and v3.3.0-beta6, and fldigi 4.2.13 sources,
+retrieved 2026-11-14T17:28:27Z with their SHA-256 hashes and field/template line evidence.
+The page's RFC 5101 wording and software spellings resolve to RFC 7011 and PEN 30351 IE 8.
+The program profiles preserve fldigi's zero options scope as a diagnosed legacy exception,
+five-byte versus four-byte frequency, fixed persistent identifier, source flags, and padding.
+Live captures confirm both WSJT-X versions and fldigi 4.2.13's long receiver profile
+without codec changes; Annex H.5–H.6 records the observed fields and sender behavior.
+
+Independent synthetic program submissions are in
+`crates/qso-graph-interop/tests/fixtures/pskreporter-ipfix.json`, generated by the
+standard-library packers in `scripts/gen_ipfix_vectors.py`. The generator also produces
+`spec/vectors/pskreporter-ipfix`; Rust executes all its entries, including truncation,
+variable-length, padding, cache-overflow and exact-profile oracles. Stateful tests plant
+session/domain collisions, replacements, withdrawals, reset/expiry, missing or ambiguous
+receiver dependencies, and evidence mutations. The `ipfix` fuzz target exercises message
+and seeded template state, two exporters, message sequences, and record verification.
+No source documents were copied and no service connection was made.
+
+## Proposed JTTYText evidence
+
+[Annex B.9](../spec/annex-b-wsjtx.md#b9-provisional-revision-3) pins type 19 to
+its proposal source and patch, with file hashes and field evidence. It is separate
+from beta6's unchanged JTTY behavior. The independent `wsjtx-jtty19.json` fixture
+retains all 22 type 19 datagrams from the installed Windows and macOS builds,
+including original capture hashes and line numbers. Its wire bytes are copied,
+not re-encoded. The generator consumes these independent oracles to build
+conformance vectors; schema 3, UTF-8, full i64 IDs, null/empty/raw text, truncations
+and trailing extensions also have constructed cases.
+
+To replay recorder NDJSON, convert each original `data_b64` datagram using
+`qg-interop decode --wsjtx`, retain its `native.data`, and attach the recorder's
+`received_at` truncated to millisecond precision. Run
+`qg-interop sim --capture converted.ndjson --to 127.0.0.1:12237 --speed 100`
+against `qg-interop listen --wsjtx 127.0.0.1:12237 --human` (or `--json`).
+Recorder envelopes and QGI event envelopes are distinct formats.
+
+## PSK Reporter MQTT captures
+
+[Annex G](../spec/annex-g-pskreporter-mqtt.md) revision 1 pins the supplied service
+page (`www.mqtt.pskreporter.info_index.html`, retrieved 2026-11-14T17:28:27Z,
+SHA-256 `d5fd2ea058681ff5f4777d3e7383802e0fa8964ce9b7ad0acdced4c3eb47248d`)
+and anonymized 2026-11-14 capture (`mqtt-capture-q.json`, SHA-256
+`221c57920393bd85a2e8386e28f952f7427db0939f76e7a7fcac504eebb1e09f`).
+No service was contacted. Page lines 1232 and 1329–1341 establish spot topic and
+payload meanings. The page links receiver-information documentation at 1063 but
+does not define its fields: those remain native, with observed types checked.
+The corrected fixture preserves all 460 anonymized records and yields 400 spots
+and 60 receiver-information events without errors. The topic replaces each
+callsign `/` with `.` in all records; 41 spots and one rxinfo record contain slash
+calls. This rule is observed in the capture and reported for all 460 original
+records by the caller; the service page does not document it. Literal payload
+callsign periods are absent from the capture and rejected as ambiguous by QGI
+policy. Independent literal field oracles cover all 42 slash-bearing records;
+generators never import the Rust implementation.
+
+
+## Live peer captures (2026-11-14/15)
+
+The lab Windows 11 VM ran the real programs below. The recorder produced one
+NDJSON object per receive (`received_at`, transport, numeric local/peer addresses,
+`data_b64`); the QSY file records sent commands (`sent_at`, transport, peer, case,
+`data_b64`). The fldigi file records method and base64 **whole HTTP** requests and
+responses, with `timed_out` on the empty timeout. Tests remove HTTP framing only
+at the codec boundary; no HTTP/XML/datagram bytes are rewritten in storage.
+All supplied recorder NDJSON files are copied exactly to
+`crates/qso-graph-interop/tests/fixtures/live-captures/`. Original wire/recorder
+artifacts retain their original formats without added license/header bytes;
+SHA256SUMS pins each capture and the LF-normalized fldigi transmitter text log.
+The log's text is otherwise unchanged, without an added header. New test code and the independent field oracles
+carry SPDX identifiers.
+
+| File | Program and production method | Date (UTC) | SHA-256 of stored artifact |
+|---|---|---|---|
+| `n1mm-1.0.11480-udp.ndjson` | N1MM Logger+ 1.0.11480; contacts logged/edited/deleted through its GUI; UDP broadcasts to 127.0.0.1:12060; AppInfo on log open | 2026-11-15 | `68d1aa0e421d4ef765dd4c3343a141bb83b70568ddf5445a67ee56b1c72d67c1` |
+| `n1mm-1.0.11480-qsy-sent.ndjson` | Recorder's nine radio_setfrequency commands sent to N1MM at 127.0.0.1:13064; RadioInfo reactions in UDP file matched by timestamps | 2026-11-15 | `ee3b4af58371c70c27c74d4e0c46c6220753be62a633d6906869ad0c6e64d2c6` |
+| `fldigi-4.2.13-xmlrpc.ndjson` | fldigi 4.2.13 XML-RPC reads/writes, unknown-method fault, and slow get_char_rates rerun | 2026-11-14 | `3ec87b797d5617d420add8d652e681820f4ef788bc9bf684befe2475e99d397c` |
+| `wsjtx-3.3.0-pr-ft8-live-udp.ndjson` | WSJT-X 3.3.0 PR build (beta6 + proposed type 19), own --live-audio-test with four ft8sim signals; own validation passed 4/4 | 2026-11-15 | `64db5ea621abfd57480971f0cfe1d207964364189dae0e4db519cf7bd3e66209` |
+| `wsjtx-beta6.ndjson` | Earlier installed WSJT-X 3.3.0-beta6 session; Heartbeat/Status traffic | 2026-11-14 | `7dc562b0850dd269743cb67b5d2cf2eb0052665f7668e3cd2b1cae8b2a985e27` |
+| `wsjtx-3.0.2-ft8-ipfix-udp.ndjson` | WSJT-X 3.0.2 general release, normal operation, live ft8sim audio through a virtual audio cable; PSK Reporter spotting enabled | 2026-11-15 | `85c4b52b94d209b313b25693dee885cf06ecb7c12e5bc10f06cb46b56cd07fcd` |
+| `wsjtx-3.3.0-beta6-ft8-ipfix-udp.ndjson` | WSJT-X 3.3.0-beta6, same normal live audio and spotting setup | 2026-11-15 | `b294b23ea3ecd3f0f05bd4d889b909e2062f4b0c52f0213d3e0cfb6df61f4a93` |
+| `fldigi-4.2.13-ipfix.ndjson` | Windows ham station, receiving fldigi 4.2.13 decoding transmitting fldigi 4.2.13 through a virtual audio cable; BPSK31, dial 14,070,000 Hz, audio 1,500 Hz; Spot enabled; one 256-byte UDP submission to 127.0.0.1:4739 | 2026-11-15 | `86d3d6784a247a55a939a538ff4e3af5cb2abd27f7f9d270408c214c5ff0a6ae` |
+| `fldigi-4.2.13-ipfix-tx.txt` | Supplied `fldigi-4.2.13-ipfix-tx.log`, CRLF converted to LF only; setup, six timed CQ lines and verbatim receiver text | 2026-11-15 | `a948c56896b5161bbc4dbd8b42ef7ab4f196e96e48311181f4c2165dedff8753` |
+
+`tests/live_captures.rs` checks the original file hashes (with planted byte
+mutations), every datagram or XML body, exact observed re-encoding, and independent
+selected field oracles. The earlier two WSJT-X files contain 20 and 40 datagrams; FT8
+records 13–16 assert full decoded message, SNR, time, audio offset, delta time,
+mode marker `~`, new/low-confidence/off-air flags. The PR build's Heartbeat still
+reports `3.3.0-beta6` (records 1,11); its build label is caller provenance, not a
+wire-derived stable-release or mapping claim. Status has empty station call/grid;
+no station call is inferred from lab metadata. Existing Windows/macOS JTTYText
+fixtures retain their separate source pins and evidence.
+
+The two IPFIX captures used normal operation, not WSJT-X's audio test mode.
+On the VM, `report.pskreporter.info` resolved to 127.0.0.1, so submissions went
+to the recorder at UDP 127.0.0.1:4739. WSJT-X's UDP server destination was
+127.0.0.1:2238 because another listener held 2237. These are capture provenance;
+verification performs no DNS lookup or service connection.
+
+The 3.0.2 capture has 209 records: two IPFIX submissions (260 and 176 bytes),
+40 Decode, 142 Status, 24 Heartbeat, and one Close. The beta6 capture has 215:
+two IPFIX submissions (272 and 188 bytes), 40 Decode, 149 Status, 24 Heartbeat,
+and no Close. All 424 datagrams decode without errors or skips. Each first
+submission yields receiver information and three spots; each second yields
+receiver information only, repeating both templates and receiver data exactly.
+[Annex H.5](../spec/annex-h-pskreporter-ipfix.md#h5-live-wsjtx-confirmation-2026-11-15)
+records the decoded fields, reception times, export intervals, and ending evidence.
+The beta6 recording ends in Status traffic, without evidence of orderly shutdown;
+the absence of Close does not establish whether one was sent outside the recording
+or lost. It is not evidence of a beta6 protocol change.
+
+`ipfix-oracles.json` was independently unpacked from big-endian recorder bytes,
+without using the Rust codec. It pins headers, Set IDs/lengths, receiver fields,
+all six sender records, and the matching Decode/Status line numbers. Tests compare
+sender call, locator, SNR, mode, dial-plus-audio frequency, and reception time
+against those messages, including raw flowStartSeconds. They check both template
+layouts, scope count, same-session refresh and fresh-session decoding of the second
+submission, byte-exact WSJT-X submission encoding, evidence verification, planted
+field drift, truncation, and missing templates. The existing codec handles these
+captures unchanged.
+
+The fldigi IPFIX file contains one submission, received at 02:55:15.884Z from
+127.0.0.1:50422. `fldigi-ipfix-oracle.json` independently pins the header, exact
+templates, receiver fields, and all three sender records from big-endian recorder
+bytes. Receiver locator is DN13la, antenna is `Dipole`, decoder software is
+`fldigi-4.2.13/windows32-ix86`, and persistentIdentifier is eight bytes
+`48 22 7b 4c 69 74 69 68`. Tests check the literal authorized station and sender
+calls within that fixture. All four records decode with zero errors or skips,
+verify, and encode to their exact record bytes; `encode_submission` with the fldigi
+profile reproduces the entire 256-byte datagram, including all padding. Sender
+template 0x022c and long receiver 0x0219 match Annex H; short receiver 0x0218 is
+covered by the source-derived fixture and is absent from this live packet.
+
+The spots carry `PSK31`, informationSource 1, explicitly empty sender locators,
+and literal frequency **0 Hz**, preserved without substituting the configured
+dial plus audio offset. Their flowStartSeconds represent 02:50:46Z, 02:51:46Z,
+and 02:52:46Z, each seven seconds after its call's first transmitted CQ line.
+The six-line receiver text contains each call twice, while the packet reports
+each once. The final transmitted line follows this sole submission.
+[Annex H.6](../spec/annex-h-pskreporter-ipfix.md#h6-live-fldigi-confirmation-2026-11-15)
+records the zero-frequency source behavior, startup prerequisites, Spot gating,
+printable delimiter, 300-second queue timer, and 1800-second call/band suppression
+as sender behavior, separate from protocol requirements. Planted field drift,
+truncation, and missing-template checks protect the conformance assertions.
+The existing codec handles the capture unchanged; live fldigi IPFIX evidence is
+done under QGI-RI-0063. Verification uses only stored bytes and opens no capture
+or service sockets.
+
+FT8 cannot pack a Q-prefixed invented call as a standard callsign message: it
+becomes 13-character free text and does not produce the intended spot. The owner
+authorized exactly five of his current/former calls, checked not reissued, for
+live-capture fixtures. Their exact names and rationale are in the policy check;
+no suffix or other real-format call is excepted. Tests plant an unrelated call
+inside base64 NDJSON and move an allowed call outside the fixture directory to
+prove both restrictions. This exception does not authorize invented non-Q QSOs.
+The callsign scan inserts field separators for the exact S5 sender template,
+preserving every byte: a call followed immediately by a timestamp byte `0x6a`
+must not become a fictitious call suffix. It checks variable field content and
+trailing bytes, and falls back to the raw scan for unrecognized or incomplete
+framing. Planted calls, suffixes, mode text, and malformed inputs protect these
+boundaries. Lowercase `.txt` evidence follows the same fixture-only allowlist.
+
+The N1MM file contains 130 records (61 RadioInfo, 51 score, 10 spot, 5 contact,
+1 edit, 1 delete, 1 AppInfo). **126 decode successfully; records 19,33,38,51 are
+incomplete XML and correctly fail as truncated.** Those bytes are preserved and
+never repaired or partially mapped. Thus zero decode errors across the supplied
+N1MM file cannot be claimed. UTF-8 names/comments in the incomplete records are
+raw-byte evidence only. Q2XYZ/P's mangled name originated in the lab automation;
+it is not evidence of an N1MM encoding conversion. The GUI stored Japanese as
+`???`. [Annex D.8.1](../spec/annex-d-n1mm.md#d81-answers-from-n1mm-logger-1011480-2026-11-15)
+answers all 17 numbered questions and identifies the remaining limits.
+
+The fldigi file contains 61 records: all 61 request XML bodies and 60 received
+response XML bodies decode successfully. Record 19 has no response bytes after a
+10-second timeout; no XML message is fabricated. Record 59's rerun returned
+3,237 HTTP bytes in approximately 19 seconds (3,150-byte XML body). Record 58 is
+an ordinary HTTP 200 XML-RPC fault with code -1, not a codec failure.
+[Annex E.8.1](../spec/annex-e-fldigi.md#e81-fldigi-4213-on-lab-windows-11-2026-11-14)
+records the fault shape, timings, and observed 0.0.0.0 server bind.
+
+No codec behavior changed: all complete traffic confirms the existing mappings,
+including N1MM frequency scaling and fldigi lexical fault codes. No mapping
+revision is required to document these observations. Tests run offline through
+the public family codec API and never start or contact these peers.

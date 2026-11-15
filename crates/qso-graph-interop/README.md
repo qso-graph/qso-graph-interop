@@ -4,7 +4,7 @@
 <!-- vale Google.Headings = YES -->
 
 QG Interop is a Rust library for applications that exchange amateur radio events and commands.
-It implements QGI-SPEC-001 0.1.0 for WSJT-X schemas 1–3, N1MM Logger+ XML, fldigi XML-RPC, and QGI event carriage over UDP and TCP.
+It implements QGI-SPEC-001 0.2.0 for WSJT-X schemas 1–3, N1MM Logger+ XML, fldigi XML-RPC, and QGI event carriage over UDP and TCP.
 Callers supply native bytes and context, and receive specification events with preserved evidence.
 Applications own transport, destinations, session identity, and control policy.
 
@@ -80,3 +80,14 @@ support resetting one session or all sessions. No codec opens a socket or reads 
 
 See [the user guides](../../docs/user/) and [protocol documentation](../../docs/PROTOCOL.md).
 Licensed under GPL-3.0-or-later.
+
+The `pskreporter-ipfix` feature provides bounded RFC 7011 UDP template decoding and
+`pskreporter_ipfix::encode_submission` with WSJT-X and fldigi profiles. The caller owns
+transport sessions, destinations, template cadence, scheduling, and duplicate suppression.
+
+The `pskreporter-mqtt` feature decodes captured MQTT topic/payload pairs without
+transport. Supply `pskreporter_mqtt::options(topic, retain, qos)` to the codec,
+or use `pskreporter_mqtt::decode_record` with a capture record. Spot events share
+PSK Reporter's sender/receiver vocabulary with IPFIX; receiver publications yield
+separate receiver-information events. Exact payload bytes remain available for
+verification and re-encoding.

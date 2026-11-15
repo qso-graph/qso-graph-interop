@@ -82,3 +82,21 @@ uv run --no-project python scripts/check-field-order-mutation.py
 
 This copies the workspace to a temporary directory, applies the adversarial review's Status
 Rx/Tx swap, and requires the independent Status fixture to fail. It never edits the working tree.
+
+The IPFIX target uses the same isolated dated nightly and receives arbitrary datagrams,
+seeded templates, multiple sessions, and evidence checks. From `fuzz/`, run:
+
+```sh
+cargo fuzz run ipfix -- -max_total_time=60 -max_len=60001 -timeout=10 -rss_limit_mb=2048 -print_final_stats=1
+```
+
+IPFIX tests and examples use only local numeric destinations. Do not contact any PSK Reporter
+host during development or testing. Application submission policy is in Annex H.1.
+
+The offline MQTT payload/topic/capture decoder has a matching fuzz target:
+
+```sh
+cargo +nightly-2026-10-30 fuzz run mqtt -- -max_total_time=60 -max_len=32769
+```
+
+Run this from `fuzz/`, like the other isolated targets.

@@ -25,7 +25,7 @@ mod tests {
         }
     }
     fn event() -> Event {
-        Event::from_value(json!({"spec":"0.1.0","family":"qgi","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"fields":{"operation":"replay"}})).unwrap()
+        Event::from_value(json!({"spec":"0.2.0","family":"qgi","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"fields":{"operation":"replay"}})).unwrap()
     }
     #[test]
     fn partial_multiple_frames_eof_and_delimiter_recovery() {

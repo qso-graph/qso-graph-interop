@@ -1,0 +1,45 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJyYyI6IlcvUTJCQkIvUTNDQ0MifQ==",
+    "mqtt": {
+      "topic": "pskr/filter/v2/20m/FT8/Q1AAA/W.Q2BBB.Q3CCC/AA00/BB11/1/2",
+      "retained": true,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "2",
+      "kind": "spot",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "receiver_call": "W/Q2BBB/Q3CCC"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJyYyI6IlcvUTJCQkIvUTNDQ0MifQ==",
+        "topic": "pskr/filter/v2/20m/FT8/Q1AAA/W.Q2BBB.Q3CCC/AA00/BB11/1/2",
+        "retained": true,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "rc": "W/Q2BBB/Q3CCC"
+  },
+  "reencode": {
+    "data": "eyJyYyI6IlcvUTJCQkIvUTNDQ0MifQ=="
+  }
+}

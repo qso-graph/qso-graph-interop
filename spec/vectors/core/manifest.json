@@ -1,10 +1,10 @@
 {
   "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
-  "spec": "0.1.0",
+  "spec": "0.2.0",
   "files": [
     {
       "file": "shape-cases.json",
-      "sha256": "a7b8f1bf889a81f1e813155f7e1831a79ecb778fb65b053b98f5d1b97b9eabc1"
+      "sha256": "43ffcda47ba3e3df5878c028b92543c738ccf900b517c37eb825a273e9b0c395"
     }
   ]
 }

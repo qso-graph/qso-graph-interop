@@ -3,3 +3,6 @@
 # checked by SHA-256, so a Windows checkout converting LF to CRLF would fail them.
 * text=auto eol=lf
 crates/qso-graph-interop-ffi/include/qso_graph_interop.h text eol=lf
+# Live captures are stored exactly as recorded (a Windows recorder wrote CRLF lines); their SHA-256 pins
+# are of those bytes, so no end-of-line conversion either way.
+crates/qso-graph-interop/tests/fixtures/live-captures/*.ndjson -text

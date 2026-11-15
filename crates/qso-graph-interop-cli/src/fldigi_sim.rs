@@ -462,7 +462,7 @@ mod tests {
         State::new(&s)
     }
     fn command(fields: Value) -> Vec<Vec<u8>> {
-        Fldigi::default().encode_commands(&Event::from_value(json!({"spec":"0.1.0","family":"fldigi","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"fields":fields})).unwrap(), &EncodeOptions::default()).unwrap().requests().iter().map(|r| r.bytes().to_vec()).collect()
+        Fldigi::default().encode_commands(&Event::from_value(json!({"spec":"0.2.0","family":"fldigi","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"fields":fields})).unwrap(), &EncodeOptions::default()).unwrap().requests().iter().map(|r| r.bytes().to_vec()).collect()
     }
     fn request(method: &str, args: &str) -> Vec<u8> {
         format!("<methodCall><methodName>{method}</methodName><params>{args}</params></methodCall>")

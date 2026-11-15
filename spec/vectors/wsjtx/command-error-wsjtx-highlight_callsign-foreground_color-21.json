@@ -1,12 +1,12 @@
 {
   "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
-  "spec": "0.1.0",
+  "spec": "0.2.0",
   "family": "wsjtx",
   "mapping": 1,
   "class": "command_negative",
   "input": {
     "event": {
-      "spec": "0.1.0",
+      "spec": "0.2.0",
       "family": "wsjtx",
       "mapping": 1,
       "kind": "control",

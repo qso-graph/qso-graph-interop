@@ -79,3 +79,23 @@ on Ubuntu 22.04 runners and require glibc 2.35 or later. Confirm that baseline f
 C consumers before releasing; static C consumers also need their platform's system
 link libraries. macOS bundles target Apple silicon; Windows bundles target x86_64
 MSVC and include separate DLL import and static libraries.
+
+## Provisional mappings in beta releases
+
+A provisional mapping may ship only in `X.Y.Z-beta.N` (positive N without leading
+zeros), with every mapping listed and pinned in that version's CHANGELOG section.
+Use the exact one-line listing and whitespace-free pin format in
+[Annex B.8](../spec/annex-b-wsjtx.md#b8-provisional-revision-2). For example, a beta
+that includes both current provisional WSJT-X revisions needs these two lines in
+its versioned section:
+
+```text
+- Provisional mapping: `wsjtx/2`; pin: `tag:v3.3.0-beta6,tarball-sha256:cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be`.
+- Provisional mapping: `wsjtx/3`; pin: `repo:github.com/qso-graph/wsjtx,commit:53313c109194de1ce8e82e44f6846d8579645e56,patch-sha256:fb245ccea54033ace6b43fce6302bae03e1dc6518a08b455bdf080ef411679bf`.
+```
+
+`uv run --no-project python scripts/release_check.py mappings . X.Y.Z-beta.N`
+checks the exact version. Without a version argument, it refuses provisional mappings. Unreleased notes do not authorize a beta. All other version forms refuse
+provisional mappings, including plain `beta` and `rc.1`. General release source
+must be checked before removing provisional metadata. Version bumps belong in a
+release pull request.

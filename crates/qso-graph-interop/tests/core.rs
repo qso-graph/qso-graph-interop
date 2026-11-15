@@ -9,7 +9,7 @@ use qso_graph_interop::{
 };
 use serde_json::{Value, json};
 fn command() -> Value {
-    json!({"spec":"0.1.0","family":"qgi","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"fields":{"operation":"replay"}})
+    json!({"spec":"0.2.0","family":"qgi","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"fields":{"operation":"replay"}})
 }
 #[test]
 fn bounded_json_preserves_unknown_values_and_rejects_duplicates() {
@@ -112,7 +112,7 @@ fn neutral_values_keep_null_empty_absent_precision_and_invalid_text() {
 }
 #[test]
 fn recursive_reader_and_producer_profiles() {
-    let mut native = json!({"spec":"0.1.0","family":"qgi","mapping":1,"kind":"decode","context":{"direction":"unknown","exchange":"unknown"},"fields":{"radio":{"instance":"synthetic-instance"}},"native":{"format":"datagram","data":""}});
+    let mut native = json!({"spec":"0.2.0","family":"qgi","mapping":1,"kind":"decode","context":{"direction":"unknown","exchange":"unknown"},"fields":{"radio":{"instance":"synthetic-instance"}},"native":{"format":"datagram","data":""}});
     let base = Event::from_value(native.clone()).unwrap();
     assert!(
         json::write(
@@ -374,7 +374,7 @@ fn request_response_context_and_application_faults_need_no_family_dependency() {
     context = context.with_correlation_id(Text::from("synthetic-request"));
     let bytes = b"<methodResponse><fault>synthetic rejection</fault></methodResponse>";
     let native = NativeEvidence::new("xmlrpc_response", bytes).unwrap();
-    let event=Event::from_value(json!({"spec":"0.1.0","family":"fldigi","mapping":1,"kind":"result","context":context.value(),"fields":{"status":"error","text":"synthetic rejection"},"native":native.into_value()})).unwrap();
+    let event=Event::from_value(json!({"spec":"0.2.0","family":"fldigi","mapping":1,"kind":"result","context":context.value(),"fields":{"status":"error","text":"synthetic rejection"},"native":native.into_value()})).unwrap();
     assert_eq!(event.native_bytes().unwrap(), bytes);
     assert!(event.value().get("wire_id").is_none());
     assert!(event.value()["context"].get("source_id").is_none());

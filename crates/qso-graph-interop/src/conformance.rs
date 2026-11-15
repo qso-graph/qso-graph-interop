@@ -130,6 +130,11 @@ pub fn run_vector(codec: &mut dyn Codec, vector: &Value) -> Result<(), String> {
     if let Some(value) = input.get("request") {
         options.native.insert("request".into(), value.clone());
     }
+    if let Some(value) = input.get("mqtt") {
+        options
+            .native
+            .extend(value.as_object().ok_or("MQTT association object")?.clone());
+    }
     let encode_options = EncodeOptions {
         native: input
             .get("options")
@@ -181,8 +186,47 @@ pub fn run_vector(codec: &mut dyn Codec, vector: &Value) -> Result<(), String> {
         {
             return Err("original command was rewritten".into());
         }
+        if let Some(original) = expected.get("preserved_event")
+            && !crate::json::semantic_eq(e.value(), original)
+        {
+            return Err("original event was rewritten".into());
+        }
         Ok(())
     };
+    if class == "templated" {
+        let bytes = base64::decode(input["data"].as_str().ok_or("native data")?)
+            .map_err(|e| e.to_string())?;
+        let out = codec.decode(&bytes, &options).map_err(|e| e.to_string())?;
+        let actual: Vec<_> = out.events.iter().map(|e| e.value().clone()).collect();
+        if !crate::json::semantic_eq(&serde_json::json!(actual), &expected["events"])
+            || !out.skips.is_empty()
+        {
+            return Err("templated output differs".into());
+        }
+        for event in &out.events {
+            if codec
+                .verify(event, &options.verification())
+                .map_err(|e| e.to_string())?
+                != crate::model::Verification::Verified
+            {
+                return Err("templated evidence unavailable".into());
+            }
+            if codec
+                .reencode(event, &encode_options, &options.verification())
+                .map_err(|e| e.to_string())?
+                != event.native_bytes().map_err(|e| e.to_string())?
+            {
+                return Err("templated record reencode differs".into());
+            }
+            crate::json::write(
+                event,
+                &crate::PublicationOptions::new(crate::PublicationMode::Authored)
+                    .with_profile(codec),
+            )
+            .map_err(|e| e.to_string())?;
+        }
+        return Ok(());
+    }
     match class {
         "command" | "command_negative" => {
             let authored = if let Some(raw) = input.get("event_json").and_then(Value::as_str) {

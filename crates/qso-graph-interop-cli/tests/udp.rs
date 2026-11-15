@@ -318,3 +318,259 @@ fn n1mm_listener_and_capture_decoder_supply_observer_context() {
     }
     std::fs::remove_file(path).unwrap();
 }
+
+#[test]
+fn multicast_arguments_name_what_to_fix() {
+    let _sockets = serial();
+    for base in [
+        vec!["listen", "--wsjtx"],
+        vec!["listen", "--n1mm"],
+        vec!["sim", "--wsjtx", "--to"],
+        vec!["sim", "--n1mm", "--to"],
+        vec!["sim", "--capture", "unused.ndjson", "--to"],
+    ] {
+        for (address, interface, message) in [
+            ("239.255.0.1:2237", None, "requires --interface <IPV4>"),
+            ("127.0.0.1:2237", Some("127.0.0.1"), "remove --interface"),
+            (
+                "[ff02::1]:2237",
+                None,
+                "IPv6 multicast is not supported; use an IPv4 group",
+            ),
+            (
+                "[ff02::1]:2237",
+                Some("127.0.0.1"),
+                "IPv6 multicast is not supported; use an IPv4 group",
+            ),
+            (
+                "239.255.0.1:2237",
+                Some("0.0.0.0"),
+                "--interface must be a numeric local IPv4 address",
+            ),
+            (
+                "239.255.0.1:2237",
+                Some("224.0.0.1"),
+                "--interface must be a numeric local IPv4 address",
+            ),
+            (
+                "239.255.0.1:2237",
+                Some("255.255.255.255"),
+                "--interface must be a numeric local IPv4 address",
+            ),
+            (
+                "239.255.0.1:2237",
+                Some("::1"),
+                "--interface must be a numeric local IPv4 address",
+            ),
+            (
+                "239.255.0.1:2237",
+                Some("localhost"),
+                "--interface must be a numeric local IPv4 address",
+            ),
+        ] {
+            let mut command = Command::new(env!("CARGO_BIN_EXE_qg-interop"));
+            command.args(&base).arg(address);
+            if let Some(interface) = interface {
+                command.args(["--interface", interface]);
+            }
+            let output = command.output().unwrap();
+            assert!(!output.status.success(), "{base:?} {address} {interface:?}");
+            assert!(
+                String::from_utf8_lossy(&output.stderr).contains(message),
+                "{base:?}: {}",
+                String::from_utf8_lossy(&output.stderr)
+            );
+        }
+    }
+}
+
+/// Kill and reap children on every failure path, including an interface retry.
+struct MulticastListener {
+    child: Option<std::process::Child>,
+    stdout: Option<std::thread::JoinHandle<Vec<u8>>>,
+}
+impl Drop for MulticastListener {
+    fn drop(&mut self) {
+        if let Some(child) = &mut self.child {
+            let _ = child.kill();
+            let _ = child.wait();
+        }
+        if let Some(stdout) = self.stdout.take() {
+            let _ = stdout.join();
+        }
+    }
+}
+
+fn multicast_pair(interface: std::net::Ipv4Addr) -> Result<(), String> {
+    let reserve = UdpSocket::bind("0.0.0.0:0").map_err(|e| e.to_string())?;
+    let port = reserve.local_addr().unwrap().port();
+    drop(reserve);
+    // Administratively scoped test group; no discovery or hostnames.
+    let address = format!("239.255.42.99:{port}");
+    let interface = interface.to_string();
+    let spawn = || {
+        Command::new(env!("CARGO_BIN_EXE_qg-interop"))
+            .args([
+                "listen",
+                "--wsjtx",
+                &address,
+                "--interface",
+                &interface,
+                "--count",
+                "9",
+                "--json",
+            ])
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()
+            .map(|mut child| {
+                let mut stdout = child.stdout.take().unwrap();
+                let reader = std::thread::spawn(move || {
+                    let mut bytes = Vec::new();
+                    std::io::Read::read_to_end(&mut stdout, &mut bytes).unwrap();
+                    bytes
+                });
+                MulticastListener {
+                    child: Some(child),
+                    stdout: Some(reader),
+                }
+            })
+            .map_err(|e| e.to_string())
+    };
+    let mut listeners = [spawn()?, spawn()?];
+    // Both sockets reuse the port, so a non-reusing wildcard probe fails once at least
+    // one has bound. Allow the other child to finish startup before the single stream.
+    let begun = Instant::now();
+    while UdpSocket::bind((std::net::Ipv4Addr::UNSPECIFIED, port)).is_ok() {
+        if begun.elapsed() > Duration::from_secs(5) {
+            return Err("listeners did not bind".into());
+        }
+        for listener in &mut listeners {
+            if let Some(status) = listener.child.as_mut().unwrap().try_wait().unwrap() {
+                return Err(format!("listener exited before bind: {status}"));
+            }
+        }
+        std::thread::sleep(Duration::from_millis(10));
+    }
+    std::thread::sleep(Duration::from_millis(250));
+    for listener in &mut listeners {
+        if let Some(status) = listener.child.as_mut().unwrap().try_wait().unwrap() {
+            return Err(format!("shared-port listener exited: {status}"));
+        }
+    }
+    let sent = Command::new(env!("CARGO_BIN_EXE_qg-interop"))
+        .args([
+            "sim",
+            "--wsjtx",
+            "--to",
+            &address,
+            "--interface",
+            &interface,
+            "--mode",
+            "FT8",
+            "--call",
+            "Q7ABC",
+        ])
+        .output()
+        .unwrap();
+    if !sent.status.success() {
+        return Err(format!(
+            "simulator: {}",
+            String::from_utf8_lossy(&sent.stderr)
+        ));
+    }
+    let until = Instant::now();
+    for listener in &mut listeners {
+        while listener
+            .child
+            .as_mut()
+            .unwrap()
+            .try_wait()
+            .unwrap()
+            .is_none()
+        {
+            if until.elapsed() > Duration::from_secs(3) {
+                return Err("listeners did not both receive the multicast stream".into());
+            }
+            std::thread::sleep(Duration::from_millis(10));
+        }
+    }
+    let mut decoded = Vec::new();
+    for listener in &mut listeners {
+        let output = listener.child.take().unwrap().wait_with_output().unwrap();
+        let stdout = listener.stdout.take().unwrap().join().unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        assert!(
+            output.stderr.is_empty(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let events: Vec<serde_json::Value> = BufReader::new(&stdout[..])
+            .lines()
+            .map(|line| serde_json::from_str(&line.unwrap()).unwrap())
+            .collect();
+        assert_eq!(events.len(), 9);
+        assert!(
+            events
+                .iter()
+                .all(|v| v["context"]["direction"] == "from_application")
+        );
+        assert!(events.iter().any(|v| v["kind"] == "qso_logged"));
+        decoded.push(events);
+    }
+    assert_eq!(
+        decoded[0], decoded[1],
+        "both listeners must decode the same events"
+    );
+    Ok(())
+}
+
+#[test]
+fn two_multicast_listeners_share_one_group_and_port() {
+    let _sockets = serial();
+    let loopback = std::net::Ipv4Addr::LOCALHOST;
+    match multicast_pair(loopback) {
+        Ok(()) => {
+            eprintln!(
+                "multicast live test: passed on loopback ({loopback}); two listeners, 9 identical events each"
+            );
+            return;
+        }
+        Err(reason) => eprintln!("multicast loopback unavailable: {reason}"),
+    }
+    // connect selects a numeric route and sends no datagram.
+    let primary = UdpSocket::bind("0.0.0.0:0").and_then(|probe| {
+        probe.connect("192.0.2.1:9")?;
+        probe.local_addr()
+    });
+    match primary {
+        Ok(std::net::SocketAddr::V4(address)) if *address.ip() != loopback => {
+            match multicast_pair(*address.ip()) {
+                Ok(()) => {
+                    eprintln!(
+                        "multicast live test: passed on primary interface ({}); two listeners, 9 identical events each",
+                        address.ip()
+                    );
+                    return;
+                }
+                Err(reason) => eprintln!("multicast primary interface unavailable: {reason}"),
+            }
+        }
+        other => eprintln!("multicast primary interface unavailable: {other:?}"),
+    }
+    assert_ne!(
+        std::env::var("QGI_REQUIRE_MULTICAST").as_deref(),
+        Ok("1"),
+        "required multicast test failed: no multicast-capable interface"
+    );
+    // Bypass the test harness's success-output capture so a skip is always visible.
+    std::io::Write::write_all(
+        &mut std::io::stderr(),
+        b"skipped: no multicast-capable interface\n",
+    )
+    .unwrap();
+}

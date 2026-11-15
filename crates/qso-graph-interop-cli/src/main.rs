@@ -6,7 +6,9 @@ use qso_graph_interop_cli::alltxt;
 mod capture;
 mod fldigi_poll;
 mod fldigi_sim;
+mod ipfix;
 mod loopback_tcp;
+mod mqtt;
 mod n1mm_sim;
 mod numeric_udp;
 mod sim;
@@ -37,17 +39,17 @@ struct Cli {
 enum Command {
     /// Print each decoded datagram as one line.
     #[command(
-        after_help = "Examples:\n  qg-interop listen --wsjtx\n  qg-interop listen --n1mm\n  qg-interop listen --n1mm 127.0.0.1:12060 --json"
+        after_help = "Examples:\n  qg-interop listen --wsjtx\n  qg-interop listen --n1mm\n  qg-interop listen --n1mm 127.0.0.1:12060 --json\n  qg-interop listen --wsjtx 239.255.0.1:2237 --interface 192.0.2.10"
     )]
     Listen(Listen),
     /// Simulate UDP traffic or serve fldigi XML-RPC on loopback.
     #[command(
-        after_help = "Examples:\n  qg-interop sim --fldigi\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --n1mm --to 127.0.0.1:12060 --radios 2 --speed 60\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call Q1AW --mode FT4 --frequency 7074000"
+        after_help = "Examples:\n  qg-interop sim --fldigi\n  qg-interop sim --wsjtx --to 127.0.0.1:2237\n  qg-interop sim --n1mm --to 127.0.0.1:12060 --radios 2 --speed 60\n  qg-interop sim --wsjtx --to 127.0.0.1:2237 --call N0CALL --dx-call Q1AW --mode FT4 --frequency 7074000\n  qg-interop sim --wsjtx --to 239.255.0.1:2237 --interface 192.0.2.10"
     )]
     Sim(Box<Sim>),
-    /// Decode one complete native body from a file or standard input.
+    /// Decode one native body or a local MQTT capture from a file or standard input.
     #[command(
-        after_help = "Examples:\n  qg-interop decode --wsjtx capture.bin\n  qg-interop decode --n1mm capture.xml\n  qg-interop decode --n1mm -\n  qg-interop decode --fldigi response.xml --request-method rig.get_frequency"
+        after_help = "Examples:\n  qg-interop decode --wsjtx capture.bin\n  qg-interop decode --n1mm capture.xml\n  qg-interop decode --n1mm -\n  qg-interop decode --fldigi response.xml --request-method rig.get_frequency\n  qg-interop decode --pskreporter-mqtt capture.json"
     )]
     Decode(Decode),
     /// Poll fldigi XML-RPC state and RX text on numeric loopback only.
@@ -55,6 +57,23 @@ enum Command {
         after_help = "Examples:\n  qg-interop poll --fldigi\n  qg-interop poll --fldigi 127.0.0.1:7362 --interval 500 --count 3"
     )]
     Poll(Poll),
+    /// Inspect PSK Reporter IPFIX submissions on a numeric unicast address.
+    #[command(
+        after_help = "Examples:\n  qg-interop collect --pskreporter-ipfix\n  qg-interop collect --pskreporter-ipfix 127.0.0.1:14739 --count 1"
+    )]
+    Collect(Collect),
+}
+
+#[derive(Args)]
+struct Collect {
+    #[arg(long, required = true)]
+    pskreporter_ipfix: bool,
+    /// Numeric unicast bind address; no DNS or multicast.
+    #[arg(default_value="127.0.0.1:4739",value_parser=ipfix::unicast)]
+    address: SocketAddr,
+    /// Exit after this many datagrams (0 listens indefinitely).
+    #[arg(long, default_value_t = 0)]
+    count: u64,
 }
 
 #[derive(Args)]
@@ -67,9 +86,15 @@ struct Listen {
     n1mm: bool,
     /// Numeric local address to bind (IPv6 uses brackets).
     address: Option<SocketAddr>,
+    /// Numeric local IPv4 interface, required only for an IPv4 multicast group.
+    #[arg(long, value_name = "IPV4", value_parser = numeric_udp::interface)]
+    interface: Option<numeric_udp::Interface>,
     /// Emit specification NDJSON (also the default output).
     #[arg(long)]
     json: bool,
+    /// Print a readable event summary instead of NDJSON.
+    #[arg(long, conflicts_with = "json")]
+    human: bool,
     /// Exit after this many datagrams (0 listens indefinitely).
     #[arg(long, default_value_t = 0)]
     count: u64,
@@ -77,7 +102,10 @@ struct Listen {
 
 #[derive(Args)]
 struct Decode {
-    #[arg(long, required_unless_present_any = ["n1mm", "fldigi"], conflicts_with_all = ["n1mm", "fldigi"])]
+    /// Decode local PSK Reporter MQTT capture JSON or NDJSON.
+    #[arg(long, conflicts_with_all = ["n1mm", "fldigi"])]
+    pskreporter_mqtt: bool,
+    #[arg(long, required_unless_present_any = ["n1mm", "fldigi", "pskreporter_mqtt"], conflicts_with_all = ["n1mm", "fldigi", "pskreporter_mqtt"])]
     wsjtx: bool,
     /// Select the N1MM Logger+ protocol family.
     #[arg(long)]
@@ -91,7 +119,7 @@ struct Decode {
     /// Original XML-RPC request body (also supplies text.get_rx range arguments).
     #[arg(long, requires = "fldigi")]
     request_file: Option<PathBuf>,
-    /// File containing one native body; '-' reads standard input.
+    /// File containing a native body or MQTT capture; '-' reads standard input.
     #[arg(default_value = "-")]
     file: PathBuf,
 }
@@ -121,8 +149,14 @@ fn loopback_address(s: &str) -> Result<SocketAddr, String> {
 }
 #[derive(Args)]
 struct Sim {
-    #[arg(long, required_unless_present_any = ["capture", "n1mm", "fldigi"], conflicts_with_all = ["qgi", "n1mm", "fldigi"])]
+    #[arg(long, required_unless_present_any = ["capture", "n1mm", "fldigi", "pskreporter_ipfix"], conflicts_with_all = ["qgi", "n1mm", "fldigi"])]
     wsjtx: bool,
+    /// Simulate PSK Reporter IPFIX submissions to an explicit numeric unicast destination.
+    #[arg(long, conflicts_with_all=["wsjtx","n1mm","fldigi","capture","qgi","file","interface","address","inhibit_status","count","call","grid","id","dx_call","mode","frequency","from","speed","seed"])]
+    pskreporter_ipfix: bool,
+    /// Source program template layout for IPFIX submissions.
+    #[arg(long, requires="pskreporter_ipfix",default_value="wsjtx",value_parser=["wsjtx","fldigi"])]
+    profile: String,
     /// Serve fldigi 4.2.13 XML-RPC (default 127.0.0.1:7362).
     #[arg(long, conflicts_with_all = ["n1mm", "capture", "qgi", "to", "file", "from", "id", "dx_call", "mode", "frequency", "repeat", "count", "station", "radios", "rate"])]
     fldigi: bool,
@@ -156,6 +190,9 @@ struct Sim {
     /// Numeric destination; no implicit broadcast or discovery.
     #[arg(long, required_unless_present = "fldigi", value_parser = sim::target)]
     to: Option<SocketAddr>,
+    /// Numeric local IPv4 interface, required only for an IPv4 multicast destination.
+    #[arg(long, value_name = "IPV4", value_parser = numeric_udp::interface, conflicts_with = "fldigi")]
+    interface: Option<numeric_udp::Interface>,
     /// ALL.TXT to play; the built-in synthetic sample is the default.
     #[arg(long, conflicts_with_all = ["dx_call", "mode", "frequency"])]
     file: Option<PathBuf>,
@@ -175,7 +212,13 @@ struct Sim {
     /// Select the legacy fixed QSO script, with this DX callsign.
     #[arg(long, value_parser = sim::call)]
     dx_call: Option<String>,
-    /// Select the legacy fixed QSO script, with this mode.
+    /// Emit an InhibitStatus snapshot: available, held, or withdrawn.
+    #[arg(long, requires = "wsjtx", value_parser = ["available", "held", "withdrawn"], conflicts_with_all = ["capture", "n1mm", "fldigi"])]
+    inhibit_status: Option<String>,
+    /// Emit proposed JTTYText updates; requires --mode JTTY.
+    #[arg(long, requires_all = ["wsjtx", "mode"], conflicts_with_all = ["capture", "file", "n1mm", "fldigi", "pskreporter_ipfix"])]
+    jtty_text: bool,
+    /// Select the fixed QSO script or a JTTY status snapshot, with this mode.
     #[arg(long)]
     mode: Option<String>,
     /// Select the legacy fixed QSO script, with this dial frequency in Hz.
@@ -199,11 +242,12 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
         Command::Sim(options) => sim::run(*options),
         Command::Decode(options) => decode_file(options),
         Command::Poll(options) => fldigi_poll::run(options),
+        Command::Collect(options) => ipfix::collect(options),
     }
 }
 
 fn listen(options: Listen) -> Result<(), Box<dyn std::error::Error>> {
-    let socket = NumericUdp::bind(listen_address(&options))?;
+    let socket = NumericUdp::bind(listen_address(&options), options.interface)?;
     let mut codec = selected_codec(options.n1mm);
     let mut bytes = [0_u8; 65_535];
     let stdout = io::stdout();
@@ -212,7 +256,13 @@ fn listen(options: Listen) -> Result<(), Box<dyn std::error::Error>> {
     loop {
         let (n, peer) = socket.recv_from(&mut bytes)?;
         // The observer on the selected application's broadcast/server port supplies direction.
-        match emit(codec.as_mut(), &bytes[..n], &mut output, "from_application") {
+        match emit(
+            codec.as_mut(),
+            &bytes[..n],
+            &mut output,
+            "from_application",
+            options.human,
+        ) {
             Ok(()) => output.flush()?,
             Err(e) => eprintln!("{peer}: {e}"),
         }
@@ -229,12 +279,40 @@ fn emit(
     bytes: &[u8],
     output: &mut impl Write,
     direction: &str,
+    human: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let options = DecodeOptions::new(qso_graph_interop::Context::from_value(
         serde_json::json!({"direction": direction, "exchange": "unknown"}),
     )?);
     let outcome = codec.decode(bytes, &options)?;
     for event in outcome.events {
+        if human {
+            let value = event.value();
+            let fields = &value["fields"];
+            if event.kind_token() == "decode" && fields.get("message_id").is_some() {
+                writeln!(
+                    output,
+                    "JTTYText id={} message={} start={} df={}Hz snr={}dB complete={} off_air={} text={}",
+                    value["wire_id"],
+                    fields["message_id"],
+                    fields["start"],
+                    fields["audio_offset_hz"],
+                    fields["snr_db"],
+                    fields["complete"],
+                    fields["off_air"],
+                    fields["text"]
+                )?;
+            } else {
+                writeln!(
+                    output,
+                    "{} id={} {}",
+                    event.kind_token(),
+                    value["wire_id"],
+                    fields
+                )?;
+            }
+            continue;
+        }
         output.write_all(&qso_graph_interop::json::write(
             &event,
             &qso_graph_interop::PublicationOptions::new(
@@ -253,6 +331,9 @@ fn emit(
     Ok(())
 }
 fn decode_file(options: Decode) -> Result<(), Box<dyn std::error::Error>> {
+    if options.pskreporter_mqtt {
+        return mqtt::file(&options.file);
+    }
     let mut codec: Box<dyn Codec> = if options.fldigi {
         Box::new(qso_graph_interop::fldigi::Fldigi::default())
     } else {
@@ -295,7 +376,13 @@ fn decode_file(options: Decode) -> Result<(), Box<dyn std::error::Error>> {
         .take((codec.limits().message_bytes + 1) as u64)
         .read_to_end(&mut bytes)?;
     if !options.fldigi {
-        return emit(codec.as_mut(), &bytes, &mut io::stdout().lock(), "unknown");
+        return emit(
+            codec.as_mut(),
+            &bytes,
+            &mut io::stdout().lock(),
+            "unknown",
+            false,
+        );
     }
     let out = codec.decode(&bytes, &decode)?;
     if !decode.metadata().extensions().contains_key("request")
@@ -332,21 +419,27 @@ fn listen_address(options: &Listen) -> SocketAddr {
 fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
     let make = |body| Packet::new(s.id.as_str(), body);
     let mode = s.mode.as_deref().unwrap_or("FT8");
+    if s.jtty_text && mode != "JTTY" {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "--jtty-text requires --mode JTTY",
+        ));
+    }
     let dx_call = s.dx_call.as_deref().unwrap_or("Q1AW");
     let frequency = s.frequency.unwrap_or(14_074_000);
-    let call = if s.call.is_empty() { "N0CALL" } else { &s.call };
+    let call = if s.call.is_empty() { "Q0CALL" } else { &s.call };
     let grid = if s.grid.is_empty() { "FN31" } else { &s.grid };
     let mut status = {
         let mut value = wsjtx::Status::default();
         value.dial_frequency_hz = frequency;
         value.mode = mode.into();
         value.dx_call = "".into();
-        value.report = "".into();
+        value.report = if mode == "JTTY" { "-15" } else { "" }.into();
         value.tx_mode = mode.into();
         value.tx_enabled = false;
         value.transmitting = false;
         value.decoding = true;
-        value.rx_df_hz = 1200;
+        value.rx_df_hz = if mode == "JTTY" { 1500 } else { 1200 };
         value.tx_df_hz = 1500;
         value.de_call = Some(call.into());
         value.de_grid = Some(grid.into());
@@ -356,7 +449,7 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
         value.fast_mode = Some(false);
         value.special_operation_mode = Some(0);
         value.frequency_tolerance_hz = Some(u32::MAX);
-        value.tr_period_seconds = Some(15);
+        value.tr_period_seconds = Some(if mode == "JTTY" { u32::MAX } else { 15 });
         value.configuration_name = Some("Default".into());
         value.tx_message = Some("".into());
         value
@@ -379,6 +472,59 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
         })),
         make(Body::Status(status.clone())),
     ];
+    if let Some(snapshot) = sim::inhibit_snapshot(s) {
+        messages.insert(1, make(snapshot));
+    }
+    if mode == "JTTY" {
+        // beta6 mainwindow_jtty_receive.cpp never calls postDecode/MessageClient::decode.
+        // beta6 hides the legacy controls and emits unknown period/tolerance sentinels.
+        if let Some(packet) = messages
+            .iter_mut()
+            .find(|p| matches!(p.body, Body::Status(_)))
+            && let Body::Status(status) = &mut packet.body
+        {
+            status.decoding = false;
+        }
+        if s.jtty_text {
+            let mut elapsed_ms = 0_u64;
+            for (index, text) in ["CQ Q1ABC DN13", "Q1ABC Q2XYZ HELLO", "Q2XYZ Q1ABC 73"]
+                .into_iter()
+                .enumerate()
+            {
+                let start_ms = seconds
+                    .checked_mul(1000)
+                    .and_then(|ms| ms.checked_add(elapsed_ms))
+                    .ok_or_else(|| {
+                        io::Error::new(io::ErrorKind::InvalidInput, "JTTY start overflows")
+                    })?;
+                let mut start = wsjtx::QDateTime::default();
+                start.julian_day = i64::try_from(start_ms / 86_400_000)
+                    .ok()
+                    .and_then(|days| days.checked_add(2_440_588))
+                    .ok_or_else(|| {
+                        io::Error::new(io::ErrorKind::InvalidInput, "JTTY date overflows")
+                    })?;
+                start.time = QTime::new((start_ms % 86_400_000) as u32);
+                start.time_spec = 1;
+                // Five characters per second, one full-text update every two characters.
+                for end in (2..text.len() + 2).step_by(2) {
+                    let end = end.min(text.len());
+                    let mut value = wsjtx::JttyText::default();
+                    value.message_id = index as i64 + 1;
+                    value.start = start.clone();
+                    value.delta_frequency_hz = 1500;
+                    value.snr_db = -12;
+                    value.text = text[..end].into();
+                    value.complete = end == text.len();
+                    value.off_air = false;
+                    messages.push(make(Body::JttyText(value)));
+                }
+                elapsed_ms += text.len() as u64 * 200 + 1500;
+            }
+        }
+        messages.push(make(Body::Close));
+        return Ok(messages);
+    }
     let time = QTime::new(((seconds % 86_400) * 1000) as u32);
     for (index, text) in [
         format!("CQ {} {}", dx_call, grid),
@@ -448,6 +594,35 @@ mod tests {
     use super::*;
     use clap::CommandFactory;
     use qso_graph_interop::wsjtx::Utf8;
+
+    #[test]
+    fn udp_adapter_rejects_invalid_interfaces_before_opening_sockets() {
+        for (address, interface) in [
+            ("239.255.0.1:2237", None),
+            ("127.0.0.1:2237", Some("127.0.0.1")),
+            ("[ff02::1]:2237", None),
+            ("[ff02::1]:2237", Some("127.0.0.1")),
+            ("239.255.0.1:2237", Some("0.0.0.0")),
+            ("239.255.0.1:2237", Some("224.0.0.1")),
+            ("239.255.0.1:2237", Some("255.255.255.255")),
+        ] {
+            let address = address.parse().unwrap();
+            let interface = interface.map(|value| value.parse().unwrap());
+            for result in [
+                NumericUdp::bind(address, interface),
+                NumericUdp::sender(address, interface),
+            ] {
+                assert_eq!(result.err().unwrap().kind(), io::ErrorKind::InvalidInput);
+            }
+        }
+        assert!(
+            numeric_udp::validate(
+                "239.255.0.1:2237".parse().unwrap(),
+                Some("127.0.0.1".parse().unwrap())
+            )
+            .is_ok()
+        );
+    }
 
     #[test]
     fn help_examples_and_no_color() {
@@ -561,6 +736,100 @@ mod tests {
                 Body::Decode(v) => assert_eq!(v.mode, Utf8::from("+")),
                 Body::QsoLogged(v) => assert_eq!(v.mode, Utf8::from("FT4")),
                 _ => {}
+            }
+        }
+    }
+    #[test]
+    fn jtty_listener_formats_human_and_json_without_losing_text() {
+        let mut text = wsjtx::JttyText::default();
+        text.message_id = i64::MAX;
+        text.start.julian_day = 2_440_588;
+        text.start.time = QTime::new(123);
+        text.start.time_spec = 1;
+        text.delta_frequency_hz = 1501;
+        text.snr_db = -12;
+        text.text = "Q1ABC café\n73".into();
+        text.complete = true;
+        let bytes = wsjtx::encode(&Packet::new("instance", Body::JttyText(text))).unwrap();
+        let mut json = Vec::new();
+        emit(
+            &mut wsjtx::Wsjtx::default(),
+            &bytes,
+            &mut json,
+            "from_application",
+            false,
+        )
+        .unwrap();
+        assert_eq!(json.iter().filter(|b| **b == b'\n').count(), 1);
+        let event: serde_json::Value = serde_json::from_slice(&json).unwrap();
+        assert_eq!(event["mapping"], 3);
+        assert_eq!(event["fields"]["text"], "Q1ABC café\n73");
+        assert_eq!(event["fields"]["message_id"], i64::MAX.to_string());
+        let mut human = Vec::new();
+        emit(
+            &mut wsjtx::Wsjtx::default(),
+            &bytes,
+            &mut human,
+            "from_application",
+            true,
+        )
+        .unwrap();
+        let human = String::from_utf8(human).unwrap();
+        assert!(human.starts_with("JTTYText id=\"instance\" message=\"9223372036854775807\""));
+        assert!(human.contains("complete=true off_air=false text=\"Q1ABC café\\n73\""));
+        assert_eq!(human.lines().count(), 1);
+        assert!(
+            Cli::try_parse_from(["qg-interop", "listen", "--wsjtx", "--human", "--json"]).is_err()
+        );
+        assert!(
+            Cli::try_parse_from([
+                "qg-interop",
+                "sim",
+                "--wsjtx",
+                "--jtty-text",
+                "--to",
+                "127.0.0.1:2237"
+            ])
+            .is_err()
+        );
+    }
+
+    #[test]
+    fn jtty_snapshot_has_no_invented_decode_or_qso() {
+        let cli = Cli::parse_from([
+            "qg-interop",
+            "sim",
+            "--wsjtx",
+            "--to",
+            "127.0.0.1:2237",
+            "--mode",
+            "JTTY",
+            "--inhibit-status",
+            "held",
+        ]);
+        let Command::Sim(s) = cli.command else {
+            panic!("sim");
+        };
+        let packets = script(&s, 43200).unwrap();
+        assert_eq!(
+            packets
+                .iter()
+                .map(|p| p.body.message_type())
+                .collect::<Vec<_>>(),
+            [0, 17, 1, 6]
+        );
+        for packet in packets {
+            let bytes = wsjtx::encode(&packet).unwrap();
+            assert!(matches!(
+                wsjtx::decode(&bytes).unwrap(),
+                wsjtx::Outcome::Message(_)
+            ));
+            if let Body::Status(status) = packet.body {
+                assert_eq!(status.mode.as_str(), Some("JTTY"));
+                assert_eq!(status.tx_mode.as_str(), Some("JTTY"));
+                assert!(!status.decoding);
+                assert_eq!(status.tr_period_seconds, Some(u32::MAX));
+                assert_eq!(status.frequency_tolerance_hz, Some(u32::MAX));
             }
         }
     }

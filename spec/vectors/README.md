@@ -1,9 +1,12 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-# QGI 0.1.0 conformance vectors
+# QGI 0.2.0 conformance vectors
 
 The [WSJT-X manifest](wsjtx/manifest.json) lists each WSJT-X vector's base specification version, family,
 mapping revision, class and SHA-256 of its complete file including the final newline. The manifest
-itself is not self-hashed. Its `source_sha256` identifies the pinned header in Annex B.
+itself is not self-hashed. WSJT-X revision 2 entries identify the provisional beta6
+tag and tarball SHA-256; the manifest carries the reserved release-blocking marker.
+Revision 1 positive vectors remain unchanged; future-type probes use 19/20 now that
+17/18 are assigned, and the unsupported command revision probe uses 3. Its `source_sha256` identifies the pinned header in Annex B.
 
 Each vector is a JSON object with `spec`, `family`, `mapping`, `class`, `input` and `expected`.
 These wrapper objects are test instructions, not events; Annex F validates their positive event members.
@@ -22,7 +25,7 @@ events or state updates. These singleton shorthands do not restrict the core col
 | `negative` with `input.event` | Read/validate the supplied event; reject with the stated category. Schema shape failures are `invalid_value`; the disagreement case also needs the mapping check. |
 | `negative` with `input.event_json` | Parse one serialized NDJSON record excluding its delimiter; apply the byte bound and duplicate-member rule before returning an event. |
 | `skip` | Compare the reason and the readable native version/type in `expected.skip`. No event, ID parsing or reply is expected. |
-| `compatibility` | Read `input.event` with the declared `reader_spec`, supplied by a hypothetical producer of `writer_spec`. `expected.read` is the reader's recognized `kind`, `fields`, `context` and any preserved `native`, not a rewritten stored event. For a command without native evidence, `expected.preserved_command`, when present, checks the original retained command separately. An unsupported MAJOR yields an error. `expected.verification`, when present, is an out-of-band validation report (`QGI-MAP-0015`), never an event member; unsupported command revisions are also exercised as `command_negative` inputs. |
+| `compatibility` | Read `input.event` with the declared `reader_spec`, supplied by a hypothetical producer of `writer_spec`. `expected.read` is the reader's recognized `kind`, `fields`, `context` and any preserved `native`, not a rewritten stored event. `expected.preserved_event`, when present, checks the complete retained event separately. For a command without native evidence, `expected.preserved_command`, when present, checks the original retained command separately. An unsupported MAJOR yields an error. `expected.verification`, when present, is an out-of-band validation report (`QGI-MAP-0015`), never an event member; unsupported command revisions are also exercised as `command_negative` inputs. |
 
 The [qgi manifest](qgi/manifest.json) uses the same per-vector metadata and hashes; its
 `source_sha256` pins the complete Annex I file named by `source`, relative to the manifest.
@@ -112,8 +115,8 @@ is schema-checked, and producer strictness closes the N1MM whole-document view a
 family argument catalog recursively. Reader acceptance and strict-producer
 rejection of added radio/view/argument members are planted explicitly.
 
-The hypothetical 0.2.0 values exercise only the additions permitted by `QGI-GEN-0005`; they do not
-publish version 0.2.0 or add real WSJT-X message types. An unknown operation token remains a string;
+The hypothetical 0.3.0 values exercise only the additions permitted by `QGI-GEN-0005`; they do not
+publish version 0.3.0 or add real WSJT-X message types. An unknown operation token remains a string;
 its presence alone supplies no permission to act. Unknown fields are omitted from the reader's
 recognized view, while the original event remains available to the application. Mapping-revision
 vectors exercise a known kind with a new native type (`unavailable`), a known operation with
@@ -170,8 +173,8 @@ native members, one/eight/nine-hop shapes, common radio labels and SO2R state ca
 There are 53 core shapes; these include invalid radio types and open nested additions.
 The [core manifest](core/manifest.json) hashes their complete file including its
 final newline. These are structural checks only: their empty byte strings are explicit placeholders,
-not valid PSK Reporter captures or complete MQTT/IPFIX decode fixtures. No mapping conformance for
-Annexes G or H is claimed by passing a shape check.
+not valid PSK Reporter captures or complete MQTT/IPFIX decode fixtures. Mapping conformance for
+Annexes G and H is checked separately by their family vectors.
 
 The [fldigi manifest](fldigi/manifest.json) pins release **4.2.13**, retrieval
 **2026-11-12**, the author's source tarball URL/SHA-256, the SourceForge listing's
@@ -279,3 +282,25 @@ no finite application maximum; the annex records that source limitation explicit
 These are synthetic contract tests, not captures. The bundled backend's empty-param
 acknowledgments retain their specified malformed outcome; the review does not claim
 live fldigi interoperability.
+
+The `pskreporter-ipfix` manifest includes `templated` vectors, whose expected `events`
+array is in wire order. Native evidence is one record plus its template, full message,
+and any receiver dependency. Each event is verified and re-encoded independently.
+Negative and unknown-template vectors use the shared error/skip instruction classes.
+Source-program submissions are also checked byte for byte against independent fixtures.
+
+## PSK Reporter MQTT
+
+The [MQTT manifest](pskreporter-mqtt/manifest.json) pins Annex G, the supplied page
+and the anonymized capture. Positive vectors retain exact captured payload bytes;
+literal common-field expectations are independently stored in the capture fixture.
+`input.mqtt` supplies topic, retain and optional QoS association to the codec.
+The generic conformance runner verifies native consistency and exact re-encoding.
+`scripts/gen_mqtt_vectors.py` extends the offline generator with both event kinds,
+all captured bands/modes and 4/6/8/10-character locators. Negative vectors plant
+JSON, Unicode, duplicate-key, every resource bound, known type/range, topic grammar
+and every topic/payload disagreement failure. Callsign vectors cover the observed
+payload `/` to topic `.` substitution in both spot roles and rxinfo. Negatives
+retain strict disagreement checks for bare calls, dropped slashes, misplaced
+periods, and ambiguous literal payload periods. Full-capture tests accept all
+460 corrected records, including 41 slash-bearing spots and one rxinfo record.

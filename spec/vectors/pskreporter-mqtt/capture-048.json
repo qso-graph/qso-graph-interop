@@ -1,0 +1,51 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJjYWxsIjoiUThBQUUvUCIsImFudGVubmEiOiJSWCBPbmx5LCBBUlIgR2FBc2ZldCBQcmVhbXAsIEFpcnNweSBSMiBTRFIsIDUgZWxlIE0yIEA1MCBmZWV0MiIsInJpZyI6Ik5vIENBVCBjb250cm9sIiwiZGVjb2RlciI6IldTSlQtWCB2My4wLjAgaSsiLCJncmlkIjoiRE43ME9QIiwidGltZV9zdGFydCI6MSwidHMiOjE3OTQ2NzY4NzR9",
+    "mqtt": {
+      "topic": "pskr/rxinfo/Q8AAE.P",
+      "retained": true,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "rxinfo",
+      "kind": "receiver_information",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "receiver_call": "Q8AAE/P"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJjYWxsIjoiUThBQUUvUCIsImFudGVubmEiOiJSWCBPbmx5LCBBUlIgR2FBc2ZldCBQcmVhbXAsIEFpcnNweSBSMiBTRFIsIDUgZWxlIE0yIEA1MCBmZWV0MiIsInJpZyI6Ik5vIENBVCBjb250cm9sIiwiZGVjb2RlciI6IldTSlQtWCB2My4wLjAgaSsiLCJncmlkIjoiRE43ME9QIiwidGltZV9zdGFydCI6MSwidHMiOjE3OTQ2NzY4NzR9",
+        "topic": "pskr/rxinfo/Q8AAE.P",
+        "retained": true,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "call": "Q8AAE/P",
+    "antenna": "RX Only, ARR GaAsfet Preamp, Airspy R2 SDR, 5 ele M2 @50 feet2",
+    "rig": "No CAT control",
+    "decoder": "WSJT-X v3.0.0 i+",
+    "grid": "DN70OP",
+    "time_start": 1,
+    "ts": 1794676874
+  },
+  "reencode": {
+    "data": "eyJjYWxsIjoiUThBQUUvUCIsImFudGVubmEiOiJSWCBPbmx5LCBBUlIgR2FBc2ZldCBQcmVhbXAsIEFpcnNweSBSMiBTRFIsIDUgZWxlIE0yIEA1MCBmZWV0MiIsInJpZyI6Ik5vIENBVCBjb250cm9sIiwiZGVjb2RlciI6IldTSlQtWCB2My4wLjAgaSsiLCJncmlkIjoiRE43ME9QIiwidGltZV9zdGFydCI6MSwidHMiOjE3OTQ2NzY4NzR9"
+  }
+}

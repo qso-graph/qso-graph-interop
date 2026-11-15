@@ -1,0 +1,146 @@
+{
+  "_license": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "provenance": "Independent big-endian struct unpacking of the original recorder bytes, not Rust codec output. Transmitter log times are on 2026-11-15 UTC; receiver spots occur seven seconds after the first corresponding sent line. Frequency is the literal wire value, not inferred from station settings.",
+  "file": "fldigi-4.2.13-ipfix.ndjson",
+  "received_at": "2026-11-15T02:55:15.884Z",
+  "peer": "127.0.0.1:50422",
+  "header": {
+    "version": 10,
+    "length": 256,
+    "export_time": 1794711315,
+    "sequence_number": 0,
+    "observation_domain_id": 1210219340
+  },
+  "set_ids": [
+    2,
+    3,
+    537,
+    556
+  ],
+  "set_lengths": [
+    52,
+    52,
+    64,
+    72
+  ],
+  "templates": [
+    {
+      "id": 556,
+      "scope_fields": null,
+      "elements": [
+        [
+          30351,
+          1,
+          65535
+        ],
+        [
+          0,
+          150,
+          4
+        ],
+        [
+          30351,
+          5,
+          4
+        ],
+        [
+          30351,
+          10,
+          65535
+        ],
+        [
+          30351,
+          3,
+          65535
+        ],
+        [
+          30351,
+          11,
+          1
+        ]
+      ],
+      "hex": "022c00068001ffff0000768f00960004800500040000768f800affff0000768f8003ffff0000768f800b00010000768f",
+      "padding_hex": ""
+    },
+    {
+      "id": 537,
+      "scope_fields": 0,
+      "elements": [
+        [
+          30351,
+          2,
+          65535
+        ],
+        [
+          30351,
+          4,
+          65535
+        ],
+        [
+          30351,
+          12,
+          8
+        ],
+        [
+          30351,
+          8,
+          65535
+        ],
+        [
+          30351,
+          9,
+          65535
+        ]
+      ],
+      "hex": "0219000500008002ffff0000768f8004ffff0000768f800c00080000768f8008ffff0000768f8009ffff0000768f",
+      "padding_hex": "0000"
+    }
+  ],
+  "receiver": {
+    "receiver_call": "KI7MT",
+    "receiver_locator": "DN13la",
+    "persistent_identifier": "H\"{Litih",
+    "reporting_software": "fldigi-4.2.13/windows32-ix86",
+    "antenna_information": "Dipole"
+  },
+  "receiver_padding_hex": "000000",
+  "spots": [
+    {
+      "flow_start_seconds": 1794711166,
+      "sent_utc": "02:52:39",
+      "fields": {
+        "sender_call": "KC4QPQ",
+        "frequency_hz": 0,
+        "mode": "PSK31",
+        "sender_locator": "",
+        "information_source": 1,
+        "time": "2026-11-15T02:52:46Z"
+      }
+    },
+    {
+      "flow_start_seconds": 1794711106,
+      "sent_utc": "02:51:39",
+      "fields": {
+        "sender_call": "KN4YU",
+        "frequency_hz": 0,
+        "mode": "PSK31",
+        "sender_locator": "",
+        "information_source": 1,
+        "time": "2026-11-15T02:51:46Z"
+      }
+    },
+    {
+      "flow_start_seconds": 1794711046,
+      "sent_utc": "02:50:39",
+      "fields": {
+        "sender_call": "KE1HA",
+        "frequency_hz": 0,
+        "mode": "PSK31",
+        "sender_locator": "",
+        "information_source": 1,
+        "time": "2026-11-15T02:50:46Z"
+      }
+    }
+  ],
+  "sender_padding_hex": "00"
+}

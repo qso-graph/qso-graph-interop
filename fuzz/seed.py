@@ -10,8 +10,8 @@ corpus.mkdir(parents=True,exist_ok=True)
 for vector in json.loads((root/'crates/qso-graph-interop/tests/fixtures/wire.json').read_text())['vectors']:
     (corpus/vector['name']).write_bytes(bytes.fromhex(vector['wire_hex']))
 
-for family in ('wsjtx', 'qgi', 'n1mm', 'fldigi'):
-    corpus = root / 'fuzz/corpus' / (family if family in ('n1mm', 'fldigi') else 'wsjtx')
+for family in ('wsjtx', 'qgi', 'n1mm', 'fldigi', 'pskreporter-ipfix', 'pskreporter-mqtt'):
+    corpus = root / 'fuzz/corpus' / ('mqtt' if family == 'pskreporter-mqtt' else 'ipfix' if family == 'pskreporter-ipfix' else family if family in ('n1mm', 'fldigi') else 'wsjtx')
     corpus.mkdir(parents=True, exist_ok=True)
     folder = root / 'spec/vectors' / family
     manifest = json.loads((folder / 'manifest.json').read_text())
@@ -21,6 +21,10 @@ for family in ('wsjtx', 'qgi', 'n1mm', 'fldigi'):
         stem = family + '-' + entry['file'].removesuffix('.json')
         if family == 'fldigi':
             (corpus / (stem + '-input')).write_text(json.dumps(supplied, separators=(',', ':')))
+        if family == 'pskreporter-mqtt' and 'data' in supplied:
+            raw = base64.b64decode(supplied['data'])
+            (corpus / (stem + '-topic')).write_bytes(supplied['mqtt']['topic'].encode() + b'\n' + raw)
+            (corpus / (stem + '-capture')).write_text(json.dumps(dict(topic=supplied['mqtt']['topic'],payload_b64=supplied['data'],retain=True,qos=0)))
         if 'data' in supplied:
             (corpus / stem).write_bytes(base64.b64decode(supplied['data']))
         if 'event' in supplied:

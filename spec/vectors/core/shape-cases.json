@@ -1,12 +1,12 @@
 {
   "$comment": "SPDX-License-Identifier: GPL-3.0-or-later. Schema shapes only; empty byte strings are structural placeholders, not valid MQTT/IPFIX decode fixtures.",
-  "spec": "0.1.0",
+  "spec": "0.2.0",
   "class": "schema_shape",
   "cases": [
     {
       "name": "observed-native",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "native",
@@ -25,7 +25,7 @@
     {
       "name": "extension-command",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "control",
@@ -42,7 +42,7 @@
     {
       "name": "no-native-decode",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "decode",
@@ -61,7 +61,7 @@
     {
       "name": "no-native-notification",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "notification",
@@ -80,7 +80,7 @@
     {
       "name": "no-native-result",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "result",
@@ -99,7 +99,7 @@
     {
       "name": "no-native-native",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "native",
@@ -118,7 +118,7 @@
     {
       "name": "no-native-ambiguous",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "ambiguous",
@@ -137,7 +137,7 @@
     {
       "name": "no-native-lifecycle",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "lifecycle",
@@ -156,7 +156,7 @@
     {
       "name": "command-missing-operation",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "control",
@@ -171,7 +171,7 @@
     {
       "name": "command-declares-native-version",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "control",
@@ -189,7 +189,7 @@
     {
       "name": "observed-control",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "control",
@@ -211,7 +211,7 @@
     {
       "name": "observed-control-missing-operation",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "control",
@@ -229,26 +229,6 @@
     },
     {
       "name": "unknown-native-member",
-      "event": {
-        "spec": "0.1.0",
-        "family": "x-org.example.shape",
-        "mapping": 1,
-        "kind": "native",
-        "context": {
-          "direction": "from_application",
-          "exchange": "unknown"
-        },
-        "fields": {},
-        "native": {
-          "format": "example_datagram",
-          "data": "",
-          "family_extra": 1
-        }
-      },
-      "valid": true
-    },
-    {
-      "name": "future-minor-native-member",
       "event": {
         "spec": "0.2.0",
         "family": "x-org.example.shape",
@@ -268,9 +248,29 @@
       "valid": true
     },
     {
+      "name": "future-minor-native-member",
+      "event": {
+        "spec": "0.3.0",
+        "family": "x-org.example.shape",
+        "mapping": 1,
+        "kind": "native",
+        "context": {
+          "direction": "from_application",
+          "exchange": "unknown"
+        },
+        "fields": {},
+        "native": {
+          "format": "example_datagram",
+          "data": "",
+          "family_extra": 1
+        }
+      },
+      "valid": true
+    },
+    {
       "name": "result-ok",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "result",
@@ -292,7 +292,7 @@
     {
       "name": "result-error",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "result",
@@ -314,7 +314,7 @@
     {
       "name": "invalid-result-status",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "result",
@@ -336,7 +336,7 @@
     {
       "name": "missing-result-status",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "result",
@@ -355,7 +355,7 @@
     {
       "name": "publish-shape",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-mqtt",
         "mapping": 1,
         "kind": "spot",
@@ -386,7 +386,7 @@
     {
       "name": "retained-publish-shape",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-mqtt",
         "mapping": 1,
         "kind": "spot",
@@ -417,7 +417,7 @@
     {
       "name": "empty-payload-shape",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-mqtt",
         "mapping": 1,
         "kind": "spot",
@@ -448,7 +448,7 @@
     {
       "name": "publish-missing-topic",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-mqtt",
         "mapping": 1,
         "kind": "spot",
@@ -478,7 +478,7 @@
     {
       "name": "publish-missing-retained",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-mqtt",
         "mapping": 1,
         "kind": "spot",
@@ -508,7 +508,7 @@
     {
       "name": "publish-retained-not-boolean",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-mqtt",
         "mapping": 1,
         "kind": "spot",
@@ -539,7 +539,7 @@
     {
       "name": "publish-topic-not-text",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-mqtt",
         "mapping": 1,
         "kind": "spot",
@@ -570,7 +570,7 @@
     {
       "name": "publish-with-template",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-mqtt",
         "mapping": 1,
         "kind": "spot",
@@ -602,7 +602,7 @@
     {
       "name": "datagram-with-retained",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "native",
@@ -622,7 +622,7 @@
     {
       "name": "templated-record-shape",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
@@ -653,7 +653,7 @@
     {
       "name": "templated-dependency-shape",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
@@ -698,7 +698,7 @@
     {
       "name": "record-missing-template",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
@@ -728,7 +728,7 @@
     {
       "name": "record-missing-message_data",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
@@ -758,7 +758,7 @@
     {
       "name": "record-missing-header",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
@@ -782,7 +782,7 @@
     {
       "name": "record-missing-set_id",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
@@ -812,7 +812,7 @@
     {
       "name": "record-missing-set_index",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
@@ -842,7 +842,7 @@
     {
       "name": "record-missing-record_index",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
@@ -872,7 +872,7 @@
     {
       "name": "record-header-overflow",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
@@ -903,7 +903,7 @@
     {
       "name": "negative-set-index",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
@@ -934,7 +934,7 @@
     {
       "name": "dependency-missing-template",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
@@ -970,7 +970,7 @@
     {
       "name": "record-with-topic",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-ipfix",
         "mapping": 1,
         "kind": "native",
@@ -1002,7 +1002,7 @@
     {
       "name": "qgi-one-hop",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "native",
@@ -1030,7 +1030,7 @@
     {
       "name": "qgi-eight-hops",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "native",
@@ -1107,7 +1107,7 @@
     {
       "name": "qgi-nine-hops",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "x-org.example.shape",
         "mapping": 1,
         "kind": "native",
@@ -1191,7 +1191,7 @@
     {
       "name": "nested-header-addition",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-ipfix",
         "mapping": 2,
         "kind": "native",
@@ -1223,7 +1223,7 @@
     {
       "name": "nested-dependency-addition",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "pskreporter-ipfix",
         "mapping": 2,
         "kind": "native",
@@ -1269,7 +1269,7 @@
     {
       "name": "radio-decode",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "n1mm",
         "mapping": 1,
         "kind": "decode",
@@ -1293,7 +1293,7 @@
     {
       "name": "radio-radio_state",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "n1mm",
         "mapping": 1,
         "kind": "radio_state",
@@ -1317,7 +1317,7 @@
     {
       "name": "radio-qso_logged",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "n1mm",
         "mapping": 1,
         "kind": "qso_logged",
@@ -1341,7 +1341,7 @@
     {
       "name": "radio-qso_changed",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "n1mm",
         "mapping": 1,
         "kind": "qso_changed",
@@ -1365,7 +1365,7 @@
     {
       "name": "radio-qso_deleted",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "n1mm",
         "mapping": 1,
         "kind": "qso_deleted",
@@ -1389,7 +1389,7 @@
     {
       "name": "radio-spot",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "n1mm",
         "mapping": 1,
         "kind": "spot",
@@ -1413,7 +1413,7 @@
     {
       "name": "radio-number-not-integer",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "n1mm",
         "mapping": 1,
         "kind": "spot",
@@ -1437,7 +1437,7 @@
     {
       "name": "so2r-provisional-shape",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "n1mm",
         "mapping": 1,
         "kind": "radio_state",
@@ -1465,7 +1465,7 @@
     {
       "name": "qgi-common-field-type",
       "event": {
-        "spec": "0.1.0",
+        "spec": "0.2.0",
         "family": "qgi",
         "mapping": 1,
         "kind": "decode",

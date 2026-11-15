@@ -1,14 +1,14 @@
 {
   "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
-  "spec": "0.1.0",
+  "spec": "0.2.0",
   "family": "n1mm",
   "mapping": 1,
   "class": "compatibility",
-  "writer_spec": "0.2.0",
-  "reader_spec": "0.1.0",
+  "writer_spec": "0.3.0",
+  "reader_spec": "0.2.0",
   "input": {
     "event": {
-      "spec": "0.2.0",
+      "spec": "0.3.0",
       "family": "n1mm",
       "mapping": 2,
       "kind": "control",
@@ -43,7 +43,7 @@
       }
     },
     "preserved_command": {
-      "spec": "0.2.0",
+      "spec": "0.3.0",
       "family": "n1mm",
       "mapping": 2,
       "kind": "control",

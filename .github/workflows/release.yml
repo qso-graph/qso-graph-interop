@@ -82,7 +82,7 @@ jobs:
         run: |
           set -euo pipefail
           fail() { echo "::error::$1"; exit 1; }
-          python3 -I scripts/release_check.py source "$REF" "$EVENT" "$(git rev-parse HEAD)" "$WORKFLOW_SHA" "$WORKFLOW_REF" "$ACTOR" "$TRIGGERING_ACTOR"
+          python3 -I scripts/release_check.py source "$REF" "$EVENT" "$(git rev-parse HEAD)" "$WORKFLOW_SHA" "$WORKFLOW_REF" "$ACTOR" "$TRIGGERING_ACTOR" "$VERSION"
           python3 -I scripts/release_check.py version "$VERSION"
           said=$(cargo metadata --no-deps --format-version 1 --locked | jq -r '.packages[] | select(.name == "qso-graph-interop") | .version')
           [ "$said" = "$VERSION" ] || fail "main says ${said}, not ${VERSION}."
@@ -153,12 +153,13 @@ jobs:
         env:
           REF: ${{ github.ref }}
           EVENT: ${{ github.event_name }}
+          VERSION: ${{ inputs.version }}
           BUILD_SHA: ${{ needs.check.outputs.sha }}
           WORKFLOW_SHA: ${{ github.sha }}
           WORKFLOW_REF: ${{ github.workflow_ref }}
           ACTOR: ${{ github.actor }}
           TRIGGERING_ACTOR: ${{ github.triggering_actor }}
-        run: python3 -I scripts/release_check.py source "$REF" "$EVENT" "$BUILD_SHA" "$WORKFLOW_SHA" "$WORKFLOW_REF" "$ACTOR" "$TRIGGERING_ACTOR"
+        run: python3 -I scripts/release_check.py source "$REF" "$EVENT" "$BUILD_SHA" "$WORKFLOW_SHA" "$WORKFLOW_REF" "$ACTOR" "$TRIGGERING_ACTOR" "$VERSION"
       - name: Rust
         run: rustup show active-toolchain || rustup toolchain install
       # Trusted Publishing's short-lived token, for every crate already on crates.io. A release whose
@@ -239,12 +240,13 @@ jobs:
         env:
           REF: ${{ github.ref }}
           EVENT: ${{ github.event_name }}
+          VERSION: ${{ inputs.version }}
           BUILD_SHA: ${{ needs.check.outputs.sha }}
           WORKFLOW_SHA: ${{ github.sha }}
           WORKFLOW_REF: ${{ github.workflow_ref }}
           ACTOR: ${{ github.actor }}
           TRIGGERING_ACTOR: ${{ github.triggering_actor }}
-        run: python3 -I scripts/release_check.py source "$REF" "$EVENT" "$BUILD_SHA" "$WORKFLOW_SHA" "$WORKFLOW_REF" "$ACTOR" "$TRIGGERING_ACTOR"
+        run: python3 -I scripts/release_check.py source "$REF" "$EVENT" "$BUILD_SHA" "$WORKFLOW_SHA" "$WORKFLOW_REF" "$ACTOR" "$TRIGGERING_ACTOR" "$VERSION"
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           pattern: interop-final-*
@@ -297,6 +299,7 @@ jobs:
             echo
             echo "Check a download against **SHA256SUMS.txt**. Every file here was built by this repository's workflow, and GitHub signs that it was: \`gh attestation verify <file> -R ${REPO}\`."
           } > notes.md
+          python3 -I scripts/release_check.py notes "$VERSION" >> notes.md
           if gh release view "$tag" --repo "$REPO" >/dev/null 2>&1; then
             gh release upload "$tag" --repo "$REPO" --clobber -- dist/*
           else

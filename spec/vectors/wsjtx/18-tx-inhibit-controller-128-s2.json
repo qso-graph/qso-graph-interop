@@ -1,0 +1,54 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "wsjtx",
+  "mapping": 2,
+  "class": "positive",
+  "input": {
+    "data": "rbzL2gAAAAIAAAASAAAADXRlc3QtaW5zdGFuY2UAAACAYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEAAABkAAAABVExQUFB",
+    "context": {
+      "direction": "to_application",
+      "exchange": "unknown"
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "wsjtx",
+      "mapping": 2,
+      "native_version": "2",
+      "kind": "control",
+      "wire_id": "test-instance",
+      "context": {
+        "direction": "to_application",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "operation": "wsjtx.tx_inhibit",
+        "controller_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "ttl_ms": 100,
+        "station": "Q1AAA"
+      },
+      "native": {
+        "format": "wsjtx_datagram",
+        "data": "rbzL2gAAAAIAAAASAAAADXRlc3QtaW5zdGFuY2UAAACAYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEAAABkAAAABVExQUFB"
+      }
+    }
+  },
+  "expected_message": {
+    "schema": 2,
+    "type": 18,
+    "id": "test-instance",
+    "body": {
+      "controller_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ttl_ms": 100,
+      "station": "Q1AAA"
+    },
+    "extensions": ""
+  },
+  "reencode": {
+    "data": "rbzL2gAAAAIAAAASAAAADXRlc3QtaW5zdGFuY2UAAACAYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEAAABkAAAABVExQUFB"
+  },
+  "source_tag": "v3.3.0-beta6",
+  "source_tarball_sha256": "cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be"
+}

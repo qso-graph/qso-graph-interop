@@ -233,6 +233,8 @@ pub fn steps(fuzz_seconds: u64) -> Vec<Step> {
                 "qso-graph-interop",
                 "-p",
                 "qso-graph-interop-cli",
+                "--config",
+                "patch.crates-io.qso-graph-interop.path=\"crates/qso-graph-interop\"",
             ],
             RUSTUP,
         ),
@@ -326,6 +328,24 @@ pub fn steps(fuzz_seconds: u64) -> Vec<Step> {
             }
         }
         list.push(fldigi);
+        let mut ipfix = list.last().expect("fldigi fuzz step").clone();
+        ipfix.name = "fuzz ipfix";
+        ipfix.args[2] = "ipfix".into();
+        for arg in &mut ipfix.args {
+            if arg.starts_with("-max_len=") {
+                *arg = "-max_len=60001".into();
+            }
+        }
+        list.push(ipfix);
+        let mut mqtt = list.last().expect("IPFIX fuzz step").clone();
+        mqtt.name = "fuzz mqtt";
+        mqtt.args[2] = "mqtt".into();
+        for arg in &mut mqtt.args {
+            if arg.starts_with("-max_len=") {
+                *arg = "-max_len=32769".into();
+            }
+        }
+        list.push(mqtt);
     }
     if !cfg!(all(
         target_os = "linux",
@@ -395,6 +415,15 @@ pub fn run_step(root: &Path, s: &Step, log: &Path) -> Outcome {
         .stdin(Stdio::null())
         .stdout(file)
         .stderr(stderr);
+    // Cargo's offline setting does not govern these tools' own network clients.
+    if std::env::var("CARGO_NET_OFFLINE").is_ok_and(|value| value == "true") {
+        if s.name == "cargo vet" {
+            command.arg("--frozen");
+        }
+        if s.name == "cargo audit" {
+            command.arg("--no-fetch");
+        }
+    }
     clean_env(&mut command);
     if let Some(tool) = s.requires
         && !on_path(tool)
@@ -571,7 +600,14 @@ pub fn ci_commands(workflow: &str) -> std::collections::BTreeSet<String> {
                     "-max_total_time=N".to_owned()
                 } else {
                     // Shell quoting is not part of the argument.
-                    word.trim_matches(['\'', '"']).to_owned()
+                    if word.len() >= 2
+                        && ((word.starts_with('\'') && word.ends_with('\''))
+                            || (word.starts_with('"') && word.ends_with('"')))
+                    {
+                        word[1..word.len() - 1].to_owned()
+                    } else {
+                        word.to_owned()
+                    }
                 });
             }
             found.insert(normal.join(" "));
@@ -713,6 +749,8 @@ mod tests {
             "fuzz run",
             "fuzz n1mm",
             "fuzz fldigi",
+            "fuzz ipfix",
+            "fuzz mqtt",
         ] {
             assert!(names.contains(&required), "{required} missing");
         }

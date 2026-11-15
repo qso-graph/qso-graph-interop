@@ -1,0 +1,104 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-ipfix",
+  "mapping": 1,
+  "class": "templated",
+  "input": {
+    "data": "AAoA1GVT8QAAAAAAUUdJAQACADxQ4wAHgAH//wAAdo+ABQAFAAB2j4AGAAEAAHaPgAr//wAAdo+AA///AAB2j4ALAAEAAHaPAJYABAADADRQ4gAFAAGAAv//AAB2j4AE//8AAHaPgAj//wAAdo+ACf//AAB2j4AN//8AAHaPAABQ4gA0BVEyQUFBBkFBMDBhYQtzeW50aGV0aWMtMQZkaXBvbGUNc3ludGhldGljIHJpZwAAUOMAIAVRMUFBQQAA1sCQ9ANGVDgGQkIxMWJiAWVT8QA="
+  },
+  "expected": {
+    "events": [
+      {
+        "spec": "0.2.0",
+        "family": "pskreporter-ipfix",
+        "mapping": 1,
+        "native_version": "10",
+        "kind": "receiver_information",
+        "context": {
+          "direction": "unknown",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "receiver_call": "Q2AAA",
+          "receiver_locator": "AA00aa",
+          "reporting_software": "synthetic-1",
+          "antenna_information": "dipole",
+          "rig_information": "synthetic rig"
+        },
+        "native": {
+          "format": "ipfix_record",
+          "message_data": "AAoA1GVT8QAAAAAAUUdJAQACADxQ4wAHgAH//wAAdo+ABQAFAAB2j4AGAAEAAHaPgAr//wAAdo+AA///AAB2j4ALAAEAAHaPAJYABAADADRQ4gAFAAGAAv//AAB2j4AE//8AAHaPgAj//wAAdo+ACf//AAB2j4AN//8AAHaPAABQ4gA0BVEyQUFBBkFBMDBhYQtzeW50aGV0aWMtMQZkaXBvbGUNc3ludGhldGljIHJpZwAAUOMAIAVRMUFBQQAA1sCQ9ANGVDgGQkIxMWJiAWVT8QA=",
+          "set_index": 2,
+          "record_index": 0,
+          "data": "BVEyQUFBBkFBMDBhYQtzeW50aGV0aWMtMQZkaXBvbGUNc3ludGhldGljIHJpZw==",
+          "template": "UOIABQABgAL//wAAdo+ABP//AAB2j4AI//8AAHaPgAn//wAAdo+ADf//AAB2jw==",
+          "header": {
+            "version": 10,
+            "length": 212,
+            "export_time": 1700000000,
+            "sequence_number": 0,
+            "observation_domain_id": 1363626241
+          },
+          "set_id": 20706
+        }
+      },
+      {
+        "spec": "0.2.0",
+        "family": "pskreporter-ipfix",
+        "mapping": 1,
+        "native_version": "10",
+        "kind": "spot",
+        "context": {
+          "direction": "unknown",
+          "exchange": "unknown"
+        },
+        "fields": {
+          "sender_call": "Q1AAA",
+          "sender_locator": "BB11bb",
+          "frequency_hz": 14074000,
+          "mode": "FT8",
+          "information_source": 1,
+          "time": "2023-11-14T22:13:20Z",
+          "snr_db": -12,
+          "receiver_call": "Q2AAA",
+          "receiver_locator": "AA00aa",
+          "reporting_software": "synthetic-1",
+          "antenna_information": "dipole",
+          "rig_information": "synthetic rig"
+        },
+        "native": {
+          "format": "ipfix_record",
+          "message_data": "AAoA1GVT8QAAAAAAUUdJAQACADxQ4wAHgAH//wAAdo+ABQAFAAB2j4AGAAEAAHaPgAr//wAAdo+AA///AAB2j4ALAAEAAHaPAJYABAADADRQ4gAFAAGAAv//AAB2j4AE//8AAHaPgAj//wAAdo+ACf//AAB2j4AN//8AAHaPAABQ4gA0BVEyQUFBBkFBMDBhYQtzeW50aGV0aWMtMQZkaXBvbGUNc3ludGhldGljIHJpZwAAUOMAIAVRMUFBQQAA1sCQ9ANGVDgGQkIxMWJiAWVT8QA=",
+          "set_index": 3,
+          "record_index": 0,
+          "data": "BVExQUFBAADWwJD0A0ZUOAZCQjExYmIBZVPxAA==",
+          "template": "UOMAB4AB//8AAHaPgAUABQAAdo+ABgABAAB2j4AK//8AAHaPgAP//wAAdo+ACwABAAB2jwCWAAQ=",
+          "header": {
+            "version": 10,
+            "length": 212,
+            "export_time": 1700000000,
+            "sequence_number": 0,
+            "observation_domain_id": 1363626241
+          },
+          "set_id": 20707,
+          "dependencies": [
+            {
+              "data": "BVEyQUFBBkFBMDBhYQtzeW50aGV0aWMtMQZkaXBvbGUNc3ludGhldGljIHJpZw==",
+              "template": "UOIABQABgAL//wAAdo+ABP//AAB2j4AI//8AAHaPgAn//wAAdo+ADf//AAB2jw==",
+              "header": {
+                "version": 10,
+                "length": 212,
+                "export_time": 1700000000,
+                "sequence_number": 0,
+                "observation_domain_id": 1363626241
+              },
+              "set_id": 20706
+            }
+          ]
+        }
+      }
+    ],
+    "skips": []
+  }
+}

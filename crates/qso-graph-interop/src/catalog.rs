@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Annex A catalog, QGI-SPEC-001 0.1.0.
+// Annex A catalog, QGI-SPEC-001 0.2.0.
 #![forbid(unsafe_code)]
 type Shape = (
     &'static [(&'static str, &'static str)],
@@ -34,6 +34,9 @@ pub(super) fn catalog(name: &str) -> Option<Shape> {
         )),
         "decode" => Some((
             &[
+                ("message_id", "text"),
+                ("start", "instant"),
+                ("complete", "boolean"),
                 ("time_of_day", "time_of_day"),
                 ("time", "instant"),
                 ("snr_db", "integer"),
@@ -55,6 +58,13 @@ pub(super) fn catalog(name: &str) -> Option<Shape> {
         )),
         "radio_state" => Some((
             &[
+                ("inhibit_supported", "boolean"),
+                ("tx_inhibited", "boolean"),
+                ("source_station", "text"),
+                ("hold_rx", "integer"),
+                ("release_rx", "integer"),
+                ("expiries", "integer"),
+                ("invalid", "integer"),
                 ("dial_frequency_hz", "integer"),
                 ("rx_offset_hz", "integer"),
                 ("tx_offset_hz", "integer"),
@@ -117,13 +127,33 @@ pub(super) fn catalog(name: &str) -> Option<Shape> {
             ],
             &[],
         )),
+        "receiver_information" => Some((
+            &[
+                ("receiver_call", "text"),
+                ("receiver_locator", "text"),
+                ("reporting_software", "text"),
+                ("antenna_information", "text"),
+                ("rig_information", "text"),
+                ("persistent_identifier", "text"),
+            ],
+            &[],
+        )),
         "spot" => Some((
             &[
+                ("band", "text"),
+                ("sender_dxcc", "integer"),
+                ("receiver_dxcc", "integer"),
+                ("transmission_start", "instant"),
                 ("call", "text"),
                 ("grid", "text"),
                 ("mode", "text"),
                 ("text", "text"),
                 ("spotter_call", "text"),
+                ("information_source", "integer"),
+                ("imd_db", "integer"),
+                ("antenna_information", "text"),
+                ("rig_information", "text"),
+                ("persistent_identifier", "text"),
                 ("source", "text"),
                 ("frequency_hz", "integer"),
                 ("time", "instant"),
@@ -154,6 +184,9 @@ pub(super) fn catalog(name: &str) -> Option<Shape> {
         )),
         "control" => Some((
             &[
+                ("controller_id", "text"),
+                ("ttl_ms", "integer"),
+                ("station", "text"),
                 ("radio", "radio"),
                 ("operation", "operation"),
                 ("window", "integer"),
@@ -214,6 +247,7 @@ pub(super) fn catalog(name: &str) -> Option<Shape> {
                 ("message", "object"),
                 ("topic", "text"),
                 ("retained", "boolean"),
+                ("qos", "integer"),
                 ("template", "base64"),
                 ("header", "ipfix_header"),
                 ("message_data", "base64"),

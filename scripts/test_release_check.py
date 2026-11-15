@@ -47,7 +47,9 @@ class Source(unittest.TestCase):
 
     def test_manual_main_release_at_exact_commit(self):
         self.assertTrue(rc.source_allowed(*self.args()))
-        rc.main(["source", *self.args()])
+        with patch.object(rc, "mappings_releasable") as mappings:
+            rc.main(["source", *self.args()])
+            mappings.assert_called_once()
 
     def test_other_branches_tags_and_pr_refs_are_refused(self):
         for ref in ["refs/heads/feature/0.1.0", "refs/heads/0.1.x", "refs/tags/v0.1.0",
@@ -80,14 +82,101 @@ class Source(unittest.TestCase):
                 self.assertFalse(rc.source_allowed(*self.args(build_sha=build_sha, workflow_sha=workflow_sha)))
 
 
+class ProvisionalMappings(unittest.TestCase):
+    def test_planted_provisional_annex_fails_then_unmarked_passes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "spec").mkdir()
+            annex = root / "spec/annex-b-wsjtx.md"
+            annex.write_text("<!-- " + rc.PROVISIONAL_MARKER + " -->\n")
+            with self.assertRaisesRegex(SystemExit, "provisional.*annex-b"):
+                rc.main(["mappings", directory])
+            annex.write_text("Released mapping revision 2\n")
+            rc.main(["mappings", directory])
+
+    def test_planted_catalog_entry_fails_even_with_unmarked_annex(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            catalog = root / "spec/vectors/wsjtx/manifest.json"
+            catalog.parent.mkdir(parents=True)
+            catalog.write_text(json.dumps({"status": rc.PROVISIONAL_MARKER}))
+            with self.assertRaisesRegex(SystemExit, "provisional.*manifest"):
+                rc.main(["mappings", directory])
+            catalog.write_text(json.dumps({"status": "released"}))
+            rc.main(["mappings", directory])
+
+    def test_missing_spec_refuses_release(self):
+        with tempfile.TemporaryDirectory() as directory, self.assertRaises(SystemExit):
+            rc.main(["mappings", directory])
+
+    def test_source_gate_cannot_bypass_provisional_guard(self):
+        with patch.object(rc, "mappings_releasable", side_effect=SystemExit("provisional")):
+            with self.assertRaisesRegex(SystemExit, "provisional"):
+                rc.main(["source", *Source().args()])
+
+    def test_beta_requires_all_pinned_markers_in_exact_version_section(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "spec").mkdir()
+            marker = rc.PROVISIONAL_MARKER
+            (root / "spec/a.md").write_text(f"<!-- {marker} wsjtx/2 tag:beta,sha256:abc -->\n")
+            (root / "spec/b.json").write_text(json.dumps({"mapping_status": f"{marker} wsjtx/3 commit:def,patch-sha256:ghi"}))
+            notes = "- Provisional mapping: `wsjtx/2`; pin: `tag:beta,sha256:abc`.\n"
+            all_notes = notes + "- Provisional mapping: `wsjtx/3`; pin: `commit:def,patch-sha256:ghi`.\n"
+            change = root / "CHANGELOG.md"
+            change.write_text("## [0.2.0-beta.1]\n" + notes)
+            with self.assertRaisesRegex(SystemExit, "unlisted.*wsjtx/3"):
+                rc.main(["mappings", directory, "0.2.0-beta.1"])
+            change.write_text("## [Unreleased]\n" + all_notes + "## [0.2.0-beta.1]\n" + notes)
+            with self.assertRaisesRegex(SystemExit, "unlisted"):
+                rc.main(["mappings", directory, "0.2.0-beta.1"])
+            change.write_text("## [0.2.0-beta.1]\n" + all_notes)
+            rc.main(["mappings", directory, "0.2.0-beta.1"])
+            for version in ["0.2.0", "0.2.0-beta", "0.2.0-beta.0x", "0.2.0-rc.1", "0.2.0-beta.0", "0.2.0-beta.1\n"]:
+                with self.subTest(version=version), self.assertRaisesRegex(SystemExit, "release refused"):
+                    rc.main(["mappings", directory, version])
+            change.write_text("## [0.2.0-beta.2]\n" + all_notes)
+            with self.assertRaisesRegex(SystemExit, "missing"):
+                rc.main(["mappings", directory, "0.2.0-beta.1"])
+            change.write_text("## [0.2.0-beta.1]\n" + all_notes.replace("commit:def", "commit:wrong"))
+            with self.assertRaisesRegex(SystemExit, "unlisted"):
+                rc.main(["mappings", directory, "0.2.0-beta.1"])
+            (root / "spec/a.md").write_text(marker)
+            with self.assertRaisesRegex(SystemExit, "unpinned"):
+                rc.main(["mappings", directory, "0.2.0-beta.1"])
+
+    def test_explicit_beta_version_reaches_source_gate(self):
+        with patch.object(rc, "mappings_releasable") as mappings:
+            rc.main(["source", *Source().args(), "0.2.0-beta.1"])
+            self.assertEqual(mappings.call_args.args[1], "0.2.0-beta.1")
+
+    def test_explicit_beta_and_exact_dated_release_notes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "spec").mkdir()
+            (root / "spec/a.md").write_text(rc.PROVISIONAL_MARKER + " wsjtx/3 commit:abc,patch-sha256:def")
+            note = "- Provisional mapping: `wsjtx/3`; pin: `commit:abc,patch-sha256:def`.\n"
+            section = "## [0.2.0-beta.1] - 2026-11-14\n" + note
+            change = root / "CHANGELOG.md"
+            change.write_text("## [Unreleased]\nfuture notes\n" + section + "## [0.1.0]\nolder notes\n")
+            self.assertEqual(rc.changelog_section(root, "0.2.0-beta.1"), note)
+            with self.assertRaisesRegex(SystemExit, "release refused"):
+                rc.main(["mappings", directory])
+            rc.main(["mappings", directory, "0.2.0-beta.1"])
+            change.write_text(section + section)
+            self.assertIsNone(rc.changelog_section(root, "0.2.0-beta.1"))
+            with self.assertRaisesRegex(SystemExit, "duplicate"):
+                rc.main(["mappings", directory, "0.2.0-beta.1"])
+
+
 class Version(unittest.TestCase):
     def test_releases_and_betas(self):
-        for v in ["0.1.0", "0.1.0-beta.1", "1.2.3-beta.12", "10.0.0"]:
+        for v in ["0.1.0", "0.1.0-beta.1", "1.2.3-beta.12", "0.1.0-beta.1000", "10.0.0"]:
             self.assertTrue(rc.is_version(v), v)
 
     def test_refused(self):
         for v in ["0.1", "v0.1.0", "0.1.0-beta.0", "0.1.0-beta", "0.1.0-rc.1", "0.1.0-beta.1 ", "0.1.0\n",
-                  "0.1.0-beta.1;x", "01.0", "01.0.0", "0.01.0", "0.1.00", "0.1.0-beta.1000"]:
+                  "0.1.0-beta.1;x", "01.0", "01.0.0", "0.01.0", "0.1.00"]:
             self.assertFalse(rc.is_version(v), repr(v))
 
 
@@ -273,4 +362,4 @@ class WorkflowPolicy(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=2)

@@ -1,0 +1,14 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-ipfix",
+  "mapping": 1,
+  "class": "templated",
+  "input": {
+    "data": "AAoAIGVT8QAAAAAAUUdJAQACAAgAAgAAAAMACAADAAA="
+  },
+  "expected": {
+    "events": [],
+    "skips": []
+  }
+}

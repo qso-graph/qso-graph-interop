@@ -202,6 +202,39 @@ pub struct AnnotationInfo {
     pub sort_order: u32,
 }
 
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
+pub struct InhibitStatus {
+    pub supported: bool,
+    pub inhibited: bool,
+    pub source_station: Utf8,
+    pub hold_rx: u32,
+    pub release_rx: u32,
+    pub expiries: u32,
+    pub invalid: u32,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
+pub struct TxInhibit {
+    pub controller_id: Utf8,
+    pub ttl_ms: u32,
+    pub station: Utf8,
+}
+
+/// Proposed WSJT-X type 19; Id is carried by the enclosing packet.
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
+pub struct JttyText {
+    pub message_id: i64,
+    pub start: QDateTime,
+    pub delta_frequency_hz: u32,
+    pub snr_db: i32,
+    pub text: Utf8,
+    pub complete: bool,
+    pub off_air: bool,
+}
+
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum Body {
@@ -220,6 +253,9 @@ pub enum Body {
     SwitchConfiguration(SwitchConfiguration),
     Configure(Configure),
     AnnotationInfo(AnnotationInfo),
+    InhibitStatus(InhibitStatus),
+    TxInhibit(TxInhibit),
+    JttyText(JttyText),
     Close,
     Replay,
 }
@@ -242,6 +278,9 @@ impl Body {
             Self::SwitchConfiguration(..) => 14,
             Self::Configure(..) => 15,
             Self::AnnotationInfo(..) => 16,
+            Self::InhibitStatus(..) => 17,
+            Self::TxInhibit(..) => 18,
+            Self::JttyText(..) => 19,
             Self::Close => 6,
             Self::Replay => 7,
         }

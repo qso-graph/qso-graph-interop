@@ -1,0 +1,7 @@
+{"_license":"SPDX-License-Identifier: GPL-3.0-or-later", "decodes":[
+  {"text":"KN4YU KE1HA -12","snr_db":-10,"audio_offset_hz":1700,"dt_seconds":0.10000000149011612},
+  {"text":"CQ KE1HA FN42","snr_db":-12,"audio_offset_hz":800,"dt_seconds":0.20000000298023224},
+  {"text":"KE1HA KN4YU EM86","snr_db":-15,"audio_offset_hz":1200,"dt_seconds":0.5},
+  {"text":"CQ DX KC4QPQ EM73","snr_db":-16,"audio_offset_hz":2300,"dt_seconds":0.800000011920929}
+]
+}

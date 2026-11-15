@@ -69,7 +69,7 @@ impl Server {
         exchange(&mut socket, body, true)
     }
     fn command(&self, fields: Value) -> Vec<Vec<u8>> {
-        let event = Event::from_value(json!({"spec":"0.1.0","family":"fldigi","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"fields":fields})).unwrap();
+        let event = Event::from_value(json!({"spec":"0.2.0","family":"fldigi","mapping":1,"kind":"control","context":{"direction":"unknown","exchange":"unknown"},"fields":fields})).unwrap();
         Fldigi::default()
             .encode_commands(&event, &EncodeOptions::default())
             .unwrap()

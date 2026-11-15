@@ -1,0 +1,15 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-ipfix",
+  "mapping": 1,
+  "class": "negative",
+  "input": {
+    "data": "AAoA1GVT8QAAAAAAUUdJAQACADxQ4wAHgAH//wAAdo+ABQAFAAB2j4AGAAEAAHaPgAr//wAAdo+AA///AAB2j4ALAAEAAHaPAJYABAADADRQ4gAFAAGAAv//AAB2j4AE//8AAHaPgAj//wAAdo+ACf//AAB2j4AN//8AAHaPAABQ4gA0BVEyQUFBBkFBMDBhYQtzeW50aGV0aWMtMQZkaXBvbGUNc3ludGhldGljIHJpZwAAUOMAIAVRMUFBQQAA1sCQ9ANGVDgGQkIxMWJiAWVT8Q=="
+  },
+  "expected": {
+    "error": {
+      "category": "malformed"
+    }
+  }
+}

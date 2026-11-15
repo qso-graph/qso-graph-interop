@@ -28,6 +28,8 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
+    env:
+      QGI_REQUIRE_MULTICAST: "1"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -73,7 +75,8 @@ jobs:
       - run: uv run --no-project --python 3.11 python scripts/test_release_check.py
       - run: uv run --no-project python scripts/package-files.py --check
       # allow-dirty also lets the identical local verifier check uncommitted review work.
-      - run: cargo package --locked --allow-dirty -p qso-graph-interop -p qso-graph-interop-cli
+      # Use the current library while development shares the preceding release's version.
+      - run: cargo package --locked --allow-dirty -p qso-graph-interop -p qso-graph-interop-cli --config 'patch.crates-io.qso-graph-interop.path="crates/qso-graph-interop"'
       # Hosted Ubuntu includes Go; the script fetches actionlint at exactly v1.7.11.
       - run: uv run --no-project python scripts/lint-workflows.py
       - name: cargo vet
@@ -124,6 +127,16 @@ jobs:
         env:
           SECONDS_EACH: ${{ github.event_name == 'schedule' && '600' || '60' }}
         run: cargo fuzz run fldigi -- -max_total_time="$SECONDS_EACH" -max_len=262145 -timeout=10 -rss_limit_mb=2048 -print_final_stats=1
+      - name: Fuzz IPFIX records and template sessions
+        working-directory: fuzz
+        env:
+          SECONDS_EACH: ${{ github.event_name == 'schedule' && '600' || '60' }}
+        run: cargo fuzz run ipfix -- -max_total_time="$SECONDS_EACH" -max_len=60001 -timeout=10 -rss_limit_mb=2048 -print_final_stats=1
+      - name: Fuzz offline MQTT payloads and captured topics
+        working-directory: fuzz
+        env:
+          SECONDS_EACH: ${{ github.event_name == 'schedule' && '600' || '60' }}
+        run: cargo fuzz run mqtt -- -max_total_time="$SECONDS_EACH" -max_len=32769 -timeout=10 -rss_limit_mb=2048 -print_final_stats=1
       - name: Lockfiles did not change
         run: git diff --exit-code -- Cargo.lock fuzz/Cargo.lock
       - name: Keep failure inputs

@@ -1,0 +1,51 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJjYWxsIjoiUTFBQUEiLCJhbnRlbm5hIjoiWlM2QktXIG9yIFZlcnRpY2FsIiwicmlnIjoiSWNvbSBJQy03MTAwIiwiZGVjb2RlciI6IldTSlQtWCB2Mi43LjAgYjRmOWE0IiwiZ3JpZCI6IkVNOTV3cDYxIiwidGltZV9zdGFydCI6MCwidHMiOjE3OTQ2NzY4NzR9",
+    "mqtt": {
+      "topic": "pskr/rxinfo/Q1AAA",
+      "retained": true,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "rxinfo",
+      "kind": "receiver_information",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "receiver_call": "Q1AAA"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJjYWxsIjoiUTFBQUEiLCJhbnRlbm5hIjoiWlM2QktXIG9yIFZlcnRpY2FsIiwicmlnIjoiSWNvbSBJQy03MTAwIiwiZGVjb2RlciI6IldTSlQtWCB2Mi43LjAgYjRmOWE0IiwiZ3JpZCI6IkVNOTV3cDYxIiwidGltZV9zdGFydCI6MCwidHMiOjE3OTQ2NzY4NzR9",
+        "topic": "pskr/rxinfo/Q1AAA",
+        "retained": true,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "call": "Q1AAA",
+    "antenna": "ZS6BKW or Vertical",
+    "rig": "Icom IC-7100",
+    "decoder": "WSJT-X v2.7.0 b4f9a4",
+    "grid": "EM95wp61",
+    "time_start": 0,
+    "ts": 1794676874
+  },
+  "reencode": {
+    "data": "eyJjYWxsIjoiUTFBQUEiLCJhbnRlbm5hIjoiWlM2QktXIG9yIFZlcnRpY2FsIiwicmlnIjoiSWNvbSBJQy03MTAwIiwiZGVjb2RlciI6IldTSlQtWCB2Mi43LjAgYjRmOWE0IiwiZ3JpZCI6IkVNOTV3cDYxIiwidGltZV9zdGFydCI6MCwidHMiOjE3OTQ2NzY4NzR9"
+  }
+}

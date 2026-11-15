@@ -1,0 +1,52 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJmIjogMCwgInJwIjogLTEyOCwgInQiOiAwLCAidF90eCI6IDAsICJzcSI6IDB9",
+    "mqtt": {
+      "topic": "pskr/filter/v2/20m/FT8/Q1AAA/Q2BBB/AA00/BB11/1/2",
+      "retained": true,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "2",
+      "kind": "spot",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "frequency_hz": 0,
+        "snr_db": -128,
+        "time": "1970-01-01T00:00:00Z",
+        "transmission_start": "1970-01-01T00:00:00Z"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJmIjogMCwgInJwIjogLTEyOCwgInQiOiAwLCAidF90eCI6IDAsICJzcSI6IDB9",
+        "topic": "pskr/filter/v2/20m/FT8/Q1AAA/Q2BBB/AA00/BB11/1/2",
+        "retained": true,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "f": 0,
+    "rp": -128,
+    "t": 0,
+    "t_tx": 0,
+    "sq": 0
+  },
+  "reencode": {
+    "data": "eyJmIjogMCwgInJwIjogLTEyOCwgInQiOiAwLCAidF90eCI6IDAsICJzcSI6IDB9"
+  }
+}

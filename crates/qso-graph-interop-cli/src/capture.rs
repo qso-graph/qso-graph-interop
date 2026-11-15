@@ -121,6 +121,13 @@ pub fn parse(bytes: &[u8], carriage: bool) -> io::Result<Vec<Frame>> {
                     "TCP capture playback requires the future stream transport helper",
                 ));
             }
+            if family == "pskreporter-ipfix"
+                && event.native().is_some_and(|n| n.format() == "ipfix_record")
+            {
+                return Err(invalid(
+                    "IPFIX native.data is one record, not a UDP message; use --qgi for record capture playback",
+                ));
+            }
             let data = event.native_bytes().map_err(|e| invalid(&e.to_string()))?;
             if data.len() > 65_507 {
                 return Err(invalid("capture native datagram exceeds 65507 bytes"));
@@ -154,7 +161,7 @@ pub fn run(s: &Sim) -> Result<(), Box<dyn std::error::Error>> {
     let frames = parse(&bytes, s.qgi)?;
     sim::delay(frames.last().map_or(0, |f| f.at_ms), s.speed)?;
     sim::install_stop()?;
-    let socket = NumericUdp::sender(s.to.ok_or("--to is required")?)?;
+    let socket = NumericUdp::sender(s.to.ok_or("--to is required")?, s.interface)?;
     loop {
         let begun = Instant::now();
         for frame in &frames {
@@ -202,7 +209,7 @@ mod tests {
     #[test]
     fn tcp_families_malformed_evidence_and_datagram_limits_are_rejected() {
         let mut v: serde_json::Value = serde_json::from_slice(&record(None)).unwrap();
-        for family in ["js8call", "fldigi", "pskreporter-mqtt", "unknown"] {
+        for family in ["fldigi", "pskreporter-mqtt", "unknown"] {
             v["family"] = family.into();
             let bytes = serde_json::to_vec(&v).unwrap();
             assert!(parse(&bytes, false).is_err(), "{family}");

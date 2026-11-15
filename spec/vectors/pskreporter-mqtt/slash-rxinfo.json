@@ -1,0 +1,45 @@
+{
+  "$comment": "SPDX-License-Identifier: GPL-3.0-or-later",
+  "spec": "0.2.0",
+  "family": "pskreporter-mqtt",
+  "mapping": 1,
+  "class": "positive",
+  "input": {
+    "data": "eyJjYWxsIjoiUTREREQvUCJ9",
+    "mqtt": {
+      "topic": "pskr/rxinfo/Q4DDD.P",
+      "retained": true,
+      "qos": 0
+    }
+  },
+  "expected": {
+    "event": {
+      "spec": "0.2.0",
+      "family": "pskreporter-mqtt",
+      "mapping": 1,
+      "native_version": "rxinfo",
+      "kind": "receiver_information",
+      "context": {
+        "direction": "unknown",
+        "exchange": "unknown"
+      },
+      "fields": {
+        "receiver_call": "Q4DDD/P"
+      },
+      "native": {
+        "format": "mqtt_publish",
+        "data": "eyJjYWxsIjoiUTREREQvUCJ9",
+        "topic": "pskr/rxinfo/Q4DDD.P",
+        "retained": true,
+        "qos": 0
+      }
+    },
+    "verification": "verified"
+  },
+  "expected_message": {
+    "call": "Q4DDD/P"
+  },
+  "reencode": {
+    "data": "eyJjYWxsIjoiUTREREQvUCJ9"
+  }
+}
