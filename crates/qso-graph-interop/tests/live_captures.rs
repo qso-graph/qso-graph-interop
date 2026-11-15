@@ -17,7 +17,7 @@ const TRANSMITTER_LOG: (&str, &str) = (
     "fldigi-4.2.13-ipfix-tx.txt",
     include_str!("fixtures/live-captures/fldigi-4.2.13-ipfix-tx.txt"),
 );
-const CAPTURES: [(&str, &str); 8] = [
+const CAPTURES: [(&str, &str); 9] = [
     (
         "fldigi-4.2.13-xmlrpc.ndjson",
         include_str!("fixtures/live-captures/fldigi-4.2.13-xmlrpc.ndjson"),
@@ -49,6 +49,10 @@ const CAPTURES: [(&str, &str); 8] = [
     (
         "fldigi-4.2.13-ipfix.ndjson",
         include_str!("fixtures/live-captures/fldigi-4.2.13-ipfix.ndjson"),
+    ),
+    (
+        "n1mm-1.0.11480-rotor.ndjson",
+        include_str!("fixtures/live-captures/n1mm-1.0.11480-rotor.ndjson"),
     ),
 ];
 fn records(index: usize) -> Vec<Value> {
@@ -216,6 +220,50 @@ fn n1mm_live_broadcasts_and_truncated_peer_payloads() {
     assert_eq!(
         codec.decode(&planted, &options).unwrap_err().category(),
         Category::Truncated
+    );
+}
+
+#[test]
+fn n1mm_rotor_command_is_an_unknown_root_beside_live_broadcasts() {
+    // N1MM's Alt+J (rotor toward the Entry window call), recorded at the rotor program's port (D.8.1 Q10).
+    let rows = records(8);
+    assert_eq!(rows.len(), 19);
+    let options = DecodeOptions::default().with_structured(true);
+    let mut codec = N1mm::default();
+    let mut roots = std::collections::BTreeMap::new();
+    for (index, row) in rows.iter().enumerate() {
+        let wire = bytes(row, "data_b64");
+        if row["local"] == "127.0.0.1:12040" {
+            assert_eq!(index + 1, 3);
+            assert_eq!(
+                wire,
+                b"<N1MMRotor><rotor>*</rotor><goazi>314.0</goazi><offset>0.0</offset><bidirectional>0</bidirectional><freqband>14.0</freqband></N1MMRotor>"
+            );
+            // No XML declaration and no line breaks, unlike every 12060 broadcast.
+            assert!(!wire.starts_with(b"<?xml") && !wire.contains(&b'\n'));
+            let outcome = codec.decode(&wire, &options).unwrap();
+            assert!(outcome.events.is_empty());
+            assert_eq!(outcome.skips.len(), 1);
+            let skip = &outcome.skips[0];
+            assert_eq!(
+                skip.reason,
+                qso_graph_interop::codec::SkipReason::UnknownType
+            );
+            assert_eq!(skip.native_name.as_deref(), Some("N1MMRotor"));
+            assert!(skip.native_version.is_none());
+            continue;
+        }
+        assert_eq!(row["local"], "127.0.0.1:12060");
+        let event = decoded(&mut codec, &wire, &options);
+        let root = event.value()["native"]["message"]["root"]
+            .as_str()
+            .unwrap()
+            .to_owned();
+        *roots.entry(root).or_insert(0) += 1;
+    }
+    assert_eq!(
+        roots,
+        std::collections::BTreeMap::from([("RadioInfo".into(), 9), ("dynamicresults".into(), 9)])
     );
 }
 
