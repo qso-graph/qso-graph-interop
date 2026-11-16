@@ -267,12 +267,19 @@ jobs:
           done
           # Four CLI archives, four C library bundles, and four Linux packages.
           [ "$n" -eq 12 ] || { echo "::error::Expected 4 CLI archives, 4 C library bundles and 4 Linux packages; found ${n}."; exit 1; }
+      # The exact specification this release implements, taken from the release commit itself.
+      - name: Specification archive
+        env:
+          VERSION: ${{ inputs.version }}
+        run: git archive --format=tar.gz --prefix="qgi-spec-${VERSION}/" -o "dist/qgi-spec-${VERSION}.tar.gz" HEAD spec
       - name: SHA256SUMS.txt
         run: (cd dist && sha256sum -- * > SHA256SUMS.txt && cat SHA256SUMS.txt)
       # Made here, so its provenance is this job's.
       - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
-          subject-path: dist/SHA256SUMS.txt
+          subject-path: |
+            dist/SHA256SUMS.txt
+            dist/qgi-spec-*.tar.gz
       # A run that stopped after this is finished by running it again: a Release already on the tag
       # gets the files again, replacing those of the same name.
       - name: Publish the Release
@@ -293,6 +300,8 @@ jobs:
             echo "- **macOS** (Apple silicon): signed by Greg Beam (KI7MT) with an Apple Developer ID, and notarized by Apple."
             echo "- **Windows** (x86_64): signed by Gregory Beam (KI7MT)."
             echo "- **Linux** (x86_64, arm64): one program for every distribution, and \`.deb\` and \`.rpm\` packages; or install it from QSO Graph's signed apt and dnf repositories: <https://github.com/qso-graph/qso-graph-packages>."
+            echo
+            echo "The specification this release implements, QGI-SPEC-001 with its annexes, schema and vectors: **qgi-spec-${VERSION}.tar.gz**."
             echo
             echo "C and C++: download the matching C library bundle (header, shared and static libraries). Linux C bundles require glibc 2.35 or later; the CLI is static."
             echo
