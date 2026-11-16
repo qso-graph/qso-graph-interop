@@ -350,27 +350,27 @@ fn deadline(start: Instant, ms: u64, speed: f64) -> io::Result<Instant> {
         .checked_add(sim::delay(ms, speed)?)
         .ok_or_else(|| invalid("playback deadline is too large"))
 }
+/// Waits until `until`, applying whatever arrives meanwhile; polled without blocking for the
+/// reason given at `sim::wait`.
 fn wait(socket: &NumericUdp, until: Instant, contest: &mut Contest) -> Result<()> {
+    socket.set_nonblocking(true)?;
+    let result = poll(socket, until, contest);
+    socket.set_nonblocking(false)?;
+    result
+}
+fn poll(socket: &NumericUdp, until: Instant, contest: &mut Contest) -> Result<()> {
     let mut bytes = [0; 65_535];
     while !sim::stopped() {
         let remaining = until.saturating_duration_since(Instant::now());
         if remaining.is_zero() {
             break;
         }
-        socket.set_read_timeout(Some(
-            remaining
-                .min(Duration::from_millis(50))
-                .max(Duration::from_millis(1)),
-        ))?;
         match socket.recv_from(&mut bytes) {
             Ok((n, _)) => contest.react(&bytes[..n]),
-            Err(e)
-                if matches!(
-                    e.kind(),
-                    io::ErrorKind::WouldBlock
-                        | io::ErrorKind::TimedOut
-                        | io::ErrorKind::Interrupted
-                ) => {}
+            Err(e) if e.kind() == io::ErrorKind::WouldBlock => {
+                std::thread::sleep(remaining.min(Duration::from_millis(1)));
+            }
+            Err(e) if e.kind() == io::ErrorKind::Interrupted => {}
             Err(e) => return Err(e.into()),
         }
     }

@@ -78,10 +78,12 @@ fn collect(
     socket: &UdpSocket,
     mut react: impl FnMut(&[u8], SocketAddr),
 ) -> Vec<Vec<u8>> {
-    // Receive on a thread of its own, so the socket keeps draining while packets are decoded
-    // and reacted to: Windows loopback UDP drops datagrams that a busy reader leaves to fill
-    // its receive buffer, and one dropped report fails an exact run-to-run comparison.
+    // Receive on a thread of its own, without a read timeout. On Windows a timed-out blocking
+    // receive leaves the socket "in an indeterminate state" (SO_RCVTIMEO, Microsoft's SOL_SOCKET
+    // options), and a 50 ms timeout that races an arriving datagram loses it, so one report goes
+    // missing and an exact run-to-run comparison fails. A non-blocking socket never times out.
     let reader = socket.try_clone().unwrap();
+    reader.set_nonblocking(true).unwrap();
     let exited = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
     let stop = exited.clone();
     let (sender, received) = std::sync::mpsc::channel();
@@ -94,16 +96,12 @@ fn collect(
                         break;
                     }
                 }
-                // Only after the simulator has exited does a quiet socket mean the end.
-                Err(e)
-                    if matches!(
-                        e.kind(),
-                        std::io::ErrorKind::WouldBlock | std::io::ErrorKind::TimedOut
-                    ) =>
-                {
+                // Only after the simulator has exited does an empty socket mean the end.
+                Err(e) if e.kind() == std::io::ErrorKind::WouldBlock => {
                     if stop.load(std::sync::atomic::Ordering::SeqCst) {
                         break;
                     }
+                    std::thread::sleep(Duration::from_millis(1));
                 }
                 Err(e) => panic!("{e}"),
             }

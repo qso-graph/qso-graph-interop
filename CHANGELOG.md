@@ -3,6 +3,12 @@
 
 ## [Unreleased]
 
+- `qg-interop sim` (WSJT-X and N1MM Logger+) no longer drops a datagram that arrives as
+  a receive times out on Windows: it polls a non-blocking socket instead of setting
+  `SO_RCVTIMEO`, which leaves a Windows socket in an indeterminate state after a timeout.
+  The N1MM simulator test's receiver does the same, which removes its intermittent
+  Windows failure.
+
 - Every release attaches `qgi-spec-<version>.tar.gz`, the exact specification it
   implements, built by `git archive` from the release commit, listed in `SHA256SUMS.txt`
   and attested. The specification stays a draft until QG Interop 1.0 (`QGI-RI-0048`),
