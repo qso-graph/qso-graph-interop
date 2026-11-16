@@ -28,21 +28,13 @@ needs no common members; `{}` is its common view unless a family annex defines o
 **`QGI-MOD-0025` — Field meanings.** `frequency_hz` on a decode or spot is the native reported frequency, not dial plus audio offset.
 `tx_frequency_hz` and `dial_frequency_hz` are distinct on a QSO; no addition is implicit. `tx_power`
 is text (such as the peer's entry), distinct from a decode's numeric `power_dbm`.
-`start` and `end` on QSO kinds are QSO instants; `decode.start` is the transmission-start instant defined below. `time` is an observation instant, independent of observer receipt
+`start` and `end` are QSO instants. `time` is an observation instant, independent of observer receipt
 time. A score is a reported snapshot, not an instruction to increment a counter. A `qso_changed`
 event contains the fields the native change carries, not a reconstructed complete record.
 N1MM `previous_start` is the prior contact-key instant carried with an edit, independent of the
 current `start`; it is not a QSO end time. Each timestamp maps independently.
 
 ## decode
-
-Added in 0.2.0 under `QGI-GEN-0005` for WSJT-X revision 3:
-`message_id` (text, canonical signed decimal preserving every qint64), `start`
-(instant, UTC transmission start), and `complete` (boolean, terminal update).
-All are optional catalog fields; existing mappings are unchanged. A type 19
-mapping supplies them as Annex B specifies. `start` here identifies transmission
-start independently of `time` (observation time); no observer time is substituted.
-
 
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|
@@ -64,18 +56,6 @@ start independently of `time` (observation time); no observer time is substitute
 | `off_air` | boolean | — | wsjtx |
 
 ## radio_state
-
-The following optional snapshot fields are added in 0.2.0 for WSJT-X revision 2:
-
-| Name | JSON type | Unit | Expected families |
-|---|---|---|---|
-| `inhibit_supported` | boolean | — | wsjtx |
-| `tx_inhibited` | boolean | — | wsjtx |
-| `source_station` | text | — | wsjtx; active holder summary |
-| `hold_rx` | integer | cumulative count | wsjtx |
-| `release_rx` | integer | cumulative count | wsjtx |
-| `expiries` | integer | cumulative count | wsjtx |
-| `invalid` | integer | cumulative count | wsjtx |
 
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|
@@ -221,10 +201,6 @@ The following optional `spot` members are also added in 0.2.0:
 
 ## control
 
-Optional WSJT-X revision 2 fields: `controller_id` (text identity), `ttl_ms`
-(integer milliseconds), and `station` (descriptive text). Only `wsjtx.tx_inhibit`
-requires them when constructing that operation; existing operations are unchanged.
-
 | Name | JSON type | Unit | Expected families |
 |---|---|---|---|
 | `radio` | radio object (`QGI-MOD-0016`) | — | n1mm `set_frequency` selector; Annex D |
@@ -284,7 +260,7 @@ support established here, not a claim that the program can never offer the actio
 **`QGI-MOD-0027` — Registered operations.** The seven shared tokens are reserved core actions even if this revision establishes only one
 family's mapping. A family-specific action uses a prefixed token: WSJT-X registers
 `wsjtx.heartbeat`, `wsjtx.location`, `wsjtx.highlight_callsign`, `wsjtx.switch_configuration`,
-`wsjtx.configure`, `wsjtx.annotation_info` and `wsjtx.tx_inhibit`. The last operation creates, refreshes or releases the identified controller's transmit-inhibit lease (Annex B.8), with `controller_id`, `ttl_ms` and `station`. Heartbeat is a protocol maintenance command;
+`wsjtx.configure` and `wsjtx.annotation_info`. Heartbeat is a protocol maintenance command;
 its observed form remains `lifecycle`. Annex B defines every required and optional argument
 for those operations. Annex D additionally defines `n1mm.spectrum` and its family arguments. Annex E defines
 fldigi method operation tokens and its family-only `rx_start`/`rx_length` control arguments.

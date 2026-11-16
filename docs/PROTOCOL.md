@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 # Protocol evidence and behavior
 
-## Source pins
+## Released source pins
 
 | Application | Released tag | Commit | Definition |
 | --- | --- | --- | --- |
@@ -29,7 +29,7 @@ The implementation is Rust; upstream C++ is not compiled or shipped here.
 ## Specification and public API
 
 The implementation follows [QGI-SPEC-001 0.2.0](../spec/QGI-SPEC-001.md), Annex A's common
-fields, Annex B revisions 1–3 for WSJT-X, Annex D revision 1 for N1MM, Annex E revision 1 for fldigi, and Annex I revision 1 for event carriage. The source pins
+fields, Annex B revision 1 for WSJT-X, Annex D revision 1 for N1MM, Annex E revision 1 for fldigi, and Annex I revision 1 for event carriage. The source pins
 above remain the native-layout evidence. No upstream source was fetched during this alignment.
 
 The family-independent core exports `Event`, `Context`, neutral text/integer/time/binary64 values,
@@ -63,7 +63,7 @@ core error. Use `Error::category()` for inspection; display strings are diagnost
 
 ## WSJT-X mapping
 
-The original 17 types and schemas 1–3 use Annex B's wire order, optional contiguous tails, radio identifier,
+All 17 types and schemas 1–3 use Annex B's wire order, optional contiguous tails, radio identifier,
 text wrappers, time resolution, integer range and sentinels. Unknown versions stop after schema;
 unknown types stop before ID. Admission order is size, magic, schema, type, then body. QString
 length checks distinguish oversized bounds, malformed odd counts and truncated payloads.
@@ -74,7 +74,7 @@ The producer profile checks that complete view against the decoded native repres
 `Profile::verify` returns `verified` or `unavailable` separately from the event and applies the
 mapping-revision outcome table. Unsupported command mappings are never encoded.
 
-The sending types are 0, 3, 4, 6–9, 11, 13–16 and revision 2 type 18. Schema defaults to 3 and accepts integers 1–3.
+The sending types are 0, 3, 4, 6–9, 11 and 13–16. Schema defaults to 3 and accepts integers 1–3.
 Missing arguments or wire IDs, optional-tail holes, incorrect text wrappers, unsupported argument
 combinations and wire-range violations return `invalid_value`. The common view never derives
 callsigns, locators, observer identity or a WSPR mode from text or IDs.
@@ -434,17 +434,6 @@ response produces a simulator-limit fault. No socket or process capability enter
 the library. Policy tests mutate the listener bind, loopback guards, DNS spelling,
 nonblocking setting, and deadline; each mutation fails the audited token check.
 
-## Provisional WSJT-X 3.3 and JTTY evidence
-
-The downloaded archives were verified offline: `v3.0.2` tarball SHA-256
-`8483a851bcb6455f5787de87b89efdf90e928842debde036e287e93e7f3837bd`; `v3.3.0-beta6` tarball SHA-256
-`cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be`. [Annex B.8](../spec/annex-b-wsjtx.md#b8-provisional-revision-2)
-records exact source paths and line evidence for types 17/18, the unchanged Decode
-marker, the ADIF 3.1.8 header, JTTY Status, absent live UDP Decode emission, and
-QSOLogged versus ADIF mode/submode. Code takes precedence over header commentary.
-The mapping remains provisional and mechanically blocks non-beta releases until re-pinned
-to general-release source. No source retrieval occurs in generation or verification.
-
 ## PSK Reporter IPFIX source evidence
 
 [Annex H](../spec/annex-h-pskreporter-ipfix.md#h0-source-pins-and-authority) pins the local
@@ -465,24 +454,6 @@ session/domain collisions, replacements, withdrawals, reset/expiry, missing or a
 receiver dependencies, and evidence mutations. The `ipfix` fuzz target exercises message
 and seeded template state, two exporters, message sequences, and record verification.
 No source documents were copied and no service connection was made.
-
-## Proposed JTTYText evidence
-
-[Annex B.9](../spec/annex-b-wsjtx.md#b9-provisional-revision-3) pins type 19 to
-its proposal source and patch, with file hashes and field evidence. It is separate
-from beta6's unchanged JTTY behavior. The independent `wsjtx-jtty19.json` fixture
-retains all 22 type 19 datagrams from the installed Windows and macOS builds,
-including original capture hashes and line numbers. Its wire bytes are copied,
-not re-encoded. The generator consumes these independent oracles to build
-conformance vectors; schema 3, UTF-8, full i64 IDs, null/empty/raw text, truncations
-and trailing extensions also have constructed cases.
-
-To replay recorder NDJSON, convert each original `data_b64` datagram using
-`qg-interop decode --wsjtx`, retain its `native.data`, and attach the recorder's
-`received_at` truncated to millisecond precision. Run
-`qg-interop sim --capture converted.ndjson --to 127.0.0.1:12237 --speed 100`
-against `qg-interop listen --wsjtx 127.0.0.1:12237 --human` (or `--json`).
-Recorder envelopes and QGI event envelopes are distinct formats.
 
 ## PSK Reporter MQTT captures
 
@@ -525,8 +496,6 @@ carry SPDX identifiers.
 | `n1mm-1.0.11480-qsy-sent.ndjson` | Recorder's nine radio_setfrequency commands sent to N1MM at 127.0.0.1:13064; RadioInfo reactions in UDP file matched by timestamps | 2026-11-15 | `ee3b4af58371c70c27c74d4e0c46c6220753be62a633d6906869ad0c6e64d2c6` |
 | `n1mm-1.0.11480-rotor.ndjson` | N1MM Logger+ 1.0.11480; recorder on 127.0.0.1:12040 (the rotor program's port, rotor program closed) and 127.0.0.1:12060 while Alt+J turned the rotor toward the Entry window call; one `N1MMRotor` command among 18 broadcasts | 2026-11-15 | `4bf51b76e3effc71f7f1a207c515479e54349b27536956e1793f06a6b234bd1a` |
 | `fldigi-4.2.13-xmlrpc.ndjson` | fldigi 4.2.13 XML-RPC reads/writes, unknown-method fault, and slow get_char_rates rerun | 2026-11-14 | `3ec87b797d5617d420add8d652e681820f4ef788bc9bf684befe2475e99d397c` |
-| `wsjtx-3.3.0-pr-ft8-live-udp.ndjson` | WSJT-X 3.3.0 PR build (beta6 + proposed type 19), own --live-audio-test with four ft8sim signals; own validation passed 4/4 | 2026-11-15 | `64db5ea621abfd57480971f0cfe1d207964364189dae0e4db519cf7bd3e66209` |
-| `wsjtx-beta6.ndjson` | Earlier installed WSJT-X 3.3.0-beta6 session; Heartbeat/Status traffic | 2026-11-14 | `7dc562b0850dd269743cb67b5d2cf2eb0052665f7668e3cd2b1cae8b2a985e27` |
 | `wsjtx-3.0.2-ft8-ipfix-udp.ndjson` | WSJT-X 3.0.2 general release, normal operation, live ft8sim audio through a virtual audio cable; PSK Reporter spotting enabled | 2026-11-15 | `85c4b52b94d209b313b25693dee885cf06ecb7c12e5bc10f06cb46b56cd07fcd` |
 | `wsjtx-3.3.0-beta6-ft8-ipfix-udp.ndjson` | WSJT-X 3.3.0-beta6, same normal live audio and spotting setup | 2026-11-15 | `b294b23ea3ecd3f0f05bd4d889b909e2062f4b0c52f0213d3e0cfb6df61f4a93` |
 | `fldigi-4.2.13-ipfix.ndjson` | Windows ham station, receiving fldigi 4.2.13 decoding transmitting fldigi 4.2.13 through a virtual audio cable; BPSK31, dial 14,070,000 Hz, audio 1,500 Hz; Spot enabled; one 256-byte UDP submission to 127.0.0.1:4739 | 2026-11-15 | `86d3d6784a247a55a939a538ff4e3af5cb2abd27f7f9d270408c214c5ff0a6ae` |
@@ -534,13 +503,9 @@ carry SPDX identifiers.
 
 `tests/live_captures.rs` checks the original file hashes (with planted byte
 mutations), every datagram or XML body, exact observed re-encoding, and independent
-selected field oracles. The earlier two WSJT-X files contain 20 and 40 datagrams; FT8
-records 13–16 assert full decoded message, SNR, time, audio offset, delta time,
-mode marker `~`, new/low-confidence/off-air flags. The PR build's Heartbeat still
-reports `3.3.0-beta6` (records 1,11); its build label is caller provenance, not a
-wire-derived stable-release or mapping claim. Status has empty station call/grid;
-no station call is inferred from lab metadata. Existing Windows/macOS JTTYText
-fixtures retain their separate source pins and evidence.
+selected field oracles. WSJT-X UDP traffic is checked through the two IPFIX captures
+below, whose Heartbeat, Status, Decode and Close messages all decode under mapping
+revision 1; WSJT-X 3.3's new message types are not mapped in 0.2.0.
 
 The two IPFIX captures used normal operation, not WSJT-X's audio test mode.
 On the VM, `report.pskreporter.info` resolved to 127.0.0.1, so submissions went

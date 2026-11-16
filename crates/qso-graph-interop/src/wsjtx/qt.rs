@@ -155,9 +155,6 @@ impl<'a> Reader<'a> {
     pub fn utf8(&mut self) -> Result<Utf8, Error> {
         self.bytes(MAX_DATAGRAM)
     }
-    pub fn inhibit_id(&mut self) -> Result<Utf8, Error> {
-        self.bytes(super::MAX_INHIBIT_ID)
-    }
     pub fn id(&mut self) -> Result<Utf8, Error> {
         self.bytes(MAX_ID)
     }

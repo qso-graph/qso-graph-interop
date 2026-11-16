@@ -86,13 +86,12 @@ MSVC and include separate DLL import and static libraries.
 A provisional mapping may ship only in `X.Y.Z-beta.N` (positive N without leading
 zeros), with every mapping listed and pinned in that version's CHANGELOG section.
 Use the exact one-line listing and whitespace-free pin format in
-[Annex B.8](../spec/annex-b-wsjtx.md#b8-provisional-revision-2). For example, a beta
-that includes both current provisional WSJT-X revisions needs these two lines in
-its versioned section:
+[Annex B.8](../spec/annex-b-wsjtx.md#b8-provisional-mappings). For example, a beta
+that includes a provisional WSJT-X revision 2 built from a pre-release archive needs
+this line in its versioned section, with the archive's real tag and SHA-256:
 
 ```text
-- Provisional mapping: `wsjtx/2`; pin: `tag:v3.3.0-beta6,tarball-sha256:cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be`.
-- Provisional mapping: `wsjtx/3`; pin: `repo:github.com/qso-graph/wsjtx,commit:53313c109194de1ce8e82e44f6846d8579645e56,patch-sha256:fb245ccea54033ace6b43fce6302bae03e1dc6518a08b455bdf080ef411679bf`.
+- Provisional mapping: `wsjtx/2`; pin: `tag:<tag>,tarball-sha256:<sha256>`.
 ```
 
 `uv run --no-project python scripts/release_check.py mappings . X.Y.Z-beta.N`

@@ -17,7 +17,7 @@ const TRANSMITTER_LOG: (&str, &str) = (
     "fldigi-4.2.13-ipfix-tx.txt",
     include_str!("fixtures/live-captures/fldigi-4.2.13-ipfix-tx.txt"),
 );
-const CAPTURES: [(&str, &str); 9] = [
+const CAPTURES: [(&str, &str); 7] = [
     (
         "fldigi-4.2.13-xmlrpc.ndjson",
         include_str!("fixtures/live-captures/fldigi-4.2.13-xmlrpc.ndjson"),
@@ -29,14 +29,6 @@ const CAPTURES: [(&str, &str); 9] = [
     (
         "n1mm-1.0.11480-udp.ndjson",
         include_str!("fixtures/live-captures/n1mm-1.0.11480-udp.ndjson"),
-    ),
-    (
-        "wsjtx-3.3.0-pr-ft8-live-udp.ndjson",
-        include_str!("fixtures/live-captures/wsjtx-3.3.0-pr-ft8-live-udp.ndjson"),
-    ),
-    (
-        "wsjtx-beta6.ndjson",
-        include_str!("fixtures/live-captures/wsjtx-beta6.ndjson"),
     ),
     (
         "wsjtx-3.0.2-ft8-ipfix-udp.ndjson",
@@ -226,7 +218,7 @@ fn n1mm_live_broadcasts_and_truncated_peer_payloads() {
 #[test]
 fn n1mm_rotor_command_is_an_unknown_root_beside_live_broadcasts() {
     // N1MM's Alt+J (rotor toward the Entry window call), recorded at the rotor program's port (D.8.1 Q10).
-    let rows = records(8);
+    let rows = records(6);
     assert_eq!(rows.len(), 19);
     let options = DecodeOptions::default().with_structured(true);
     let mut codec = N1mm::default();
@@ -399,38 +391,6 @@ fn fldigi_live_requests_responses_and_fault() {
     assert_eq!(responses, 60);
 }
 
-#[test]
-fn wsjtx_live_ft8_and_beta6() {
-    let oracles: Value =
-        serde_json::from_str(include_str!("fixtures/live-captures/ft8-oracles.json")).unwrap();
-    for (index, count) in [(3, 20), (4, 40)] {
-        let rows = records(index);
-        assert_eq!(rows.len(), count);
-        let mut codec = Wsjtx::default();
-        let mut decodes = 0;
-        for (i, row) in rows.iter().enumerate() {
-            let wire = bytes(row, "data_b64");
-            let event = decoded(&mut codec, &wire, &DecodeOptions::default());
-            let v = event.value();
-            if index == 3 && (13..=16).contains(&(i + 1)) {
-                assert_eq!(v["kind"], "decode");
-                let f = &v["fields"];
-                let expected = &oracles["decodes"][decodes];
-                for key in ["text", "snr_db", "audio_offset_hz", "dt_seconds"] {
-                    assert_eq!(f[key], expected[key], "record {}: {key}", i + 1);
-                }
-                assert_eq!(f["mode"], "~");
-                assert_eq!(f["is_new"], true);
-                assert_eq!(f["low_confidence"], false);
-                assert_eq!(f["off_air"], false);
-                assert_eq!(f["time_of_day"], "01:04:00.000");
-                decodes += 1;
-            }
-        }
-        assert_eq!(decodes, if index == 3 { 4 } else { 0 });
-    }
-}
-
 fn recorder_index(value: &Value) -> usize {
     usize::try_from(value.as_u64().unwrap()).unwrap() - 1
 }
@@ -454,8 +414,8 @@ fn fldigi_live_ipfix_matches_transmitter_log_and_exact_submission() {
         "fixtures/live-captures/fldigi-ipfix-oracle.json"
     ))
     .unwrap();
-    let rows = records(7);
-    assert_eq!(CAPTURES[7].0, oracle["file"]);
+    let rows = records(5);
+    assert_eq!(CAPTURES[5].0, oracle["file"]);
     assert_eq!(rows.len(), 1);
     let row = &rows[0];
     assert_eq!(row["received_at"], oracle["received_at"]);
@@ -612,8 +572,8 @@ fn wsjtx_live_ipfix_matches_audio_decodes_and_refreshes_templates() {
     let oracles: Value =
         serde_json::from_str(include_str!("fixtures/live-captures/ipfix-oracles.json")).unwrap();
     for (capture, oracle) in oracles["captures"].as_array().unwrap().iter().enumerate() {
-        let rows = records(capture + 5);
-        assert_eq!(CAPTURES[capture + 5].0, oracle["file"]);
+        let rows = records(capture + 3);
+        assert_eq!(CAPTURES[capture + 3].0, oracle["file"]);
         assert_eq!(rows.len() as u64, oracle["records"]);
         let mut wsjtx = Wsjtx::default();
         let mut udp_events = std::collections::BTreeMap::new();

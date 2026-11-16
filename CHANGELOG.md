@@ -3,11 +3,43 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-16
+
+QG Interop 0.2.0 adds, since 0.1.0: IPv4 multicast for `listen` and the simulators;
+PSK Reporter IPFIX (decoder, WSJT-X and fldigi submission encoders, `collect`, and a
+simulator) and offline PSK Reporter MQTT capture decoding; live-peer captures from
+WSJT-X 3.0.2, N1MM Logger+ 1.0.11480 and fldigi 4.2.13; `listen --human`; and
+specification 0.2.0, which removes the reserved `js8call` family. WSJT-X support is
+types 0–16 at the 3.0.2 general release (mapping revision 1).
+
+### Removed
+
+- WSJT-X 3.3 support from 0.2.0-beta.1 is not in 0.2.0: JTTY, InhibitStatus (type 17),
+  TxInhibit (type 18) and the proposed JTTYText (type 19), with Annex B's provisional
+  revisions 2 and 3, their vectors and fixtures, the beta6 and 3.3 pull-request-build
+  UDP captures, and the simulator's `--mode JTTY`, `--inhibit-status` and
+  `--jtty-text`. A release may not carry a
+  provisional mapping, and both were pinned to pre-release or proposed WSJT-X source.
+  WSJT-X 3.3 support returns in a later release after WSJT-X 3.3's general release.
+  `listen --human` remains, with one generic line per event. The beta release gate
+  and Annex B.8's marker rules remain for later betas.
+
+### Added
+
 - Every release attaches `qgi-spec-<version>.tar.gz`, the exact specification it
   implements, built by `git archive` from the release commit, listed in `SHA256SUMS.txt`
   and attested. The specification stays a draft until QG Interop 1.0 (`QGI-RI-0048`),
   when it becomes 1.0.0. New §10 states how it changes: by pull request, errata as PATCH
   releases, released versions immutable, the maintainer deciding adoption.
+
+- Add a byte-exact N1MM Logger+ 1.0.11480 rotor capture: the `N1MMRotor` command
+  N1MM sends to the rotor program on port 12040 (no XML declaration, no line
+  breaks), decoded as an `unknown_type` skip beside 18 live broadcasts. Record that
+  N1MM accepts and displays QG Interop's encoded Spectrum vectors and confirms kHz
+  scope frequencies, and that External Callsign Lookup cannot be enabled in its
+  Configurer. Annex D.8.1 answers Q10 and updates Q1 and Q6.
+
+### Changed
 
 - Close the issue #5 review gaps found after 0.2.0-beta.1: a MINOR release may not
   narrow an existing field's value domain (`QGI-GEN-0005`); an fldigi codec takes no
@@ -20,14 +52,13 @@
   the enforced unsafe-code policy; `docs/NORMALIZATION.md` cites the requirements it
   describes.
 
-- Annex B.9: type 19 (JTTYText) is proposed in WSJT-X pull request #171; the pin is unchanged.
+### Fixed
 
-- Add a byte-exact N1MM Logger+ 1.0.11480 rotor capture: the `N1MMRotor` command
-  N1MM sends to the rotor program on port 12040 (no XML declaration, no line
-  breaks), decoded as an `unknown_type` skip beside 18 live broadcasts. Record that
-  N1MM accepts and displays QG Interop's encoded Spectrum vectors and confirms kHz
-  scope frequencies, and that External Callsign Lookup cannot be enabled in its
-  Configurer. Annex D.8.1 answers Q10 and updates Q1 and Q6.
+- `qg-interop sim` (WSJT-X and N1MM Logger+) no longer drops a datagram that arrives as
+  a receive times out on Windows: it polls a non-blocking socket instead of setting
+  `SO_RCVTIMEO`, which leaves a Windows socket in an indeterminate state after a timeout.
+  The N1MM simulator test's receiver does the same, which removes its intermittent
+  Windows failure.
 
 ## [0.2.0-beta.1] - 2026-11-15
 

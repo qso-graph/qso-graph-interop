@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Generate QGI 0.2.0 vectors from Annexes B, D, E and I and the pinned WSJT-X release and provisional sources.
+"""Generate QGI 0.2.0 vectors from Annexes B, D, E and I and the pinned released header.
 
 No implementation imports, subprocesses, third-party generation dependencies or network access.
 The byte packers transcribe wire primitives; expected common fields are explicit test oracles.
@@ -25,9 +25,6 @@ ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / 'spec/vectors/wsjtx'
 SPEC = '0.2.0'
 PIN = 'fd73b7f92fc0f66ea8f12a147b59a6072408c24656735d59df772dc55a5eeb62'
-BETA_TAG = 'v3.3.0-beta6'
-BETA_TARBALL = 'cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be'
-PROVISIONAL = 'QGI-MAPPING-' + 'PROVISIONAL'
 
 
 def b64(value):
@@ -110,9 +107,9 @@ class Suite:
     def positive(self, name, schema, typ, body, kind, fields, *, direction=None,
                  identity='test-instance', message=None, extensions=b'', canonical=None):
         if direction is None:
-            direction = 'to_application' if typ in (4, 7, 8, 9, 11, 13, 14, 15, 16, 18) else 'from_application'
+            direction = 'to_application' if typ in (4, 7, 8, 9, 11, 13, 14, 15, 16) else 'from_application'
         raw = header(schema, typ, identity) + body + extensions
-        event = {'spec': SPEC, 'family': 'wsjtx', 'mapping': 3 if typ == 19 else 2 if typ >= 17 else 1,
+        event = {'spec': SPEC, 'family': 'wsjtx', 'mapping': 1,
                  'native_version': str(schema), 'kind': kind, 'wire_id': text(identity),
                  'context': context(direction), 'fields': fields,
                  'native': {'format': 'wsjtx_datagram', 'data': b64(raw)}}
@@ -126,11 +123,9 @@ class Suite:
         if message is not None:
             value['expected_message'] = {'schema': schema, 'type': typ, 'id': text(identity),
                                          'body': message, 'extensions': b64(extensions)}
-        if typ in (0, 3, 4, 6, 7, 8, 9, 11, 13, 14, 15, 16, 17, 18, 19):
+        if typ in (0, 3, 4, 6, 7, 8, 9, 11, 13, 14, 15, 16):
             encoded = raw if canonical is None else header(schema, typ, identity) + canonical + extensions
             value['reencode'] = {'data': b64(encoded)}
-        if typ >= 17:
-            value["mapping"] = 3 if typ == 19 else 2
         self.add(name, value)
         return event
 
@@ -419,204 +414,7 @@ def build():
         s.add('context-target-type-' + str(typ), vector)
     compatibility(s)
     commands(s)
-    beta6_vectors(s)
-    jtty19_vectors(s)
     return s
-
-
-
-def jtty19_vectors(s):
-    """Proposal layouts plus byte-for-byte independent installed-build datagrams."""
-    for schema in (2, 3):
-        for label, message_id, txt, complete, off_air in [
-                ('growing', 1, 'CQ Q1', False, False),
-                ('complete', 1, 'CQ Q1ABC', True, False),
-                ('off-air', -7, 'Q1ABC Q2XYZ 73', True, True),
-                ('utf8', 2**63-1, 'Q1ABC café\n73 🌍 ', False, True),
-                ('minimum-id', -2**63, '', False, False),
-                ('null', 0, None, True, False),
-                ('raw', 2**53+1, b'Q1ABC \xff', False, False)]:
-            dt, view = date(schema)
-            body = pack('q', message_id) + dt + pack('Ii', 1501, -12) + utf8(txt) + pack('BB', complete, off_air)
-            fields = dict(message_id=str(message_id), start='1970-01-01T01:00:00.123Z',
-                          audio_offset_hz=1501, snr_db=-12, text=text(txt), complete=complete, off_air=off_air)
-            message = dict(message_id=str(message_id), start=view, delta_frequency_hz=1501,
-                           snr_db=-12, text=text(txt), complete=complete, off_air=off_air)
-            identity = None if label == 'null' else b'instance\xff' if label == 'raw' else 'test-instance'
-            s.positive(f'jtty19-{label}-s{schema}', schema, 19, body, 'decode', fields,
-                       identity=identity, message=message, extensions=b'\x00future\xff' if label == 'utf8' else b'')
-            if label == 'complete':
-                raw = header(schema, 19) + body
-                # Every byte boundary: Id and every body field, including exact field boundaries.
-                for count in range(12, len(raw)):
-                    s.negative(f'jtty19-truncated-s{schema}-{count}', raw[:count], 'truncated')
-                    s.vectors[f'jtty19-truncated-s{schema}-{count}']['mapping'] = 3
-    fixture = json.loads((ROOT / 'crates/qso-graph-interop/tests/fixtures/wsjtx-jtty19.json').read_text())
-    for item in fixture['vectors']:
-        raw = bytes.fromhex(item['wire_hex'])
-        # Use the original bytes and independently reviewed common oracle, never a re-encoded body.
-        event = dict(spec=SPEC, family='wsjtx', mapping=3, native_version=str(item['schema']),
-                     kind='decode', wire_id=item['wire_id'], context=context(), fields=item['fields'],
-                     native=dict(format='wsjtx_datagram', data=b64(raw)))
-        s.add('jtty19-capture-' + item['name'], dict(mapping=3, **{'class': 'positive'},
-              provenance=dict(capture=item['capture'], line=item['line'], sha256=fixture['captures'][item['capture']]),
-              input=dict(data=b64(raw), context=context()), expected=dict(event=event), reencode=dict(data=b64(raw))))
-
-
-def beta6_vectors(s):
-    """Independent beta6 wire construction; no codec or generated layout imports."""
-    def command(name, fields, *, identity='test-instance', schema=3, error=None):
-        event = {'spec': SPEC, 'family': 'wsjtx', 'mapping': 2, 'kind': 'control',
-                 'context': context('to_application'), 'wire_id': text(identity),
-                 'fields': dict(operation='wsjtx.tx_inhibit', **fields)}
-        if error:
-            s.add('beta6-command-error-' + name, {'mapping': 2, 'class': 'command_negative',
-                  'input': {'event': event, 'options': {'schema': schema}},
-                  'expected': {'error': {'category': error}}})
-        else:
-            body = utf8(fields['controller_id']) + pack('I', fields['ttl_ms']) + utf8(fields['station'])
-            s.add('beta6-command-' + name, {'mapping': 2, 'class': 'command',
-                  'input': {'event': event, 'options': {'schema': schema}},
-                  'expected': {'data': b64(header(schema, 18, identity) + body)}})
-
-    for schema in (1, 2, 3):
-        for name, supported, inhibited, station, counters in [
-            ('available', True, False, '', (0, 0, 0, 0)),
-            ('held', True, True, 'Q1AAA', (1, 2, 3, 4)),
-            ('withdrawn', False, True, 'Q2BBB', (2**32-1, 0, 2**32-1, 2**32-1)),
-            ('null', False, False, None, (0, 0, 0, 0)),
-            ('raw', False, False, b'\xff', (0, 0, 0, 0)),
-        ]:
-            body = pack('BB', supported, inhibited) + utf8(station) + pack('4I', *counters)
-            wire = dict(supported=supported, inhibited=inhibited, source_station=text(station),
-                        **dict(zip(('hold_rx', 'release_rx', 'expiries', 'invalid'), counters)))
-            fields = dict(wire)
-            fields['inhibit_supported'] = fields.pop('supported')
-            fields['tx_inhibited'] = fields.pop('inhibited')
-            s.positive(f'17-inhibit-status-{name}-s{schema}', schema, 17, body, 'radio_state', fields,
-                       message=wire, extensions=b'future' if name == 'held' else b'')
-        raw = header(schema, 17) + body
-        for count in range(len(header(schema, 17)), len(raw)):
-            s.negative(f'beta6-truncated-17-s{schema}-{count}', raw[:count], 'truncated')
-        for field in ('hold_rx', 'release_rx', 'expiries', 'invalid'):
-            # The wire has only u32; over-boundary integers are rejected as authored field values
-            # by consistency verification, not interpreted as an extra wire byte.
-            event = copy.deepcopy(s.vectors[f'17-inhibit-status-withdrawn-s{schema}']['expected']['event'])
-            event['fields'][field] = 2**32
-            s.add(f'beta6-event-17-{field}-over-s{schema}', {'mapping': 2, 'class': 'negative',
-                  'input': {'event': event}, 'expected': {'error': {'category': 'invalid_value'}}})
-
-    legacy = copy.deepcopy(s.vectors['command-09-s3'])
-    legacy['mapping'] = 2
-    legacy['input']['event']['mapping'] = 2
-    s.add('beta6-command-existing-send-text', legacy)
-    good = dict(controller_id='controller-1', ttl_ms=100, station='Q1AAA')
-    cases = [
-        ('minimum', dict(controller_id='a', ttl_ms=0, station=''), 'test-instance'),
-        ('ttl-minimum', dict(good, ttl_ms=100), 'test-instance'),
-        ('ttl-maximum', dict(good, ttl_ms=30000), 'test-instance'),
-        ('null-station', dict(good, station=None), 'test-instance'),
-        ('controller-128', dict(good, controller_id='a'*128), 'test-instance'),
-        ('controller-utf8-128', dict(good, controller_id='é'*64), 'test-instance'),
-        ('station-128', dict(good, station=' '*128), 'test-instance'),
-        ('station-utf8-128', dict(good, station='é'*64), 'test-instance'),
-        ('id-1024', good, 'i'*1024),
-        ('id-utf8-1024', good, 'é'*512),
-        ('id-empty', good, ''),
-    ]
-    for schema in (2, 3):
-        for name, fields, identity in cases:
-            body = utf8(fields['controller_id']) + pack('I', fields['ttl_ms']) + utf8(fields['station'])
-            s.positive(f'18-tx-inhibit-{name}-s{schema}', schema, 18, body, 'control',
-                       dict(operation='wsjtx.tx_inhibit', **fields), identity=identity, message=fields)
-            command(f'{name}-s{schema}', fields, identity=identity, schema=schema)
-        body = utf8(good['controller_id']) + pack('I', 100) + utf8(good['station'])
-        raw = header(schema, 18) + body
-        for count in range(len(header(schema, 18)), len(raw)):
-            s.negative(f'beta6-truncated-18-s{schema}-{count}', raw[:count], 'truncated')
-        extensions = b'\x55' * (4096 - len(raw))
-        s.positive(f'18-tx-inhibit-datagram-4096-s{schema}', schema, 18, body, 'control',
-                   dict(operation='wsjtx.tx_inhibit', **good), message=good, extensions=extensions)
-        s.negative(f'beta6-datagram-4097-s{schema}', raw + extensions + b'\x00', 'oversized')
-
-    decimal_mapping = copy.deepcopy(s.vectors['beta6-command-minimum-s3'])
-    decimal_mapping['input']['event']['mapping'] = 2.0
-    s.add('beta6-command-integral-mapping', decimal_mapping)
-    bad = [
-        ('controller-null', dict(good, controller_id=None)),
-        ('controller-empty', dict(good, controller_id='')),
-        ('controller-129', dict(good, controller_id='a'*129)),
-        ('controller-utf8-130', dict(good, controller_id='é'*65)),
-        ('controller-space', dict(good, controller_id='two words')),
-        ('controller-unicode-space', dict(good, controller_id='a\u00a0b')),
-        ('controller-control', dict(good, controller_id='a\x00b')),
-        ('controller-unassigned', dict(good, controller_id='a\u0378')),
-        ('controller-invalid-utf8', dict(good, controller_id=b'\xc0\xaf')),
-        ('station-129', dict(good, station='a'*129)),
-        ('station-utf8-130', dict(good, station='é'*65)),
-        ('station-newline', dict(good, station='line\nbreak')),
-        ('station-control', dict(good, station='a\x7fb')),
-        ('station-unassigned', dict(good, station='\u0378')),
-        ('station-invalid-utf8', dict(good, station=b'\xff')),
-    ] + [(f'ttl-{ttl}', dict(good, ttl_ms=ttl)) for ttl in (1, 99, 30001, 2**32-1)]
-    for name, fields in bad:
-        body = utf8(fields['controller_id']) + pack('I', fields['ttl_ms']) + utf8(fields['station'])
-        for schema in (2, 3):
-            s.negative(f'beta6-{name}-s{schema}', header(schema, 18) + body, 'invalid_value')
-            command(f'{name}-s{schema}', {k: text(v) for k, v in fields.items()}, schema=schema, error='invalid_value')
-    for name, identity, category in [('id-1025', 'i'*1025, 'oversized'),
-            ('id-utf8-1026', 'é'*513, 'oversized'), ('id-null', None, 'invalid_value'),
-            ('id-invalid-utf8', b'\xff', 'invalid_value')]:
-        raw = header(3, 18, identity) + utf8('a') + pack('I', 0) + utf8('')
-        s.negative('beta6-' + name, raw, category)
-        command(name, good, identity=identity, error=category)
-    raw = header(1, 18) + utf8('a') + pack('I', 0) + utf8('')
-    s.negative('beta6-schema-1', raw, 'unsupported_version')
-    command('schema-1', good, schema=1, error='unsupported_version')
-    for field in good:
-        missing = dict(good)
-        missing.pop(field)
-        command('missing-' + field, missing, error='invalid_value')
-    for ttl in (-1, 2**32, 0.5, True):
-        command('ttl-json-' + str(ttl), dict(good, ttl_ms=ttl), error='invalid_value')
-    # JTTY has Status and logging, but no live type 2 decode path. Clone a known
-    # full Status body with hidden-control sentinels, not a decoder result.
-    for schema in (2, 3):
-        body = pack('Q', 14074000) + utf8('JTTY') + utf8('') + utf8('-10') + utf8('JTTY')
-        body += pack('BBBII', 0, 0, 0, 1500, 1500)
-        body += utf8('Q2AAA') + utf8('AA00') + utf8('') + b'\x00' + utf8('')
-        body += pack('BBII', 0, 0, 2**32-1, 2**32-1) + utf8('Default') + utf8('')
-        fields = dict(dial_frequency_hz=14074000, mode='JTTY', dx_call='', report='-10', tx_mode='JTTY',
-                      tx_enabled=False, transmitting=False, decoding=False, rx_offset_hz=1500, tx_offset_hz=1500,
-                      station_call='Q2AAA', station_grid='AA00', dx_grid='', tx_watchdog=False, sub_mode='',
-                      fast_mode=False, configuration_name='Default', tx_message='')
-        s.positive(f'beta6-jtty-status-s{schema}', schema, 1, body, 'radio_state', fields,
-                   message=dict(dial_frequency_hz='14074000', mode='JTTY', dx_call='', report='-10', tx_mode='JTTY',
-                        tx_enabled=False, transmitting=False, decoding=False, rx_df_hz=1500, tx_df_hz=1500,
-                        de_call='Q2AAA', de_grid='AA00', dx_grid='', tx_watchdog=False, sub_mode='', fast_mode=False,
-                        special_operation_mode=0, frequency_tolerance_hz=2**32-1, tr_period_seconds=2**32-1,
-                        configuration_name='Default', tx_message=''))
-        # Exact beta6 appended satellite fields stay raw extensions, without guessed submode.
-        base = s.vectors[f'05-qso-logged-s{schema}']
-        raw = base64.b64decode(base['input']['data'])
-        body = raw[len(header(schema, 5)):].replace(utf8('FT8'), utf8('JTTY'), 1)
-        fields = copy.deepcopy(base['expected']['event']['fields'])
-        fields.pop('radio')
-        fields['mode'] = 'JTTY'
-        view = copy.deepcopy(base['expected_message']['body'])
-        view['mode'] = 'JTTY'
-        s.positive(f'beta6-jtty-qso-s{schema}', schema, 5, body, 'qso_logged', fields,
-                   message=view, extensions=utf8('')*3)
-        adif = '\n<adif_ver:5>3.1.8\n<programid:6>WSJT-X\n<EOH>\n'
-        adif += '<call:5>Q1AAA <gridsquare:4>AA00 <mode:4>MFSK <submode:4>JTTY'
-        adif += ' <rst_sent:3>-10 <rst_rcvd:3>-11 <qso_date:8>19700101 <time_on:6>000000'
-        adif += ' <qso_date_off:8>19700101 <time_off:6>000001 <band:3>20m <freq:9>14.074000'
-        adif += ' <station_callsign:5>Q2AAA <EOR>'
-        s.positive(f'beta6-jtty-adif-s{schema}', schema, 12, utf8(adif), 'qso_logged', {'adif': adif}, message={'adif': adif})
-    for name, vector in s.vectors.items():
-        if name.startswith(('beta6-', '17-', '18-')):
-            vector['source_tag'] = BETA_TAG
-            vector['source_tarball_sha256'] = BETA_TARBALL
 
 
 def compatibility(s):
@@ -652,7 +450,7 @@ def compatibility(s):
     new = copy.deepcopy(old)
     new['spec'] = '0.3.0'
     new['mapping'] = 2
-    new['native']['data'] = b64(header(3, 19))
+    new['native']['data'] = b64(header(3, 17))
     new['kind'] = 'future_kind'
     new['fields'] = {'future_field': True}
     read_native = dict(read, kind='native', fields={})
@@ -673,13 +471,13 @@ def compatibility(s):
     new = copy.deepcopy(old)
     new['spec'] = '0.3.0'
     new['mapping'] = 2
-    new['native']['data'] = b64(header(3, 20))
+    new['native']['data'] = b64(header(3, 18))
     new['kind'] = 'control'
     new['fields'] = {'operation': 'future_operation'}
     add('old-reader-new-operation', new)
     s.vectors['compat-old-reader-new-operation']['expected']['verification'] = 'unavailable'
     for name, native_type, kind, fields in [
-        ('known-kind-new-revision', 19, 'radio_state', {'dial_frequency_hz': 14074000}),
+        ('known-kind-new-revision', 17, 'radio_state', {'dial_frequency_hz': 14074000}),
         ('known-operation-new-revision', 8, 'control', {'operation': 'halt_tx', 'auto_tx_only': True}),
     ]:
         new = copy.deepcopy(old)
@@ -856,7 +654,7 @@ def commands(s):
         event['fields']['text'] = bad
         negative(label, event)
     event = copy.deepcopy(baselines['send_text'])
-    event['mapping'] = 3
+    event['mapping'] = 2
     negative('known-operation-new-revision', event, category='unsupported_version')
     for schema in (0, 4, '3', True):
         negative('schema-' + str(schema), baselines['close'], {'schema': schema}, 'unsupported_version')
@@ -1237,9 +1035,7 @@ def producer_validator(schema, jsonschema):
     strict = copy.deepcopy(schema)
     strict['additionalProperties'] = False
     strict['properties']['spec'] = {'const': SPEC}
-    strict['properties']['mapping'] = {'enum': [1, 2, 3]}
-    strict['allOf'].append({'if': {'properties': {'family': {'not': {'const': 'wsjtx'}}}},
-        'then': {'properties': {'mapping': {'const': 1}}}})
+    strict['properties']['mapping'] = {'const': 1}
     strict['properties']['family'] = {'enum': ['wsjtx', 'n1mm', 'fldigi',
         'pskreporter-mqtt', 'pskreporter-ipfix', 'qgi']}
     strict['properties']['kind'] = {'enum': [k for k in strict['$defs']
@@ -1262,7 +1058,7 @@ def producer_validator(schema, jsonschema):
         'QColor': {'$ref': '#/$defs/qcolor'}}
     layouts = (ROOT / 'spec/annex-b-wsjtx.md').read_text().split('## B.4 Message layouts')[1].split('## B.5')[0]
     message = {'type': 'object', 'required': ['schema', 'type', 'id', 'body', 'extensions'],
-        'properties': {'schema': {'enum': [1, 2, 3]}, 'type': {'enum': list(range(20))},
+        'properties': {'schema': {'enum': [1, 2, 3]}, 'type': {'enum': list(range(17))},
             'id': {'$ref': '#/$defs/text'}, 'body': {'type': 'object'},
             'extensions': {'$ref': '#/$defs/base64'}}, 'allOf': []}
     for section in layouts.split('### ')[1:]:
@@ -1316,8 +1112,6 @@ def check_status_sentinels(suite):
         if vector['class'] != 'positive' or vector['expected']['event']['kind'] != 'radio_state':
             continue
         raw = base64.b64decode(vector['input']['data'])
-        if struct.unpack_from('>I', raw, 8)[0] != 1:
-            continue
         offset = 16 + struct.unpack_from('>I', raw, 12)[0] + 8
         for _ in range(4):
             length = struct.unpack_from('>I', raw, offset)[0]
@@ -1377,7 +1171,7 @@ def check_revision_outcomes(suite):
         assert 'verification' not in event
     vector = suite.vectors['command-error-known-operation-new-revision']
     assert vector['input']['event']['fields']['operation'] == 'send_text'
-    assert vector['input']['event']['mapping'] == 3
+    assert vector['input']['event']['mapping'] == 2
     assert vector['expected']['error']['category'] == 'unsupported_version'
 
 
@@ -3743,24 +3537,11 @@ def main():
     fldigi_validation = validate_fldigi(fldigi_suite, check_n1mm_xml, ROOT,
                                        args.producer_strict, producer_validator)
     outputs = {name + '.json': dump(vector) for name, vector in suite.vectors.items()}
-    manifest = {'$comment': 'SPDX-License-Identifier: GPL-3.0-or-later', 'spec': SPEC, 'family': 'wsjtx', 'mapping': 3,
-                'source_sha256': '8d38619417ee80853d2e5480bd92143065da1a64d5a33a41969f40086194e065',
-                'previous_provisional_source': {'mapping': 2, 'source_tag': BETA_TAG,
-                    'source_tarball_sha256': BETA_TARBALL,
-                    'source_sha256': 'b640a632f38b218f97b9c9cf5b5a09b183e1629c613c33d90f39635f9b3fdb3d'},
-                'previous_source': {'mapping': 1, 'source_tag': 'v3.0.2', 'source_sha256': PIN,
-                    'source_tarball_sha256': '8483a851bcb6455f5787de87b89efdf90e928842debde036e287e93e7f3837bd'},
+    manifest = {'$comment': 'SPDX-License-Identifier: GPL-3.0-or-later', 'spec': SPEC, 'family': 'wsjtx', 'mapping': 1, 'source_sha256': PIN,
                 'hash_scope': 'SHA-256 of each complete vector file, including its final newline',
                 'vectors': [{'file': name, 'class': suite.vectors[name[:-5]]['class'], 'spec': SPEC,
-                             'family': 'wsjtx', 'mapping': suite.vectors[name[:-5]]['mapping'], 'sha256': hashlib.sha256(data).hexdigest()}
+                             'family': 'wsjtx', 'mapping': 1, 'sha256': hashlib.sha256(data).hexdigest()}
                             for name, data in sorted(outputs.items())]}
-    manifest['mapping_revisions'] = [1, 2, 3]
-    manifest['mapping_status'] = [PROVISIONAL + ' wsjtx/2 tag:v3.3.0-beta6,tarball-sha256:cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be',
-                                  PROVISIONAL + ' wsjtx/3 repo:github.com/qso-graph/wsjtx,commit:53313c109194de1ce8e82e44f6846d8579645e56,patch-sha256:fb245ccea54033ace6b43fce6302bae03e1dc6518a08b455bdf080ef411679bf']
-    manifest['proposal'] = {'mapping': 3, 'repository': 'github.com/qso-graph/wsjtx',
-                            'commit': '53313c109194de1ce8e82e44f6846d8579645e56',
-                            'base': 'WSJTX/wsjtx release/3.3 7255454d37c4c834dc88869bce810e39df91582b',
-                            'patch_sha256': 'fb245ccea54033ace6b43fce6302bae03e1dc6518a08b455bdf080ef411679bf'}
     outputs['manifest.json'] = dump(manifest)
     outputs = {'wsjtx/' + name: data for name, data in outputs.items()}
     shapes = dump(core_shapes())

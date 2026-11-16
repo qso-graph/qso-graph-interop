@@ -109,16 +109,6 @@ pub fn install_stop() -> Result<()> {
     Ok(())
 }
 
-pub fn inhibit_snapshot(s: &Sim) -> Option<Body> {
-    let state = s.inhibit_status.as_deref()?;
-    let mut snapshot = wsjtx::InhibitStatus::default();
-    snapshot.supported = state != "withdrawn";
-    snapshot.inhibited = state != "available";
-    snapshot.source_station = if snapshot.inhibited { "Q1AAA" } else { "" }.into();
-    snapshot.hold_rx = u32::from(snapshot.inhibited);
-    Some(Body::InhibitStatus(snapshot))
-}
-
 pub struct Player {
     pub status: wsjtx::Status,
     pub window: Vec<wsjtx::Decode>,
@@ -127,7 +117,6 @@ pub struct Player {
     staged: String,
     pub close: bool,
     window_bytes: usize,
-    inhibit: Option<Body>,
 }
 impl Player {
     pub fn new(s: &Sim) -> Self {
@@ -157,7 +146,6 @@ impl Player {
             staged: String::new(),
             close: false,
             window_bytes: 0,
-            inhibit: inhibit_snapshot(s),
         }
     }
     fn packet(&self, body: Body) -> Packet {
@@ -198,9 +186,6 @@ impl Player {
             self.heartbeat(),
             self.packet(Body::Status(self.status.clone())),
         ];
-        if let Some(snapshot) = &self.inhibit {
-            packets.insert(1, self.packet(snapshot.clone()));
-        }
         for l in &c.decodes {
             let mut d = wsjtx::Decode::default();
             d.new = true;
@@ -325,31 +310,36 @@ fn send(socket: &NumericUdp, packets: Vec<Packet>) -> Result<()> {
     }
     Ok(())
 }
-fn wait(socket: &NumericUdp, until: Instant, mut player: Option<&mut Player>) -> Result<()> {
+/// Waits until `until`, reacting to whatever arrives meanwhile.
+///
+/// The socket is polled without blocking rather than given a read timeout: on Windows a timed-out
+/// receive leaves the socket in an indeterminate state (`SO_RCVTIMEO`), and a datagram racing the
+/// timeout is lost.
+fn wait(socket: &NumericUdp, until: Instant, player: Option<&mut Player>) -> Result<()> {
+    socket.set_nonblocking(true)?;
+    let result = poll(socket, until, player);
+    socket.set_nonblocking(false)?;
+    result
+}
+fn poll(socket: &NumericUdp, until: Instant, mut player: Option<&mut Player>) -> Result<()> {
     let mut bytes = [0; 65_535];
     while !stopped() && !player.as_ref().is_some_and(|p| p.close) {
         let remaining = until.saturating_duration_since(Instant::now());
         if remaining.is_zero() {
             break;
         }
-        socket.set_read_timeout(Some(
-            remaining
-                .min(Duration::from_millis(50))
-                .max(Duration::from_millis(1)),
-        ))?;
         match socket.recv_from(&mut bytes) {
             Ok((n, _)) => {
                 if let Some(p) = player.as_deref_mut() {
+                    socket.set_nonblocking(false)?;
                     send(socket, p.react(&bytes[..n]))?;
+                    socket.set_nonblocking(true)?;
                 }
             }
-            Err(e)
-                if matches!(
-                    e.kind(),
-                    io::ErrorKind::WouldBlock
-                        | io::ErrorKind::TimedOut
-                        | io::ErrorKind::Interrupted
-                ) => {}
+            Err(e) if e.kind() == io::ErrorKind::WouldBlock => {
+                std::thread::sleep(remaining.min(Duration::from_millis(1)));
+            }
+            Err(e) if e.kind() == io::ErrorKind::Interrupted => {}
             Err(e) => return Err(e.into()),
         }
     }
@@ -378,32 +368,6 @@ pub fn run(s: Sim) -> Result<()> {
         let packets = crate::script(&s, seconds)?;
         install_stop()?;
         let socket = NumericUdp::sender(s.to.ok_or("--to is required")?, s.interface)?;
-        if s.jtty_text {
-            let begin = Instant::now();
-            let mut elapsed_ms = 0;
-            let mut previous_id = None;
-            let mut previous_length = 0;
-            for packet in packets {
-                if let Body::JttyText(text) = &packet.body {
-                    if previous_id != Some(text.message_id) {
-                        if previous_id.is_some() {
-                            elapsed_ms += 1500;
-                        }
-                        previous_id = Some(text.message_id);
-                        previous_length = 0;
-                    }
-                    let length = text.text.as_str().expect("synthetic ASCII text").len();
-                    elapsed_ms += (length - previous_length) as u64 * 200;
-                    previous_length = length;
-                    wait_capture(&socket, deadline(begin, elapsed_ms, s.speed)?)?;
-                }
-                if stopped() {
-                    break;
-                }
-                send(&socket, vec![packet])?;
-            }
-            return Ok(());
-        }
         return send(&socket, packets);
     }
     let name = s

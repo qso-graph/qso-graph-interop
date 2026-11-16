@@ -152,7 +152,7 @@ struct Sim {
     #[arg(long, required_unless_present_any = ["capture", "n1mm", "fldigi", "pskreporter_ipfix"], conflicts_with_all = ["qgi", "n1mm", "fldigi"])]
     wsjtx: bool,
     /// Simulate PSK Reporter IPFIX submissions to an explicit numeric unicast destination.
-    #[arg(long, conflicts_with_all=["wsjtx","n1mm","fldigi","capture","qgi","file","interface","address","inhibit_status","count","call","grid","id","dx_call","mode","frequency","from","speed","seed"])]
+    #[arg(long, conflicts_with_all=["wsjtx","n1mm","fldigi","capture","qgi","file","interface","address","count","call","grid","id","dx_call","mode","frequency","from","speed","seed"])]
     pskreporter_ipfix: bool,
     /// Source program template layout for IPFIX submissions.
     #[arg(long, requires="pskreporter_ipfix",default_value="wsjtx",value_parser=["wsjtx","fldigi"])]
@@ -212,13 +212,7 @@ struct Sim {
     /// Select the legacy fixed QSO script, with this DX callsign.
     #[arg(long, value_parser = sim::call)]
     dx_call: Option<String>,
-    /// Emit an InhibitStatus snapshot: available, held, or withdrawn.
-    #[arg(long, requires = "wsjtx", value_parser = ["available", "held", "withdrawn"], conflicts_with_all = ["capture", "n1mm", "fldigi"])]
-    inhibit_status: Option<String>,
-    /// Emit proposed JTTYText updates; requires --mode JTTY.
-    #[arg(long, requires_all = ["wsjtx", "mode"], conflicts_with_all = ["capture", "file", "n1mm", "fldigi", "pskreporter_ipfix"])]
-    jtty_text: bool,
-    /// Select the fixed QSO script or a JTTY status snapshot, with this mode.
+    /// Select the fixed QSO script, with this mode.
     #[arg(long)]
     mode: Option<String>,
     /// Select the legacy fixed QSO script, with this dial frequency in Hz.
@@ -288,29 +282,13 @@ fn emit(
     for event in outcome.events {
         if human {
             let value = event.value();
-            let fields = &value["fields"];
-            if event.kind_token() == "decode" && fields.get("message_id").is_some() {
-                writeln!(
-                    output,
-                    "JTTYText id={} message={} start={} df={}Hz snr={}dB complete={} off_air={} text={}",
-                    value["wire_id"],
-                    fields["message_id"],
-                    fields["start"],
-                    fields["audio_offset_hz"],
-                    fields["snr_db"],
-                    fields["complete"],
-                    fields["off_air"],
-                    fields["text"]
-                )?;
-            } else {
-                writeln!(
-                    output,
-                    "{} id={} {}",
-                    event.kind_token(),
-                    value["wire_id"],
-                    fields
-                )?;
-            }
+            writeln!(
+                output,
+                "{} id={} {}",
+                event.kind_token(),
+                value["wire_id"],
+                value["fields"]
+            )?;
             continue;
         }
         output.write_all(&qso_graph_interop::json::write(
@@ -419,12 +397,6 @@ fn listen_address(options: &Listen) -> SocketAddr {
 fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
     let make = |body| Packet::new(s.id.as_str(), body);
     let mode = s.mode.as_deref().unwrap_or("FT8");
-    if s.jtty_text && mode != "JTTY" {
-        return Err(io::Error::new(
-            io::ErrorKind::InvalidInput,
-            "--jtty-text requires --mode JTTY",
-        ));
-    }
     let dx_call = s.dx_call.as_deref().unwrap_or("Q1AW");
     let frequency = s.frequency.unwrap_or(14_074_000);
     let call = if s.call.is_empty() { "Q0CALL" } else { &s.call };
@@ -434,12 +406,12 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
         value.dial_frequency_hz = frequency;
         value.mode = mode.into();
         value.dx_call = "".into();
-        value.report = if mode == "JTTY" { "-15" } else { "" }.into();
+        value.report = "".into();
         value.tx_mode = mode.into();
         value.tx_enabled = false;
         value.transmitting = false;
         value.decoding = true;
-        value.rx_df_hz = if mode == "JTTY" { 1500 } else { 1200 };
+        value.rx_df_hz = 1200;
         value.tx_df_hz = 1500;
         value.de_call = Some(call.into());
         value.de_grid = Some(grid.into());
@@ -449,7 +421,7 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
         value.fast_mode = Some(false);
         value.special_operation_mode = Some(0);
         value.frequency_tolerance_hz = Some(u32::MAX);
-        value.tr_period_seconds = Some(if mode == "JTTY" { u32::MAX } else { 15 });
+        value.tr_period_seconds = Some(15);
         value.configuration_name = Some("Default".into());
         value.tx_message = Some("".into());
         value
@@ -472,59 +444,6 @@ fn script(s: &Sim, seconds: u64) -> Result<Vec<Packet>, io::Error> {
         })),
         make(Body::Status(status.clone())),
     ];
-    if let Some(snapshot) = sim::inhibit_snapshot(s) {
-        messages.insert(1, make(snapshot));
-    }
-    if mode == "JTTY" {
-        // beta6 mainwindow_jtty_receive.cpp never calls postDecode/MessageClient::decode.
-        // beta6 hides the legacy controls and emits unknown period/tolerance sentinels.
-        if let Some(packet) = messages
-            .iter_mut()
-            .find(|p| matches!(p.body, Body::Status(_)))
-            && let Body::Status(status) = &mut packet.body
-        {
-            status.decoding = false;
-        }
-        if s.jtty_text {
-            let mut elapsed_ms = 0_u64;
-            for (index, text) in ["CQ Q1ABC DN13", "Q1ABC Q2XYZ HELLO", "Q2XYZ Q1ABC 73"]
-                .into_iter()
-                .enumerate()
-            {
-                let start_ms = seconds
-                    .checked_mul(1000)
-                    .and_then(|ms| ms.checked_add(elapsed_ms))
-                    .ok_or_else(|| {
-                        io::Error::new(io::ErrorKind::InvalidInput, "JTTY start overflows")
-                    })?;
-                let mut start = wsjtx::QDateTime::default();
-                start.julian_day = i64::try_from(start_ms / 86_400_000)
-                    .ok()
-                    .and_then(|days| days.checked_add(2_440_588))
-                    .ok_or_else(|| {
-                        io::Error::new(io::ErrorKind::InvalidInput, "JTTY date overflows")
-                    })?;
-                start.time = QTime::new((start_ms % 86_400_000) as u32);
-                start.time_spec = 1;
-                // Five characters per second, one full-text update every two characters.
-                for end in (2..text.len() + 2).step_by(2) {
-                    let end = end.min(text.len());
-                    let mut value = wsjtx::JttyText::default();
-                    value.message_id = index as i64 + 1;
-                    value.start = start.clone();
-                    value.delta_frequency_hz = 1500;
-                    value.snr_db = -12;
-                    value.text = text[..end].into();
-                    value.complete = end == text.len();
-                    value.off_air = false;
-                    messages.push(make(Body::JttyText(value)));
-                }
-                elapsed_ms += text.len() as u64 * 200 + 1500;
-            }
-        }
-        messages.push(make(Body::Close));
-        return Ok(messages);
-    }
     let time = QTime::new(((seconds % 86_400) * 1000) as u32);
     for (index, text) in [
         format!("CQ {} {}", dx_call, grid),
@@ -739,32 +658,10 @@ mod tests {
             }
         }
     }
+
     #[test]
-    fn jtty_listener_formats_human_and_json_without_losing_text() {
-        let mut text = wsjtx::JttyText::default();
-        text.message_id = i64::MAX;
-        text.start.julian_day = 2_440_588;
-        text.start.time = QTime::new(123);
-        text.start.time_spec = 1;
-        text.delta_frequency_hz = 1501;
-        text.snr_db = -12;
-        text.text = "Q1ABC café\n73".into();
-        text.complete = true;
-        let bytes = wsjtx::encode(&Packet::new("instance", Body::JttyText(text))).unwrap();
-        let mut json = Vec::new();
-        emit(
-            &mut wsjtx::Wsjtx::default(),
-            &bytes,
-            &mut json,
-            "from_application",
-            false,
-        )
-        .unwrap();
-        assert_eq!(json.iter().filter(|b| **b == b'\n').count(), 1);
-        let event: serde_json::Value = serde_json::from_slice(&json).unwrap();
-        assert_eq!(event["mapping"], 3);
-        assert_eq!(event["fields"]["text"], "Q1ABC café\n73");
-        assert_eq!(event["fields"]["message_id"], i64::MAX.to_string());
+    fn listener_human_summary_is_one_line_and_excludes_json() {
+        let bytes = wsjtx::encode(&Packet::new("instance", Body::Close)).unwrap();
         let mut human = Vec::new();
         emit(
             &mut wsjtx::Wsjtx::default(),
@@ -775,62 +672,10 @@ mod tests {
         )
         .unwrap();
         let human = String::from_utf8(human).unwrap();
-        assert!(human.starts_with("JTTYText id=\"instance\" message=\"9223372036854775807\""));
-        assert!(human.contains("complete=true off_air=false text=\"Q1ABC café\\n73\""));
+        assert!(human.contains(" id=\"instance\" "), "{human}");
         assert_eq!(human.lines().count(), 1);
         assert!(
             Cli::try_parse_from(["qg-interop", "listen", "--wsjtx", "--human", "--json"]).is_err()
         );
-        assert!(
-            Cli::try_parse_from([
-                "qg-interop",
-                "sim",
-                "--wsjtx",
-                "--jtty-text",
-                "--to",
-                "127.0.0.1:2237"
-            ])
-            .is_err()
-        );
-    }
-
-    #[test]
-    fn jtty_snapshot_has_no_invented_decode_or_qso() {
-        let cli = Cli::parse_from([
-            "qg-interop",
-            "sim",
-            "--wsjtx",
-            "--to",
-            "127.0.0.1:2237",
-            "--mode",
-            "JTTY",
-            "--inhibit-status",
-            "held",
-        ]);
-        let Command::Sim(s) = cli.command else {
-            panic!("sim");
-        };
-        let packets = script(&s, 43200).unwrap();
-        assert_eq!(
-            packets
-                .iter()
-                .map(|p| p.body.message_type())
-                .collect::<Vec<_>>(),
-            [0, 17, 1, 6]
-        );
-        for packet in packets {
-            let bytes = wsjtx::encode(&packet).unwrap();
-            assert!(matches!(
-                wsjtx::decode(&bytes).unwrap(),
-                wsjtx::Outcome::Message(_)
-            ));
-            if let Body::Status(status) = packet.body {
-                assert_eq!(status.mode.as_str(), Some("JTTY"));
-                assert_eq!(status.tx_mode.as_str(), Some("JTTY"));
-                assert!(!status.decoding);
-                assert_eq!(status.tr_period_seconds, Some(u32::MAX));
-                assert_eq!(status.frequency_tolerance_hz, Some(u32::MAX));
-            }
-        }
     }
 }
