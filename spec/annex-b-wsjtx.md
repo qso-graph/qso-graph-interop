@@ -1,12 +1,12 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-# Annex B: WSJT-X, mapping revisions 1–2
+# Annex B: WSJT-X, mapping revision 1
 
-This annex is normative for family `wsjtx`, specification `0.2.0`. Revision 1 remains unchanged for types 0–16. Revision 2 adds types 17–18; its provisional pin and JTTY evidence are in B.8. Revision 3 adds proposed type 19 only, pinned in B.9. The revision 1 pin is
+This annex is normative for family `wsjtx`, specification `0.2.0`. Its pin is
 [WSJT-X v3.0.2, NetworkMessage.hpp](https://github.com/WSJTX/wsjtx/blob/v3.0.2/Network/NetworkMessage.hpp),
 commit `ccdfaf3c1c109010d15399674ce278167cfde848`, SHA-256
 `fd73b7f92fc0f66ea8f12a147b59a6072408c24656735d59df772dc55a5eeb62`.
 [Protocol evidence](../docs/PROTOCOL.md) records the matching 2.7.0 definition and the pinned
-stream-format evidence for date/time, time zones and colors. The `v3.0.2` tarball SHA-256 is `8483a851bcb6455f5787de87b89efdf90e928842debde036e287e93e7f3837bd`. Header line references below use
+stream-format evidence for date/time, time zones and colors. Header line references below use
 this exact file. The source defines layouts; the requirements here define their common mapping.
 
 ## B.1 Framing, limits and outcomes
@@ -15,10 +15,10 @@ this exact file. The source defines layouts; the requirements here define their 
 |---|---|---|
 | `QGI-WSJ-0010` | A codec MUST read the header in order: magic `u32` `0xadbccbda`, schema `u32`, type `u32`, ID `utf8`; all multibyte values are big endian (header lines 8–51). | Test |
 | `QGI-WSJ-0011` | A codec MUST reject a datagram longer than 65,507 bytes as `oversized` before reading it. | Test |
-| `QGI-WSJ-0012` | A codec MUST reject a non-null ID length greater than 256 bytes (1,024 for type 18), or any other non-null declared text length greater than 65,507 bytes, as `oversized` before allocation. | Test |
+| `QGI-WSJ-0012` | A codec MUST reject a non-null ID length greater than 256 bytes, or any other non-null declared text length greater than 65,507 bytes, as `oversized` before allocation. | Test |
 | `QGI-WSJ-0013` | Schema 0 MUST return `unsupported_version`; schemas 1–3 MUST use the layouts below; a schema greater than 3 MUST return `future_version` immediately after the eight-byte magic/schema prefix, without reading type or ID. | Test |
 | `QGI-WSJ-0014` | An unknown type in a supported schema MUST return `unknown_type` immediately after its four-byte type, without reading ID or body. | Test |
-| `QGI-WSJ-0015` | A successful event MUST use `family: "wsjtx"`, `mapping: 1` for types 0–16 `mapping: 2` for types 17–18 or `mapping: 3` for type 19, `native_version` equal to the schema's decimal string, `wire_id` equal to the decoded ID (including null), and `native.format: "wsjtx_datagram"`. | Test |
+| `QGI-WSJ-0015` | A successful event MUST use `family: "wsjtx"`, `mapping: 1`, `native_version` equal to the schema's decimal string, `wire_id` equal to the decoded ID (including null), and `native.format: "wsjtx_datagram"`. | Test |
 | `QGI-WSJ-0016` | A codec MUST parse each known optional suffix only if bytes remain, preserve its absence by omission, and report `truncated` if a begun field lacks bytes; bytes after all known fields MUST remain in `native.data` as extensions. | Test |
 | `QGI-WSJ-0017` | Within a field, a decoder MUST check its declared resource bound, structural encoding, byte availability and semantic discriminator in that order; wrong magic is `malformed`, an odd non-null QString byte count is `malformed`, and a time-spec byte outside 0–3 is `invalid_value`. | Test |
 | `QGI-WSJ-0018` | Every non-null length MUST fit the remaining input before allocation; absence of those bytes is `truncated`. | Test |
@@ -78,7 +78,7 @@ no conversion to another color space occurs.
 | `QGI-WSJ-0025` | A valid QTime MUST map to `time_of_day` using exactly three fractional digits; a QDateTime resolving without host data MUST map to `instant` using exactly three fractional digits, otherwise the common time MUST be absent. | Test |
 | `QGI-WSJ-0026` | Status frequency tolerance and T/R period equal to `0xffffffff` MUST leave their common members absent (not applicable); Configure MUST retain those integers because its sentinels are command arguments. | Test |
 | `QGI-WSJ-0027` | LoggedADIF MUST map only its verbatim ADIF text, without parsing tags into other common members; WSPRDecode MUST NOT synthesize a mode, and Decode MUST NOT extract call or grid from its text. | Test |
-| `QGI-WSJ-0028` | **Radio.** For types 1, 2, 5, 10, 12, 17 and 19, `fields.radio.instance` MUST equal the header client ID using the same text representation as `wire_id`, including null or empty; `radio.number` MUST be absent. The client ID labels the one-radio WSJT-X instance (including the program's `--rig-name` instance label), never sender identity. It MUST NOT fill `source_id`. Types with no common radio-bearing kind MUST NOT invent a radio field. | Test |
+| `QGI-WSJ-0028` | **Radio.** For types 1, 2, 5, 10 and 12, `fields.radio.instance` MUST equal the header client ID using the same text representation as `wire_id`, including null or empty; `radio.number` MUST be absent. The client ID labels the one-radio WSJT-X instance (including the program's `--rig-name` instance label), never sender identity. It MUST NOT fill `source_id`. Types with no common radio-bearing kind MUST NOT invent a radio field. | Test |
 | `QGI-WSJ-0029` | **Side effects.** The WSJT-X effects listed below are the family-defined meanings for `QGI-MOD-0022`; callers MUST NOT equate `fields.text` with guaranteed on-air content. Mapping and encoding MUST NOT execute these effects. | Inspection |
 
 | Operation | Possible WSJT-X application effects (pinned header) |
@@ -103,7 +103,7 @@ an observer's date to QTime nor consults a clock. A family-carried UTC value is 
 **`QGI-WSJ-0053` — Other canonicalizations.** The other common canonicalizations are text presentation (`QGI-SER-0002`), binary64 presentation
 (`QGI-SER-0003`), integer omission outside the common range (`QGI-MOD-0013`), and field renaming in
 the tables. There is no callsign case conversion, whitespace trimming, mode-symbol expansion,
-frequency addition, or loss of null versus empty text. UTF-8 invalidity itself is not an error for revision 1 types or types 17 and 19; type 18 has the explicit validation in B.8.
+frequency addition, or loss of null versus empty text. UTF-8 invalidity itself is not an error.
 A nonfinite float retains its bits. A negative zero is emitted as a JSON negative-zero number;
 comparison of finite floating fields uses binary64 values as in `QGI-SER-0008`.
 
@@ -145,8 +145,6 @@ The direction column is the native protocol's defined direction; it never change
 | 14 | SwitchConfiguration | to application | control | `wsjtx.switch_configuration` |
 | 15 | Configure | to application | control | `wsjtx.configure` |
 | 16 | AnnotationInfo | to application | control | `wsjtx.annotation_info` |
-| 17 | InhibitStatus (revision 2) | from application | radio_state | — |
-| 18 | TxInhibit (revision 2) | to application | control | `wsjtx.tx_inhibit` |
 
 ### 0: Heartbeat
 
@@ -360,44 +358,6 @@ The direction column is the native protocol's defined direction; it never change
 | `sort_order_provided` | `bool` | `sort_order_provided` |
 | `sort_order` | `u32` | `sort_order` |
 
-### 17: InhibitStatus
-
-Revision 2; beta6 `Network/MessageClient.cpp:727–744` governs serialization.
-
-| Native field | Wire type | Common field |
-|---|---|---|
-| `supported` | `bool` | `inhibit_supported` |
-| `inhibited` | `bool` | `tx_inhibited` |
-| `source_station` | `utf8` | `source_station` |
-| `hold_rx` | `u32` | `hold_rx` |
-| `release_rx` | `u32` | `release_rx` |
-| `expiries` | `u32` | `expiries` |
-| `invalid` | `u32` | `invalid` |
-
-### 18: TxInhibit
-
-Revision 2; beta6 `Network/MessageClient.cpp:368–421` governs reception.
-
-| Native field | Wire type | Common field |
-|---|---|---|
-| `controller_id` | `utf8` | `controller_id` |
-| `ttl_ms` | `u32` | `ttl_ms` |
-| `station` | `utf8` | `station` |
-
-### 19: JTTYText → `decode` (revision 3 only)
-
-Id remains `wire_id` and `radio.instance`. All seven body fields are required.
-
-| Wire field | Type | Common field |
-|---|---|---|
-| `message_id` | `i64` | `message_id` (signed decimal text) |
-| `start` | `QDateTime` | `start` (UTC transmission start) |
-| `delta_frequency_hz` | `u32` | `audio_offset_hz` |
-| `snr_db` | `i32` | `snr_db` |
-| `text` | `utf8` | `text` |
-| `complete` | `bool` | `complete` |
-| `off_air` | `bool` | `off_air` |
-
 ## B.5 Structured view
 
 | ID | Requirement | Verify |
@@ -416,7 +376,7 @@ Command side effects are defined once in B.3 (`QGI-WSJ-0029`), including staged 
 
 | ID | Requirement | Verify |
 |---|---|---|
-| `QGI-WSJ-0040` | Command encoding MUST select types 0, 3, 4, 6–9, 11, 13–16 and (revision 2) 18 from the operation table below and encode only the command fields and `wire_id`, using B.2 primitives and B.4 wire order. | Test |
+| `QGI-WSJ-0040` | Command encoding MUST select types 0, 3, 4, 6–9, 11 and 13–16 from the operation table below and encode only the command fields and `wire_id`, using B.2 primitives and B.4 wire order. | Test |
 | `QGI-WSJ-0041` | Observed re-encoding MUST decode `native.data`, check its mapping consistency, and write every field, preserving raw values and extensions except boolean-byte canonicalization under `QGI-WSJ-0024`. | Test |
 | `QGI-WSJ-0042` | Command encoding MUST reject a value outside B.2 wire ranges, a missing required argument, an unrecognized operation, or a hole in an optional tail as `invalid_value`. | Test |
 | `QGI-WSJ-0043` | Encoding MUST enforce the decoding size limits before producing a datagram. | Test |
@@ -440,7 +400,6 @@ Command side effects are defined once in B.3 (`QGI-WSJ-0029`), including staged 
 | `wsjtx.switch_configuration` | 14 | `configuration_name` | none |
 | `wsjtx.configure` | 15 | `mode`, `frequency_tolerance_hz`, `sub_mode`, `fast_mode`, `tr_period_seconds`, `rx_offset_hz`, `dx_call`, `dx_grid` | `generate_messages` |
 | `wsjtx.annotation_info` | 16 | `dx_call`, `sort_order_provided`, `sort_order` | none |
-| `wsjtx.tx_inhibit` | 18 | `controller_id`, `ttl_ms`, `station` | none |
 
 **`QGI-WSJ-0057` — Argument representations.** `operation` is `fields.operation`. A text argument MUST use a string when valid in its native encoding, and only the matching raw wrapper when invalid; WSJT-X UTF-8 arguments MUST reject UTF-16 wrappers and raw UTF-8 wrappers containing valid UTF-8 as `invalid_value`. Required text arguments accept explicit null and empty under
 B.2, but omission is not null. QColor arguments use the B.2 object (`spec` u8, exactly five u16
@@ -464,7 +423,7 @@ periodic heartbeats and transport stay outside this family codec. This does not 
 template state in templated families under `QGI-CLS-0021`.
 
 **`QGI-WSJ-0059` — Evidence operations.** Observed re-encoding is available for the sending types; observation types 1, 2, 5, 10 and 12 may
-also be offered for simulators, as may type 17. Explicit original-byte retrieval remains separate from re-encoding
+also be offered for simulators. Explicit original-byte retrieval remains separate from re-encoding
 and always returns `native.data` exactly, including noncanonical boolean bytes. Commands cannot
 retrieve or re-encode absent native evidence. An observed out-of-range Clear window remains
 lossless under B.3; that does not make it an accepted argument for command construction.
@@ -481,29 +440,21 @@ The largest native datagram is N = 65,507 bytes. Its base64 evidence uses
 an invalid UTF-8 byte array costs at most four per byte including commas, and UTF-16 unit arrays
 at most six per two native bytes. The common and structured views therefore use at most 12N =
 786,084 bytes for text/extension contents. The client ID occurs in `wire_id`, `radio.instance` and
-structured `id`; reserving two copies in 12N plus one extra maximum escaped ID (including type 18) costs 6 × 1,024 =
-6,144 bytes. Fixed member names, punctuation, scalar values, text-wrapper names and date/time
+structured `id`; reserving two copies in 12N plus one extra maximum escaped ID costs 6 × 256 =
+1,536 bytes. Fixed member names, punctuation, scalar values, text-wrapper names and date/time
 objects use a conservative 32,768-byte reserve: each supported type has fewer than 256 such
 members/scalars across both views, each budgeted 128 bytes. Context and all hops use at most the
-65,536-byte reserve. Total: 87,344 + 786,084 + 6,144 + 32,768 + 65,536 = 977,876 bytes,
-leaving 70,700 bytes below 1 MiB. Consequently every admitted WSJT-X datagram fits, including
+65,536-byte reserve. Total: 87,344 + 786,084 + 1,536 + 32,768 + 65,536 = 973,268 bytes,
+leaving 75,308 bytes below 1 MiB. Consequently every admitted WSJT-X datagram fits, including
 maximal common fields and the specified structured view. The terms intentionally overcount
 shared wire storage; they are an upper bound rather than a claim that all maxima coexist.
 
-## B.8 Provisional revision 2
+## B.8 Provisional mappings
 
-<!-- QGI-MAPPING-PROVISIONAL wsjtx/2 tag:v3.3.0-beta6,tarball-sha256:cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be -->
-
-**Provisional.** Revision 2 is pinned to WSJT-X **`v3.3.0-beta6`**, dated 2026-11-11,
-tarball SHA-256 `cbbbfd213de2dabfb0d2bac626a3b2ebb9e7b1836bd2771f90d12800771694be`.
-The general release baseline is **`v3.0.2`**, tarball SHA-256
-`8483a851bcb6455f5787de87b89efdf90e928842debde036e287e93e7f3837bd`. These archives are the independent source inputs;
-`Network/NetworkMessage.hpp` in beta6 has SHA-256
-`b640a632f38b218f97b9c9cf5b5a09b183e1629c613c33d90f39635f9b3fdb3d`.
-Code governs when a header description disagrees with serialization or reception.
-Revision 2 changes no revision 1 meaning, type, unit, default or required field.
-Readers accept revisions 1 and 2; authors may use revision 2 for existing types unchanged.
-A revision 1 event cannot claim a revision 2 native type. Older positive vectors remain unchanged.
+No `wsjtx` mapping revision is provisional in specification `0.2.0`. This section defines how a
+later revision built from WSJT-X pre-release or proposed source is marked and gated
+(`QGI-WSJ-0002`); support for WSJT-X 3.3's new message types returns in a later release after
+WSJT-X 3.3's general release.
 
 The reserved marker is the exact ASCII token formed by `QGI-MAPPING-` followed by
 `PROVISIONAL`. Each occurrence MUST be followed by a space, `family/revision`, a
@@ -519,134 +470,9 @@ An optional ` - YYYY-MM-DD` suffix on the section heading is allowed. Entries in
 Unreleased or another version do not count. Missing, mismatched or unpinned
 markers fail. Every other version refuses provisional mappings. The workflow
 passes its selected version at every signing/publication gate and checks it
-against the workspace version. No release version is changed by this work.
+against the workspace version.
 
 Source-pin tokens use `tag:<tag>,tarball-sha256:<digest>` for pre-release archives,
 or `repo:<repository>,commit:<full-sha>,patch-sha256:<digest>` for proposals, where the digest is
 of `git diff --binary --full-index <base> <commit>` so anyone can reproduce it from the repositories.
 Re-pin the source and remove markers only after checking the general release source.
-
-| ID | Requirement | Verify |
-|---|---|---|
-| `QGI-WSJ-0061` | Type 18 MUST use schema 2 or 3, a non-null valid UTF-8 target ID of at most 1,024 bytes, a datagram of at most 4,096 bytes including extensions, and all three body fields. Schema 1 MUST return `unsupported_version`. Envelope size violations MUST return `oversized`. | Test |
-| `QGI-WSJ-0062` | Type 18 Controller ID MUST be non-null, nonempty valid UTF-8 of at most 128 bytes, with neither nonprinting characters nor whitespace. Station MUST be valid UTF-8 of at most 128 bytes with no nonprinting characters; explicit null and empty are permitted. TTL MUST be zero or 100–30,000 integer milliseconds. Invalid body values MUST return `invalid_value`. Encoding MUST reject, never truncate. | Test |
-| `QGI-WSJ-0063` | Type 17 MUST map to `radio_state`, with `radio.instance` from Id and the B.4 fields. Counters MUST remain cumulative unsigned values, without inference of deltas or acknowledgement. | Test |
-
-Beta6 uses `QString::fromUtf8`, checks exact UTF-8 round-trip, and tests
-`QChar::isPrint` / `QChar::isSpace` on Unicode scalars (`MessageClient.cpp:43–59`).
-The implementation's Unicode classification data is version 16.0 (the unassigned
-category table transcribed from cached crates.io `regex-syntax` 0.8.11); this is
-explicit data, not a locale lookup. Qt's Unicode database depends on the Qt build;
-the WSJT-X archive does not pin that database version. Newly assigned characters
-can therefore differ across Qt builds. ASCII and the Unicode boundary fixtures do
-not depend on locale. This uncertainty does not license guessing a new wire layout.
-
-**Application semantics, informative.** Beta6's header `NetworkMessage.hpp:548–606`
-defines a supported snapshot as DTR/RTS PTT with Accept UDP requests enabled.
-Snapshots follow changes and heartbeats; withdrawal can remain inhibited until
-leases expire. Source station summarizes holders; counters cover the current
-transceiver lifetime. Controllers expire advertisements after three missed heartbeat
-intervals. TTL zero releases only the named controller; positive TTL creates or
-refreshes its lease. Holds combine with OR. Up to 64 controller identities are
-tracked individually; extra identities extend an aggregate lease whose expiry is
-counted once and which individual releases cannot clear. Disabling requests leaves
-existing holds to expire. A codec performs none of these effects. The caller chooses
-control policy and the numeric endpoint learned from traffic; TxInhibit uses the
-exact target Id, peer schema, and source port, without discovery.
-
-**Decode and Reply Mode, informative.** Beta6 `NetworkMessage.hpp:238–239, 289–296`
-clarifies that Decode Mode is the decoded-line marker (`~` for FT8, `+` for FT4),
-not an operating-mode name. `mainwindow.cpp:14131–14149` passes `parts[4]` unchanged;
-Reply copies it unchanged. Existing codec behavior already preserves the marker,
-so this clarification changes no mapping. `MessageClient.cpp:1126` constructs the
-LoggedADIF header with `<adif_ver:5>3.1.8`; it is carried verbatim, not rewritten.
-
-**JTTY wire findings, informative.** All paths below are from the pinned beta6:
-
-- `widgets/mainwindow.cpp:11987–12044` selects `m_mode = "JTTY"`, disables slotted
-  auto sequencing, and uses sample coordinates for receive timing. The internal
-  legacy `m_TRperiod=180` is not evidence for a fixed UDP period.
-- `widgets/mainwindow.cpp:14842–14877` passes `m_mode` for both Status Mode and Tx
-  Mode; `Network/MessageClient.cpp:1026–1034` writes those UTF-8 strings. Status thus
-  carries `"JTTY"`. `mainwindow.cpp:12334` selects stacked page 1;
-  `mainwindow.ui:1379,1694,1805,3633` places the legacy `sbFtol` and `sbTR`
-  on hidden page 0. The `isVisible()` checks at `mainwindow.cpp:14851–14863`
-  therefore send `0xffffffff` for both tolerance and period, which remain absent
-  in the common view under the existing sentinel rule. The JTTY controls have
-  separate `_2` names. No JTTY slot duration is inferred.
-- `widgets/mainwindow_jtty_receive.cpp:96–146` wires all receive effects: rendering,
-  optional Windows MMTTY/N1MM echo, recording, local Rx logging, and PSK Reporter.
-  `JttyReceiveResultController.cpp:8–105` applies those effects.
-  `mainwindow.cpp:2535–2540` returns early from the legacy decoder data sink for JTTY. Neither path calls
-  `postDecode` or `MessageClient::decode`. **No live JTTY type 2 Decode is sent**;
-  there is consequently no JTTY UDP time/SNR/dt/df/Mode-marker tuple to invent.
-- Display/local-log formatting is not a UDP layout: `widgets/JttyMessages.hpp:395–399`
-  formats optional UTC `hhmmss`, and `:482–489` formats frequency, SNR and chat text.
-  The generic Replay path (`mainwindow.cpp:14100–14128`) can pass displayed text
-  through the legacy fixed-column `postDecode` parser; arbitrary chat text can
-  satisfy that parser accidentally. This is not a JTTY receive wire contract and
-  supplies no stable JTTY marker or decode tuple.
-- `widgets/logqso.cpp:380–385,472–477` retains the selected mode in acceptQSO;
-  `mainwindow.cpp:10735–10738` forwards mode and ADIF. `MessageClient.cpp:1095–1113`
-  serializes QSOLogged Mode as `"JTTY"`, with no QSOLogged submode field. Additional
-  satellite, satellite mode and receive-frequency text are trailing extensions,
-  preserved unchanged by both mappings.
-- `logbook/AdifQso.cpp:6–9,51–57` maps JTTY to ADIF `MODE=MFSK`, `SUBMODE=JTTY`.
-  `MessageClient.cpp:1118–1130` emits it as LoggedADIF, independently of QSOLogged.
-
-The simulator's JTTY script emits Heartbeat, a JTTY Status snapshot with unknown
-period/tolerance sentinels, and Close;
-it does not manufacture live Decode traffic or a completed contact. Optional
-InhibitStatus snapshots describe synthetic state independently of JTTY reception.
-
-## B.9 Provisional revision 3
-
-<!-- QGI-MAPPING-PROVISIONAL wsjtx/3 repo:github.com/qso-graph/wsjtx,commit:53313c109194de1ce8e82e44f6846d8579645e56,patch-sha256:fb245ccea54033ace6b43fce6302bae03e1dc6518a08b455bdf080ef411679bf -->
-
-**Provisional: proposed in [WSJT-X pull request #171](https://github.com/WSJTX/wsjtx/pull/171).**
-Revision 3 adds type 19 only. Its authority is repository `github.com/qso-graph/wsjtx`,
-branch `jtty-udp-text`, commit `53313c109194de1ce8e82e44f6846d8579645e56`, based on
-`WSJTX/wsjtx` `release/3.3` at `7255454d37c4c834dc88869bce810e39df91582b`. The change alone is
-the output of `git diff --binary --full-index 7255454d37c4c834dc88869bce810e39df91582b
-53313c109194de1ce8e82e44f6846d8579645e56`, SHA-256
-`fb245ccea54033ace6b43fce6302bae03e1dc6518a08b455bdf080ef411679bf`.
-This is a proposal pin, not a released WSJT-X contract. WSJT-X may change or reject
-it; this mapping then follows WSJT-X. Revisions 1–2 and their vectors retain their
-meanings. Readers accept revisions 1–3; authors may use revision 3 for existing
-observations unchanged. Command construction remains on revisions 1–2, but type 19 requires revision 3 (`QGI-MAP-0002`, `QGI-GEN-0005`).
-
-Source root: `/home/ki7mt/workspace/worktrees/WSJTX/wsjtx/jtty-udp-text`.
-
-| Source path | SHA-256 | Field evidence |
-|---|---|---|
-| `Network/NetworkMessage.hpp` | `8d38619417ee80853d2e5480bd92143065da1a64d5a33a41969f40086194e065` | Lines 605–625: type 19, Id, all seven body fields and update semantics |
-| `Network/MessageClient.cpp` | `2e07a1a42109eaee36d06419a1a3971e14e6eb7e09a2ca5f0f61425b829f5de2` | Lines 1059–1070: exact write order, `start.toUTC()`, `text.toUtf8()` |
-| `UDPExamples/MessageServer.cpp` | `1cd662edc396dfda3e1b99e16e3c47f6ea74e584cf9cc90d0835b520c5425104` | Lines 291–305: signed/unsigned widths, read order, all fields required |
-| `tests/unit/network/test_message_jtty_text.cpp` | `94d9591cac2b3c1a1daa2aa63e9e23a215346556e70ef4e41c49ebab5627556b` | Lines 35–96, 100–132: schema cases, server parsing, growing/complete and UTC normalization |
-
-**`QGI-WSJ-0064` — JTTY text.** A codec MUST map type 19 as B.4 specifies,
-without stripping or parsing Text or inventing Mode, dt, time of day or a callsign.
-Message id MUST retain the full signed 64-bit value as decimal text. Start follows
-B.3's time resolution rule; native QDateTime bytes remain authoritative. Missing
-or truncated fields MUST fail as `truncated`; trailing extensions follow B.1.
-Id has the existing null/empty/raw-byte preservation rules. No new schema encoding
-is inferred: the existing schema 1–3 primitives apply, and vectors cover 2 and 3.
-
-Text is the whole message so far, with upstream JTTY filler already removed.
-Listeners associate updates by `(Id, Message id)` within a caller-chosen session;
-IDs are not globally unique. Complete is true on terminal updates; Off air marks
-WAV decoding. Review of retained audio does not emit this message. Codec calls
-neither assemble transmissions nor infer missing updates.
-
-The independent fixture `crates/qso-graph-interop/tests/fixtures/wsjtx-jtty19.json`
-contains every type 19 datagram byte-for-byte from both installed-build captures:
-
-| Capture (not redistributed) | SHA-256 | NDJSON lines |
-|---|---|---|
-| `windows11-vm170-udp.ndjson` | `b88677c313edec81cc4fd1acb47da5e95eb602339ee572a6141e820f0bd994d0` | 18, 19, 21, 22 (live); 24–30 (WAV) |
-| `macos27-ibex-installed-udp.ndjson` | `9aa5b232fcfbae69c74626afa4f5653a5d3c8f574bd5dee75866fcfc695bf868` | 17–19, 21 (live); 23–29 (WAV) |
-
-Both captures use schema 2, UTC time spec 1, 1500 Hz, SNR 16, message ID 1 for live
-and 3 for WAV; all fields agree with the proposal source and no extensions occur.
-Schema 3 and non-ASCII text are independently constructed conformance vectors,
-not claims about captured traffic. See `docs/PROTOCOL.md` for capture reproduction.

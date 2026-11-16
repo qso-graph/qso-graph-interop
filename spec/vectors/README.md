@@ -3,10 +3,7 @@
 
 The [WSJT-X manifest](wsjtx/manifest.json) lists each WSJT-X vector's base specification version, family,
 mapping revision, class and SHA-256 of its complete file including the final newline. The manifest
-itself is not self-hashed. WSJT-X revision 2 entries identify the provisional beta6
-tag and tarball SHA-256; the manifest carries the reserved release-blocking marker.
-Revision 1 positive vectors remain unchanged; future-type probes use 19/20 now that
-17/18 are assigned, and the unsupported command revision probe uses 3. Its `source_sha256` identifies the pinned header in Annex B.
+itself is not self-hashed. Its `source_sha256` identifies the pinned header in Annex B.
 
 Each vector is a JSON object with `spec`, `family`, `mapping`, `class`, `input` and `expected`.
 These wrapper objects are test instructions, not events; Annex F validates their positive event members.

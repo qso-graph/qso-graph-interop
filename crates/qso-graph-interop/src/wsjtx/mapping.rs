@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! Revisions 1–3 wire-to-common catalog from Annex B.4.
+//! Revision 1 wire-to-common catalog from Annex B.4.
 #![forbid(unsafe_code)]
 pub(super) fn layout(n: u32) -> &'static [(&'static str, &'static str, &'static str, bool)] {
     match n {
@@ -125,29 +125,6 @@ pub(super) fn layout(n: u32) -> &'static [(&'static str, &'static str, &'static 
             ("dx_call", "dx_call", "utf8", false),
             ("sort_order_provided", "sort_order_provided", "bool", false),
             ("sort_order", "sort_order", "u32", false),
-        ],
-        17 => &[
-            ("supported", "inhibit_supported", "bool", false),
-            ("inhibited", "tx_inhibited", "bool", false),
-            ("source_station", "source_station", "utf8", false),
-            ("hold_rx", "hold_rx", "u32", false),
-            ("release_rx", "release_rx", "u32", false),
-            ("expiries", "expiries", "u32", false),
-            ("invalid", "invalid", "u32", false),
-        ],
-        18 => &[
-            ("controller_id", "controller_id", "utf8", false),
-            ("ttl_ms", "ttl_ms", "u32", false),
-            ("station", "station", "utf8", false),
-        ],
-        19 => &[
-            ("message_id", "message_id", "i64", false),
-            ("start", "start", "QDateTime", false),
-            ("delta_frequency_hz", "audio_offset_hz", "u32", false),
-            ("snr_db", "snr_db", "i32", false),
-            ("text", "text", "utf8", false),
-            ("complete", "complete", "bool", false),
-            ("off_air", "off_air", "bool", false),
         ],
         _ => &[],
     }
