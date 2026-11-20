@@ -158,7 +158,11 @@ jobs:
               [ -z "$bad" ] || { echo "::error::qg-interop.exe needs DLLs Windows does not have: $bad"; exit 1; } ;;
           esac
           exe=qg-interop; [ "$RUNNER_OS" = Windows ] && exe=qg-interop.exe
-          "$dir/$exe" --version
+          # The program reports the version being released, so a stale or hard-coded one cannot ship.
+          want="qg-interop $(cargo metadata --no-deps --format-version 1 --locked | jq -r '.packages[] | select(.name == "qso-graph-interop-cli") | .version')"
+          got=$("$dir/$exe" --version | tr -d '\r')
+          echo "$got"
+          [ "$got" = "$want" ] || { echo "::error::qg-interop --version says '$got', expected '$want'"; exit 1; }
 
       - name: Stage unsigned files
         shell: bash

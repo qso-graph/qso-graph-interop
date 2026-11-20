@@ -3,6 +3,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- The release build checks that `qg-interop --version` reports the version being released.
+
 ## [0.2.0] - 2026-11-16
 
 QG Interop 0.2.0 adds, since 0.1.0: IPv4 multicast for `listen` and the simulators;
