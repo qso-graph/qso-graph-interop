@@ -263,8 +263,20 @@ jobs:
           sudo apt-get install -y -qq rpm cpio >/dev/null
           version=$(cat files/version.txt)
           bash scripts/linux-packages.sh files/cli/qg-interop "$version" "$NAME" dist
+      # Sigstore's log can answer 404 for an entry it has just written, so a failed attestation
+      # is tried once more after a pause. The second try's result is the step's result.
       - name: Attest every final file
+        id: attest_1
         if: inputs.sign
+        continue-on-error: true
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: dist/*
+      - name: Wait before attesting again
+        if: inputs.sign && steps.attest_1.outcome == 'failure'
+        run: sleep 30
+      - name: Attest every final file, second try
+        if: inputs.sign && steps.attest_1.outcome == 'failure'
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: dist/*
